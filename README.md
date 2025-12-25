@@ -1,0 +1,3 @@
+# grc
+
+Grow Room Controller
