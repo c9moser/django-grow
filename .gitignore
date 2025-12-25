@@ -1,0 +1,19 @@
+# VSCode
+.vscode/
+
+# python
+build/
+dist/
+old/
+__pycache__/
+**/__pycache__/
+
+
+# project
+.static/
+.media/
+
+django_project/local/settings.py
+django_project/local/settings_dev.py
+django_project/local/settings_prod.py
+
