@@ -14,17 +14,20 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
+from django.contrib import admin
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/', include('grc.api.urls')),
-    path('accounts', include('allauth.urls')),
-    path('', include('grc.urls')),
-
+    path('accounts/', include('allauth.urls')),
+    path('api/', include('grow.api.urls')),
+    path('', include('grow.urls')),
 ]
+if settings.ADMIN_URL:
+    urlpatterns.insert(0, path(settings.ADMIN_URL, admin.site.urls))
+
+if settings.INCLUDE_WIKI:
+    urlpatterns.insert(-1, path('wiki/', include('tinywiki.urls')))
 
 if settings.DEBUG:
     from django.conf.urls.static import static

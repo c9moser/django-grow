@@ -3,7 +3,7 @@ from .views import (
     IndexView,
 )
 
-app_name = "grc"
+app_name = "grow"
 
 urlpatterns = [
     path("", IndexView.as_view(), name="home")

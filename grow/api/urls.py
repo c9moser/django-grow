@@ -1,5 +1,5 @@
 from django.urls import path
 
-app_name = "grc.api"
+app_name = "grow.api"
 
 urlpatterns = []

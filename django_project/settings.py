@@ -13,32 +13,38 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 from pathlib import Path
 from environ import Env
 from django.conf import settings
+from django.urls import reverse_lazy
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 env = Env(
-    GRC_DEBUG=(bool, False),
-    GRC_SECRET_KEY=(str, 'django-insecure-#zp@r)@gr(f%o3y3*g1dup_z+@lt$o)mgq#8ne%llaz4vh82lf'),
-    GRC_ALLOWED_HOSTS=(list, ['*']),
-    GRC_DATABASE=(str, f'sqlite:////{BASE_DIR / "db.sqlite3"}'),
-    GRC_DEFAULT_FROM_EMAIL=(str, 'webmaster@localhost'),
-    GRC_EMAIL_BACKEND=(str, 'django.core.mail.backends.console.EmailBackend'),
-    GRC_EMAIL_HOST=(str, 'localhost'),
-    GRC_EMAIL_PORT=(int, 25),
-    GRC_EMAIL_USE_TLS=(bool, False),
-    GRC_EMAIL_HOST_USER=(str, ''),
-    GRC_EMAIL_HOST_PASSWORD=(str, ''),
-    GRC_STATIC_URL=(str, 'static/'),
-    GRC_STATIC_ROOT=(str, BASE_DIR / '.static'),
-    GRC_MEDIA_URL=(str, 'media/'),
-    GRC_MEDIA_ROOT=(str, BASE_DIR / '.media'),
-    GRC_TIME_ZONE=(str, 'UTC'),
-    GRC_LANGUAGE_CODE=(str, 'en-us'),
+    GROW_DEBUG=(bool, False),
+    GROW_SECRET_KEY=(str, 'django-insecure-#zp@r)@gr(f%o3y3*g1dup_z+@lt$o)mgq#8ne%llaz4vh82lf'),
+    GROW_ALLOWED_HOSTS=(list, ['*']),
+    GROW_DATABASE=(str, f'sqlite:////{BASE_DIR / "db.sqlite3"}'),
+    GROW_DEFAULT_FROM_EMAIL=(str, 'webmaster@localhost'),
+    GROW_EMAIL_BACKEND=(str, 'django.core.mail.backends.console.EmailBackend'),
+    GROW_EMAIL_HOST=(str, 'localhost'),
+    GROW_EMAIL_PORT=(int, 25),
+    GROW_EMAIL_USE_TLS=(bool, False),
+    GROW_EMAIL_HOST_USER=(str, ''),
+    GROW_EMAIL_HOST_PASSWORD=(str, ''),
+    GROW_STATIC_URL=(str, 'static/'),
+    GROW_STATIC_ROOT=(str, BASE_DIR / '.static'),
+    GROW_MEDIA_URL=(str, 'media/'),
+    GROW_MEDIA_ROOT=(str, BASE_DIR / '.media'),
+    GROW_TIME_ZONE=(str, 'UTC'),
+    GROW_LANGUAGE_CODE=(str, 'en-us'),
+    GROW_ALLOW_SIGNUP=(bool, True),
+    GROW_ADMIN_URL=(str, "admin/"),
+    GROW_ACCOUNT_LOGIN_METHODS=(list, ['email']),
+    GROW_LOGIN_REQUIRED=(bool, False),
+    GROW_INCLUDE_WIKI=(bool, True)
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env.bool('GRC_DEBUG')
+DEBUG = env.bool('GROW_DEBUG')
 
 if (BASE_DIR / '.env').exists():
     env.read_env(BASE_DIR / '.env')
@@ -51,9 +57,9 @@ elif not DEBUG and (BASE_DIR / '.env.prod').exists():
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('GRC_SECRET_KEY')
+SECRET_KEY = env('GROW_SECRET_KEY')
 
-ALLOWED_HOSTS = env('GRC_ALLOWED_HOSTS')
+ALLOWED_HOSTS = env('GROW_ALLOWED_HOSTS')
 
 
 # Application definition
@@ -76,12 +82,13 @@ third_party_apps = [
     'allauth.socialaccount.providers.openid',
     'allauth.socialaccount.providers.steam',
     'rest_framework',
+    'widget_tweaks',
 ]
 
 project_apps = [
     'core',
-    'grc',
-    'grc.api',
+    'grow',
+    'grow.api',
 ]
 
 MIDDLEWARE = [
@@ -109,7 +116,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'grc.context_processors.grc_context'
+                'core.context_processors.core',
+                'grow.context_processors.grow',
             ],
         },
     },
@@ -123,10 +131,10 @@ WSGI_APPLICATION = 'django_project.wsgi.application'
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 DATABASES = {
-    'default': env.db('GRC_DATABASE'),
+    'default': env.db('GROW_DATABASE'),
 }
 
-
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
 
@@ -154,9 +162,9 @@ AUTHENTICATION_BACKENDS = [
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
-LANGUAGE_CODE = env('GRC_LANGUAGE_CODE')
+LANGUAGE_CODE = env('GROW_LANGUAGE_CODE')
 
-TIME_ZONE = env('GRC_TIME_ZONE')
+TIME_ZONE = env('GROW_TIME_ZONE')
 
 USE_I18N = True
 
@@ -167,27 +175,50 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATICFILES_DIRS = [
-    BASE_DIR / 'static',
+    BASE_DIR / 'staticfiles',
 ]
-STATIC_URL = env('GRC_STATIC_URL')
-STATIC_ROOT = env('GRC_STATIC_ROOT')
-MEDIA_URL = env('GRC_MEDIA_URL')
-MEDIA_ROOT = env('GRC_MEDIA_ROOT')
+STATIC_URL = env('GROW_STATIC_URL')
+STATIC_ROOT = env('GROW_STATIC_ROOT')
+MEDIA_URL = env('GROW_MEDIA_URL')
+MEDIA_ROOT = env('GROW_MEDIA_ROOT')
 
 AUTH_USER_MODEL = 'core.User'
 
-EMAIL_BACKEND = env('GRC_EMAIL_BACKEND')
-DEFAULT_FROM_EMAIL = env('GRC_DEFAULT_FROM_EMAIL')
-EMAIL_HOST = env('GRC_EMAIL_HOST')
-EMAIL_PORT = env('GRC_EMAIL_PORT')
-EMAIL_USE_TLS = env('GRC_EMAIL_USE_TLS')
-EMAIL_HOST_USER = env('GRC_EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = env('GRC_EMAIL_HOST_PASSWORD')
+EMAIL_BACKEND = env('GROW_EMAIL_BACKEND')
+DEFAULT_FROM_EMAIL = env('GROW_DEFAULT_FROM_EMAIL')
+EMAIL_HOST = env('GROW_EMAIL_HOST')
+EMAIL_PORT = env('GROW_EMAIL_PORT')
+EMAIL_USE_TLS = env('GROW_EMAIL_USE_TLS')
+EMAIL_HOST_USER = env('GROW_EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('GROW_EMAIL_HOST_PASSWORD')
 
+# Allauth settings
+ACCOUNT_SIGNUP_FIELDS = [
+    'username*',
+    'email*',
+    'first_name',
+    'last_name',
+    'password1*',
+    'password2*',
+]
+ACCOUNT_SIGNUP_FORM_HONEYPOT_FIELD = 'country'
+ACCOUNT_LOGIN_METHODS = env('GROW_ACCOUNT_LOGIN_METHODS')
+ACCOUNT_EMAIL_VERIFICATION_SUPPORTS_RESEND = True
+
+LOGIN_REDIRECT_URL = reverse_lazy("grow:home")
+LOGOUT_REDIRECT_URL = reverse_lazy("grow:home")
 
 # PROJECT settings
+ADMIN_URL = env("GROW_ADMIN_URL")
 USE_BOOTSTRAP = True
+ALLOW_SIGNUP = env.bool('GROW_ALLOW_SIGNUP')
+LOGIN_REQUIRED = env.bool('GROW_LOGIN_REQUIRED')
+INCLUDE_WIKI = env.bool('GROW_INCLUDE_WIKI')
 
+if INCLUDE_WIKI:
+    third_party_apps.append('tinywiki')
+
+# load local config
 _local_settings_path = BASE_DIR / 'django_project' / 'local'
 
 if (_local_settings_path / 'settings.py').exists():

@@ -113,7 +113,7 @@ class SensorReadingDay(models.Model):
     _readings_comrepssed = models.BooleanField(
         _("Compressed readings"),
         db_column='readings_compressed',
-        default=settings.GRC_SENSOR_READINGS_PER_DAY_COMPRESSED
+        default=settings.GROW_SENSOR_READINGS_PER_DAY_COMPRESSED
     )
 
     @property
@@ -129,7 +129,7 @@ class SensorReadingDay(models.Model):
     def readings(self, readings: list[dict]):
         data = json.dumps(readings, ensure_ascii=False).encode('utf-8')
 
-        if settings.GRC_SENSOR_READINGS_PER_DAY_COMPRESSED:
+        if settings.GROW_SENSOR_READINGS_PER_DAY_COMPRESSED:
             self.readings_data = bz2.compress(data)
         else:
             self.readings_data = data

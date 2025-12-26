@@ -5,21 +5,75 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="author" content="Christian Moser">
-        <title>GRC</title>
-        <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous"> -->
-        <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+        <title>Grow</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+        <!-- <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet"> -->
     </head>
     <body>
-        <div class="container-fluid h-100">
+        <div class="container-fluid">
             <div class="row bg-success text-white px-4">
-                <span class="display-5">GrowRoomControl</span>
+                <span class="display-5">Grow</span>
             </div>
             <div class="row">
-                <nav class="navbar navbar-expand-lg bg-success justify-content-between px-4">
+                <nav class="navbar navbar-expand bg-success justify-content-between px-4">
                     <ul class="nav navbar-collapse justify-content-start">
                         <li class="nav-item">
-                            <a class="nav-link text-white" href="{% url 'grc:home' %}">{% translate "Home" %}</a>
+                            <a class="nav-link btn btn-success text-white" href="{% url 'grow:home' %}">{% translate "Home" %}</a>
                         </li>
+                        {% if include_wiki %}
+                        <li class="nav-item">
+                            <div class="dropdown btn-group">
+                                <a class="btn btn-success text-white dropdown-toggle"
+                                    href="#"
+                                    id="navbar-wiki-dropdown"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                >{% translate 'Wiki' %}</a>
+                                <ul class="dropdown-menu dropdown-menu-start" aria-labelledby="navbar-wiki-dropdown">
+                                    <li>
+                                        <a
+                                            class="dropdown-item"
+                                            href="{% url 'tinywiki:home' %}"
+                                        >
+                                            <i class="bi bi-house"></i>
+                                            {% translate "Wiki home" %}
+                                        </a>
+                                    </li>
+
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <a
+                                            class="dropdown-item"
+                                            href="{% url 'tinywiki:toc' %}"
+                                        >
+                                                <i class="bi bi-bookmark"></i>
+                                                {% translate "Wiki Pages" %}
+                                        </a>
+                                    </li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <a
+                                            class="dropdown-item"
+                                            href="{% url 'tinywiki:page' slug='tw-bbcode' %}"
+                                        >
+                                            <i class="bi bi-journal"></i>
+                                            {% translate "BBCode Guide" %}
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a
+                                            class="dropdown-item"
+                                            href="{% url 'tinywiki:page' slug='tw-markdown' %}"
+                                        >
+                                            <i class="bi bi-journal"></i>
+                                            {% translate "Markdown Guide" %}
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        {% endif %}
                     </ul>
                     <ul class="nav navbar-collapse justify-content-end">
                     {% if not request.user.is_authenticated %}
@@ -33,21 +87,44 @@
                         {% endif %}
                     {% else %}
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle text-white" href="#" id="navbar-user-dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                {{ user.username }}
-                            </a>
+                            <a class="nav-link dropdown-toggle text-white"
+                            href="#" id="navbar-user-dropdown"
+                            role="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                            >{{ user.username }}</a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbar-user-dropdown">
-                                <li><a class="dropdown-item" href="#">{% translate "Profile Info" %}</a></li>
-                                <li><a class="dropdown-item" href="#">{% translate "Settings" %}</a></li>
+                                <li>
+                                    <a class="dropdown-item" href="#">
+                                        <i class="bi bi-person"></i>
+                                        {% translate "Profile" %}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="#">
+                                        <i class="bi bi-person-gear"></i>
+                                        {% translate "Settings" %}
+                                    </a>
+                                </li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="#">{% translate "Log out" %}</a></li>
+                                <li>
+                                    <form class=""
+                                        method="POST"
+                                        action="{% url 'account_logout' %}">
+                                        {% csrf_token %}
+                                        <button tpye="submit" class='btn btn-link dropdown-item'>
+                                            <i class="bi bi-box-arrow-left"></i>
+                                            {% translate "Log out" %}
+                                        </button>
+                                    </form>
+                                </li>
                             </ul>
                         </li>
                     {% endif %}
                     </ul>
                 </nav>
-
             </div>
+
             <div class="row mt-3">
                 <div class="col-md-3 mt-3">
                     {% block left_sidebar %}
@@ -65,15 +142,17 @@
             </div>
             <div class="row">
                 <footer class="fixed-bottom bg-success text-white py-2 px-4 fs-5 d-flex justify-content-between">
-                    <div><a class="text-reset fw-bold text-decoration-none">GrowRoomControl</a></div>
+                    <div>
+                        <a class="text-reset fw-bold text-decoration-none" href="#">django-grow</a>
+                    </div>
                     <div>&copy; 2025 - 2026 Christian Moser</div>
                 </footer>
             </div>
         </div>
     </body>
-    <!--
+
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js" integrity="sha384-G/EV+4j2dNv+tEPo3++6LCgdCROaejBqfUeNjuKAiuXbjrxilcCdDz6ZAVfHWe1Y" crossorigin="anonymous"></script>
-    -->
-    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+
+    <!-- <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script> -->
 </html>
