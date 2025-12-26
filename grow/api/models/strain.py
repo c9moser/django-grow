@@ -50,7 +50,7 @@ class Breeder(models.Model):
         return self.name
 
     class Meta:
-        db_name = "grow_breeder"
+        db_table = "grow_breeder"
         ordering = ['name']
 
 
@@ -97,7 +97,7 @@ class Strain(models.Model):
                                    ])
 
     class Meta:
-        db_name = "grow_strain"
+        db_table = "grow_strain"
         unique_together = ('key', 'breeder')
         ordering = ['breeder__name', 'name']
 
@@ -131,7 +131,7 @@ class StrainUserDescription(models.Model):
                                       auto_now=True)
 
     class Meta:
-        db_name = "grow_strain_user_description"
+        db_table = "grow_strain_user_description"
         unique_together = ('strain', 'user')
 
 
@@ -140,7 +140,7 @@ class StrainDescriptionImage(models.Model):
         StrainUserDescription,
         on_delete=models.CASCADE,
         related_name="images",
-        verbose_name=_("strain user description"),
+        verbose_name=_("user description"),
     )
     strain = models.ForeignKey(Strain,
                                on_delete=models.CASCADE,
@@ -153,7 +153,7 @@ class StrainDescriptionImage(models.Model):
                                        auto_now_add=True)
 
     class Meta:
-        db_name = "grow_strain_description_image"
+        db_table = "grow_strain_description_image"
 
 
 class StrainsInStock(models.Model):
@@ -177,5 +177,5 @@ class StrainsInStock(models.Model):
                              null=True)
 
     class Meta:
-        db_name = "grow_strains_in_stock"
+        db_table = "grow_strains_in_stock"
         unique_together = ('strain', 'user')

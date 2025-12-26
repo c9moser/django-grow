@@ -65,11 +65,13 @@ class LocationType(StrEnum):
 
 
 LOCATION_TYPES = [
-    GrowLocationType.INDOOR,
-    GrowLocationType.OUTDOOR,
-    GrowLocationType.GREENHOUSE,
-    GrowLocationType.BALCONY,
+    LocationType.INDOOR,
+    LocationType.OUTDOOR,
+    LocationType.GREENHOUSE,
+    LocationType.BALCONY,
 ]
+
+LOCATION_CHOICES = [(lt.value, lt.name_lazy) for lt in LocationType]
 
 
 class GrowLightType(StrEnum):
@@ -143,6 +145,8 @@ GROW_LIGHT_TYPES = [
     GrowLightType.FLUORESCENT,
 ]
 
+GROW_LIGHT_CHOICES = [(glt.value, glt.name_lazy) for glt in GROW_LIGHT_TYPES]
+
 
 class GrowMediumType(StrEnum):
     """
@@ -199,6 +203,7 @@ GROW_MEDIUM_TYPES = [
     GrowMediumType.HYDROPONIC,
     GrowMediumType.AEROPONIC,
 ]
+GROW_MEDIUM_CHOICES = [(gmt.value, gmt.name_lazy) for gmt in GROW_MEDIUM_TYPES]
 
 
 class TextType(StrEnum):
@@ -255,6 +260,8 @@ TEXT_TYPES = [
     TextType.BBCODE,
     TextType.HTML,
 ]
+
+TEXT_CHOICES = [(tt.value, tt.name_lazy) for tt in TEXT_TYPES]
 
 
 class StrainType(StrEnum):
@@ -331,9 +338,10 @@ STRAIN_TYPES = [
     StrainType.HYBRID,
     StrainType.HYBRID_RUDERALIS,
 ]
+STRAIN_TYPE_CHOICES = [(st.value, st.name_lazy) for st in STRAIN_TYPES]
 
 
-class GrowPermissionType(StrEnum):
+class PermissionType(StrEnum):
     """
     Growlog permission type enumeration.
     """
@@ -341,15 +349,15 @@ class GrowPermissionType(StrEnum):
     PUBLIC = "public"
     PRIVATE = "private"
     MEMBERS_ONLY = "members_only"
-    FRIENDS = "friends_only"
+    FRIENDS_ONLY = "friends_only"
 
     @staticmethod
-    def from_string(permission_str: str) -> 'GrowPermissionType':
+    def from_string(permission_str: str) -> 'PermissionType':
         mapping = {
-            "public": GrowPermissionType.PUBLIC,
-            "private": GrowPermissionType.PRIVATE,
-            "members_only": GrowPermissionType.MEMBERS_ONLY,
-            "friends_only": GrowPermissionType.FRIENDS,
+            "public": PermissionType.PUBLIC,
+            "private": PermissionType.PRIVATE,
+            "members_only": PermissionType.MEMBERS_ONLY,
+            "friends_only": PermissionType.FRIENDS_ONLY,
         }
         try:
             return mapping.get(permission_str.lower())
@@ -359,10 +367,10 @@ class GrowPermissionType(StrEnum):
     @property
     def name_raw(self) -> str:
         mapping = {
-            GrowPermissionType.PUBLIC: "public",
-            GrowPermissionType.PRIVATE: "private",
-            GrowPermissionType.MEMBERS_ONLY: "members only",
-            GrowPermissionType.FRIENDS: "friends only",
+            PermissionType.PUBLIC: "public",
+            PermissionType.PRIVATE: "private",
+            PermissionType.MEMBERS_ONLY: "members only",
+            PermissionType.FRIENDS_ONLY: "friends only",
         }
         return mapping[self]
 
@@ -381,12 +389,13 @@ class GrowPermissionType(StrEnum):
         return f"<GrowlogPermissionType: {self.value.upper()}>"
 
 
-GROW_PERMISSION_TYPES = [
-    GrowPermissionType.FRIENDS,
-    GrowPermissionType.MEMBERS_ONLY,
-    GrowPermissionType.PRIVATE,
-    GrowPermissionType.PUBLIC,
+PERMISSION_TYPES = [
+    PermissionType.FRIENDS_ONLY,
+    PermissionType.MEMBERS_ONLY,
+    PermissionType.PRIVATE,
+    PermissionType.PUBLIC,
 ]
+PERMISSION_CHOICES = [(pt.value, pt.name_lazy) for pt in PERMISSION_TYPES]
 
 
 class SensorType(StrEnum):
@@ -444,3 +453,16 @@ class SensorType(StrEnum):
 
     def __repr__(self):
         return f"<SensorType: {self.value.upper()}>"
+
+
+SENSOR_TYPES = [
+    SensorType.TEMPERATURE,
+    SensorType.HUMIDITY,
+    SensorType.SOIL_MOISTURE,
+    SensorType.LIGHT_INTENSITY,
+    SensorType.CO2_LEVEL,
+    SensorType.PH,
+    SensorType.EC,
+    SensorType.TEMPERATURE_MEDIUM,
+]
+SENSOR_TYPE_CHOICES = [(st.value, st.name_lazy) for st in SENSOR_TYPES]

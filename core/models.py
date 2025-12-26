@@ -9,7 +9,7 @@ from django.contrib.auth.models import (
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, email:str, username:str, password=None, **extra_fields):
+    def create_user(self, email: str, username: str, password=None, **extra_fields):
         if not email:
             raise ValueError('The Email field must be set')
         if not username:
@@ -21,7 +21,7 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, password=None, **extra_fields):
+    def create_superuser(self, email, username, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
 
@@ -30,7 +30,7 @@ class UserManager(BaseUserManager):
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('Superuser must have is_superuser=True.')
 
-        return self.create_user(email, password, **extra_fields)
+        return self.create_user(email, username, password, **extra_fields)
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -63,5 +63,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     def short_name(self):
         return self.first_name if self.first_name else self.username
 
+    objects = UserManager()
+
     class Meta:
-        db_name = "auth_user"
+        db_table = "auth_user"

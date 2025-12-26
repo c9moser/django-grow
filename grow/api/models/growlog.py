@@ -9,9 +9,9 @@ from django.conf import settings
 
 from ..enums import (
     TextType,
-    GrowPermissionType,
-    TEXT_TYPES,
-    GROW_PERMISSION_TYPES
+    TEXT_CHOICES,
+    PermissionType,
+    PERMISSION_CHOICES,
 )
 
 from .strain import Strain
@@ -22,69 +22,107 @@ GROWLOG_PERMISSION_TYPE = _("This determines who can view the grow log.")
 
 
 class Growlog(models.Model):
-    key = models.SlugField(_("key"),
-                           max_length=255,
-                           unique=True)
-    name = models.CharField(_("name"),
-                            max_length=255)
-    description = models.TextField(_("description"),
-                                   blank=True,
-                                   null=True)
-    description_type_data = models.CharField(_("description type"),
-                                             max_length=50,
-                                             default="markdown",
-                                             choices=[
-                                                 (tt.value, tt.name_lazy)
-                                                 for tt in TEXT_TYPES
-                                            ],
-                                             db_column="description_type")
+    #: The key(slug) for the growlog
+    #: The growlog is looked up by ${BASE_URL}/userid/slug
+    key = models.SlugField(
+        _("key"),
+        max_length=255,
+    )
 
+    #: The name of the growlog
+    name = models.CharField(
+        _("name"),
+        max_length=255
+    )
+
+    #: The desctiption of the growlog
+    description = models.TextField(
+        _("description"),
+        default=""
+    )
+
+    #: The TextType of the growlog (default: Markdown).
+    description_type_data = models.CharField(
+        _("description type"),
+        max_length=50,
+        default="markdown",
+        choices=TEXT_CHOICES,
+        db_column="description_type")
+
+    #: Personal Notes
+    #:
+    #: Personal notes are only displayed to the Grower himself/herself.
     notes = models.TextField(_("notes"),
                              blank=True,
                              null=True)
-    notes_type_data = models.CharField(_("notes type"),
-                                       max_length=50,
-                                       default="markdown",
-                                       choices=[
-                                           (tt.value, tt.name_lazy)
-                                           for tt in TEXT_TYPES
-                                       ],
-                                       db_column="notes_type")
+    #: The TextType of the personal notes (default: Markdown)
+    notes_type_data = models.CharField(
+        _("notes type"),
+        max_length=50,
+        default="markdown",
+        choices=TEXT_CHOICES,
+        db_column="notes_type"
+    )
 
+    #: The grower (creator) of the growlog.
     grower = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='grow_logs',
         verbose_name=_("grower"),
     )
-    started_at = models.DateTimeField(_("started at"),
-                                      blank=True,
-                                      null=True)
+    #: The timestamp, when the growlog was started. (automatically created)
+    started_at = models.DateTimeField(
+        _("started at"),
+        auto_now_add=True
+    )
 
-    germinated_at = models.DateField(_("germinated at"),
-                                     blank=True,
-                                     null=True)
+    #: When the seeds germinated
+    germinated_at = models.DateField(
+        _("germinated at"),
+        blank=True,
+        null=True
+    )
 
-    flowering_at = models.DateField(_("flowering at"),
-                                    blank=True,
-                                    null=True)
+    #: When cuttings where cut.
+    cutted_at = models.DateField(
+        _("Cutted at"),
+        blank=True,
+        null=True
+    )
 
-    harvested_at = models.DateField(_("harvested at"),
-                                    blank=True,
-                                    null=True)
+    #: When the flowering period was started
+    flowering_at = models.DateField(
+        _("flowering at"),
+        blank=True,
+        null=True
+    )
 
-    finished_at = models.DateTimeField(_("finished at"),
-                                       blank=True,
-                                       null=True)
+    #: When the plants were hearvested.
+    harvested_at = models.DateField(
+        _("harvested at"),
+        blank=True,
+        null=True
+    )
 
-    permission_data = models.CharField(_("permission"),
-                                       max_length=50,
-                                       default="private",
-                                       choices=[
-                                        (gp.value, gp.name_lazy)
-                                        for gp in GROW_PERMISSION_TYPES
-                                       ],
-                                       db_column="permission")
+    #: When the grow was finished.
+    #:
+    #: When the growlog is finished, only the description can be edited.
+    finished_at = models.DateTimeField(
+        _("finished at"),
+        blank=True,
+        null=True
+    )
+
+    #: The permission data
+    #:
+    #: Use the `permission` property to set permissions.
+    permission_data = models.CharField(
+        _("permission"),
+        max_length=50,
+        default="private",
+        choices=PERMISSION_CHOICES,
+        db_column="permission")
 
     @property
     def description_type(self) -> TextType:
@@ -115,14 +153,14 @@ class Growlog(models.Model):
         self.notes_type_data = text_type.value
 
     @property
-    def permission(self) -> GrowPermissionType:
+    def permission(self) -> PermissionType:
         """
         Get the GrowPermissionType enum for the grow log's permission.
         """
-        return GrowPermissionType.from_string(self.permission_data)
+        return PermissionType.from_string(self.permission_data)
 
     @permission.setter
-    def permission(self, permission: GrowPermissionType) -> None:
+    def permission(self, permission: PermissionType) -> None:
         """
         Set the grow log's permission using a GrowPermissionType enum.
         """
@@ -133,28 +171,28 @@ class Growlog(models.Model):
         """
         Check if the grow log is private.
         """
-        return self.permission == GrowPermissionType.PRIVATE
+        return self.permission == PermissionType.PRIVATE
 
     @property
     def is_public(self) -> bool:
         """
         Check if the grow log is public.
         """
-        return self.permission == GrowPermissionType.PUBLIC
+        return self.permission == PermissionType.PUBLIC
 
     @property
     def is_members_only(self) -> bool:
         """
         Check if the grow log is members only.
         """
-        return self.permission == GrowPermissionType.MEMBERS_ONLY
+        return self.permission == PermissionType.MEMBERS_ONLY
 
     @property
     def is_friends_only(self) -> bool:
         """
         Check if the grow log is friends only.
         """
-        return self.permission == GrowPermissionType.FRIENDS_ONLY
+        return self.permission == PermissionType.FRIENDS_ONLY
 
     @property
     def is_active(self) -> bool:
@@ -178,6 +216,10 @@ class Growlog(models.Model):
         return self.germinated_at is not None
 
     @property
+    def is_cutted(self) -> bool:
+        return self.cutted_at is not None
+
+    @property
     def is_finished(self) -> bool:
         """
         Check if the grow log is finished.
@@ -195,11 +237,16 @@ class Growlog(models.Model):
     def age_days(self) -> int:
         """
         Calculate the age of the grow log in days since germination.
-        Returns 0 if germination date is not set.
+        Returns 0 if germination date and cutted date is not set.
         """
-        if not self.is_germinated:
+        if not self.is_germinated and not self.is_cutted:
             return 0
-        delta = timezone.now().date() - self.germinated_at
+
+        if self.is_cutted:
+            delta = timezone.now().date() - self.germinated_at
+        else:
+            delta = timezone.now().date() - self.cutted_at
+
         return delta.days
 
     @property
@@ -420,23 +467,38 @@ class Growlog(models.Model):
 
     class Meta:
         db_table = "grow_growlog"
+        unique_together = [
+            ('grower', 'key')
+        ]
 
 
 class GrowlogStrain(models.Model):
-    grow_log = models.ForeignKey(GrowLog,
-                                 on_delete=models.CASCADE,
-                                 related_name='growlog_strains',
-                                 verbose_name=_("grow log"))
-    strain = models.ForeignKey(Strain,
-                               on_delete=models.CASCADE,
-                               related_name='growlog_strains',
-                               verbose_name=_("strain"))
+    #: The growlog for this strain
+    grow_log = models.ForeignKey(
+        Growlog,
+        on_delete=models.CASCADE,
+        related_name='growlog_strains',
+        verbose_name=_("grow log")
+    )
 
-    is_grown_from_seed = models.BooleanField(_("from seed"),
-                                             default=True)
+    #: The strain itself
+    strain = models.ForeignKey(
+        Strain,
+        on_delete=models.CASCADE,
+        related_name='growlog_strains',
+        verbose_name=_("strain")
+    )
 
-    quantity = models.PositiveIntegerField(_("quantity"),
-                                           default=1)
+    #: `True` if the strain is grown from seed.
+    is_grown_from_seed = models.BooleanField(
+        _("grown from seed"),
+        default=True)
+
+    #: Ǹumber of plants in this grow
+    quantity = models.PositiveIntegerField(
+        _("quantity"),
+        default=1
+    )
 
     class Meta:
         db_table = "grow_growlog_strains"
@@ -446,26 +508,40 @@ class GrowlogStrain(models.Model):
 
 
 class GrowlogEntry(models.Model):
+    #: The growlog this entry belongs to
     grow_log = models.ForeignKey(Growlog,
                                  on_delete=models.CASCADE,
                                  related_name='entries',
                                  verbose_name=_("grow log"))
-    timestamp = models.DateTimeField(_("timestamp"))
+    #: The timestamp of this entry
+    timestamp = models.DateTimeField(_("timestamp"),
+                                     auto_now_add=True)
+
+    #: The content of the entry
+    #:
+    #: **Note:** Must contain a text
     content = models.TextField(_("content"))
-    content_type_data = models.CharField(_("content type"),
-                                         max_length=50,
-                                         default="markdown",
-                                         choices=[
-                                            (tt.value, tt.name_lazy)
-                                            for tt in TEXT_TYPES
-                                        ],
-                                        db_column="content_type")
-    location = models.ForeignKey(Location,
-                                 on_delete=models.SET_NULL,
-                                 related_name="growlog_entries",
-                                 verbose_name=_("location"),
-                                 blank=True,
-                                 null=True)
+
+    #: The text type of the content
+    #:
+    #: Use the `content_type` property to get/set the text type.
+    content_type_data = models.CharField(
+        _("content type"),
+        max_length=50,
+        default="markdown",
+        choices=TEXT_CHOICES,
+        db_column="content_type"
+    )
+
+    #: The location of the plants
+    location = models.ForeignKey(
+        Location,
+        on_delete=models.SET_NULL,
+        related_name="growlog_entries",
+        verbose_name=_("location"),
+        blank=True,
+        null=True
+    )
 
     @property
     def content_type(self) -> TextType:
@@ -487,9 +563,14 @@ class GrowlogEntry(models.Model):
         Calculate the age of the grow log entry in days since the grow log's germination.
         Returns 0 if germination date is not set.
         """
-        if not self.grow_log.is_germinated:
+        if not self.grow_log.is_germinated and not self.grow_log.is_cutted:
             return 0
-        delta = self.timestamp.date() - self.grow_log.germinated_at
+
+        if self.grow_log.is_germinated:
+            delta = self.timestamp.date() - self.grow_log.germinated_at
+        else:
+            delta = self.timestamp.date() - self.grow_log.is_cutted
+
         return delta.days
 
     @property
@@ -563,31 +644,46 @@ class GrowlogEntry(models.Model):
 
     class Meta:
         db_table = "grow_growlogentry"
-        # ordering = ['-timestamp']
+        ordering = ['-timestamp']
 
 
 class GrowlogEntryImage(models.Model):
-    growlog_entry = models.ForeignKey(GrowlogEntry,
-                                      on_delete=models.CASCADE,
-                                      related_name="images",
-                                      verbose_name=_("growlog entry"))
-    image = models.ImageField(_("image"),
-                              upload_to='grow/growlog/entry_images/')
+    """Images that are added to the growlog"""
 
-    description = models.CharField(_("description"),
-                                   max_length=255,
-                                   blank=True,
-                                   null=True)
-    description_type = models.CharField(_("description type"),
-                                        max_length=50,
-                                        default="markdown",
-                                        choices=[
-                                            (tt.value, tt.name_lazy)
-                                            for tt in TEXT_TYPES
-                                        ])
+    #: The entry
+    growlog_entry = models.ForeignKey(
+        GrowlogEntry,
+        on_delete=models.CASCADE,
+        related_name="images",
+        verbose_name=_("growlog entry")
+    )
 
-    is_plant_image = models.BooleanField(_("is plant image"),
-                                         default=True)
+    # The image itself.
+    image = models.ImageField(
+        _("image"),
+        upload_to='grow/growlog/entry_images/'
+    )
+
+    #: The description of the image
+    description = models.CharField(
+        _("description"),
+        max_length=255,
+        default=""
+    )
+
+    #: The description type
+    description_type = models.CharField(
+        _("description type"),
+        max_length=50,
+        default="markdown",
+        choices=TEXT_CHOICES
+    )
+
+    #: `True` if it is a plant image
+    is_plant_image = models.BooleanField(
+        _("is plant image"),
+        default=True
+    )
 
     @property
     def age_days(self) -> int:

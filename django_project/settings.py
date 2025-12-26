@@ -11,23 +11,49 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
-
+from environ import Env
 from django.conf import settings
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+env = Env(
+    GRC_DEBUG=(bool, False),
+    GRC_SECRET_KEY=(str, 'django-insecure-#zp@r)@gr(f%o3y3*g1dup_z+@lt$o)mgq#8ne%llaz4vh82lf'),
+    GRC_ALLOWED_HOSTS=(list, ['*']),
+    GRC_DATABASE=(str, f'sqlite:////{BASE_DIR / "db.sqlite3"}'),
+    GRC_DEFAULT_FROM_EMAIL=(str, 'webmaster@localhost'),
+    GRC_EMAIL_BACKEND=(str, 'django.core.mail.backends.console.EmailBackend'),
+    GRC_EMAIL_HOST=(str, 'localhost'),
+    GRC_EMAIL_PORT=(int, 25),
+    GRC_EMAIL_USE_TLS=(bool, False),
+    GRC_EMAIL_HOST_USER=(str, ''),
+    GRC_EMAIL_HOST_PASSWORD=(str, ''),
+    GRC_STATIC_URL=(str, 'static/'),
+    GRC_STATIC_ROOT=(str, BASE_DIR / '.static'),
+    GRC_MEDIA_URL=(str, 'media/'),
+    GRC_MEDIA_ROOT=(str, BASE_DIR / '.media'),
+    GRC_TIME_ZONE=(str, 'UTC'),
+    GRC_LANGUAGE_CODE=(str, 'en-us'),
+)
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = env.bool('GRC_DEBUG')
+
+if (BASE_DIR / '.env').exists():
+    env.read_env(BASE_DIR / '.env')
+if DEBUG and (BASE_DIR / '.env.dev').exists():
+    env.read_env(BASE_DIR / '.env.dev')
+elif not DEBUG and (BASE_DIR / '.env.prod').exists():
+    env.read_env(BASE_DIR / '.env.prod')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-#zp@r)@gr(f%o3y3*g1dup_z+@lt$o)mgq#8ne%llaz4vh82lf'
+SECRET_KEY = env('GRC_SECRET_KEY')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = env('GRC_ALLOWED_HOSTS')
 
 
 # Application definition
@@ -47,14 +73,15 @@ third_party_apps = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.github',
+    'allauth.socialaccount.providers.openid',
     'allauth.socialaccount.providers.steam',
     'rest_framework',
 ]
 
 project_apps = [
     'core',
-    'grow',
-    'grow.api',
+    'grc',
+    'grc.api',
 ]
 
 MIDDLEWARE = [
@@ -65,6 +92,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware'
 ]
 
 ROOT_URLCONF = 'django_project.urls'
@@ -81,10 +109,12 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'grc.context_processors.grc_context'
             ],
         },
     },
 ]
+BASE_TEMPLATE = "base.html"
 
 WSGI_APPLICATION = 'django_project.wsgi.application'
 
@@ -93,10 +123,7 @@ WSGI_APPLICATION = 'django_project.wsgi.application'
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': env.db('GRC_DATABASE'),
 }
 
 
@@ -127,9 +154,9 @@ AUTHENTICATION_BACKENDS = [
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = env('GRC_LANGUAGE_CODE')
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = env('GRC_TIME_ZONE')
 
 USE_I18N = True
 
@@ -139,12 +166,27 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / '.static'
-MEDIA_URL = 'media/'
-MEDIA_ROOT = BASE_DIR / '.media'
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
+STATIC_URL = env('GRC_STATIC_URL')
+STATIC_ROOT = env('GRC_STATIC_ROOT')
+MEDIA_URL = env('GRC_MEDIA_URL')
+MEDIA_ROOT = env('GRC_MEDIA_ROOT')
 
 AUTH_USER_MODEL = 'core.User'
+
+EMAIL_BACKEND = env('GRC_EMAIL_BACKEND')
+DEFAULT_FROM_EMAIL = env('GRC_DEFAULT_FROM_EMAIL')
+EMAIL_HOST = env('GRC_EMAIL_HOST')
+EMAIL_PORT = env('GRC_EMAIL_PORT')
+EMAIL_USE_TLS = env('GRC_EMAIL_USE_TLS')
+EMAIL_HOST_USER = env('GRC_EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('GRC_EMAIL_HOST_PASSWORD')
+
+
+# PROJECT settings
+USE_BOOTSTRAP = True
 
 _local_settings_path = BASE_DIR / 'django_project' / 'local'
 
@@ -157,7 +199,11 @@ else:
     if (_local_settings_path / 'settings_prod.py').exists():
         from .local.settings_prod import *  # noqa
 
+del _local_settings_path
+
 if DEBUG:
-    INSTALLED_APPS = django_apps + third_party_apps + project_apps
+    third_party_apps.insert(0, 'django_browser_reload')
+    MIDDLEWARE.insert(0, "django_browser_reload.middleware.BrowserReloadMiddleware")
+    INSTALLED_APPS = list(set(django_apps + third_party_apps + project_apps))
 else:
-    INSTALLED_APPS = django_apps + third_party_apps + project_apps
+    INSTALLED_APPS = list(set(django_apps + third_party_apps + project_apps))
