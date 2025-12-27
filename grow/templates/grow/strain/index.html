@@ -1,0 +1,39 @@
+{% extends base_template %}
+{% load i18n %}
+
+{% block title %}{% translate "Grow: Breeder overview" %}{% endblock title %}
+
+{% block content %}
+
+<table {% if use_bootstrap %}class="table table-hover"{% endif %}>
+    <thead>
+        <tr>
+            <th>{% translate "Name" %}</th>
+            <th>{% translate "Strains" %}</th>
+            <th>{% translate "Growlogs" %}</th>
+            <th><i class="bi bi-box-arrow-up"></i></th>
+        </tr>
+    </thead>
+    <tbody {% if use_bootstrap %}class="table-group-divider"{% endif %}>
+        {% for breeder in breeders %}
+        <tr>
+            <td><a href="{% url "grow:breeder-detail" key=breeder.key %}">{{ breeder.name }}</td>
+            <td>{{ breeder.strain_count }}</td>
+            <td>{{ breeder.growlog_count }}</td>
+            <td>{% if breeder.id in breeders_allowed_to_edit %}
+                <a
+                    href="{% url 'grow:breeder-update' slug=breeder.slug %}"
+                    data-bs-toggle="tooltip"
+                    data-bs-html="true"
+                    data-bs-placement="left"
+                    data-bs-title="Edit <i>{{ breeder.name }}</i>"
+                >
+                    <i class="bi bi-pencil-square"></i>
+            </a>
+            {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock content %}

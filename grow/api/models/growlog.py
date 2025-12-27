@@ -7,6 +7,7 @@ from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 from django.conf import settings
 
+from core.models import User
 
 from ..enums import (
     TextType,
@@ -69,7 +70,7 @@ class Growlog(models.Model):
     grower = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name='grow_logs',
+        related_name='growlogs',
         verbose_name=_("grower"),
     )
     #: The timestamp, when the growlog was started. (automatically created)
@@ -124,6 +125,16 @@ class Growlog(models.Model):
         default="private",
         choices=PERMISSION_CHOICES,
         db_column="permission")
+
+    def is_user_allowed_to_view(self, user: User) -> bool:
+        if self.is_public:
+            return True
+        elif self.is_members_only:
+            return user.is_authenticated
+        elif self.is_friends_only:
+            return not user.groups.filter(f"user-{self.grower.id}-friends")
+        else:
+            return user == self.grower
 
     @property
     def description_type(self) -> TextType:
@@ -479,7 +490,7 @@ class GrowlogStrain(models.Model):
         Growlog,
         on_delete=models.CASCADE,
         related_name='growlog_strains',
-        verbose_name=_("grow log")
+        verbose_name=_("growlog")
     )
 
     #: The strain itself
@@ -690,6 +701,7 @@ class GrowlogEntryImage(models.Model):
     def age_days(self) -> int:
         """
         Calculate the age of the grow log entry image in days since the grow log's germination.
+
         Returns 0 if germination date is not set.
         """
         return self.growlog_entry.age_days
@@ -698,6 +710,7 @@ class GrowlogEntryImage(models.Model):
     def age_weeks(self) -> int | None:
         """
         Calculate the age of the grow log entry image in weeks since the grow log's germination.
+
         Returns None if germination date is not set.
         """
         return self.growlog_entry.age_weeks
@@ -705,7 +718,9 @@ class GrowlogEntryImage(models.Model):
     @property
     def age_weeks_days(self) -> tuple[int, int] | None:
         """
-        Calculate the age of the grow log entry image in weeks and days since the grow log's germination.
+        Calculate the age of the grow log entry image in weeks and days since the grow
+        log's germination.
+
         Returns None if germination date is not set.
         """
         return self.growlog_entry.age_weeks_days

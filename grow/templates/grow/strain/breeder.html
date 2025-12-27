@@ -1,5 +1,80 @@
 {% extends base_template %}
 {% load i18n %}
 
+{% block title %}{% translate "Grow: Breeder" %}{% endblock title %}
 {% block content %}
+<h1>{{ breeder.name }}</h1>
+<p>
+{% blocktranslate with name=breeder.name count n_strains=breeder.strains.count %}
+There is one strain in the database for the breeder <i>{{ name }}</i>.
+{% plural %}
+There are {{ n_strains }} strains in the database for breeder <i>{{ name }}</i>.
+{% endblocktranslate%}
+{% blocktranslate with n_strains=breeder.strains_with_growlogs_count count n=breeder.strains_with_growlogs_count %}
+There is one strain that appears in growlogs.
+{% plural %}
+There are {{ n_strains }} strains that apper in growlogs.
+{% endblocktranslate %}
+{% blocktranslate with name=breeder.name count n=breeder.growlog_count %}
+There is one growlog for the strains of <i>{{ name }}</i>.
+{% plural %}
+There are {{ n }} for the strains of <i>{{ name }}</i>.
+{% endblocktranslate %}
+</p>
+
+{% if use_bootstrap %}
+<h2>Strains</h2>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Strain</th>
+            <th>Genetics</th>
+            <th>Flowering time</th>
+            <th>Growlogs</th>
+        </tr>
+    </thead>
+    <tbody class="table-group-divider">
+    {% for strain in growlog.strains_sorted %}
+        <tr>
+            <td><a href="#">{{ strain.name }}</a></td>
+            <td>{{ strain.genetics.name }}</td>
+            <td>
+                {% blocktranslate with days=strain.flowering_days count n=strain.flowering_days%}
+                {{ days }} day
+                {% plural %}
+                {{ days }} days
+                {% endblocktranslate %}
+            </td>
+            <td>
+                {% blocktranslate with growlogs=strain.growlog_count count n=strain.growlog_count %}
+                {{ growlogs }} growlog
+                {% plural %}
+                {{ growlogs }} growlogs
+                {% endblocktranslate %}</td>
+        <tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<table>
+    <thead>
+        <tr>
+            <th>Strain</th>
+            <th>Genetics</th>
+            <th>Flowering time</th>
+            <th>Growlogs</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for strain in growlog.strains_sorted %}
+        <tr>
+            <td><a href="#">{{ strain.name }}</a></td>
+            <td>{{ strain.strain_type.name }}</td>
+            <td>{{ strain.flowering_time }} days</td>
+            <td>{{ strain.growlog_count }}</td>
+        <tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endif %}
 {% endblock content%}

@@ -6,6 +6,7 @@ from .api.enums import (
     PERMISSION_CHOICES,
 )
 
+
 class UserSettings(models.Model):
     #: default Growlog permission
     #:

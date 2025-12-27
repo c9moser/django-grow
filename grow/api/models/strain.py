@@ -14,7 +14,7 @@ from ..enums import (
 
 
 class Breeder(models.Model):
-    key = models.SlugField(
+    slug = models.SlugField(
         _("key"),
         max_length=255,
         unique=True
@@ -40,8 +40,8 @@ class Breeder(models.Model):
         blank=True,
         null=True
     )
-    logo_icon = models.ImageField(
-        _("logo icon"),
+    logo_image = models.ImageField(
+        _("logo image"),
         upload_to='grow/breeder_logos/',
         blank=True,
         null=True
@@ -59,12 +59,43 @@ class Breeder(models.Model):
         null=True
     )
 
-    owner = models.ForeignKey(
+    created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
+        null=True,
         related_name='breeders',
         verbose_name=_("owner"),
     )
+
+    added_at = models.DateTimeField(
+        _("added at"),
+        auto_now_add=True
+    )
+
+    @property
+    def strain_count(self) -> int:
+        return self.strains.count()
+
+    @property
+    def growlog_count(self) -> int:
+        if self.strain_count > 0:
+            return sum(strain.growlog_count for strain in self.strains.all())
+        return 0
+
+    @property
+    def strains_with_growlogs(self):
+        ret = []
+        for strain in self.strains.all():
+            if strain.growlog_count > 0:
+                ret.append(strain)
+
+    @property
+    def strains_with_growlogs_count(self) -> int:
+        ret = 0
+        for strain in self.strains.all():
+            if strain.growlog_count() > 0:
+                ret += 1
+        return ret
 
     def __str__(self):
         return self.name
@@ -75,12 +106,12 @@ class Breeder(models.Model):
 
 
 class Strain(models.Model):
-    key = models.SlugField(
+    slug = models.SlugField(
         _("key"),
         max_length=255
     )
     name = models.CharField(
-        _("name"),
+        _("breeder name"),
         max_length=255
     )
     description = models.TextField(
@@ -107,8 +138,8 @@ class Strain(models.Model):
         null=True
     )
 
-    logo = models.ImageField(
-        _("logo"),
+    logo_image = models.ImageField(
+        _("logo image"),
         upload_to='grow/strain/logos/',
         blank=True,
         null=True
@@ -122,20 +153,49 @@ class Strain(models.Model):
         _("is feminized"),
         default=True
     )
+    is_regular = models.BooleanField(
+        _("is regular"),
+        default=False
+    )
+
     flowering_time_days = models.IntegerField(
         _("flowering time (days)"),
         default=0
     )
-    strain_type = models.CharField(
+    genetics_data = models.CharField(
         _("strain type"),
         max_length=50,
         choices=STRAIN_TYPE_CHOICES,
-        default=StrainType.HYBRID.value
+        db_column="genetics"
     )
+
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name="strains",
+        verbose_name=_("created by")
+    )
+    added_at = models.DateTimeField(
+        _("added at"),
+        auto_now_add=True,
+    )
+
+    @property
+    def genetics(self) -> StrainType:
+        return StrainType.from_string(self.genetics_data)
+
+    @genetics.setter
+    def genetics(self, genetics: StrainType):
+        self.genetics_data = genetics.value
+
+    @property
+    def growlog_count(self):
+        return self.growlog_strains.count()
 
     class Meta:
         db_table = "grow_strain"
-        unique_together = ('key', 'breeder')
+        unique_together = ('slug', 'breeder')
         ordering = ['breeder__name', 'name']
 
     def __str__(self):
@@ -214,6 +274,14 @@ class StrainImage(models.Model):
         default=TextType.MARKDOWN.value,
         choices=TEXT_CHOICES
     )
+
+    @property
+    def description_type(self) -> TextType:
+        return TextType.from_string(self.description_type_data)
+
+    @description_type.setter
+    def description_type(self, description_type: TextType):
+        self.description_type_data = description_type.value
 
     class Meta:
         db_table = "grow_strain_image"

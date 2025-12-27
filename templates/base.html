@@ -5,76 +5,116 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="author" content="Christian Moser">
-        <title>Grow</title>
+        <title>{% block head_title %}Grow{% endblock %}</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-        <!-- <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet"> -->
+        {% block extra_css %}{% endblock %}
+        <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.min.js"></script>
+        <script>
+            document.documentElement.setAttribute('data-bs-theme', (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'))
+        </script>
+        {% block scripts %}{% endblock %}
     </head>
-    <body>
+    <body style="margin-bottom:50px;">
         <div class="container-fluid">
-            <div class="row bg-success text-white px-4">
-                <span class="display-5">Grow</span>
-            </div>
+            <header class="row bg-success text-white px-4 d-none d-lg-block ">
+                <span class="display-5">{% block title %}Grow{% endblock %}</span>
+            </header>
             <div class="row">
                 <nav class="navbar navbar-expand bg-success justify-content-between px-4">
                     <ul class="nav navbar-collapse justify-content-start">
                         <li class="nav-item">
-                            <a class="nav-link btn btn-success text-white" href="{% url 'grow:home' %}">{% translate "Home" %}</a>
+                            <a class="nav-link btn btn-success text-white" href="{% url 'grow:home' %}">
+                                <i class="bi bi-house"></i>
+                                {% translate "Home" %}
+                            </a>
                         </li>
-                        {% if include_wiki %}
-                        <li class="nav-item">
-                            <div class="dropdown btn-group">
-                                <a class="btn btn-success text-white dropdown-toggle"
-                                    href="#"
-                                    id="navbar-wiki-dropdown"
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false"
-                                >{% translate 'Wiki' %}</a>
-                                <ul class="dropdown-menu dropdown-menu-start" aria-labelledby="navbar-wiki-dropdown">
-                                    <li>
-                                        <a
-                                            class="dropdown-item"
-                                            href="{% url 'tinywiki:home' %}"
-                                        >
-                                            <i class="bi bi-house"></i>
-                                            {% translate "Wiki home" %}
-                                        </a>
-                                    </li>
+                        {# Strains Dropdown #}
+                        <li class="nav-item  dropdown-center">
+                            <a class="nav-link dropdown-toggle text-white"
+                                href="#" id="navbar-strain-dropdown"
+                                role="button"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                            >{% translate "Strains" %}</a>
+                            <ul class="dropdown-menu dropdown-menu-center" aria-labelledby="navbar-strain-dropdown">
+                                <li>
+                                    <button type="button" class="dropdown-item">
+                                        <i class="bi bi-search"></i>
+                                        {% translate "Search for strains" %}
+                                    </button>
+                                </li>
+                                <li><hr class="dropdown divider"></li>
+                                <li>
+                                    <a class="dropdown-item" href="{% url "grow:breeder-overview" %}">
+                                        <i class="bi bi-people-fill"></i>
+                                        {% translate "Breeders" %}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href={% url "grow:breeder-create" %}>
+                                        <i class="bi bi-person-fill-add"></i>
+                                        {% translate "New Breeder" %}
+                                    </a>
+                                </li>
 
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li>
-                                        <a
-                                            class="dropdown-item"
-                                            href="{% url 'tinywiki:toc' %}"
-                                        >
-                                                <i class="bi bi-bookmark"></i>
-                                                {% translate "Wiki Pages" %}
-                                        </a>
-                                    </li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li>
-                                        <a
-                                            class="dropdown-item"
-                                            href="{% url 'tinywiki:page' slug='tw-bbcode' %}"
-                                        >
-                                            <i class="bi bi-journal"></i>
-                                            {% translate "BBCode Guide" %}
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a
-                                            class="dropdown-item"
-                                            href="{% url 'tinywiki:page' slug='tw-markdown' %}"
-                                        >
-                                            <i class="bi bi-journal"></i>
-                                            {% translate "Markdown Guide" %}
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
+                            </ul>
                         </li>
+
+                        {# Wiki Dropdown #}
+                        {% if include_wiki %}
+                        <li class="nav-item dropdown-center">
+
+                            <a class="btn btn-success text-white dropdown-toggle"
+                                href="#"
+                                id="navbar-wiki-dropdown"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                            >{% translate 'Wiki' %}</a>
+                            <ul class="dropdown-menu dropdown-menu-center" aria-labelledby="navbar-wiki-dropdown">
+                                <li>
+                                    <a
+                                        class="dropdown-item"
+                                        href="{% url 'tinywiki:home' %}"
+                                    >
+                                        <i class="bi bi-house"></i>
+                                        {% translate "Wiki home" %}
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a
+                                        class="dropdown-item"
+                                        href="{% url 'tinywiki:page' slug='tw-bbcode' %}"
+                                    >
+                                        <i class="bi bi-journal"></i>
+                                        {% translate "BBCode Guide" %}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a
+                                        class="dropdown-item"
+                                        href="{% url 'tinywiki:page' slug='tw-markdown' %}"
+                                    >
+                                        <i class="bi bi-journal"></i>
+                                        {% translate "Markdown Guide" %}
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a
+                                        class="dropdown-item"
+                                        href="{% url 'tinywiki:toc' %}"
+                                    >
+                                            <i class="bi bi-bookmark"></i>
+                                            {% translate "Table of Content" %}
+                                    </a>
+                                </li>
+                            </ul>
                         {% endif %}
                     </ul>
+
+                    {# User navbar items (right side) #}
                     <ul class="nav navbar-collapse justify-content-end">
                     {% if not request.user.is_authenticated %}
                         <li class="nav-item">
@@ -126,7 +166,7 @@
             </div>
 
             <div class="row mt-3">
-                <div class="col-md-3 mt-3">
+                <div class="col-md-3 mt-3 d-lg-block">
                     {% block left_sidebar %}
                     {% endblock left_sidebar %}
                 </div>
@@ -135,13 +175,13 @@
                     <h1>It works!</h1>
                     {% endblock content %}
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-3 d-lg-block">
                     {% block right_sidebar%}
                     {% endblock right_sidebar %}
                 </div>
             </div>
-            <div class="row">
-                <footer class="fixed-bottom bg-success text-white py-2 px-4 fs-5 d-flex justify-content-between">
+            <div class="row fixed-bottom mt-auto">
+                <footer class="bg-success text-white py-2 px-4 fs-5 d-flex justify-content-between">
                     <div>
                         <a class="text-reset fw-bold text-decoration-none" href="#">django-grow</a>
                     </div>
@@ -149,10 +189,15 @@
                 </footer>
             </div>
         </div>
+        {% block body_scripts %}{% endblock %}
     </body>
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js" integrity="sha384-G/EV+4j2dNv+tEPo3++6LCgdCROaejBqfUeNjuKAiuXbjrxilcCdDz6ZAVfHWe1Y" crossorigin="anonymous"></script>
-
-    <!-- <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script> -->
+    <script>
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    </script>
+    {% block extra_scripts %}
+    {% endblock extra_scripts %}
 </html>

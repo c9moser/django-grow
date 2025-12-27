@@ -3,6 +3,7 @@ grow.api settings
 """
 
 from django.conf import settings
+from pathlib import Path
 from .enums import (
     PermissionType,
     TextType,
@@ -28,3 +29,14 @@ GROW_DEFAULT_TEXT_TYPE = getattr(settings,
 
 if isinstance(GROW_DEFAULT_TEXT_TYPE, str):
     GROW_DEFAULT_TEXT_TYPE = TextType.from_string(GROW_DEFAULT_TEXT_TYPE)
+
+
+GROW_EXPORTS_VERSIONS = getattr(settings, "GROW_EXPRTS_VERSIONS", 3)
+GROW_EXPORTS_DIR = getattr(settings, 'GROW_EXPORTS_DIR',
+                           Path(settings.MEDIA_ROOT) / "grow" / "exports")
+
+if isinstance(GROW_EXPORTS_DIR, str):
+    GROW_EXPORTS_DIR = Path(GROW_EXPORTS_DIR).resolve()
+
+GROW_EXPORTS_FILE_FORMAT = str(GROW_EXPORTS_DIR / "grow-exports-{date}.zip")
+GROW_EXPORTS_VERSIONS_FILE = GROW_EXPORTS_DIR / "grow-exports.versions"

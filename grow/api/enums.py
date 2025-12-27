@@ -42,10 +42,10 @@ class LocationType(StrEnum):
     @property
     def name_raw(self) -> str:
         mapping = {
-            LocationType.INDOOR: "indoor",
-            LocationType.OUTDOOR: "outdoor",
-            LocationType.GREENHOUSE: "greenhouse",
-            LocationType.BALCONY: "balcony",
+            LocationType.INDOOR: _("indoor"),
+            LocationType.OUTDOOR: _("outdoor"),
+            LocationType.GREENHOUSE: _("greenhouse"),
+            LocationType.BALCONY: _("balcony"),
         }
         return mapping[self]
 
@@ -114,7 +114,7 @@ class GrowLightType(StrEnum):
     @property
     def name_raw(self) -> str:
         mapping = {
-            GrowLightType.LED: "led",
+            GrowLightType.LED: _("led"),
             GrowLightType.HPS: _("High Pressure Sodium"),
             GrowLightType.HIGH_PRESSURE_SODIUM: _("High Pressure Sodium"),
             GrowLightType.MH: _("Metal Halide"),
@@ -177,9 +177,9 @@ class GrowMediumType(StrEnum):
     @property
     def name_raw(self) -> str:
         mapping = {
-            GrowMediumType.SOIL: "soil",
-            GrowMediumType.HYDROPONIC: "hydroponic",
-            GrowMediumType.AEROPONIC: "aeroponic",
+            GrowMediumType.SOIL: _("soil"),
+            GrowMediumType.HYDROPONIC: _("hydroponic"),
+            GrowMediumType.AEROPONIC: _("aeroponic"),
         }
         return mapping[self]
 
@@ -232,10 +232,10 @@ class TextType(StrEnum):
     @property
     def name_raw(self) -> str:
         mapping = {
-            TextType.PLAIN: "plain",
-            TextType.MARKDOWN: "markdown",
-            TextType.HTML: "html",
-            TextType.BBCODE: "bbcode",
+            TextType.PLAIN: _("plain"),
+            TextType.MARKDOWN: _("markdown"),
+            TextType.HTML: _("html"),
+            TextType.BBCODE: _("bbcode"),
         }
         return mapping[self]
 
@@ -268,7 +268,7 @@ class StrainType(StrEnum):
     """
     Strain type enumeration.
     """
-
+    UNKNOWN = "unknown"
     INDICA = "indica"
     INDICA_RUDERALIS = "indica_ruderalis"
     SATIVA = "sativa"
@@ -282,6 +282,7 @@ class StrainType(StrEnum):
     @staticmethod
     def from_string(strain_str: str) -> 'StrainType':
         mapping = {
+            "unknown": StrainType.UNKNOWN,
             "indica": StrainType.INDICA,
             "sativa": StrainType.SATIVA,
             "hybrid": StrainType.HYBRID,
@@ -300,15 +301,16 @@ class StrainType(StrEnum):
     @property
     def name_raw(self) -> str:
         mapping = {
-            StrainType.INDICA: "indica",
-            StrainType.SATIVA: "sativa",
-            StrainType.HYBRID: "indica/sativa hybrid",
-            StrainType.INDICA_RUDERALIS: "indica/ruderalis hybrid",
-            StrainType.SATIVA_RUDERALIS: "sativa/ruderalis hybrid",
-            StrainType.HYBRID_RUDERALIS: "indica/sativa/ruderalis hybrid",
-            StrainType.MOSTLY_INDICA: "mostly indica",
-            StrainType.MOSTLY_SATIVA: "mostly sativa",
-            StrainType.RUDERAILIS: "ruderalis",
+            StrainType.UNKNOWN: _("unknown"),
+            StrainType.INDICA: _("indica"),
+            StrainType.SATIVA: _("sativa"),
+            StrainType.HYBRID: _("indica/sativa hybrid"),
+            StrainType.INDICA_RUDERALIS: _("indica/ruderalis hybrid"),
+            StrainType.SATIVA_RUDERALIS: _("sativa/ruderalis hybrid"),
+            StrainType.HYBRID_RUDERALIS: _("indica/sativa/ruderalis hybrid"),
+            StrainType.MOSTLY_INDICA: _("mostly indica"),
+            StrainType.MOSTLY_SATIVA: _("mostly sativa"),
+            StrainType.RUDERAILIS: _("ruderalis"),
         }
         return mapping[self]
 
@@ -328,6 +330,7 @@ class StrainType(StrEnum):
 
 
 STRAIN_TYPES = [
+    StrainType.UNKNOWN,
     StrainType.INDICA,
     StrainType.SATIVA,
     StrainType.RUDERAILIS,
@@ -367,10 +370,10 @@ class PermissionType(StrEnum):
     @property
     def name_raw(self) -> str:
         mapping = {
-            PermissionType.PUBLIC: "public",
-            PermissionType.PRIVATE: "private",
-            PermissionType.MEMBERS_ONLY: "members only",
-            PermissionType.FRIENDS_ONLY: "friends only",
+            PermissionType.PUBLIC: _("public"),
+            PermissionType.PRIVATE: _("private"),
+            PermissionType.MEMBERS_ONLY: _("members only"),
+            PermissionType.FRIENDS_ONLY: _("friends only"),
         }
         return mapping[self]
 
@@ -429,14 +432,14 @@ class SensorType(StrEnum):
     @property
     def name_raw(self) -> str:
         mapping = {
-            SensorType.TEMPERATURE: "temperature",
-            SensorType.HUMIDITY: "humidity",
-            SensorType.SOIL_MOISTURE: "soil moisture",
-            SensorType.LIGHT_INTENSITY: "light intensity",
-            SensorType.CO2_LEVEL: "CO2 level",
-            SensorType.PH: "pH",
-            SensorType.EC: "electrical conductivity",
-            SensorType.TEMPERATURE_MEDIUM: "medium temperature",
+            SensorType.TEMPERATURE: _("temperature"),
+            SensorType.HUMIDITY: _("humidity"),
+            SensorType.SOIL_MOISTURE: _("soil moisture"),
+            SensorType.LIGHT_INTENSITY: _("light intensity"),
+            SensorType.CO2_LEVEL: _("CO2 level"),
+            SensorType.PH: _("pH"),
+            SensorType.EC: _("electrical conductivity"),
+            SensorType.TEMPERATURE_MEDIUM: _("medium temperature"),
         }
         return mapping[self]
 

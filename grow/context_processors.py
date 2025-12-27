@@ -10,4 +10,5 @@ def grow(request: HttpRequest) -> dict[str, Any]:
 
     return {
         'base_template': settings.BASE_TEMPLATE,
+        'use_bootstrap': settings.USE_BOOTSTRAP,
     }
