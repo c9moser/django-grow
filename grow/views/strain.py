@@ -5,6 +5,7 @@ from django.views.generic.edit import (
     CreateView,
     UpdateView,
 )
+from django.db.models.functions import Lower
 
 from ._base import BaseView
 from ..api.models import (
@@ -18,13 +19,32 @@ class BreederIndexView(BaseView):
 
     def get(self, request: HttpRequest) -> HttpResponse:
         breeders_allowed_to_edit = [breeder.id for breeder in Breeder.objects.all()]
+        breeders_id_label = []
+        breeder_ids = []
+        breeders = []
+
+        breeder_id_format = "breeder-{}"
+        for breeder in Breeder.objects.all().order_by(Lower("name")):
+            breeders.append(breeder)
+            if breeder.name[0].isdigit():
+                if 'breeder-num' in breeder_ids:
+                    breeders_id_label.append((breeder, None, None))
+                else:
+                    breeders_id_label.append((breeder, 'breeder-num', '0-9'))
+            else:
+                id = breeder_id_format.format(breeder.name[0].lower())
+                if id in breeder_ids:
+                    breeders_id_label.append((breeder, None, None))
+                else:
+                    breeder_ids.append(id)
+                    breeders_id_label.append((breeder, id, breeder.name[0].upper()))
 
         return render(request, self.template_name, context={
             'breeder_count': Breeder.objects.count(),
-            'breeders': Breeder.objects.all().order_by("name"),
+            'breeders': breeders,
+            'breederd_id_label': breeders_id_label,
             'breeders_allowed_to_edit': breeders_allowed_to_edit,
         })
-
 
 
 class BreederView(BaseView):
@@ -53,9 +73,9 @@ class BreederCreateView(CreateView):
     ]
 
     def form_valid(self, form):
-        ret = super().form_valid(form)
+        form.instance.created_by = self.request.user
         self._key = form.cleaned_data['key']
-        return ret
+        return super().form_valid(form)
 
     @property
     def success_url(self):

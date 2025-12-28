@@ -19,7 +19,7 @@ _strain_logo_archname_format = "breeder/strains/{breeder_slug}/{strain_slug}/log
 _strain_image_archname_format = "breeder/strains/{breeder_slug}/{strain_slug}/images/{basename}"
 
 
-def export_data() -> bool:
+def export_data(filename: str | Path | None) -> bool:
     def export_strain(zfile: zipfile.ZipFile, strain: Strain) -> str:
         data = {
             'name': strain.name,
@@ -87,14 +87,25 @@ def export_data() -> bool:
         from tinywiki.utils import export_wiki_content
 
     timestamp = now()
-    exports_file = Path(settings.GROW_EXPORTS_FILE_FORMAT.format(
-        timestamp.strftime("%Y%m%d%H%M%S")
-    )).resolve()
+
+    if filename:
+        exports_version = False
+        if not isinstance(filename, Path):
+            exports_file = Path(filename).resolve()
+        else:
+            exports_file = filename
+    else:
+        exports_version = True
+        exports_file = Path(settings.GROW_EXPORTS_FILE_FORMAT.format(
+            timestamp.strftime("%Y%m%d%H%M%S")
+        )).resolve()
 
     if include_wiki:
         export_wiki_content("grow", exports_file, prefix="grow-")
 
-    with zipfile.ZipFile(exports_file, "a", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as zf:
+    with zipfile.ZipFile(exports_file, "a",
+                         compression=zipfile.ZIP_DEFLATED,
+                         compresslevel=9) as zf:
         for breeder in Breeder.objects.all().order_by('slug'):
             breeder_data = {
                 'slug': breeder.slug,
@@ -137,11 +148,12 @@ def export_data() -> bool:
             if os.path.isfile(ef):
                 os.unlink(ef)
 
-    exports = exports[settings.GROW_EXPORTS_VERSIONS - 1:]
-    exports.insert(0, os.path.basename(exports_file))
+    if exports_version:
+        exports = exports[settings.GROW_EXPORTS_VERSIONS - 1:]
+        exports.insert(0, os.path.basename(exports_file))
 
-    with open(settings.GROW_EXPORTS_VERSIONS_FILE, "wt", encoding="utf-8") as vofile:
-        vofile.write('\n'.join(exports))
+        with open(settings.GROW_EXPORTS_VERSIONS_FILE, "wt", encoding="utf-8") as vofile:
+            vofile.write('\n'.join(exports))
 
     return True
 
@@ -156,7 +168,7 @@ def import_data(filename: str | Path, user=None) -> bool:
         except UserModel.DoesNotExist:
             return user
 
-    def import_breeder(zarchive: zipfile.ZipFile, arcname: str, slug:str):
+    def import_breeder(zarchive: zipfile.ZipFile, arcname: str, slug: str):
         try:
             data = json.loads(zarchive.read(arcname).decode("utf-8"))
         except Exception:
