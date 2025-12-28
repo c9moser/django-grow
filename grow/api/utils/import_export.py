@@ -8,10 +8,10 @@ from django.utils.timezone import now
 from django.conf import settings as django_settings
 from django.core.files.images import ImageFile
 from django.contrib.auth import get_user_model
-from .exceptions import NotFileError, FileFormatError
-from . import settings
-from .models import Breeder, Strain, StrainImage
-from .enums import TextType
+from ..exceptions import NotFileError, FileFormatError
+from .. import settings
+from ..models import Breeder, Strain, StrainImage
+from ..enums import TextType
 
 
 _breeder_logo_archname_format = "breeder/logos/{basename}"

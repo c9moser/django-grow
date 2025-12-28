@@ -469,3 +469,106 @@ SENSOR_TYPES = [
     SensorType.TEMPERATURE_MEDIUM,
 ]
 SENSOR_TYPE_CHOICES = [(st.value, st.name_lazy) for st in SENSOR_TYPES]
+
+
+class LengthUnit(StrEnum):
+    METRIC = 'metric'
+    IMPERIAL = 'imperial'
+
+    @staticmethod
+    def from_string(string: str) -> "LengthUnit":
+        mapping = {
+            LengthUnit.METRIC.value: LengthUnit.METRIC,
+            LengthUnit.IMPERIAL.value: LengthUnit.IMPERIAL,
+        }
+
+        try:
+            return mapping[string.lower()]
+        except KeyError:
+            raise ValueError("Not a valid length unit!")
+
+    @property
+    def name_raw(self) -> str:
+        mapping = {
+            LengthUnit.METRIC: _("metric"),
+            LengthUnit.IMPERIAL: _("imerial"),
+        }
+        return mapping[self]
+
+    @property
+    def name_lazy(self):
+        return gettext_lazy(self.name_raw)
+
+    @property
+    def name(self):
+        return gettext(self.name_raw)
+
+    def __str__(self):
+        return self.value
+
+    @property
+    def __repr__(self):
+        return f"<LengthUnits: {self.value.upper()}>"
+
+
+LENGTH_UNITS = [
+    LengthUnit.METRIC,
+    LengthUnit.IMPERIAL,
+]
+LENGTH_UNIT_CHOICES = [(lu.value, lu.name_lazy) for lu in LENGTH_UNITS]
+
+
+class TemperatureUnit(StrEnum):
+    CELCIUS = "C"
+    FAHRENHEIT = "F"
+    KELVIN = "K"
+
+    @staticmethod
+    def from_string(string: str) -> "TemperatureUnit":
+        mapping = {
+            'C': TemperatureUnit.CELCIUS,
+            'CELCIUS': TemperatureUnit.CELCIUS,
+            'F': TemperatureUnit.FAHRENHEIT,
+            'FAHRENHEIT': TemperatureUnit.FAHRENHEIT,
+            'K': TemperatureUnit.KELVIN,
+            'KELVIN': TemperatureUnit.KELVIN,
+        }
+        try:
+            return mapping[string.upper()]
+        except KeyError:
+            raise ValueError("Not a valid temperature unit!")
+
+    @property
+    def name_raw(self) -> str:
+        mapping = {
+            TemperatureUnit.CELCIUS: _("Celcius"),
+            TemperatureUnit.FAHRENHEIT: _("Fahrenheit"),
+            TemperatureUnit.KELVIN: _("Kelvin"),
+        }
+        return mapping[self]
+
+    @property
+    def name_lazy(self):
+        return gettext_lazy(self.name_raw)
+
+    @property
+    def name(self) -> str:
+        return gettext(self.name_raw)
+
+    @property
+    def unit(self):
+        return self.value
+
+    def __str__(self):
+        return self.value
+
+    def __repr__(self):
+        return f"<TemperatureUnit: {self.name_raw.upper()}>"
+
+
+TEMPERATURE_UNITS = [
+    TemperatureUnit.CELCIUS,
+    TemperatureUnit.FAHRENHEIT,
+    TemperatureUnit.KELVIN,
+]
+TEMPERATURE_UNIT_CHOICES = [(tu.value, tu.name_lazy) for tu in TEMPERATURE_UNITS]
