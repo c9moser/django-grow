@@ -67,6 +67,12 @@ class Breeder(models.Model):
         verbose_name=_("owner"),
     )
 
+    creator_name = models.CharField(
+        max_length=255,
+        null=True,
+        blank=True,
+    )
+
     added_at = models.DateTimeField(
         _("added at"),
         auto_now_add=True
@@ -145,6 +151,18 @@ class Strain(models.Model):
         null=True
     )
 
+    strain_url = models.URLField(
+        _("strain homepage"),
+        null=True,
+        blank=True
+    )
+
+    seedfinder_url = models.URLField(
+        _("seedfinder url"),
+        null=True,
+        blank=True
+    )
+
     is_automatic = models.BooleanField(
         _("is automatic"),
         default=False
@@ -172,9 +190,16 @@ class Strain(models.Model):
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         null=True,
+        blank=True,
         on_delete=models.SET_NULL,
         related_name="strains",
         verbose_name=_("created by")
+    )
+    creator_name = models.CharField(
+        _("The name of the creator"),
+        max_length=255,
+        null=True,
+        blank=True
     )
     added_at = models.DateTimeField(
         _("added at"),
@@ -260,6 +285,13 @@ class StrainImage(models.Model):
     uploaded_at = models.DateTimeField(
         _("uploaded at"),
         auto_now_add=True
+    )
+
+    uplaoder_name = models.CharField(
+        _("uploader"),
+        max_length=255,
+        null=True,
+        blank=True,
     )
 
     description = models.TextField(
