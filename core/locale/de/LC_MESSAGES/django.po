@@ -4,12 +4,11 @@
 # Christian Moser <christian@cmoser.eu>, YEAR.
 #
 #, fuzzy
-
 msgid ""
 msgstr ""
 "Project-Id-Version: django-grc.core 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-25 23:15+0100\n"
+"POT-Creation-Date: 2025-12-29 14:07+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Christian Moser <christian@cmoser.eu>\n"
 "Language-Team: de \n"
@@ -18,6 +17,19 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: core/forms/userforms.py:22
+msgid "Password"
+msgstr ""
+
+#: core/forms/userforms.py:27
+msgid "New password"
+msgstr ""
+
+#: core/forms/userforms.py:32
+msgid "Confirm your password"
+msgstr ""
+
 #: core/models.py:37
 msgid "email address"
 msgstr "Email Adresse"
@@ -45,3 +57,31 @@ msgstr ""
 #: core/models.py:43
 msgid "date joined"
 msgstr "Datum beigetreten"
+
+#: core/templates/core/user/hx_account.html:5
+msgid "Account data"
+msgstr ""
+
+#: core/templates/core/user/hx_account.html:58
+msgid "Update my account"
+msgstr ""
+
+#: core/templates/core/user/hx_password.html:4
+msgid "Change password"
+msgstr ""
+
+#: core/templates/core/user/hx_password.html:24
+msgid "Update my password"
+msgstr ""
+
+#: core/templates/core/user/profile_update.html:5
+msgid "My Profile"
+msgstr ""
+
+#: core/views/user.py:58
+msgid "Username is already taken!"
+msgstr ""
+
+#: core/views/user.py:70
+msgid "Email is already taken!"
+msgstr ""

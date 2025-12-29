@@ -1,0 +1,143 @@
+{% extends base_template %}
+{% load i18n widget_tweaks %}
+{% block content %}
+<h1>Create Strain</h1>
+
+<form method="post" enctype="multipart/formdata">
+    {% csrf_token %}
+{% if use_bootstrap %}
+    <div class="form-floating mb-3">
+        <input type="text" id="breeder_name" class="form-control" value="{{ breeder.name }}" readonly disabled>
+        <label for="breeder_name">{% translate "Breeder" %}</label>
+    </div>
+
+    {% if 'name' in form.errors %}
+    <div class="bg-danger text-white p-3">
+        <ul>
+        {% for error in form.errors.name %}
+            <li>{{ error }}</li>
+        {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <div class="form-floating mb-3">
+        {% render_field form.name class="form-control" placeholder=form.name.label %}
+        <label for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+    </div>
+
+    {% if 'slug' in form.errors %}
+    <div class="bg-danger text-white p-3">
+        <ul>
+        {% for error in form.errors.slug %}
+            <li>{{ error }}</li>
+        {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    <div class="form-floating mb-3">
+        {% render_field form.slug class="form-control" placeholder=form.slug.label %}
+        <label for="{{ form.slug.id_for_label }}">{{ form.slug.label }}</label>
+    </div>
+    <div class="form-floating mb-3">
+
+    </div>
+
+    <div class="input-group input-group-lg mb-3">
+        <label id="{{ form.genetics_data.id_for_label }}" class="input-group-text">{% translate "Genetics" %}</label>
+        {% render_field form.genetics_data class="form-control" %}
+    </div>
+
+    {% if 'flowering_time_days' in form.errors %}
+    <div class="bg-danger text-white p-3">
+        <ul>
+        {% for error in form.errors.flowering_time_days %}
+            <li>{{ error }}</li>
+        {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    <div class="input-group mb-3">
+        <span class="input-group-text">
+            <span class="me-2 text-truncate ">{% translate "Regular" %}</span>
+            <label for="{{ form.is_regular.id_for_label }}" class="visually-hidden">
+                {{ form.is_regular.label }}
+            </label>
+            {% render_field form.is_regular class="form-check-input" %}
+        </span>
+
+
+        <span class="input-group-text">
+            <span class="me-2 d-inline-block text-truncate">{% translate "Feminized" %}</span>
+            <label for="{{ form.is_feminized.id_for_label }}" class="visually-hidden">
+                {{ form.is_feminized.label }}
+            </label>
+            {% render_field form.is_feminized class="form-check-input" %}
+        </span>
+
+        <span class="input-group-text">
+            <div class="text-truncate me-2">{% translate "Automatic" %}</div>
+            <label for="{{ form.is_automatic.id_for_label }}" class="visually-hidden">
+                {{ form.is_automatic.label }}
+            </label>
+            {% render_field form.is_automatic class="form-check-input" %}
+        </span>
+    </div>
+    <div class="input-group mb-3" id='flowering_time_div'>
+        <div class="form-floating">
+            {% render_field form.flowering_time_days class="form-control" style="min-width:75px;" placeholder=form.flowering_time_days %}
+            <label for="{{ form.flowering_time_days.id_for_label }}">{{ form.flowering_time_days.label }}</label>
+        </div>
+        {{ form.flowering_time_unit }}
+    </div>
+
+
+    <div class="input-group input-group-lg mb-3">
+        <label for="{{ form.description_type.id_for_label }}" class="input-group-text">{{ form.description_type.label }}</label>
+        {% render_field form.description_type class="form-control" %}
+    </div>
+
+    <div class="form-floating mb-3">
+        {% render_field form.description class="form-control" style="height:20rem;"%}
+        <label for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
+    </div>
+
+    <div class="text-end">
+{% else %}
+    <p>
+        <label for="breeder_name">{% translate "Breeder" %}</label>
+        <input type="text" id="breeder_name" class="form-control" value="{{ breeder.name }}" readonly disabled>
+    </p>
+    {{ form.as_p }}
+{% endif %}
+    {% block form_buttons %}{% endblock form_buttons %}
+{% if use_bootstrap %}
+    </div>
+{% endif %}
+</form>
+{% endblock %}
+
+{% block extra_scripts %}
+{% if use_bootstrap %}
+<script>
+unction fixFloweringTimeUnitStyling() {
+    var ftu = document.getElementById('id_flowering_time_unit');
+    var ft = document.getElementById('flowering_time_div');
+    var children = ftu.children
+    var n_children = children.length;
+    for (var i=0; i < n_children; ++i) {
+        var child_div = children[i];
+        var label = child_div.children[0];
+
+        label.classList.add("input-group-text");
+        label.children[0].classList.add("me-2");
+        label.children[0].classList.add('form-check-input');
+        ft.appendChild(label);
+    }
+    ft.removeChild(ftu);
+}
+
+fixFloweringTimeUnitStyling();
+</script>
+{% endif %}{# use_bootstrap #}
+{% endblock %}

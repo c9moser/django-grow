@@ -17,7 +17,7 @@ from django.urls import reverse_lazy
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+LOCAL_SETTINGS_DIR = Path(__file__).resolve().parent / 'local'
 env = Env(
     GROW_DEBUG=(bool, False),
     GROW_SECRET_KEY=(str, 'django-insecure-#zp@r)@gr(f%o3y3*g1dup_z+@lt$o)mgq#8ne%llaz4vh82lf'),
@@ -46,18 +46,37 @@ env = Env(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool('GROW_DEBUG')
 
-if (BASE_DIR / '.env').exists():
+if (BASE_DIR / '.env').is_file():
     env.read_env(BASE_DIR / '.env')
-if DEBUG and (BASE_DIR / '.env.dev').exists():
-    env.read_env(BASE_DIR / '.env.dev')
-elif not DEBUG and (BASE_DIR / '.env.prod').exists():
-    env.read_env(BASE_DIR / '.env.prod')
+if (LOCAL_SETTINGS_DIR / '.env').exists():
+    env.read_env(LOCAL_SETTINGS_DIR / '.env')
+
+
+if DEBUG and (BASE_DIR / '.env-dev').is_file():
+    env.read_env(BASE_DIR / '.env-dev')
+elif not DEBUG and (BASE_DIR / '.env-prod').is_file():
+    env.read_env(BASE_DIR / '.env-prod')
+
+# HERE for docker includes
+if DEBUG and (LOCAL_SETTINGS_DIR / '.env-dev').is_file():
+    env.read_env(LOCAL_SETTINGS_DIR / '.env-dev')
+elif not DEBUG and (LOCAL_SETTINGS_DIR / 'local' / '.env-prod').is_file():
+    env.read_env(LOCAL_SETTINGS_DIR / 'local' / '.env-prod')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env('GROW_SECRET_KEY')
+if (LOCAL_SETTINGS_DIR / 'secret_key').is_file():
+    with open(LOCAL_SETTINGS_DIR / 'secret_key', 'rt', encoding='utf-8') as skf:
+        SECRET_KEY = skf.readline().strip()
+
+if (LOCAL_SETTINGS_DIR / 'secret_key_fallabcks').is_file():
+    with open(LOCAL_SETTINGS_DIR / 'secret_key_fallbacks', 'rt', encoding='utf-8') as skf:
+        SECRET_KEY_FALLBACKS = [
+            line.strip() for line in skf.readlines() if line.strip()
+        ]
 
 ALLOWED_HOSTS = env('GROW_ALLOWED_HOSTS')
 
@@ -163,7 +182,10 @@ AUTHENTICATION_BACKENDS = [
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
 LANGUAGE_CODE = env('GROW_LANGUAGE_CODE')
-
+LANGUAGES = [
+    ('en-us', 'English (US)'),
+    ('de', 'Deutsch'),
+]
 TIME_ZONE = env('GROW_TIME_ZONE')
 
 USE_I18N = True

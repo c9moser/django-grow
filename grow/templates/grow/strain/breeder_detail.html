@@ -22,8 +22,8 @@ There are {{ n }} for the strains of <i>{{ name }}</i>.
 {% endblocktranslate %}
 </p>
 
-{% if use_bootstrap %}
 <h2>Strains</h2>
+{% if use_bootstrap %}
 <table class="table table-hover">
     <thead>
         <tr>
@@ -31,15 +31,30 @@ There are {{ n }} for the strains of <i>{{ name }}</i>.
             <th>Genetics</th>
             <th>Flowering time</th>
             <th>Growlogs</th>
+            <th>
+            {% if can_add_strains %}
+                {% if use_bootstrap %}
+                <a href="{% url 'grow:strain-create' breeder_slug=breeder.slug %}"
+                    class="link-body-emphasis link-opacity-50 link-opacity-75-hover"
+                ><i class="bi bi-plus-square"></i></a>
+
+                {% else %}
+                <a href="{% url 'grow:strain-create' %}">Add</a>
+                {% endif %}
+                {% else %}
+            {% endif %}
+            </th>
         </tr>
     </thead>
     <tbody class="table-group-divider">
-    {% for strain in growlog.strains_sorted %}
+    {% for strain in breeder.strains_sorted %}
         <tr>
-            <td><a href="#">{{ strain.name }}</a></td>
+            <td><a href="{% url 'grow:strain-detail' breeder_slug=breeder.slug slug=strain.slug %}"
+                class="link-body-emphasis link-opacity-50 link-opacity-75-hover link-underline-opacity-50 link-underline-opacity-75-hover"
+            >{{ strain.name }}</a></td>
             <td>{{ strain.genetics.name }}</td>
             <td>
-                {% blocktranslate with days=strain.flowering_days count n=strain.flowering_days%}
+                {% blocktranslate with days=strain.flowering_time_days count n=strain.flowering_time_days%}
                 {{ days }} day
                 {% plural %}
                 {{ days }} days
@@ -50,7 +65,15 @@ There are {{ n }} for the strains of <i>{{ name }}</i>.
                 {{ growlogs }} growlog
                 {% plural %}
                 {{ growlogs }} growlogs
-                {% endblocktranslate %}</td>
+                {% endblocktranslate %}
+            </td>
+            <td>
+                {% if strain.id in strains_allowed_to_edit %}
+                <a href="{% url 'grow:strain-update' breeder_slug=breeder.slug slug=strain.slug %}"
+                    class="link-body-emphasis link-opacity-50 link-opacity-75-hover"
+                ><i class="bi bi-plus-square"></i></a>
+                {% endif %}
+            </td>
         <tr>
     {% endfor %}
     </tbody>
@@ -66,15 +89,25 @@ There are {{ n }} for the strains of <i>{{ name }}</i>.
         </tr>
     </thead>
     <tbody>
-    {% for strain in growlog.strains_sorted %}
+    {% for strain in strains %}
         <tr>
             <td><a href="#">{{ strain.name }}</a></td>
             <td>{{ strain.strain_type.name }}</td>
             <td>{{ strain.flowering_time }} days</td>
             <td>{{ strain.growlog_count }}</td>
+            <td>
+            {% if strain.id in strains_allowed_to_edit %}
+                {% if use_bootstrap %}
+                {% else %}
+                <a href="{% url 'grow:strain-update' breeder_slug=breeder.slug slug=strain.slug %}">
+                </a>
+                {% endif %}
+            {% endif%}
+            </td>
         <tr>
     {% endfor %}
     </tbody>
 </table>
+
 {% endif %}
 {% endblock content%}

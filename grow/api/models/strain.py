@@ -3,6 +3,7 @@ Strain models
 """
 
 from django.db import models
+from django.db.models.functions import Upper
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 from ..enums import (
@@ -28,10 +29,11 @@ class Breeder(models.Model):
         blank=True,
         null=True
     )
-    description_type = models.CharField(
+    description_type_data = models.CharField(
         _("description type"),
         max_length=50,
         default="markdown",
+        db_column="description_type",
         choices=TEXT_CHOICES
     )
 
@@ -40,6 +42,7 @@ class Breeder(models.Model):
         blank=True,
         null=True
     )
+
     logo_image = models.ImageField(
         _("logo image"),
         upload_to='grow/breeder_logos/',
@@ -79,6 +82,20 @@ class Breeder(models.Model):
     )
 
     @property
+    def description_type(self):
+        return TextType.from_string(self.description_type_data)
+
+    @description_type.setter
+    def description_type(self, text_type: TextType | str):
+        if not isinstance(text_type, TextType):
+            text_type = TextType.from_string(TextType)
+        self.description_type_data = text_type.value
+
+    @property
+    def strains_sorted(self):
+        return self.strains.all().order_by(Upper('name'))
+
+    @property
     def strain_count(self) -> int:
         return self.strains.count()
 
@@ -99,7 +116,7 @@ class Breeder(models.Model):
     def strains_with_growlogs_count(self) -> int:
         ret = 0
         for strain in self.strains.all():
-            if strain.growlog_count() > 0:
+            if strain.growlog_count > 0:
                 ret += 1
         return ret
 
@@ -117,7 +134,7 @@ class Strain(models.Model):
         max_length=255
     )
     name = models.CharField(
-        _("breeder name"),
+        _("strain name"),
         max_length=255
     )
     description = models.TextField(
@@ -180,11 +197,13 @@ class Strain(models.Model):
         _("flowering time (days)"),
         default=0
     )
+
     genetics_data = models.CharField(
         _("strain type"),
-        max_length=50,
+        max_length=127,
         choices=STRAIN_TYPE_CHOICES,
-        db_column="genetics"
+        default=StrainType.UNKNOWN,
+        db_column="genetics",
     )
 
     created_by = models.ForeignKey(

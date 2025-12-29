@@ -1,0 +1,61 @@
+{% load i18n widget_tweaks %}
+<form method="POST" id="accountForm" class="mb-3">
+    {% csrf_token %}
+    <fieldset class="p-3 border rounded">
+        <legend>{% translate "Account data" %}</legend>
+        {% if username_error %}
+        <div class="p-3 bg-danger text-white">
+            {{ username_error }}
+        </div>
+        {% endif %}
+        <div class="form-floating mb-3">
+            {% if username_valid %}
+                {% render_field form.username class="form-control is-valid" %}
+            {% elif username_error %}
+                {% render_field form.username class="form-control is-invalid" %}
+            {% else %}
+                {% render_field form.username class="form-control" %}
+            {% endif %}
+            <label for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
+        </div>
+        {% if email_error %}
+        <div class="p-3 bg-danger text-white">
+            {{ email_error }}
+        </div>
+        {% endif %}
+        <div class="form-floating mb-3">
+            {% if email_valid %}
+                {% render_field form.email class="form-control is-valid" %}
+            {% elif email_error %}
+                {% render_field form.email class="form-control is-invalid" %}
+            {% else %}
+                {% render_field form.email class="form-control" %}
+            {% endif %}
+            <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+        </div>
+        <div class="form-floating mb-3">
+            {% if first_name_valid %}
+                {% render_field form.first_name class="form-control is-valid" %}
+            {% else %}
+                {% render_field form.first_name class="form-control" %}
+            {% endif %}
+            <label for="{{ form.first_name.id_for_label }}">{{ form.first_name.label }}</label>
+        </div>
+        <div class="form-floating mb-3">
+            {% if last_name_valid %}
+                {% render_field form.last_name class="form-control is-valid" %}
+            {% else %}
+                {% render_field form.last_name class="form-control" %}
+            {% endif %}
+            <label for="{{ form.last_name.id_for_label }}">{{ form.last_name.label }}</label>
+        </div>
+        <div class="text-end">
+            <button type="submit"
+                class="btn btn-success"
+                hx-post="{% url 'core:hx_account' %}"
+                hx-swap="outerHTML"
+                hx-target="#accountForm"
+            ><i class="bi bi-person-check me-2"></i>{% translate "Update my account" %}</button>
+        </div>
+    </fieldset>
+</form>

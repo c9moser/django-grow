@@ -1,0 +1,22 @@
+{% extends base_template %}
+{% load i18n %}
+
+{% block content %}
+<h1 class="mb-4">{% translate "My Profile" %}</h1>
+
+<form id="accountForm"
+    hx-target="#accountForm"
+    hx-get="{% url 'core:hx_account' %}"
+    hx-trigger="load"
+    hx-swap="outerHTML"
+></form>
+
+<form id="passwordForm"
+    hx-target="#passwordForm"
+    hx-get="{% url 'core:hx_password' %}"
+    hx-trigger="load"
+    hx-swap="outerHTML"
+></form>
+
+</fieldset>
+{% endblock content %}

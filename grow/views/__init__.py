@@ -4,4 +4,7 @@ from .strain import (  # noqa
     BreederView,
     BreederCreateView,
     BreederUpdateView,
+    StrainCreateView,
+    StrainUpdateView,
+    StrainView,
 )

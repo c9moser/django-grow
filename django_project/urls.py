@@ -21,6 +21,7 @@ from django.contrib import admin
 urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('api/', include('grow.api.urls')),
+    path('', include('core.urls')),
     path('', include('grow.urls')),
 ]
 if settings.ADMIN_URL:

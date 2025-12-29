@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: django-grc.api 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-25 23:15+0100\n"
+"POT-Creation-Date: 2025-12-29 14:07+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Christian Moser <christian@cmoser.eu>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,280 +17,520 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-#: grow/api/enums.py:116 grow/api/enums.py:117
+
+#: grow/api/enums.py:45
+msgid "indoor"
+msgstr ""
+
+#: grow/api/enums.py:46
+msgid "outdoor"
+msgstr ""
+
+#: grow/api/enums.py:47
+msgid "greenhouse"
+msgstr ""
+
+#: grow/api/enums.py:48
+msgid "balcony"
+msgstr ""
+
+#: grow/api/enums.py:117
+msgid "led"
+msgstr ""
+
+#: grow/api/enums.py:118 grow/api/enums.py:119
 msgid "High Pressure Sodium"
 msgstr "Natriumhochdruck"
 
-#: grow/api/enums.py:118 grow/api/enums.py:119
+#: grow/api/enums.py:120 grow/api/enums.py:121
 msgid "Metal Halide"
 msgstr "Metallhalogen"
 
-#: grow/api/models/growlog.py:21
-msgid "This determines who can view the grow log."
-msgstr "Dies bestimmt wer den Growlog ansehen kann."
+#: grow/api/enums.py:180
+msgid "soil"
+msgstr ""
 
-#: grow/api/models/growlog.py:25 grow/api/models/location.py:20
-#: grow/api/models/location.py:64 grow/api/models/location.py:144
-#: grow/api/models/sensors.py:13 grow/api/models/strain.py:12
-#: grow/api/models/strain.py:58
-msgid "key"
-msgstr "Schlüssel"
+#: grow/api/enums.py:181
+msgid "hydroponic"
+msgstr ""
 
-#: grow/api/models/growlog.py:28 grow/api/models/location.py:23
-#: grow/api/models/location.py:67 grow/api/models/location.py:147
-#: grow/api/models/sensors.py:16 grow/api/models/strain.py:15
-#: grow/api/models/strain.py:60
-msgid "name"
-msgstr "Name"
+#: grow/api/enums.py:182
+msgid "aeroponic"
+msgstr ""
 
-#: grow/api/models/growlog.py:30 grow/api/models/growlog.py:577
-#: grow/api/models/location.py:33 grow/api/models/location.py:122
-#: grow/api/models/location.py:165 grow/api/models/strain.py:17
-#: grow/api/models/strain.py:62 grow/api/models/strain.py:119
-msgid "description"
-msgstr "Beschreibung"
+#: grow/api/enums.py:233
+msgid "markdown"
+msgstr ""
 
-#: grow/api/models/growlog.py:33 grow/api/models/growlog.py:581
-#: grow/api/models/location.py:36 grow/api/models/location.py:125
-#: grow/api/models/location.py:168 grow/api/models/strain.py:20
-#: grow/api/models/strain.py:65 grow/api/models/strain.py:120
-msgid "description type"
-msgstr "Beschreibungstyp"
+#: grow/api/enums.py:234
+msgid "bbcode"
+msgstr ""
 
-#: grow/api/models/growlog.py:42 grow/api/models/strain.py:175
-msgid "notes"
-msgstr "Notizen"
+#: grow/api/enums.py:298
+msgid "unknown"
+msgstr ""
 
-#: grow/api/models/growlog.py:45
-msgid "notes type"
-msgstr "Notizentyp"
+#: grow/api/enums.py:299
+msgid "indica"
+msgstr ""
 
-#: grow/api/models/growlog.py:58
-msgid "grower"
-msgstr "Grower"
+#: grow/api/enums.py:300
+msgid "sativa"
+msgstr ""
 
-#: grow/api/models/growlog.py:60
-msgid "started at"
-msgstr "Gestartet am"
+#: grow/api/enums.py:301
+msgid "indica/sativa hybrid"
+msgstr ""
 
-#: grow/api/models/growlog.py:64
-msgid "germinated at"
-msgstr "Gekeimt am"
+#: grow/api/enums.py:302
+msgid "indica/ruderalis hybrid"
+msgstr ""
 
-#: grow/api/models/growlog.py:68
-msgid "flowering at"
-msgstr "Blüte am"
+#: grow/api/enums.py:303
+msgid "sativa/ruderalis hybrid"
+msgstr ""
 
-#: grow/api/models/growlog.py:72
-msgid "harvested at"
-msgstr "Geerntet am"
+#: grow/api/enums.py:304
+msgid "indica/sativa/ruderalis hybrid"
+msgstr ""
 
-#: grow/api/models/growlog.py:76
-msgid "finished at"
-msgstr "Beendet am"
+#: grow/api/enums.py:305
+msgid "mostly indica"
+msgstr ""
 
-#: grow/api/models/growlog.py:80
-msgid "permission"
-msgstr "Berechtigung"
+#: grow/api/enums.py:306
+msgid "mostly sativa"
+msgstr ""
 
-#: grow/api/models/growlog.py:429 grow/api/models/growlog.py:452
-msgid "grow log"
-msgstr "Growlog"
+#: grow/api/enums.py:307
+msgid "ruderalis"
+msgstr ""
 
-#: grow/api/models/growlog.py:433 grow/api/models/strain.py:112
-#: grow/api/models/strain.py:148 grow/api/models/strain.py:163
-msgid "strain"
-msgstr "Sorte"
+#: grow/api/enums.py:367
+msgid "public"
+msgstr ""
 
-#: grow/api/models/growlog.py:435
-msgid "from seed"
-msgstr "vom Samen"
+#: grow/api/enums.py:368
+msgid "private"
+msgstr ""
 
-#: grow/api/models/growlog.py:438 grow/api/models/strain.py:170
-msgid "quantity"
-msgstr "Menge"
+#: grow/api/enums.py:369
+msgid "members only"
+msgstr ""
 
-#: grow/api/models/growlog.py:453 grow/api/models/sensors.py:39
-msgid "timestamp"
-msgstr "Zeitstempel"
+#: grow/api/enums.py:370
+msgid "friends only"
+msgstr ""
 
-#: grow/api/models/growlog.py:454
-msgid "content"
-msgstr "Inhalt"
+#: grow/api/enums.py:429
+msgid "temperature"
+msgstr ""
 
-#: grow/api/models/growlog.py:455
-msgid "content type"
-msgstr "Inhaltstyp"
+#: grow/api/enums.py:430
+msgid "humidity"
+msgstr ""
 
-#: grow/api/models/growlog.py:466 grow/api/models/location.py:73
-#: grow/api/models/location.py:153 grow/api/models/sensors.py:21
-msgid "location"
-msgstr "Ort"
+#: grow/api/enums.py:431
+msgid "soil moisture"
+msgstr ""
 
-#: grow/api/models/growlog.py:573
-msgid "growlog entry"
-msgstr "Growlog Eintrag"
-
-#: grow/api/models/growlog.py:574 grow/api/models/strain.py:149
-msgid "image"
-msgstr "Bild"
-
-#: grow/api/models/growlog.py:589
-msgid "is plant image"
-msgstr "ist ein Pflanezenbild"
-
-#: grow/api/models/location.py:26
-msgid "location type"
-msgstr "Ortstyp"
-
-#: grow/api/models/location.py:48 grow/api/models/strain.py:46
-msgid "owner"
-msgstr "Eigentümer"
-
-#: grow/api/models/location.py:75
-msgid "lighting"
-msgstr "Beleuchtung"
-
-#: grow/api/models/location.py:83
-msgid "light cycle hours"
-msgstr "Lichtzyklus in Stunden"
-
-#: grow/api/models/location.py:84
-msgid "Number of hours the light is on during a 24-hour period."
-msgstr "Anzahl der Stunden in denen das Licht in einer 24 Stunden Periode eingeschaltet ist."
-
-#: grow/api/models/location.py:89
+#: grow/api/enums.py:432 grow/api/models/location.py:136
 msgid "light intensity"
 msgstr "Lichtintensität"
 
-#: grow/api/models/location.py:90
+#: grow/api/enums.py:433
+msgid "CO2 level"
+msgstr ""
+
+#: grow/api/enums.py:434
+msgid "pH"
+msgstr ""
+
+#: grow/api/enums.py:435
+msgid "electrical conductivity"
+msgstr ""
+
+#: grow/api/enums.py:436
+msgid "medium temperature"
+msgstr ""
+
+#: grow/api/enums.py:487
+msgid "metric"
+msgstr ""
+
+#: grow/api/enums.py:488
+msgid "imerial"
+msgstr ""
+
+#: grow/api/enums.py:538
+msgid "Celcius"
+msgstr ""
+
+#: grow/api/enums.py:539
+msgid "Fahrenheit"
+msgstr ""
+
+#: grow/api/enums.py:540
+msgid "Kelvin"
+msgstr ""
+
+#: grow/api/models/growlog.py:23
+msgid "This determines who can view the grow log."
+msgstr "Dies bestimmt wer den Growlog ansehen kann."
+
+#: grow/api/models/growlog.py:30 grow/api/models/location.py:24
+#: grow/api/models/sensors.py:26 grow/api/models/strain.py:19
+#: grow/api/models/strain.py:133
+msgid "key"
+msgstr "Schlüssel"
+
+#: grow/api/models/growlog.py:36 grow/api/models/location.py:30
+#: grow/api/models/sensors.py:31 grow/api/models/strain.py:24
+msgid "name"
+msgstr "Name"
+
+#: grow/api/models/growlog.py:42 grow/api/models/growlog.py:681
+#: grow/api/models/location.py:46 grow/api/models/location.py:222
+#: grow/api/models/strain.py:28 grow/api/models/strain.py:141
+#: grow/api/models/strain.py:317 grow/api/models/strain.py:323
+msgid "description"
+msgstr "Beschreibung"
+
+#: grow/api/models/growlog.py:48 grow/api/models/growlog.py:688
+#: grow/api/models/location.py:53 grow/api/models/location.py:229
+#: grow/api/models/strain.py:33 grow/api/models/strain.py:146
+#: grow/api/models/strain.py:265
+msgid "description type"
+msgstr "Beschreibungstyp"
+
+#: grow/api/models/growlog.py:57 grow/api/models/strain.py:357
+msgid "notes"
+msgstr "Notizen"
+
+#: grow/api/models/growlog.py:62
+msgid "notes type"
+msgstr "Notizentyp"
+
+#: grow/api/models/growlog.py:74
+msgid "grower"
+msgstr "Grower"
+
+#: grow/api/models/growlog.py:78
+msgid "started at"
+msgstr "Gestartet am"
+
+#: grow/api/models/growlog.py:84
+msgid "germinated at"
+msgstr "Gekeimt am"
+
+#: grow/api/models/growlog.py:91
+#, fuzzy
+#| msgid "started at"
+msgid "Cutted at"
+msgstr "Gestartet am"
+
+#: grow/api/models/growlog.py:98
+msgid "flowering at"
+msgstr "Blüte am"
+
+#: grow/api/models/growlog.py:105
+msgid "harvested at"
+msgstr "Geerntet am"
+
+#: grow/api/models/growlog.py:114
+msgid "finished at"
+msgstr "Beendet am"
+
+#: grow/api/models/growlog.py:123
+msgid "permission"
+msgstr "Berechtigung"
+
+#: grow/api/models/growlog.py:493
+#, fuzzy
+#| msgid "grow log"
+msgid "growlog"
+msgstr "Growlog"
+
+#: grow/api/models/growlog.py:501 grow/api/models/strain.py:254
+#: grow/api/models/strain.py:345
+msgid "strain"
+msgstr "Sorte"
+
+#: grow/api/models/growlog.py:506
+#, fuzzy
+#| msgid "from seed"
+msgid "grown from seed"
+msgstr "vom Samen"
+
+#: grow/api/models/growlog.py:511 grow/api/models/strain.py:352
+msgid "quantity"
+msgstr "Menge"
+
+#: grow/api/models/growlog.py:527
+msgid "grow log"
+msgstr "Growlog"
+
+#: grow/api/models/growlog.py:529 grow/api/models/sensors.py:87
+msgid "timestamp"
+msgstr "Zeitstempel"
+
+#: grow/api/models/growlog.py:535
+msgid "content"
+msgstr "Inhalt"
+
+#: grow/api/models/growlog.py:541
+msgid "content type"
+msgstr "Inhaltstyp"
+
+#: grow/api/models/growlog.py:553 grow/api/models/location.py:114
+#: grow/api/models/location.py:200 grow/api/models/sensors.py:46
+msgid "location"
+msgstr "Ort"
+
+#: grow/api/models/growlog.py:670
+msgid "growlog entry"
+msgstr "Growlog Eintrag"
+
+#: grow/api/models/growlog.py:675 grow/api/models/strain.py:300
+msgid "image"
+msgstr "Bild"
+
+#: grow/api/models/growlog.py:696
+msgid "is plant image"
+msgstr "ist ein Pflanezenbild"
+
+#: grow/api/models/location.py:37
+msgid "location type"
+msgstr "Ortstyp"
+
+#: grow/api/models/location.py:63
+#, fuzzy
+#| msgid "permission"
+msgid "Permission"
+msgstr "Berechtigung"
+
+#: grow/api/models/location.py:64
+msgid ""
+"This defines who can view the location details. If not permitted to view "
+"details only the location type is shown."
+msgstr ""
+
+#: grow/api/models/location.py:76 grow/api/models/strain.py:70
+msgid "owner"
+msgstr "Eigentümer"
+
+#: grow/api/models/location.py:121
+msgid "lighting"
+msgstr "Beleuchtung"
+
+#: grow/api/models/location.py:129
+msgid "light cycle hours"
+msgstr "Lichtzyklus in Stunden"
+
+#: grow/api/models/location.py:130
+msgid "Number of hours the light is on during a 24-hour period."
+msgstr ""
+"Anzahl der Stunden in denen das Licht in einer 24 Stunden Periode "
+"eingeschaltet ist."
+
+#: grow/api/models/location.py:137
 msgid "Light intensity in lumens."
 msgstr "Licht Intensität in Lumen."
 
-#: grow/api/models/location.py:95
+#: grow/api/models/location.py:143
 msgid "light power consumption"
 msgstr "Stromverbrauch des Lichts"
 
-#: grow/api/models/location.py:96 grow/api/models/location.py:108
+#: grow/api/models/location.py:144 grow/api/models/location.py:158
 msgid "Power consumption in Watts."
 msgstr "Stromverbrauch in Watt"
 
-#: grow/api/models/location.py:101
+#: grow/api/models/location.py:150
 msgid "ventilation intensity"
 msgstr "Intensität der Belüftung"
 
-#: grow/api/models/location.py:102
+#: grow/api/models/location.py:151
 msgid "Ventilation intensity in cubic meters per hour."
 msgstr "Intensität der Blüftung in Kubikmeter pro Stunde"
 
-#: grow/api/models/location.py:107
+#: grow/api/models/location.py:157
 msgid "ventilation power consumption"
 msgstr "Stromverbrauch der Belüftung"
 
-#: grow/api/models/location.py:112
+#: grow/api/models/location.py:164
 msgid "width"
 msgstr "Breite"
 
-#: grow/api/models/location.py:114
+#: grow/api/models/location.py:166
 msgid "Width in centimeters."
 msgstr "Breite in Zentimeter"
 
-#: grow/api/models/location.py:115
+#: grow/api/models/location.py:171
 msgid "height"
 msgstr "Höhe"
 
-#: grow/api/models/location.py:117
+#: grow/api/models/location.py:173
 msgid "Height in centimeters."
 msgstr "Höhe in Zentimeter"
 
-#: grow/api/models/location.py:118
+#: grow/api/models/location.py:178
 msgid "depth"
 msgstr "Tiefe"
 
-#: grow/api/models/location.py:120
+#: grow/api/models/location.py:180
 msgid "Depth in centimeters."
 msgstr "Tiefe in Zenitmeter"
 
-#: grow/api/models/location.py:154
+#: grow/api/models/location.py:205
 msgid "longitude"
 msgstr "Längengrad"
 
-#: grow/api/models/location.py:159
+#: grow/api/models/location.py:212
 msgid "latitude"
 msgstr "Bretiengrad"
 
-#: grow/api/models/sensors.py:23
+#: grow/api/models/sensors.py:51
 msgid "sensor type"
 msgstr "Sensortyp"
 
-#: grow/api/models/sensors.py:38
+#: grow/api/models/sensors.py:82
 msgid "readings"
 msgstr "Lesungen"
 
-#: grow/api/models/sensors.py:41
+#: grow/api/models/sensors.py:91
 msgid "value"
 msgstr "Wert"
 
-#: grow/api/models/strain.py:27 grow/api/models/strain.py:77
+#: grow/api/models/sensors.py:104
+msgid "Date"
+msgstr ""
+
+#: grow/api/models/sensors.py:109
+#, fuzzy
+#| msgid "readings"
+msgid "The readings"
+msgstr "Lesungen"
+
+#: grow/api/models/sensors.py:114
+msgid "Compressed readings"
+msgstr ""
+
+#: grow/api/models/strain.py:41 grow/api/models/strain.py:159
 msgid "logo URL"
 msgstr "Logo URL"
 
-#: grow/api/models/strain.py:30
-msgid "logo icon"
-msgstr "Logo Icon"
+#: grow/api/models/strain.py:47 grow/api/models/strain.py:165
+#, fuzzy
+#| msgid "image"
+msgid "logo image"
+msgstr "Bild"
 
-#: grow/api/models/strain.py:35
+#: grow/api/models/strain.py:54
 msgid "Seedfinder URL"
 msgstr "Seedfinder URL"
 
-#: grow/api/models/strain.py:38
+#: grow/api/models/strain.py:60
 msgid "breeder URL"
 msgstr "Züchter URL"
 
-#: grow/api/models/strain.py:75
+#: grow/api/models/strain.py:80 grow/api/models/strain.py:224
+#, fuzzy
+#| msgid "uploaded at"
+msgid "added at"
+msgstr "hochgeladen am"
+
+#: grow/api/models/strain.py:137
+#, fuzzy
+#| msgid "strain type"
+msgid "strain name"
+msgstr "Sortentypus"
+
+#: grow/api/models/strain.py:155
 msgid "breeder"
 msgstr "Züchter"
 
-#: grow/api/models/strain.py:81
-msgid "logo"
-msgstr "Logo"
+#: grow/api/models/strain.py:172
+#, fuzzy
+#| msgid "strain type"
+msgid "strain homepage"
+msgstr "Sortentypus"
 
-#: grow/api/models/strain.py:86
+#: grow/api/models/strain.py:178
+#, fuzzy
+#| msgid "Seedfinder URL"
+msgid "seedfinder url"
+msgstr "Seedfinder URL"
+
+#: grow/api/models/strain.py:184
 msgid "is automatic"
 msgstr "ist Automatik"
 
-#: grow/api/models/strain.py:88
+#: grow/api/models/strain.py:188
 msgid "is feminized"
 msgstr "ist Feminisiert"
 
-#: grow/api/models/strain.py:90
+#: grow/api/models/strain.py:192
+msgid "is regular"
+msgstr ""
+
+#: grow/api/models/strain.py:197
 msgid "flowering time (days)"
 msgstr "Blütezeit"
 
-#: grow/api/models/strain.py:92
+#: grow/api/models/strain.py:202
 msgid "strain type"
 msgstr "Sortentypus"
 
-#: grow/api/models/strain.py:117 grow/api/models/strain.py:168
+#: grow/api/models/strain.py:215
+#, fuzzy
+#| msgid "created at"
+msgid "created by"
+msgstr "Erstellt am"
+
+#: grow/api/models/strain.py:218
+msgid "The name of the creator"
+msgstr ""
+
+#: grow/api/models/strain.py:260 grow/api/models/strain.py:350
 msgid "user"
 msgstr "Nutzer"
 
-#: grow/api/models/strain.py:128
+#: grow/api/models/strain.py:263
+msgid "comment"
+msgstr ""
+
+#: grow/api/models/strain.py:272
 msgid "created at"
 msgstr "Erstellt am"
 
-#: grow/api/models/strain.py:130
+#: grow/api/models/strain.py:276
 msgid "updated at"
 msgstr "Aktualisiert am"
 
-#: grow/api/models/strain.py:143
+#: grow/api/models/strain.py:290
 msgid "user description"
 msgstr "Nutzer Beschreibung"
 
-#: grow/api/models/strain.py:152
+#: grow/api/models/strain.py:295
+msgid "User"
+msgstr ""
+
+#: grow/api/models/strain.py:305
 msgid "uploaded at"
 msgstr "hochgeladen am"
 
-#: grow/api/models/strain.py:172
+#: grow/api/models/strain.py:310
+#, fuzzy
+#| msgid "uploaded at"
+msgid "uploader"
+msgstr "hochgeladen am"
+
+#: grow/api/models/strain.py:354
 msgid "bought at"
 msgstr "gekauft am"
+
+#~ msgid "logo icon"
+#~ msgstr "Logo Icon"
+
+#~ msgid "logo"
+#~ msgstr "Logo"

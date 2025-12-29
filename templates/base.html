@@ -11,11 +11,12 @@
         {% block extra_css %}{% endblock %}
         <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.min.js"></script>
         <script>
-            document.documentElement.setAttribute('data-bs-theme', (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'))
+            document.documentElement.setAttribute('data-bs-theme',
+                (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'))
         </script>
         {% block scripts %}{% endblock %}
     </head>
-    <body style="margin-bottom:50px;">
+    <body style="margin-bottom:56px;">
         <div class="container-fluid">
             <header class="row bg-success text-white px-4 d-none d-lg-block ">
                 <span class="display-5">{% block title %}Grow{% endblock %}</span>
@@ -107,7 +108,7 @@
                                         href="{% url 'tinywiki:toc' %}"
                                     >
                                             <i class="bi bi-bookmark"></i>
-                                            {% translate "Table of Content" %}
+                                            {% translate "Table of Contents" %}
                                     </a>
                                 </li>
                             </ul>
@@ -137,12 +138,24 @@
                                 <li>
                                     <a class="dropdown-item" href="#">
                                         <i class="bi bi-person"></i>
+                                        {% translate "My Infos" %}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'core:account' %}">
+                                        <i class="bi bi-person-gear"></i>
                                         {% translate "Profile" %}
                                     </a>
                                 </li>
                                 <li>
                                     <a class="dropdown-item" href="#">
-                                        <i class="bi bi-person-gear"></i>
+                                        <i class="bi bi-people"></i>
+                                        {% translate "My Friends" %}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="#">
+                                        <i class="bi bi-gear"></i>
                                         {% translate "Settings" %}
                                     </a>
                                 </li>
@@ -170,18 +183,26 @@
                     {% block left_sidebar %}
                     {% endblock left_sidebar %}
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 mt-3">
                     {% block content %}
                     <h1>It works!</h1>
                     {% endblock content %}
                 </div>
-                <div class="col-md-3 d-lg-block">
+                <div class="col-md-3 d-lg-block mt-3">
                     {% block right_sidebar%}
                     {% endblock right_sidebar %}
                 </div>
             </div>
-            <div class="row fixed-bottom mt-auto">
-                <footer class="bg-success text-white py-2 px-4 fs-5 d-flex justify-content-between">
+            <div class="row fixed-bottom d-none d-lg-block">
+                <footer class="col-lg-12 bg-success text-white py-2 px-4 fs-5 d-flex justify-content-between">
+                    <div>
+                        <a class="text-reset fw-bold text-decoration-none" href="#">django-grow</a>
+                    </div>
+                    <div>&copy; 2025 - 2026 Christian Moser</div>
+                </footer>
+            </div>
+            <div class="row fixed-bottom d-block d-md-none">
+                <footer class="col-sm-12 bg-success text-white py-2 px-4 fs-6 d-flex justify-content-between">
                     <div>
                         <a class="text-reset fw-bold text-decoration-none" href="#">django-grow</a>
                     </div>

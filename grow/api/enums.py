@@ -219,10 +219,8 @@ class TextType(StrEnum):
     @staticmethod
     def from_string(text_str: str) -> 'TextType':
         mapping = {
-            "plain": TextType.PLAIN,
             "bbcode": TextType.BBCODE,
             "markdown": TextType.MARKDOWN,
-            "html": TextType.HTML,
         }
         try:
             return mapping.get(text_str.lower())
@@ -232,9 +230,7 @@ class TextType(StrEnum):
     @property
     def name_raw(self) -> str:
         mapping = {
-            TextType.PLAIN: _("plain"),
             TextType.MARKDOWN: _("markdown"),
-            TextType.HTML: _("html"),
             TextType.BBCODE: _("bbcode"),
         }
         return mapping[self]
@@ -255,10 +251,8 @@ class TextType(StrEnum):
 
 
 TEXT_TYPES = [
-    TextType.PLAIN,
     TextType.MARKDOWN,
     TextType.BBCODE,
-    TextType.HTML,
 ]
 
 TEXT_CHOICES = [(tt.value, tt.name_lazy) for tt in TEXT_TYPES]

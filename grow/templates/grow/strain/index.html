@@ -5,31 +5,53 @@
 
 {% block content %}
 
+<p>{{ labels }}</p>
+
 <table {% if use_bootstrap %}class="table table-hover"{% endif %}>
     <thead>
         <tr>
             <th>{% translate "Name" %}</th>
             <th>{% translate "Strains" %}</th>
             <th>{% translate "Growlogs" %}</th>
-            <th><i class="bi bi-box-arrow-up"></i></th>
+            <th>
+                {% if allowed_to_create %}
+                <a href="{% url "grow:breeder-create" %}"
+                    class="link-body-emphasis link-opacity-50 link-unnderline-opacity-50 link-opacity-75-hover link-underline-opacity-75-hover"
+                ><i class="bi bi-plus-square"></i></a>
+                {% else %}
+                <i class="bi bi-box-arrow-up"></i>
+                {% endif %}
+            </th>
         </tr>
     </thead>
     <tbody {% if use_bootstrap %}class="table-group-divider"{% endif %}>
-        {% for breeder in breeders %}
+        {% for breeder, breeder_id in breeders_id %}
         <tr>
-            <td><a href="{% url "grow:breeder-detail" key=breeder.key %}">{{ breeder.name }}</td>
+            <td>
+                <a href="{% url "grow:breeder-detail" slug=breeder.slug %}"
+                    {% if breeder_id %}id="{{ breeder_id}}"{% endif %}
+                    class="link-body-emphasis link-opacity-50 link-underline-opacity-50 link-opacity-75-hover link-underline-opacity-75-hover"
+                >{{ breeder.name }}</a>
+            </td>
             <td>{{ breeder.strain_count }}</td>
             <td>{{ breeder.growlog_count }}</td>
-            <td>{% if breeder.id in breeders_allowed_to_edit %}
-                <a
-                    href="{% url 'grow:breeder-update' slug=breeder.slug %}"
+            <td>
+            {% if breeder.id in breeders_allowed_to_edit %}
+                {% if use_bootstrap %}
+                <a href="{% url 'grow:breeder-update' slug=breeder.slug %}"
+                    class="link-body-emphasis link-opacity-50 link-unnderline-opacity-50 link-opacity-75-hover link-underline-opacity-75-hover"
                     data-bs-toggle="tooltip"
                     data-bs-html="true"
                     data-bs-placement="left"
                     data-bs-title="Edit <i>{{ breeder.name }}</i>"
                 >
                     <i class="bi bi-pencil-square"></i>
-            </a>
+                </a>
+                {% else %}
+                <a href="{% url 'grow:breeder-update' slug=breeder.slug %}">
+                    {% translate "Edit" %}
+                </a>
+                {% endif %}
             {% endif %}
             </td>
         </tr>
