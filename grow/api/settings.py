@@ -40,3 +40,6 @@ if isinstance(GROW_EXPORTS_DIR, str):
 
 GROW_EXPORTS_FILE_FORMAT = str(GROW_EXPORTS_DIR / "grow-exports-{date}.zip")
 GROW_EXPORTS_VERSIONS_FILE = GROW_EXPORTS_DIR / "grow-exports.versions"
+
+INCLUDE_WIKI = getattr(settings, "INCLUDE_WIKI", False)
+USE_BOOTSTRAP = getattr(settings, "USE_BOOTSTRAP", False)

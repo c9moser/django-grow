@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 14:07+0100\n"
+"POT-Creation-Date: 2025-12-31 07:40+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,86 +17,172 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
 #: templates/account/login.html:23
 msgid "Log in to your account"
-msgstr ""
+msgstr "Melde dich an deinem Ayyount an"
 
 #: templates/account/login.html:27
 msgid "Email address"
-msgstr ""
+msgstr "Email-Adresse"
 
 #: templates/account/login.html:32
 msgid "Password"
-msgstr ""
+msgstr "Passwort"
 
 #: templates/account/login.html:43
 msgid "Log me in"
-msgstr ""
+msgstr "Melde mich an"
 
-#: templates/base.html:30
+#: templates/base.html:38 templates/tinywiki/home/bs-wiki-content.html:9
+#: templates/tinywiki/home/home.html:14
 msgid "Home"
-msgstr ""
+msgstr "Start"
 
-#: templates/base.html:40
+#: templates/base.html:48
 msgid "Strains"
-msgstr ""
+msgstr "Sorten"
 
-#: templates/base.html:45
+#: templates/base.html:53
 msgid "Search for strains"
-msgstr ""
+msgstr "Nach Sorten suchen"
 
-#: templates/base.html:52
+#: templates/base.html:60
 msgid "Breeders"
-msgstr ""
+msgstr "Züchter"
 
-#: templates/base.html:58
+#: templates/base.html:66
 msgid "New Breeder"
-msgstr ""
+msgstr "Neuer Züchter"
 
-#: templates/base.html:74
+#: templates/base.html:82 templates/tinywiki/home/bs-wiki-content.html:11
+#: templates/tinywiki/home/home.html:15 templates/tinywiki/page/bs-view.html:28
 msgid "Wiki"
-msgstr ""
+msgstr "Wiki"
 
-#: templates/base.html:82
+#: templates/base.html:90
 msgid "Wiki home"
-msgstr ""
+msgstr "Wiki Start"
 
-#: templates/base.html:92
+#: templates/base.html:100
 msgid "BBCode Guide"
-msgstr ""
+msgstr "BBCode Anleitung"
 
-#: templates/base.html:101
+#: templates/base.html:109
 msgid "Markdown Guide"
-msgstr ""
+msgstr "Makrdown Anleitung"
 
-#: templates/base.html:111
+#: templates/base.html:119 templates/tinywiki/home/bs-wiki-content.html:13
+#: templates/tinywiki/home/bs-wiki-content.html:18
 msgid "Table of Contents"
-msgstr ""
+msgstr "Inhaltsverzeichnis"
 
-#: templates/base.html:122
+#: templates/base.html:130
 msgid "Login"
-msgstr ""
+msgstr "Anmelden"
 
-#: templates/base.html:126
+#: templates/base.html:134
 msgid "Sign up"
-msgstr ""
+msgstr "Registrieren"
 
-#: templates/base.html:141
+#: templates/base.html:149
 msgid "My Infos"
-msgstr ""
+msgstr "Meine Infos"
 
-#: templates/base.html:147
+#: templates/base.html:155
 msgid "Profile"
-msgstr ""
+msgstr "Profil"
 
-#: templates/base.html:153
+#: templates/base.html:161
 msgid "My Friends"
-msgstr ""
+msgstr "Meine Freunde"
 
-#: templates/base.html:159
+#: templates/base.html:167
 msgid "Settings"
+msgstr "Einstellungen"
+
+#: templates/base.html:178
+msgid "Log out"
+msgstr "Abmelden"
+
+#: templates/tinywiki/home/home.html:23
+msgid "Welcome to the Grow Wiki"
+msgstr "Wilkommen beim Grow Wiki"
+
+#: templates/tinywiki/home/home.html:26
+#, python-format
+msgid ""
+"You are seeing this welcome page because there is no Welcome page\n"
+"    configured for your Wiki. To configure a welcome page %(create_tw_home)s "
+"and put the content for your welcome-page there."
+msgstr ""
+"Do siehst diese Wilkommensseite, weil noch keine eigene Wilkommenseite "
+"für    diesen Wiki konfiguriert wurde. Um eine Willkommensseite zu ertellen "
+"%(create_tw_home)s und füge den Inhalt dor ein."
+
+#: templates/tinywiki/home/home.html:28
+msgid ""
+"You can use BBCode or Markdown to write your pages. If you don't know\n"
+"    Markdown or BBCode there are two guides you can consult before you start "
+"editing your pages."
+msgstr ""
+"Du kanns BBCode und Markdown zum schreiben der Seiten verwenden. Solltest du "
+"Markdown oder BBCode nicht können, gibt es zwei Anleitungen, die du "
+"konsultieren kannst, bevorDu beginnst Seiten zu Bearbeiten."
+
+#: templates/tinywiki/page/bs-create.html:4
+#: templates/tinywiki/page/bs-create.html:6
+#: templates/tinywiki/page/create.html:4
+msgid "Create a new Wiki page"
+msgstr "Erstelle eine Neue Wiki Seite"
+
+#: templates/tinywiki/page/bs-create.html:19
+msgid "Create page and continue"
+msgstr "Erstelle Seite und fahre fort"
+
+#: templates/tinywiki/page/bs-create.html:20
+#: templates/tinywiki/page/create.html:7
+msgid "Create Page"
+msgstr "Erstelle Seite"
+
+#: templates/tinywiki/page/bs-create.html:21
+#: templates/tinywiki/page/bs-edit.html:27
+#: templates/tinywiki/page/create.html:8 templates/tinywiki/page/edit.html:8
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: templates/tinywiki/page/bs-edit.html:4
+#: templates/tinywiki/page/bs-edit.html:6 templates/tinywiki/page/edit.html:4
+msgid "Edit Wiki Page"
+msgstr "Wiki Seite bearbeiten"
+
+#: templates/tinywiki/page/bs-edit.html:23
+msgid "Save and continue"
+msgstr "Speichern und fortfahren"
+
+#: templates/tinywiki/page/bs-edit.html:26
+msgid "Save and show"
+msgstr "Speichern und Anzeigen"
+
+#: templates/tinywiki/page/bs-view.html:26
+msgid "Start"
 msgstr ""
 
-#: templates/base.html:170
-msgid "Log out"
-msgstr ""
+#: templates/tinywiki/page/bs-view.html:39
+msgid "Edit Page"
+msgstr "Seite bearbeiten"
+
+#: templates/tinywiki/page/bs-view.html:52
+#: templates/tinywiki/page/delete.html:9
+msgid "Delete Page"
+msgstr "Seite löschen"
+
+#: templates/tinywiki/page/edit.html:7
+msgid "Save Changes"
+msgstr "Änderungen speichern"
+
+#~ msgid "Delete Wiki-Page"
+#~ msgstr "Wiki-Seite löschen"
+
+#~ msgid "Delete the page"
+#~ msgstr "Lösche die Seite"

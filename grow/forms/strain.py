@@ -10,8 +10,8 @@ class StrainForm(forms.ModelForm):
             ('w', _("Weeks")),
         ],
         widget=forms.RadioSelect,
-        required=bool,
-        initial="w"
+        required=True,
+        initial="d"
     )
 
     class Meta:
@@ -19,7 +19,7 @@ class StrainForm(forms.ModelForm):
         fields = [
             'slug',
             'name',
-            'description_type',
+            'description_type_data',
             'description',
             'is_regular',
             'is_feminized',
@@ -28,4 +28,6 @@ class StrainForm(forms.ModelForm):
             'flowering_time_days',
             'logo_url',
             'logo_image',
+            'strain_url',
+            'seedfinder_url',
         ]

@@ -48,11 +48,11 @@
         <label for="{{ form.logo_url.id_for_label }}">{{ form.logo_image.label }}</label>
     </div>
     <div class="input-group mb-3">
-        <label for="form.description_type.id_for_label" class="input-group-text">{{ form.description_type.label}}</label>
-        {% render_field form.description_type class="form-control form-control-sm" %}
+        <label for="form.description_type_data.id_for_label" class="input-group-text">{{ form.description_type_data.label}}</label>
+        {% render_field form.description_type_data class="form-control form-control-sm" %}
     </div>
     <div class="form-floating mb-3">
-        {% render_field form.description class="form-control form-control-sm w-100" style="height:200px;resize:none" placeholder=form.description.label %}
+        {% render_field form.description class="form-control form-control-sm w-100" style="height:10rem;resize:none" placeholder=form.description.label %}
         <label for="{{ form.description.label }}">{{ form.description.label }}</label>
     </div>
     <div class="text-end">

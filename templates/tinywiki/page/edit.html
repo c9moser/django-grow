@@ -1,0 +1,9 @@
+{% extends "tinywiki/page/model-base.html" %}
+{% load i18n %}
+
+{% block title %}{% translate "Edit Wiki Page" %}{% endblock title%}
+
+{% block form_buttons %}
+<button type="submit">{% translate "Save Changes" %}</button>
+<a class="button button-secondary" href="{% url "tinywiki:page" form.instance.slug %}">{% translate "Cancel" %}</a>
+{% endblock form_buttons %}

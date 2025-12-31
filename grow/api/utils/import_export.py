@@ -26,7 +26,11 @@ def export_data(filename: str | Path | None) -> bool:
             'creator_name': (
                 strain.creator_name
                 if strain.creator_name
-                else strain.created_by.username
+                else (
+                    strain.created_by.username
+                    if strain.created_by
+                    else "GROW"
+                )
             ),
             'strain_url': strain.strain_url,
             'seedfinder_url': strain.seedfinder_url,
@@ -48,9 +52,7 @@ def export_data(filename: str | Path | None) -> bool:
             zf.write(strain.logo_image.path, logo_arch_name)
             data['logo_image'] = os.path.basename(strain.logo_image)
 
-        for strain_image in strain.strain_images.all():
-            strain_image = StrainImage()
-
+        for strain_image in strain.images.all():
             if not os.path.exists(strain_image.image.path):
                 continue
 
@@ -71,10 +73,10 @@ def export_data(filename: str | Path | None) -> bool:
             )
             zf.write(strain_image.image.path, si_archname)
 
-            if not data['strain_images']:
-                data['strain_images'] = [si_data]
+            if not data['images']:
+                data['images'] = [si_data]
             else:
-                data['strain_images'].append(si_data)
+                data['images'].append(si_data)
 
         return data
     # ## END export_strain()
@@ -82,7 +84,7 @@ def export_data(filename: str | Path | None) -> bool:
     if not settings.GROW_EXPORTS_DIR.exists():
         os.makedirs(settings.GROW_EXPORTS_DIR)
 
-    include_wiki = settings.getattr(django_settings, "INCLUDE_WIKI", False)
+    include_wiki = getattr(django_settings, "INCLUDE_WIKI", False)
     if include_wiki:
         from tinywiki.utils import export_wiki_content
 
@@ -94,6 +96,7 @@ def export_data(filename: str | Path | None) -> bool:
             exports_file = Path(filename).resolve()
         else:
             exports_file = filename
+
     else:
         exports_version = True
         exports_file = Path(settings.GROW_EXPORTS_FILE_FORMAT.format(
@@ -131,7 +134,7 @@ def export_data(filename: str | Path | None) -> bool:
             if breeder.strain_count > 0:
                 breeder_data['strains'] = dict(
                     (
-                        (strain.slug, export_strain(strain))
+                        (strain.slug, export_strain(zf, strain))
                         for strain in breeder.strains.all().order_by('slug')
                     )
                 )
@@ -139,16 +142,16 @@ def export_data(filename: str | Path | None) -> bool:
             zf.writestr(f"breeder/{breeder.slug}.json",
                         json.dumps(breeder_data, ensure_ascii=False, indent=4))
 
-    with open(settings.GROW_EXPORTS_VERSIONS_FILE, 'rt', encoding="utf-8") as vifile:
-        exports = vifile.readlines()
-
-    if len(exports) > (settings.GROW_EXPORTS_VERSIONS - 1):
-        for ef_basename in exports[settings.GROW_EXPORTS_VERSIONS - 1:]:
-            ef = settings.GROW_EXPORTS_DIR / ef_basename
-            if os.path.isfile(ef):
-                os.unlink(ef)
-
     if exports_version:
+        with open(settings.GROW_EXPORTS_VERSIONS_FILE, 'rt', encoding="utf-8") as vifile:
+            exports = vifile.readlines()
+
+        if len(exports) > (settings.GROW_EXPORTS_VERSIONS - 1):
+            for ef_basename in exports[settings.GROW_EXPORTS_VERSIONS - 1:]:
+                ef = settings.GROW_EXPORTS_DIR / ef_basename
+                if os.path.isfile(ef):
+                    os.unlink(ef)
+
         exports = exports[settings.GROW_EXPORTS_VERSIONS - 1:]
         exports.insert(0, os.path.basename(exports_file))
 

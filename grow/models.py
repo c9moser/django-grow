@@ -39,7 +39,7 @@ class UserSettings(models.Model):
     length_unit = models.CharField(
         _("unit of length"),
         max_length=50,
-        default=LengthUnit.METRIC,
+        default=LengthUnit.METRIC.value,
         choices=LENGTH_UNIT_CHOICES
     )
 
@@ -49,7 +49,7 @@ class UserSettings(models.Model):
     #: The WebAPI returns the data in Celcius always.
     temperature_unit = models.CharField(
         max_length=1,
-        default=TemperatureUnit.CELCIUS,
+        default=TemperatureUnit.CELCIUS.value,
         choices=TEMPERATURE_UNIT_CHOICES
     )
 

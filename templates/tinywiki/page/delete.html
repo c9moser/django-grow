@@ -1,0 +1,12 @@
+{% extends base_template %}
+{% load i18n %}
+
+{% block content %}
+<form method="POST">
+    {% csrf_token %}
+    <p>Type <b>{{ page.slug }}</b> in the field to delete the page.</p>
+    {{ form.as_p }}
+    <button class="button button-danger" type="submit">{% translate "Delete Page" %}</button>
+    <a class="button button-secondary" href="{% url 'tinywiki:page' page.slug %}">Cancel</a>
+</form>
+{% endblock content %}

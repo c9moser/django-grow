@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 14:07+0100\n"
+"POT-Creation-Date: 2025-12-31 07:40+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -38,88 +38,99 @@ msgstr ""
 msgid "unit of length"
 msgstr ""
 
-#: grow/templates/grow/index/index.html:7
+#: grow/templates/grow/index/index.html:9
+#: grow/templates/grow/index/index.html:11
+#: grow/templates/grow/strain/breeder_detail.html:13
+#: grow/templates/grow/strain/breeder_detail.html:15
+#: grow/templates/grow/strain/index.html:12
+#: grow/templates/grow/strain/index.html:14
+#: grow/templates/grow/strain/strain_detail.html:11
+#: grow/templates/grow/strain/strain_detail.html:13
+msgid "Home"
+msgstr ""
+
+#: grow/templates/grow/index/index.html:20
 #, python-format
 msgid "Welcome to Grow, %(user_short_name)s"
 msgstr ""
 
-#: grow/templates/grow/index/index.html:10
+#: grow/templates/grow/index/index.html:23
 msgid "Welcome to Grow"
 msgstr ""
 
-#: grow/templates/grow/index/index.html:15
+#: grow/templates/grow/index/index.html:28
 msgid "My active Growlogs"
 msgstr ""
 
-#: grow/templates/grow/index/index.html:16
+#: grow/templates/grow/index/index.html:29
 msgid "Create a new Growlog"
 msgstr ""
 
-#: grow/templates/grow/index/index.html:21
-#: grow/templates/grow/index/index.html:50
+#: grow/templates/grow/index/index.html:34
+#: grow/templates/grow/index/index.html:63
 msgid "Title"
 msgstr ""
 
-#: grow/templates/grow/index/index.html:22
-#: grow/templates/grow/index/index.html:52
+#: grow/templates/grow/index/index.html:35
+#: grow/templates/grow/index/index.html:65
 msgid "Locations"
 msgstr ""
 
-#: grow/templates/grow/index/index.html:23
-#: grow/templates/grow/index/index.html:53
+#: grow/templates/grow/index/index.html:36
+#: grow/templates/grow/index/index.html:66
 msgid "Plant age"
 msgstr ""
 
-#: grow/templates/grow/index/index.html:24
-#: grow/templates/grow/index/index.html:54
-#: grow/templates/grow/index/index.html:82
+#: grow/templates/grow/index/index.html:37
+#: grow/templates/grow/index/index.html:67
+#: grow/templates/grow/index/index.html:95
 msgid "Flowering time"
 msgstr ""
 
-#: grow/templates/grow/index/index.html:32
-#: grow/templates/grow/index/index.html:33
-#: grow/templates/grow/index/index.html:63
-#: grow/templates/grow/index/index.html:64
+#: grow/templates/grow/index/index.html:45
+#: grow/templates/grow/index/index.html:46
+#: grow/templates/grow/index/index.html:76
+#: grow/templates/grow/index/index.html:77
 #, python-format
 msgid "%(weeks)s week"
 msgid_plural "%(weeks)s weeks"
 msgstr[0] ""
 msgstr[1] ""
 
-#: grow/templates/grow/index/index.html:40
+#: grow/templates/grow/index/index.html:53
 msgid "You have no Growlogs! How about creating one?"
 msgstr ""
 
-#: grow/templates/grow/index/index.html:45
+#: grow/templates/grow/index/index.html:58
 msgid "New growlogs"
 msgstr ""
 
-#: grow/templates/grow/index/index.html:51
+#: grow/templates/grow/index/index.html:64
 msgid "User"
 msgstr ""
 
-#: grow/templates/grow/index/index.html:71
+#: grow/templates/grow/index/index.html:84
 msgid "There are no new growlogs of other users you are allowed to view!"
 msgstr ""
 
-#: grow/templates/grow/index/index.html:79
+#: grow/templates/grow/index/index.html:92
 #: grow/templates/grow/strain/strain_form.html:11
-#: grow/templates/grow/strain/strain_form.html:108
+#: grow/templates/grow/strain/strain_form.html:131
 msgid "Breeder"
 msgstr ""
 
-#: grow/templates/grow/index/index.html:80
-#: grow/templates/grow/strain/index.html:13
+#: grow/templates/grow/index/index.html:93
+#: grow/templates/grow/strain/index.html:28
 msgid "Name"
 msgstr ""
 
-#: grow/templates/grow/index/index.html:81
+#: grow/templates/grow/index/index.html:94
 #: grow/templates/grow/strain/strain_form.html:47
 msgid "Genetics"
 msgstr ""
 
-#: grow/templates/grow/index/index.html:91
-#: grow/templates/grow/strain/breeder_detail.html:57
+#: grow/templates/grow/index/index.html:104
+#: grow/templates/grow/strain/breeder_detail.html:125
 #, python-format
 msgid ""
 "\n"
@@ -136,11 +147,51 @@ msgstr[1] ""
 msgid "Create Breeder"
 msgstr ""
 
-#: grow/templates/grow/strain/breeder_detail.html:4
+#: grow/templates/grow/strain/breeder_delete.html:5
+#: grow/templates/grow/strain/hx_breeder_delete.html:5
+#: grow/templates/grow/strain/hx_breeder_delete.html:9
+msgid "Delete Breeder"
+msgstr ""
+
+#: grow/templates/grow/strain/breeder_delete.html:7
+#, python-format
+msgid ""
+"\n"
+"        If you really want to delete breeder %(name)s type <i>%(slug)s</i>\n"
+"        in the field below and hit the %(delete_breeder_label)s button.\n"
+"        "
+msgstr ""
+
+#: grow/templates/grow/strain/breeder_delete.html:18
+#: grow/templates/grow/strain/hx_breeder_delete.html:34
+msgid "Cancel"
+msgstr ""
+
+#: grow/templates/grow/strain/breeder_detail.html:5
 msgid "Grow: Breeder"
 msgstr ""
 
-#: grow/templates/grow/strain/breeder_detail.html:8
+#: grow/templates/grow/strain/breeder_detail.html:20
+#: grow/templates/grow/strain/index.html:29
+#: grow/templates/grow/strain/strain_detail.html:18
+msgid "Strains"
+msgstr ""
+
+#: grow/templates/grow/strain/breeder_detail.html:36
+#: grow/templates/grow/strain/breeder_detail.html:51
+msgid "Edit breeder"
+msgstr ""
+
+#: grow/templates/grow/strain/breeder_detail.html:44
+#: grow/templates/grow/strain/breeder_detail.html:52
+msgid "Delete breeder"
+msgstr ""
+
+#: grow/templates/grow/strain/breeder_detail.html:59
+msgid "Breeder logo"
+msgstr ""
+
+#: grow/templates/grow/strain/breeder_detail.html:63
 #, python-format
 msgid ""
 "\n"
@@ -152,29 +203,38 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: grow/templates/grow/strain/breeder_detail.html:13
+#: grow/templates/grow/strain/breeder_detail.html:68
 #, python-format
 msgid ""
 "\n"
-"There is one strain that appears in growlogs.\n"
+"One strain appears in growlogs.\n"
 msgid_plural ""
 "\n"
-"There are %(n_strains)s strains that apper in growlogs.\n"
+"%(n_strains)s strains appear in growlogs.\n"
 msgstr[0] ""
 msgstr[1] ""
 
-#: grow/templates/grow/strain/breeder_detail.html:18
+#: grow/templates/grow/strain/breeder_detail.html:73
 #, python-format
 msgid ""
 "\n"
-"There is one growlog for the strains of <i>%(name)s</i>.\n"
+"A total of one growlog has been created for the strains of <i>%(name)s</i>.\n"
 msgid_plural ""
 "\n"
-"There are %(n)s for the strains of <i>%(name)s</i>.\n"
+"A total of %(n)s growlogs have been created for the strains of <i>%(name)s</"
+"i>.\n"
 msgstr[0] ""
 msgstr[1] ""
 
-#: grow/templates/grow/strain/breeder_detail.html:64
+#: grow/templates/grow/strain/breeder_detail.html:81
+msgid "Breeder's homepage"
+msgstr ""
+
+#: grow/templates/grow/strain/breeder_detail.html:84
+msgid "Breeder on SeedFinder.eu"
+msgstr ""
+
+#: grow/templates/grow/strain/breeder_detail.html:132
 #, python-format
 msgid ""
 "\n"
@@ -186,6 +246,10 @@ msgid_plural ""
 "                "
 msgstr[0] ""
 msgstr[1] ""
+
+#: grow/templates/grow/strain/breeder_detail.html:164
+msgid "Breeder information"
+msgstr ""
 
 #: grow/templates/grow/strain/breeder_form.html:7
 msgid "Grow: new Breeder"
@@ -199,24 +263,130 @@ msgstr ""
 msgid "Save changes "
 msgstr ""
 
+#: grow/templates/grow/strain/hx_breeder_delete.html:13
+#, python-format
+msgid ""
+"\n"
+"                    If you really want to delete breeder %(name)s type "
+"<i>%(slug)s</i>\n"
+"                    in the field below and hit the %(delete_breeder_label)s "
+"button.\n"
+"                    "
+msgstr ""
+
 #: grow/templates/grow/strain/index.html:4
 msgid "Grow: Breeder overview"
 msgstr ""
 
-#: grow/templates/grow/strain/index.html:14
-msgid "Strains"
+#: grow/templates/grow/strain/index.html:17
+msgid "Breeders"
 msgstr ""
 
-#: grow/templates/grow/strain/index.html:15
+#: grow/templates/grow/strain/index.html:30
 msgid "Growlogs"
 msgstr ""
 
-#: grow/templates/grow/strain/index.html:52
+#: grow/templates/grow/strain/index.html:50
+msgid "Add breeder"
+msgstr ""
+
+#: grow/templates/grow/strain/index.html:106
 msgid "Edit"
+msgstr ""
+
+#: grow/templates/grow/strain/index.html:111
+msgid "Delete"
 msgstr ""
 
 #: grow/templates/grow/strain/strain_create.html:4
 msgid "Create Strain"
+msgstr ""
+
+#: grow/templates/grow/strain/strain_detail.html:79
+msgid "Flowering time:"
+msgstr ""
+
+#: grow/templates/grow/strain/strain_detail.html:80
+#, python-format
+msgid ""
+"\n"
+"                %(ftd)s day\n"
+"                "
+msgid_plural ""
+"\n"
+"                %(ftd)s days\n"
+"                "
+msgstr[0] ""
+msgstr[1] ""
+
+#: grow/templates/grow/strain/strain_detail.html:85
+#, python-format
+msgid ""
+"\n"
+"                (%(ftw)s week)\n"
+"                "
+msgid_plural ""
+"\n"
+"                (%(ftw)s weeks)\n"
+"                "
+msgstr[0] ""
+msgstr[1] ""
+
+#: grow/templates/grow/strain/strain_detail.html:92
+msgid "Genetics:"
+msgstr ""
+
+#: grow/templates/grow/strain/strain_detail.html:95
+msgid "This is a autflowering strain?"
+msgstr ""
+
+#: grow/templates/grow/strain/strain_detail.html:96
+#: grow/templates/grow/strain/strain_detail.html:100
+#: grow/templates/grow/strain/strain_detail.html:104
+#: grow/templates/grow/strain/strain_detail.html:109
+msgid "Yes"
+msgstr ""
+
+#: grow/templates/grow/strain/strain_detail.html:96
+#: grow/templates/grow/strain/strain_detail.html:100
+#: grow/templates/grow/strain/strain_detail.html:104
+#: grow/templates/grow/strain/strain_detail.html:111
+msgid "No"
+msgstr ""
+
+#: grow/templates/grow/strain/strain_detail.html:99
+msgid "You can get regular seeds?"
+msgstr ""
+
+#: grow/templates/grow/strain/strain_detail.html:103
+msgid "You can get feminized seeds?"
+msgstr ""
+
+#: grow/templates/grow/strain/strain_detail.html:107
+msgid "This is a clone-only strain?"
+msgstr ""
+
+#: grow/templates/grow/strain/strain_detail.html:118
+msgid "Strain Homepage"
+msgstr ""
+
+#: grow/templates/grow/strain/strain_detail.html:121
+msgid "View on SeedFinder.eu"
+msgstr ""
+
+#: grow/templates/grow/strain/strain_detail.html:125
+msgid "Strain description"
+msgstr ""
+
+#: grow/templates/grow/strain/strain_detail.html:146
+msgid ""
+"\n"
+"There are currently no growlogs for this strain, at least none you are "
+"allowed to view.\n"
+"You could grow this strain yourself and add a growlog for the members here, "
+"so they\n"
+"can see how this strain grows and flowers. Others might want to learn from "
+"what you are doing.\n"
 msgstr ""
 
 #: grow/templates/grow/strain/strain_form.html:62

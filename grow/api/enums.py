@@ -1,7 +1,7 @@
 """
 Enums and constantcs for the GrowControl API.
 """
-from enum import StrEnum
+from enum import StrEnum, IntEnum
 from django.utils.translation import (
     gettext_noop as _,
     gettext_lazy,
@@ -211,10 +211,8 @@ class TextType(StrEnum):
     Text type enumeration.
     """
 
-    PLAIN = "plain"
     MARKDOWN = "markdown"
     BBCODE = "bbcode"
-    HTML = "html"
 
     @staticmethod
     def from_string(text_str: str) -> 'TextType':
@@ -485,7 +483,7 @@ class LengthUnit(StrEnum):
     def name_raw(self) -> str:
         mapping = {
             LengthUnit.METRIC: _("metric"),
-            LengthUnit.IMPERIAL: _("imerial"),
+            LengthUnit.IMPERIAL: _("imperial"),
         }
         return mapping[self]
 
@@ -566,3 +564,10 @@ TEMPERATURE_UNITS = [
     TemperatureUnit.KELVIN,
 ]
 TEMPERATURE_UNIT_CHOICES = [(tu.value, tu.name_lazy) for tu in TEMPERATURE_UNITS]
+
+
+class PermissionCode(IntEnum):
+    ALLOW = 1
+    CONTINUE = 2
+    RESTRICT = 3
+    RAISE_EXCEPTION = 4

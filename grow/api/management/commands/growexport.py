@@ -12,6 +12,8 @@ class Command(BaseCommand):
         filename = options['file']
         if not filename:
             filename = None
+        else:
+            filename = filename[0]
 
         if export_data(filename=filename):
             if filename:

@@ -86,15 +86,38 @@
     <div class="input-group mb-3" id='flowering_time_div'>
         <div class="form-floating">
             {% render_field form.flowering_time_days class="form-control" style="min-width:75px;" placeholder=form.flowering_time_days %}
-            <label for="{{ form.flowering_time_days.id_for_label }}">{{ form.flowering_time_days.label }}</label>
+            <label for="{{ form.flowering_time_days.id_for_label }}">
+                {{ form.flowering_time_days.label }}
+            </label>
         </div>
         {{ form.flowering_time_unit }}
     </div>
 
+    <div class="form-floating mb-3">
+        {% render_field form.logo_url class="form-control" placeholder=form.logo_url.label %}
+        <label for="{{ form.logo_url.id_for_label }}">{{ form.logo_url.label }}</label>
+    </div>
+
+    <div class="form-floating mb-3">
+        {% render_field form.logo_image class="form-control" placeholder=form.logo_image.label %}
+        <label for="{{ form.logo_image.id_for_label }}">{{ form.logo_image.label }}</label>
+    </div>
+
+    <div class="form-floating mb-3">
+        {% render_field form.strain_url class="form-control" placeholder=form.strain_url.label %}
+        <label for="{{ form.strain_url.id_for_label }}">{{ form.strain_url.label }}</label>
+    </div>
+
+    <div class="form-floating mb-3">
+        {% render_field form.seedfinder_url class="form-control" placeholder=form.seedfinder_url.label %}
+        <label for="{{ form.seedfinder_url.id_for_label }}">{{ form.seedfinder_url.label }}</label>
+    </div>
 
     <div class="input-group input-group-lg mb-3">
-        <label for="{{ form.description_type.id_for_label }}" class="input-group-text">{{ form.description_type.label }}</label>
-        {% render_field form.description_type class="form-control" %}
+        <label for="{{ form.description_type_data.id_for_label }}" class="input-group-text">
+            {{ form.description_type_data.label }}
+        </label>
+        {% render_field form.description_type_data class="form-control" %}
     </div>
 
     <div class="form-floating mb-3">
@@ -118,9 +141,10 @@
 {% endblock %}
 
 {% block extra_scripts %}
+
 {% if use_bootstrap %}
 <script>
-unction fixFloweringTimeUnitStyling() {
+function fixFloweringTimeUnitStyling() {
     var ftu = document.getElementById('id_flowering_time_unit');
     var ft = document.getElementById('flowering_time_div');
     var children = ftu.children
@@ -140,4 +164,5 @@ unction fixFloweringTimeUnitStyling() {
 fixFloweringTimeUnitStyling();
 </script>
 {% endif %}{# use_bootstrap #}
+
 {% endblock %}

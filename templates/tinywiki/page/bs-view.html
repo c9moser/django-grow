@@ -1,0 +1,69 @@
+{% extends base_template %}
+{% load i18n static %}
+
+{% block extra_css %}
+<link rel="stylesheet" id="hljs-theme" href="{% static 'tinywiki/css/atom-one-light.min.css' %}">
+{% endblock %}
+{% block scripts %}
+<script>
+    const theme=(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    if (theme==="dark") {
+        let hljs_theme = document.getElementById('hljs-theme');
+        hljs_theme.setAttribute('href',href="{% static 'tinywiki/css/atom-one-dark.min.css' %}");
+}
+</script>
+<script src="{% static 'tinywiki/js/highlight.min.js' %}"></script>
+<script src="{% static 'tinywiki/js/bbcode.js' %}"></script>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>hljs.highlightAll();</script>
+{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb" style="--bs-breadcrumb-divider:'&#10093;';">
+    <li class="breadcrumb-item"><a href="/">{% translate "Start" %}</a></li>
+    <li class="breadcrumb-item">
+        <a href="{% url 'tinywiki:home' %}">{% translate "Wiki" %}</a>
+    </li>
+    <li class="breadcrumb-item active">{{ page.title }}</li>
+    </ol>
+</nav>
+
+<div class="h3">
+    {% if user_can_edit_wiki_page %}
+    <a href="{% url 'tinywiki:page-edit' slug=page.slug %}"
+        data-bs-toggle="tooltip"
+        data-bs-placement="bottom"
+        data-bs-title="{% translate "Edit Page" %}"
+        class="h3 link-body-emphasis link-opacity-50 link-opacity-100-hover link-underline-opacity-0 me-2"
+    ><i class="bi bi-pencil-square"></i></a>
+    {% endif %}
+    {% if user_can_delete_wiki_page %}
+    <a  href="#"
+        class="m-0 p-0 link-body-emphasis  link-opacity-50 link-opacity-100-hover link-underline-opacity-0"
+        hx-get="{% url 'tinywiki:hx-page-delete' pk=page.pk %}"
+        hx-target="#modal-here"
+        hx-swap="innerHTML"
+        hx-trigger="click"
+        data-bs-toggle="modal"
+        data-bs-target="#modal-here"
+    ><i class="bi bi-x-square"><!-- data-bs-title="{% translate 'Delete Page' %}"
+        data-bs-toggle="tooltip"
+        data-bs-placement="bottom"--></i>
+    </a>
+    {% endif %}
+
+</div>
+{{ page.html_content }}
+{% endblock content %}
+
+{% block extra_body %}
+<!-- <div id="modal-here" class="modal modal-blur fade" style="display:none;" aria-hidden="false" tab-index="-1"> -->
+<div id="modal-here" class="modal modal-blur fade" aria-hidden="false">
+    <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div>
+{% endblock extra_body %}

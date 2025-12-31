@@ -1,0 +1,35 @@
+{% extends "tinywiki/page/bs-model-base.html" %}
+{% load i18n %}
+
+{% block head_title %}{{ site_title }} - {% translate "Create a new Wiki page" %}{% endblock %}
+
+{% block title %}{% translate "Create a new Wiki page" %}{% endblock title%}
+
+{% block scripts %}
+<script>
+function save_and_continue() {
+    form = document.getElementById("wiki-page-form");
+    form.action = form.action + "?save=1";
+    form.submit();
+}
+</script>
+{% endblock scripts %}
+
+{% block form_buttons %}
+<button class="btn btn-primary" type="button" onclick="save_and_continue();">{% translate "Create page and continue" %}<button>
+<button class="btn btn-success">{% translate "Create Page" %}</button>
+<a class="btn btn-secondary" href="{% url 'tinywiki:home' %}">{% translate "Cancel" %}</a>
+{% endblock form_buttons %}
+
+{% block extended_extra_scripts %}
+<script>
+document.addEventListener('keydown',function(e) {
+if (e.ctrlKey && e.key == "s") {
+        e.preventDefault();   
+        var form = document.getElementById('wiki-page-form');
+        form.action = form.action + "?save=1";
+        form.submit();
+    }
+});
+</script>
+{% endblock extended_extra_scripts%}

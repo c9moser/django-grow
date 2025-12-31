@@ -1,0 +1,66 @@
+{% extends base_template %}
+{% load i18n widget_tweaks %}
+
+{% block style %}
+{% endblock %}
+
+{% block content %}
+<h1>{% block title %}{% endblock title%}</h1>
+<form method="POST"
+    class="mb-4"
+    id="wiki-page-form"
+    action="{% if create %}{% url "tinywiki:page-create" %}{% else %}{% url "tinywiki:page-edit" slug=form.instance.slug|default:"1" %}{% endif %}">
+    {% csrf_token %}
+    <div class="form-floating form-floating-lg mb-3">
+        {% render_field form.title class="form-control form-control-lg" %}
+        {{ form.title.label_tag }} 
+    </div>
+    <div class="form-floating form-floating-sm mb-3">
+        {% if create and slug %}
+        {% render_field form.slug class="form-control form-control-sm" value=slug placeholder="slug" %}
+        {% else %}
+        {% render_field form.slug class="form-control form-control-sm" palceholder="slug" %}
+        {% endif %}
+        {{ form.slug.label_tag }}
+    </div>
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="form-floating form-floating-sm mb-3">
+                {% render_field form.content_type_data class="form-select form-select-sm" %}
+                {{ form.content_type_data.label_tag }}
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="form-floating form-floating-sm mb-3">
+                {% render_field form.status_data class="form-select form-select-sm" %}
+                {{ form.status_data.label_tag }}
+            </div>
+        </div>
+    </div>
+    <div class="form-floating mb-3">
+        {% render_field form.content class="form-control h-100" style="font-family:monospace;" rows=25 %}
+        {{ form.content.label_tag }} 
+    </div>
+    <div class="text-end">
+        {% block form_buttons %}{% endblock form_buttons %}
+    </div>
+</form>
+{% endblock content%}
+
+{% block extra_scripts %}
+<script>
+document.getElementById("id_content").addEventListener('keydown',function(e) {
+    if (e.key == "Tab") {
+        e.preventDefault();
+        var start = this.selectionStart;
+        var end = this.selectionEnd;
+
+        console.log(this.value);
+        // set textarea value to: text before caret + 4 spaces + text after caret
+        this.value = this.value.substring(0,start) + "    " + this.value.substring(end);
+        this.selectionStart = this.selectionEnd = start + 4;
+    } 
+});
+</script>
+{% block extended_extra_scripts %}{% endblock %}
+{% endblock extra_scripts %}

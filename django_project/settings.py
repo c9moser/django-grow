@@ -14,6 +14,7 @@ from pathlib import Path
 from environ import Env
 from django.conf import settings
 from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as L_, pgettext_lazy as Q_
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -237,8 +238,13 @@ ALLOW_SIGNUP = env.bool('GROW_ALLOW_SIGNUP')
 LOGIN_REQUIRED = env.bool('GROW_LOGIN_REQUIRED')
 INCLUDE_WIKI = env.bool('GROW_INCLUDE_WIKI')
 
+LOCALE_PATHS = [
+    BASE_DIR / "locale",
+]
+
 if INCLUDE_WIKI:
     third_party_apps.append('tinywiki')
+    TINYWIKI_HOME = Q_("wiki", "grow-home")
 
 # load local config
 _local_settings_path = BASE_DIR / 'django_project' / 'local'

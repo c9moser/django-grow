@@ -486,7 +486,7 @@ class Growlog(models.Model):
 
 class GrowlogStrain(models.Model):
     #: The growlog for this strain
-    grow_log = models.ForeignKey(
+    growlog = models.ForeignKey(
         Growlog,
         on_delete=models.CASCADE,
         related_name='growlog_strains',
@@ -515,16 +515,16 @@ class GrowlogStrain(models.Model):
     class Meta:
         db_table = "grow_growlog_strains"
         unique_together = [
-            ('grow_log', 'strain')
+            ('growlog', 'strain')
         ]
 
 
 class GrowlogEntry(models.Model):
     #: The growlog this entry belongs to
-    grow_log = models.ForeignKey(Growlog,
-                                 on_delete=models.CASCADE,
-                                 related_name='entries',
-                                 verbose_name=_("grow log"))
+    growlog = models.ForeignKey(Growlog,
+                                on_delete=models.CASCADE,
+                                related_name='entries',
+                                verbose_name=_("grow log"))
     #: The timestamp of this entry
     timestamp = models.DateTimeField(_("timestamp"),
                                      auto_now_add=True)
@@ -575,13 +575,13 @@ class GrowlogEntry(models.Model):
         Calculate the age of the grow log entry in days since the grow log's germination.
         Returns 0 if germination date is not set.
         """
-        if not self.grow_log.is_germinated and not self.grow_log.is_cutted:
+        if not self.growlog.is_germinated and not self.growlog.is_cutted:
             return 0
 
-        if self.grow_log.is_germinated:
-            delta = self.timestamp.date() - self.grow_log.germinated_at
+        if self.growlog.is_germinated:
+            delta = self.timestamp.date() - self.growlog.germinated_at
         else:
-            delta = self.timestamp.date() - self.grow_log.is_cutted
+            delta = self.timestamp.date() - self.growlog.is_cutted
 
         return delta.days
 
@@ -591,7 +591,7 @@ class GrowlogEntry(models.Model):
         Calculate the age of the grow log entry in weeks since the grow log's germination.
         Returns None if germination date is not set.
         """
-        if not self.grow_log.is_germinated:
+        if not self.growlog.is_germinated:
             return None
 
         if self.age_days % 7 > 3:
@@ -604,7 +604,7 @@ class GrowlogEntry(models.Model):
         Calculate the age of the grow log entry in weeks and days since the grow log's germination.
         Returns None if germination date is not set.
         """
-        if not self.grow_log.is_germinated:
+        if not self.growlog.is_germinated:
             return None
 
         weeks = self.age_days // 7
@@ -617,9 +617,9 @@ class GrowlogEntry(models.Model):
         Calculate the number of days since flowering started for the grow log entry.
         Returns 0 if flowering date is not set.
         """
-        if not self.grow_log.is_flowering:
+        if not self.growlog.is_flowering:
             return 0
-        delta = self.timestamp.date() - self.grow_log.flowering_at
+        delta = self.timestamp.date() - self.growlog.flowering_at
         return delta.days
 
     @property
@@ -628,7 +628,7 @@ class GrowlogEntry(models.Model):
         Calculate the number of weeks since flowering started for the grow log entry.
         Returns 0 if flowering date is not set.
         """
-        if not self.grow_log.is_flowering:
+        if not self.growlog.is_flowering:
             return 0
         if self.flowering_days % 7 > 3:
             return (self.flowering_days // 7) + 1
@@ -640,14 +640,14 @@ class GrowlogEntry(models.Model):
         Calculate the number of weeks and days since flowering started for the grow log entry.
         Returns None if flowering date is not set.
         """
-        if not self.grow_log.is_flowering:
+        if not self.growlog.is_flowering:
             return None
 
-        if not self.grow_log.is_harvested:
+        if not self.growlog.is_harvested:
             weeks = self.flowering_days // 7
             days = self.flowering_days % 7
         else:
-            delta = self.grow_log.harvested_at - self.grow_log.flowering_at
+            delta = self.growlog.harvested_at - self.growlog.flowering_at
             total_days = delta.days
             weeks = total_days // 7
             days = total_days % 7

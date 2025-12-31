@@ -6,12 +6,16 @@ from django.db import models
 from django.db.models.functions import Upper
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
+
 from ..enums import (
     TextType,
     TEXT_CHOICES,
     StrainType,
     STRAIN_TYPE_CHOICES
 )
+
+from ..parser.bbcode import render_description_bbcode
+from ..parser.markdown import render_description_markdown
 
 
 class Breeder(models.Model):
@@ -29,10 +33,27 @@ class Breeder(models.Model):
         blank=True,
         null=True
     )
+
+    @property
+    def description_html(self) -> str:
+        if not self.description:
+            return ""
+
+        if self.description_type == TextType.BBCODE:
+            return render_description_bbcode(self.description)
+        elif self.description_type == TextType.MARKDOWN:
+            return render_description_markdown(self.description)
+        else:
+            return self.description
+
+    @property
+    def has_description(self) -> bool:
+        return bool(self.description)
+
     description_type_data = models.CharField(
         _("description type"),
         max_length=50,
-        default="markdown",
+        default=TextType.MARKDOWN.value,
         db_column="description_type",
         choices=TEXT_CHOICES
     )
@@ -57,7 +78,7 @@ class Breeder(models.Model):
     )
 
     breeder_url = models.URLField(
-        _("breeder URL"),
+        _("breeder url"),
         blank=True,
         null=True
     )
@@ -120,6 +141,25 @@ class Breeder(models.Model):
                 ret += 1
         return ret
 
+    @property
+    def has_logo(self) -> bool:
+        return (bool(self.logo_image) or bool(self.logo_url))
+
+    @property
+    def logo(self) -> str:
+        """
+        Returns the image url if logo_image.url or logo_url exists.
+        If none of both exist an empty string is returned.
+
+        :return: The logo image url.
+        :rtype: str
+        """
+        if self.logo_image:
+            return self.logo_image.url
+        if self.logo_url:
+            return self.logo_url
+        return ""
+
     def __str__(self):
         return self.name
 
@@ -142,12 +182,41 @@ class Strain(models.Model):
         blank=True,
         null=True
     )
-    description_type = models.CharField(
+    description_type_data = models.CharField(
         _("description type"),
         max_length=50,
-        default="markdown",
-        choices=TEXT_CHOICES
+        default=TextType.MARKDOWN.value,
+        choices=TEXT_CHOICES,
+        db_column="description_type"
     )
+
+    @property
+    def has_description(self) -> bool:
+        return bool(self.description)
+
+    @property
+    def description_html(self):
+        if not self.description:
+            return ""
+
+        if self.description_type == TextType.BBCODE:
+            return render_description_bbcode(self.description)
+        elif self.description_type == TextType.MARKDOWN:
+            return render_description_markdown(self.description)
+
+        return self.description
+
+    @property
+    def description_type(self) -> TextType:
+        return TextType.from_string(self.description_type_data)
+
+    @description_type.setter
+    def description_type(self, text_type: TextType | str):
+        if not isinstance(text_type, TextType):
+            text_type = TextType.from_string(text_type)
+
+        self.description_type_data = text_type.value
+
     breeder = models.ForeignKey(
         Breeder,
         on_delete=models.CASCADE,
@@ -202,7 +271,7 @@ class Strain(models.Model):
         _("strain type"),
         max_length=127,
         choices=STRAIN_TYPE_CHOICES,
-        default=StrainType.UNKNOWN,
+        default=StrainType.UNKNOWN.value,
         db_column="genetics",
     )
 
@@ -236,6 +305,28 @@ class Strain(models.Model):
     @property
     def growlog_count(self):
         return self.growlog_strains.count()
+
+    @property
+    def flowering_time_weeks(self) -> int:
+        if not self.flowering_time_days:
+            return 0
+
+        ret = self.flowering_time_days // 7
+        if (self.flowering_time_days % 7) > 3:
+            ret += 1
+        return ret
+
+    @property
+    def has_logo(self) -> bool:
+        return (bool(self.logo_image) or bool(self.logo_url))
+
+    @property
+    def logo(self) -> str:
+        if self.logo_image:
+            return self.logo_image.url
+        elif self.logo_url:
+            return self.logo_url
+        return ""
 
     class Meta:
         db_table = "grow_strain"

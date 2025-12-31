@@ -1,0 +1,57 @@
+{% extends base_template %}
+{% load i18n static %}
+
+{% block content %}
+{% if use_bootstrap %}
+<nav aria-label="breadcrumb">
+    {% url "grow:home" as grow_home %}
+    <ol class="breadcrumb" style="--bs-breadcrumb-divider:'&#10093;';">
+        <li class="breadcrumb-item"><a href="/">{% translate "Home" %}</a></li>
+        <li class="breadcrumb-item">
+            <a href="{% url 'tinywiki:home' %}">{% translate "Wiki" %}</a>
+        </li>
+        <li class="breadcrumb-item active">{% translate "Table of Contents" %}</li>
+    </ol>
+</nav>
+{% endif %}
+
+<h1>{% translate "Table of Contents" %}</h1>
+
+{% for toc_section,pages_1,pages_2 in toc %}
+<h2>{{ toc_section }}</h2>
+<div class="row gx-4 mb-2">
+<div class="col-lg-6">
+    <ul style="list-style-type:none;" class="mb-0 ps-0">
+{% for page in pages_1 %}
+    <li>
+        <a class="icon-link icon-link-hover" href="{% url 'tinywiki:page' page.slug %}">
+            {{ page.title }}
+            {% if page.is_system %}
+            <svg class="bi"><use xlink:href="{% static 'icons/bootstrap-icons.svg' %}#journal" ></use></svg>
+            {% else %}
+            <svg class="bi"><use xlink:href="{% static 'icons/bootstrap-icons.svg' %}#book" ></use></svg>
+            {% endif %}
+        </a>
+    </li>
+{% endfor %}
+    </ul>
+</div>
+<div class="col-lg-6">
+    <ul style="list-style-type:none;" class="mt-0 ps-0">
+{% for page in pages_2 %}
+        <li>
+            <a class="icon-link icon-link-hover" href="{% url 'tinywiki:page' page.slug %}">
+            {{ page.title }}
+            {% if page.is_system %}
+            <svg class="bi"><use xlink:href="{% static 'icons/bootstrap-icons.svg' %}#journal" ></use></svg>
+            {% else %}
+            <svg class="bi"><use xlink:href="{% static 'icons/bootstrap-icons.svg' %}#book" ></use></svg>
+            {% endif %}
+        </a>
+        </li>
+{% endfor %}
+    </ul>
+</div>
+</div>
+{% endfor%}
+{% endblock %}

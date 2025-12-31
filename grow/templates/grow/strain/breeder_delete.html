@@ -1,0 +1,22 @@
+{% extends base_template %}
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+{% translate "Delete Breeder" as delete_breeder_label %}
+    <p>
+        {% blocktranslate with slug=breeder.slug name=breeder.name %}
+        If you really want to delete breeder {{ name }} type <i>{{ slug }}</i>
+        in the field below and hit the {{ delete_breeder_label }} button.
+        {% endblocktranslate %}
+    </p>
+    {{ form.as_p }}
+    <div>
+        <button type="submit">
+            {{ delete_breeder_label }}
+        </button>
+        <button type="button" onclick="location.href='{% url 'grow:breeder-detail' slug=breeder.slug %}'">
+            {% translate "Cancel" %}
+        </button>
+    </div>
+</form>
+{% endblock %}

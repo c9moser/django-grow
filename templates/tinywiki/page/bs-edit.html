@@ -1,0 +1,45 @@
+{% extends "tinywiki/page/bs-model-base.html" %}
+{% load i18n static %}
+
+{% block head_title %}{{ site_title }} - {% translate "Edit Wiki Page" %}{% endblock head_title %}
+
+{% block title %}{% translate "Edit Wiki Page" %}{% endblock title%}
+
+{% block scripts %}
+<script src="{% static "tinywiki/js/htmx.min.js" %}"></script>
+{% endblock %}
+
+{% block form_buttons %}
+<span id="popover-btn-save-and-continue">
+    <button id="btn-save-and-continue"
+        type="button"
+        class="btn btn-primary" 
+        id="btn-save-and-continue"
+        data-bs-toggle="popopver"
+        data-bs-placement="top"
+        hx-target="#popover-btn-save-and-continue"
+        hx-post="{% url "tinywiki:hx-page-edit" pk=page.pk %}"
+    >
+        {% translate "Save and continue" %}
+    </button>
+</span>
+<button type="submit" class="btn btn-success">{% translate "Save and show" %}</button>
+<a class="btn btn-secondary" href="{% url "tinywiki:page" form.instance.slug %}">{% translate "Cancel" %}</a>
+{% endblock form_buttons %}
+
+{% block extended_extra_scripts%}
+<script>
+document.addEventListener('keydown',function(e) {
+if (e.ctrlKey && e.key == "s") {
+        e.preventDefault();
+        btn = document.getElementById("btn-save-and-continue")
+        btn.click()        
+    }
+});
+</script>
+<script>
+    btn_save_popover = new bootstrap.Popover(document.getElementById("btn-save-and-continue"),trigger="manual");
+    btn_save_popover.show();
+    setTimeout(()=>{btn_save_popover.hide();},3000);
+</script>
+{% endblock %}

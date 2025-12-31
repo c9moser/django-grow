@@ -1,1 +1,1 @@
-from ..enums import LengthUnit, TemperatureUnit
+from ..enums import LengthUnit, TemperatureUnit  # noqa

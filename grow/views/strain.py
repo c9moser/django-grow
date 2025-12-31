@@ -1,6 +1,6 @@
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.views.generic.edit import (
     CreateView,
     UpdateView,
@@ -16,15 +16,32 @@ from ..api.models import (
     Strain
 )
 from .. import settings
-from ..forms import StrainForm
+from ..forms import (
+    DeleteWithSlugForm,
+    StrainForm
+)
+
+from ..api.permission import growlog_user_is_allowed_to_view
 
 
 class BreederIndexView(BaseView):
     template_name = settings.GROW_TEMPLATES['grow/strain']
 
     def get(self, request: HttpRequest) -> HttpResponse:
-        breeders_allowed_to_edit = [breeder.id for breeder in Breeder.objects.all()]  # TODO: add logic
-        allowed_to_create = True  # TODO: add logic
+        if request.user.is_authenticated:
+            breeders_allowed_to_edit = [
+                breeder.id for breeder in Breeder.objects.all()
+            ]  # TODO: add logic
+            breeders_allowed_to_delete = [
+                breeder.id for breeder in Breeder.objects.all()
+                if breeder.growlog_count == 0
+            ]
+            allowed_to_add_breeder = True  # TODO: add logic
+        else:
+            breeders_allowed_to_edit = []
+            breeders_allowed_to_delete = []
+            allowed_to_add_breeder = False
+
         breeders_id = []
         labels_id = []
         breeder_ids = []
@@ -35,10 +52,10 @@ class BreederIndexView(BaseView):
             breeders.append(breeder)
             if breeder.name[0].isdigit():
                 if 'breeder-num' in breeder_ids:
-                    breeders_id.append((breeder, None))
+                    breeders_id.append((breeder, None, None))
                 else:
                     breeder_ids.append('breeder-num')
-                    breeders_id.append((breeder, 'breeder-num'))
+                    breeders_id.append((breeder, 'breeder-num', '0-9'))
                     labels_id.append('breeder-num', '0-9')
             else:
                 id = breeder_id_format.format(breeder.name[0].lower())
@@ -47,7 +64,9 @@ class BreederIndexView(BaseView):
                 else:
                     breeder_ids.append(id)
                     labels_id.append((breeder.name[0].upper(), id))
-                    breeders_id.append((breeder, id))
+                    breeders_id.append((breeder, id, breeder.name[0].upper()))
+
+        group_breeders = (Breeder.objects.all().count() > 30)
 
         if settings.USE_BOOTSTRAP:
             label_format = "<a class=\"link-body-emphasis link-opacity-50 link-opacity-100-hover link-underline-opacity-50 link-underline-opacity-75-hover\" href=\"#{id}\">{label}</a>"  # noqa: E501
@@ -55,40 +74,54 @@ class BreederIndexView(BaseView):
             label_format = "<a href=\"#{id}\">{label}</a>"
         labels = ', '.join(label_format.format(id=id, label=label) for label, id in labels_id)
         labels = mark_safe(labels)
+
         return render(request, self.template_name, context={
             'breeder_count': Breeder.objects.count(),
             'breeders': breeders,
             'breeders_id': breeders_id,
             'labels': labels,
             'breeders_allowed_to_edit': breeders_allowed_to_edit,
-            'allowed_to_create': allowed_to_create
+            'breeders_allowed_to_delete': breeders_allowed_to_delete,
+            'allowed_to_add_breeder': allowed_to_add_breeder,
+            'group_breeders': group_breeders,
         })
 
 
 class BreederView(BaseView):
-    template_name = settings.GROW_TEMPLATES['grow/strain/breeder']
+    template_name = settings.GROW_TEMPLATES['grow/breeder/detail']
 
     def get(self, request: HttpRequest, slug: str) -> HttpResponse:
         breeder = get_object_or_404(Breeder, slug=slug)
-        can_add_strains = True  # TODO: add logic
-        strains_allowed_to_edit = [strain.id for strain in breeder.strains.all()]  # TODO: add logic
+        allowed_to_edit = request.user.is_authenticated  # TODO: add logic
+        allowed_to_delete = request.user.is_authenticated  # TODO: allowed_to_delete
+        allowed_to_add_strains = request.user.is_authenticated  # TODO: add logic
+
+        if request.user.is_authenticated:
+            strains_allowed_to_edit = [
+                strain.id for strain in breeder.strains.all()
+            ]  # TODO: add logic
+        else:
+            strains_allowed_to_edit = []
+
         strains = breeder.strains.all().order_by('name')
         return render(request, self.template_name, context={
             'breeder': breeder,
-            'can_add_strains': can_add_strains,
+            'allowed_to_edit': allowed_to_edit,
+            'allowed_to_delete': allowed_to_delete,
+            'allowed_to_add_strains': allowed_to_add_strains,
             'strains': strains,
             'strains_allowed_to_edit': strains_allowed_to_edit,
         })
 
 
-class BreederCreateView(CreateView):
-    template_name = settings.GROW_TEMPLATES['grow/strain/breeder/create']
+class BreederCreateView(LoginRequiredMixin, CreateView):
+    template_name = settings.GROW_TEMPLATES['grow/breeder/create']
     model = Breeder
     fields = [
         "slug",
         "name",
         "description",
-        "description_type",
+        "description_type_data",
         "breeder_url",
         "seedfinder_url",
         "logo_url",
@@ -105,15 +138,15 @@ class BreederCreateView(CreateView):
         return reverse("grow:breeder-detail", kwargs={'slug': self._slug})
 
 
-class BreederUpdateView(UpdateView):
-    template_name = settings.GROW_TEMPLATES["grow/strain/breeder/update"]
+class BreederUpdateView(LoginRequiredMixin, UpdateView):
+    template_name = settings.GROW_TEMPLATES["grow/breeder/update"]
     model = Breeder
 
     fields = [
         "slug",
         "name",
         "description",
-        "description_type",
+        "description_type_data",
         "breeder_url",
         "seedfinder_url",
         "logo_url",
@@ -122,12 +155,49 @@ class BreederUpdateView(UpdateView):
 
     def form_valid(self, form):
         ret = super().form_valid(form)
-        self._key = form.cleaned_data['key']
+        self._slug = form.cleaned_data['slug']
         return ret
 
     @property
     def success_url(self):
-        return reverse("grow:breeder-detail", kwargs={'key': self._key})
+        return reverse("grow:breeder-detail", kwargs={'slug': self.get_object().slug})
+
+
+class BreederDeleteView(LoginRequiredMixin, View):
+    template_name = settings.GROW_TEMPLATES['grow/breeder/delete']
+    form_class = DeleteWithSlugForm
+    success_url = reverse_lazy("grow:breeder-overview")
+
+    def get(self, request: HttpRequest, slug: str) -> HttpResponse:
+        breeder = get_object_or_404(Breeder, slug=slug)
+        return render(request, self.template_name, context={
+            'form': self.form_class(),
+            'breeder': breeder,
+        })
+
+    def post(self, request: HttpRequest, slug: str) -> HttpResponse:
+        breeder = get_object_or_404(Breeder, slug=slug)
+        form = self.form_class(request.POST)
+        delete_error = None
+
+        if form.is_valid():
+            if form.cleaned_data['slug'] == breeder.slug:
+                try:
+                    breeder.delete()
+                    return redirect(self.success_url)
+
+                except Exception as error:
+                    delete_error = str(error)
+
+        return render(request, self.template_name, context={
+            'form': self.form_class(),
+            'delete_error': delete_error,
+            'breeder': breeder,
+        })
+
+
+class HxBreederDelete(LoginRequiredMixin, View):
+    pass
 
 
 class StrainView(BaseView):
@@ -136,8 +206,19 @@ class StrainView(BaseView):
     def get(self, request: HttpRequest, breeder_slug: str, slug: str) -> HttpResponse:
         breeder = get_object_or_404(Breeder, slug=breeder_slug)
         strain = get_object_or_404(breeder.strains, slug=slug)
+        growlogs = [
+            growlog_strain.growlog
+            for growlog_strain in strain.growlog_strains.all().order_by(Lower('growlog__name'))
+            if growlog_user_is_allowed_to_view(self.request.user, growlog_strain.growlog)
+        ]
+        allowed_to_edit = request.user.is_authenticated
+        allowed_to_delete = request.user.is_authenticated and strain.growlog_count == 0
+
         return render(request, self.template_name, context={
             'strain': strain,
+            'growlogs': growlogs,
+            'allowed_to_delete': allowed_to_delete,
+            'allowed_to_edit': allowed_to_edit,
         })
 
 
@@ -157,14 +238,18 @@ class StrainCreateView(LoginRequiredMixin, View):
         form = StrainForm(request.POST)
 
         if form.is_valid():
+            if form.cleaned_data['flowering_time_unit'] == 'w':
+                form.cleaned_data['flowering_time_days'] = (
+                    form.cleaned_data['flowering_time_days'] * 7
+                )
             strain = form.save(commit=False)
             strain.breeder = breeder
             strain.save()
 
-            return redirect("grow:strain-detail",kwargs={
+            return redirect(reverse("grow:strain-detail", kwargs={
                 'breeder_slug': breeder.slug,
                 'slug': strain.slug,
-            })
+            }))
 
         form.fields['name'] = strain.name
 
@@ -174,7 +259,7 @@ class StrainCreateView(LoginRequiredMixin, View):
         })
 
 
-class StrainUpdateView(BaseView):
+class StrainUpdateView(LoginRequiredMixin, View):
     template_name = "grow/strain/strain_update.html"
 
     def get(self, request: HttpRequest, breeder_slug: str, slug: str) -> HttpResponse:
@@ -192,6 +277,8 @@ class StrainUpdateView(BaseView):
 
         if form.is_valid():
             strain = form.save(commit=False)
+            if form.cleaned_data['flowering_time_unit'] == 'w':
+                strain.flowering_time_days = strain.flowering_time_days * 7
             strain.save()
 
             return redirect(reverse("grow:strain-detail", kwargs={

@@ -1,0 +1,45 @@
+{% extends base_template %}
+{% load i18n %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.11.1/build/styles/default.min.css">
+{% endblock %}
+
+{% block content %}
+{% if page %}
+{% if use_bootstrap %}
+<nav aria-label="breadcrumb">
+    {% url "grow:home" as grow_home %}
+    <ol class="breadcrumb" style="--bs-breadcrumb-divider:'&#10093;';">
+        <li class="breadcrumb-item"><a href="/">{% translate "Home" %}</a></li>
+        <li class="breadcrumb-item active">{% translate "Wiki" %}</li>
+    </ol>
+</nav>
+{% endif %}
+
+<h1>{{ page.title }}</h1>
+{{ page.html_content }}
+{% else %}
+<h1>{% translate "Welcome to the Grow Wiki" %}</h1>
+
+
+<p style="text-align:justify">{% blocktranslate %}You are seeing this welcome page because there is no Welcome page
+    configured for your Wiki. To configure a welcome page {{ create_tw_home }} and put the content for your welcome-page there.{% endblocktranslate %}</p>
+<p style="text-align:justify">{% blocktranslate %}You can use BBCode or Markdown to write your pages. If you don't know
+    Markdown or BBCode there are two guides you can consult before you start editing your pages.{% endblocktranslate %}
+    <ol>
+        <li>{{ bbcode_guide }}</li>
+        <li>{{ markdown_guide }}</li>
+    </ol>
+</p>
+{% endif %}
+{% endblock content %}
+
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.11.1/build/highlight.min.js"></script>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>hljs.highlightAll();</script>
+{% endblock %}
