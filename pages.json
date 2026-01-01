@@ -1,0 +1,49 @@
+{
+    "app": "grow",
+    "prefix": "grow-",
+    "version": 0,
+    "pages": {
+        "grow-de-fertilizers-biobizz": {
+            "title": "Biobizz Düngerschema",
+            "content_type": "bbcode",
+            "status": "in_progress",
+            "file": "pages/grow-de-fertilizers-biobizz.bbcode"
+        },
+        "grow-fertilizers-biobizz": {
+            "title": "Biobizz Fertilizer",
+            "content_type": "bbcode",
+            "status": "in_progress",
+            "file": "pages/grow-fertilizers-biobizz.bbcode"
+        },
+        "grow-fertilizers": {
+            "title": "Fertilizers",
+            "content_type": "bbcode",
+            "status": "in_progress",
+            "file": "pages/grow-fertilizers.bbcode"
+        },
+        "grow-de-fertilizers": {
+            "title": "Dünger",
+            "content_type": "bbcode",
+            "status": "in_progress",
+            "file": "pages/grow-de-fertilizers.bbcode"
+        },
+        "grow-license": {
+            "title": "Grow License",
+            "content_type": "bbcode",
+            "status": "published",
+            "file": "pages/grow-license.bbcode"
+        },
+        "grow-home": {
+            "title": "Wiki Homepage",
+            "content_type": "bbcode",
+            "status": "in_progress",
+            "file": "pages/grow-home.bbcode"
+        },
+        "grow-de-home": {
+            "title": "Grow Wiki",
+            "content_type": "bbcode",
+            "status": "in_progress",
+            "file": "pages/grow-de-home.bbcode"
+        }
+    }
+}

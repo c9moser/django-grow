@@ -5,8 +5,8 @@
             <h5 class="modal-title">{% translate "Delete Breeder" %}</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
         </div>
-        <form method="post" action="{% url grow:hx_breeder_delete pk=breeder.pk %}">
-            {% translate "Delete Breeder" as delete_breeder_label %}
+        {% translate "Delete Breeder" as delete_breeder_label %}
+        <form method="post" action="{% url 'grow:hx-breeder-delete' pk=breeder.pk %}">
             <div class="modal-body">
                 {% csrf_token %}
                 <p>
@@ -17,23 +17,22 @@
                 </p>
                 <p>
                     <label for="form.slug.id_for_label" class="visually-hidden">{{ from.slug.label }}</label>
-                    {% render_field form.slug class="form-control" placeholoder=breeder.slug %}
+                    {% render_field form.slug class="form-control" placeholder=breeder.slug %}
                 </p>
             </div>
             <div class="modal-footer text-end">
-                <button type="submit"
-                    class="btn btn-danger"
-                    hx-trigger="click"
-                    hx-post="{% url 'grow:hx-breeder-delete' %}">
-                    <i class="bi bi-x-square"></i>
+                <button type="submit" class="btn btn-danger">
+                    <i class="bi bi-person-fill-dash"></i>
                     {{ delete_breeder_label }}
                 </button>
                 <button type="button"
                     class="btn btn-secondary"
-                    data-bs-dismiss="modal">
+                    data-bs-dismiss="modal"
+                >
+                    <i class="bi bi-x">
                     {% translate "Cancel" %}
                 </button>
             </div>
-        </form>
-    </div>
+        </div>
+    </form>
 </div>

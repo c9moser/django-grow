@@ -1,5 +1,25 @@
 {% extends "grow/strain/strain_form.html" %}
 {% load i18n %}
 {% block form_buttons %}
-<button type="submit" class="btn btn-success">{% translate "Update Strain" %}</button>
+{% if use_bootstrap %}
+<button type="submit" class="btn btn-success">
+    <i class="bi bi-check"></i>
+    {% translate "Update Strain" %}
+</button>
+<a href="{% url 'grow:strain-detail' breeder_slug=form.instance.breeder.slug slug=form.instance.slug %}"
+    class="btn btn-secondary"
+>
+    <i class="bi bi-x"></i>
+    {% translate "Cancel" %}
+</a>
+{% else %}
+<button type="submit">
+    {% translate "Update Strain" %}
+</button>
+<button
+    onclick="locaction.href='{% url 'grow:strain-detail' breeder_slug=form.instance.breeder.slug slug=form.instance.slug %}'"
+    class="btn btn-secondary">
+    {% translate "Cancel" %}
+</button>
+{% endif %}
 {% endblock %}

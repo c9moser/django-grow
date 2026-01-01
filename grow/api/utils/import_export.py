@@ -11,7 +11,7 @@ from django.contrib.auth import get_user_model
 from ..exceptions import NotFileError, FileFormatError
 from .. import settings
 from ..models import Breeder, Strain, StrainImage
-from ..enums import TextType
+from ..enums import TextType, StrainType
 
 
 _breeder_logo_archname_format = "breeder/logos/{basename}"
@@ -100,7 +100,7 @@ def export_data(filename: str | Path | None) -> bool:
     else:
         exports_version = True
         exports_file = Path(settings.GROW_EXPORTS_FILE_FORMAT.format(
-            timestamp.strftime("%Y%m%d%H%M%S")
+            date=timestamp.strftime("%Y%m%d%H%M%S")
         )).resolve()
 
     if include_wiki:
@@ -143,8 +143,11 @@ def export_data(filename: str | Path | None) -> bool:
                         json.dumps(breeder_data, ensure_ascii=False, indent=4))
 
     if exports_version:
-        with open(settings.GROW_EXPORTS_VERSIONS_FILE, 'rt', encoding="utf-8") as vifile:
-            exports = vifile.readlines()
+        if os.path.isfile(settings.GROW_EXPORTS_VERSIONS_FILE):
+            with open(settings.GROW_EXPORTS_VERSIONS_FILE, 'rt', encoding="utf-8") as vifile:
+                exports = vifile.readlines()
+        else:
+            exports = []
 
         if len(exports) > (settings.GROW_EXPORTS_VERSIONS - 1):
             for ef_basename in exports[settings.GROW_EXPORTS_VERSIONS - 1:]:
@@ -171,14 +174,14 @@ def import_data(filename: str | Path, user=None) -> bool:
         except UserModel.DoesNotExist:
             return user
 
-    def import_breeder(zarchive: zipfile.ZipFile, arcname: str, slug: str):
+    def import_breeder(zarchive: zipfile.ZipFile, arcname: str):
         try:
             data = json.loads(zarchive.read(arcname).decode("utf-8"))
         except Exception:
             return False
 
         try:
-            breeder = Breeder.objects.get(slug=slug)
+            breeder = Breeder.objects.get(slug=data['slug'])
             breeder.name = data['name']
             breeder.description_type = TextType.from_string(data['description_type'])
             breeder.description = data['description']
@@ -188,7 +191,8 @@ def import_data(filename: str | Path, user=None) -> bool:
             breeder.save()
 
         except Breeder.DoesNotExist:
-            breeder = Breeder.create(
+            breeder = Breeder.objects.create(
+                slug=data['slug'],
                 name=data['name'],
                 description_type_data=TextType.from_string(data['description_type']).value,
                 description=data['description'],
@@ -213,36 +217,43 @@ def import_data(filename: str | Path, user=None) -> bool:
 
         if 'strains' in data:
             for strain_slug, strain_data in data['strains'].items():
-                import_strain(zarchive, slug, strain_slug, strain_data)
+                import_strain(zarchive, breeder, strain_slug, strain_data)
     # ## END import_breeder()
 
-    def import_strain(zarchive: zipfile.ZipFile, breeder_slug: str, slug: str, data: dict):
+    def import_strain(zarchive: zipfile.ZipFile, breeder: Breeder, slug: str, data: dict):
+        print(data['name'])
         try:
-            strain = Strain.objects.get(slug=slug)
+            strain = breeder.strains.get(slug=slug)
             strain.name = data['name']
+            strain.creator_name = data['creator_name']
             strain.description = data['description']
             strain.description_type = TextType.from_string(data['description_type'])
-            strain.creator_name = data['creator_name']
+            strain.genetics = StrainType.from_string(data['genetics'])
+            strain.logo_url = data['logo_url']
             strain.strain_url = data['strain_url']
             strain.seedfinder_url = data['seedfinder_url']
-            strain.is_automatic = data['is_automaitc']
+            strain.is_automatic = data['is_automatic']
             strain.is_feminized = data['is_feminized']
-            strain.is_regular = data['is regular']
+            strain.is_regular = data['is_regular']
             strain.flowering_time_days = data['flowering_time_days']
             strain.save()
         except Strain.DoesNotExist:
             strain = Strain.objects.create(
-                slug=slug,
+                breeder=breeder,
                 created_by=get_creator_user(user, data['creator_name']),
+                creator_name=data['creator_name'],
                 description=data['description'],
                 description_type_data=TextType.from_string(data['description_type']).value,
-                creator_name=data['creator_name'],
-                strain_url=data['strain_url'],
-                seedfinder_url=data['seedfinder_url'],
-                is_automatic=data['is_automaitc'],
+                flowering_time_days=data['flowering_time_days'],
+                genetics=StrainType.from_string(data['genetics']),
+                is_automatic=data['is_automatic'],
                 is_feminized=data['is_feminized'],
-                is_regular=data['is regular'],
-                flowering_time_days=data['flowering_time_days']
+                is_regular=data['is_regular'],
+                logo_url=data['logo_url'],
+                name=data['name'],
+                seedfinder_url=data['seedfinder_url'],
+                slug=slug,
+                strain_url=data['strain_url'],
             )
 
         if 'logo_image' in data:
@@ -250,7 +261,7 @@ def import_data(filename: str | Path, user=None) -> bool:
                     or os.path.basename(strain.logo_image) != data['logo_image']):
                 try:
                     img_zpath = _strain_logo_archname_format.format(
-                        breeder_slug=breeder_slug,
+                        breeder_slug=breeder.slug,
                         strain_slug=slug,
                         basename=['logo_image'],
                     )
@@ -273,7 +284,7 @@ def import_data(filename: str | Path, user=None) -> bool:
                     continue
                 img_file = ImageFile(
                     _strain_image_archname_format.format(
-                        breeder_slug=breeder_slug,
+                        breeder_slug=breeder.slug,
                         strain_slug=slug,
                         basename=image['image']
                     )

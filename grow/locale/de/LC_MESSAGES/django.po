@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-31 07:40+0100\n"
+"POT-Creation-Date: 2025-12-31 18:53+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: grow/forms/generic.py:8
+msgid "Slug"
+msgstr ""
 
 #: grow/forms/strain.py:9
 msgid "Days"
@@ -130,7 +134,7 @@ msgid "Genetics"
 msgstr ""
 
 #: grow/templates/grow/index/index.html:104
-#: grow/templates/grow/strain/breeder_detail.html:125
+#: grow/templates/grow/strain/breeder_detail.html:132
 #, python-format
 msgid ""
 "\n"
@@ -177,21 +181,21 @@ msgstr ""
 msgid "Strains"
 msgstr ""
 
-#: grow/templates/grow/strain/breeder_detail.html:36
-#: grow/templates/grow/strain/breeder_detail.html:51
+#: grow/templates/grow/strain/breeder_detail.html:40
+#: grow/templates/grow/strain/breeder_detail.html:58
 msgid "Edit breeder"
 msgstr ""
 
-#: grow/templates/grow/strain/breeder_detail.html:44
-#: grow/templates/grow/strain/breeder_detail.html:52
+#: grow/templates/grow/strain/breeder_detail.html:51
+#: grow/templates/grow/strain/breeder_detail.html:59
 msgid "Delete breeder"
 msgstr ""
 
-#: grow/templates/grow/strain/breeder_detail.html:59
+#: grow/templates/grow/strain/breeder_detail.html:66
 msgid "Breeder logo"
 msgstr ""
 
-#: grow/templates/grow/strain/breeder_detail.html:63
+#: grow/templates/grow/strain/breeder_detail.html:70
 #, python-format
 msgid ""
 "\n"
@@ -203,7 +207,7 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: grow/templates/grow/strain/breeder_detail.html:68
+#: grow/templates/grow/strain/breeder_detail.html:75
 #, python-format
 msgid ""
 "\n"
@@ -214,7 +218,7 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: grow/templates/grow/strain/breeder_detail.html:73
+#: grow/templates/grow/strain/breeder_detail.html:80
 #, python-format
 msgid ""
 "\n"
@@ -226,15 +230,15 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: grow/templates/grow/strain/breeder_detail.html:81
+#: grow/templates/grow/strain/breeder_detail.html:88
 msgid "Breeder's homepage"
 msgstr ""
 
-#: grow/templates/grow/strain/breeder_detail.html:84
+#: grow/templates/grow/strain/breeder_detail.html:91
 msgid "Breeder on SeedFinder.eu"
 msgstr ""
 
-#: grow/templates/grow/strain/breeder_detail.html:132
+#: grow/templates/grow/strain/breeder_detail.html:139
 #, python-format
 msgid ""
 "\n"
@@ -247,7 +251,7 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: grow/templates/grow/strain/breeder_detail.html:164
+#: grow/templates/grow/strain/breeder_detail.html:171
 msgid "Breeder information"
 msgstr ""
 
@@ -337,7 +341,7 @@ msgid "Genetics:"
 msgstr ""
 
 #: grow/templates/grow/strain/strain_detail.html:95
-msgid "This is a autflowering strain?"
+msgid "Is this is a autoflowering strain?"
 msgstr ""
 
 #: grow/templates/grow/strain/strain_detail.html:96
@@ -355,11 +359,11 @@ msgid "No"
 msgstr ""
 
 #: grow/templates/grow/strain/strain_detail.html:99
-msgid "You can get regular seeds?"
+msgid "Can one get regular seeds?"
 msgstr ""
 
 #: grow/templates/grow/strain/strain_detail.html:103
-msgid "You can get feminized seeds?"
+msgid "Can one get feminized seeds?"
 msgstr ""
 
 #: grow/templates/grow/strain/strain_detail.html:107

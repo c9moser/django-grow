@@ -1,5 +1,22 @@
 {% extends "grow/strain/breeder_form.html" %}
 {% load i18n %}
+
 {% block form_buttons %}
-<button class="btn btn-success" type="submit"><i class="bi bi-person-add me-2"></i>{% translate "Create Breeder" %}</button>
+{% if use_bootstrap %}
+<button class="btn btn-success" type="submit">
+    <i class="bi bi-person-fill-add me-1"></i>
+    {% translate "Create Breeder" %}
+</button>
+<a class="btn btn-secondary" href="{% url 'grow:breeder-overview' %}">
+    <i class="bi bi-x"></i>
+    {% translate "Cancel" %}
+</a>
+{% else %}
+<button type="submit">{% translate "Create Breeder" %}</button>
+<button type="button"
+    onclick="location.href='{% url 'grow:breeder-overview' %}'">
+    {% translate "Cancel" %}
+</button>
+{% endif %}
+
 {% endblock %}

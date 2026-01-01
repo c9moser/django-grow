@@ -9,7 +9,7 @@ GROW_BUILTIN_TEMPLATES = {
     'grow/breeder/create': 'grow/strain/breeder_create.html',
     'grow/breeder/delete': 'grow/strain/breeder_delete.html',
     'grow/breeder/detail': 'grow/strain/breeder_detail.html',
-    'grow/breeder/hx_delete': 'grow/strain/hx_breeder_delete.html',
+    'grow/breeder/hx-delete': 'grow/strain/hx_breeder_delete.html',
     'grow/breeder/update': 'grow/strain/breeder_update.html',
     'grow/strain': 'grow/strain/index.html',
     'grow/strain/create': 'grow/strain/strain_create.html',

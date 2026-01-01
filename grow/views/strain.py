@@ -9,6 +9,7 @@ from django.db.models.functions import Lower
 from django.utils.safestring import mark_safe
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
+from django.views.generic import FormView
 
 from ._base import BaseView
 from ..api.models import (
@@ -103,6 +104,14 @@ class BreederView(BaseView):
         else:
             strains_allowed_to_edit = []
 
+        if request.user.is_authenticated:
+            strains_allowed_to_delete = [
+                strain.id for strain in breeder.strains.all()
+                if strain.growlog_count == 0
+            ]
+        else:
+            strains_allowed_to_delete = []
+
         strains = breeder.strains.all().order_by('name')
         return render(request, self.template_name, context={
             'breeder': breeder,
@@ -111,6 +120,7 @@ class BreederView(BaseView):
             'allowed_to_add_strains': allowed_to_add_strains,
             'strains': strains,
             'strains_allowed_to_edit': strains_allowed_to_edit,
+            'strains_allowed_to_delete': strains_allowed_to_delete,
         })
 
 
@@ -129,7 +139,10 @@ class BreederCreateView(LoginRequiredMixin, CreateView):
     ]
 
     def form_valid(self, form):
-        form.instance.created_by = self.request.user
+        breeder = form.save(commit=False)
+        breeder.created_by = self.request.user
+        breeder.save()
+
         self._slug = form.cleaned_data['slug']
         return super().form_valid(form)
 
@@ -196,8 +209,43 @@ class BreederDeleteView(LoginRequiredMixin, View):
         })
 
 
-class HxBreederDelete(LoginRequiredMixin, View):
-    pass
+class HxBreederDeleteView(LoginRequiredMixin, FormView):
+    template_name = settings.GROW_TEMPLATES['grow/breeder/hx-delete']
+    form_class = DeleteWithSlugForm
+    success_url = reverse_lazy("grow:breeder-overview")
+
+    def get_failed_url(self) -> str:
+        return reverse("grow:breeder-detail", kwargs={'slug': self.breeder.slug})
+
+    def get_context_data(self, **kwargs):
+        context = super(HxBreederDeleteView, self).get_context_data(**kwargs)
+        context['breeder'] = self.breeder
+        context['form'] = self.form_class()
+        if self.form_error:
+            context['form_error'] = self.form_error
+        return context
+
+    def get(self, request: HttpRequest, pk: int) -> HttpResponse:
+        self.form_error = None
+        self.breeder = get_object_or_404(Breeder, pk=pk)
+        return super(HxBreederDeleteView, self).get(request)
+
+    def post(self, request: HttpRequest, pk: int) -> HttpResponse:
+        self.form_error = None
+        self.breeder = get_object_or_404(Breeder, pk=pk)
+        return super(HxBreederDeleteView, self).post(request)
+
+    def form_valid(self, form: DeleteWithSlugForm):
+        if self.breeder.slug == form.cleaned_data['slug']:
+            try:
+                self.breeder.delete()
+                return super(HxBreederDeleteView, self).form_valid(form)
+            except Exception as ex:
+                print(f"Deleting breeder \"{self.breeder.name}\" failed! ({str(ex)})")
+        return redirect(self.get_failed_url())
+
+    def form_invalid(self, form):
+        return redirect(self.get_failed_url())
 
 
 class StrainView(BaseView):
@@ -225,24 +273,23 @@ class StrainView(BaseView):
 class StrainCreateView(LoginRequiredMixin, View):
     template_name = settings.GROW_TEMPLATES["grow/strain/create"]
 
-    def get(self, request: HttpRequest, breeder_slug: str) -> HttpResponse:
-        breeder = get_object_or_404(Breeder, slug=breeder_slug)
+    def get(self, request: HttpRequest, breeder_pk: int) -> HttpResponse:
+        breeder = get_object_or_404(Breeder, pk=breeder_pk)
 
         return render(request, self.template_name, context={
             'breeder': breeder,
             'form': StrainForm(),
         })
 
-    def post(self, request: HttpRequest, breeder_slug: str) -> HttpResponse:
-        breeder = get_object_or_404(Breeder, slug=breeder_slug)
+    def post(self, request: HttpRequest, breeder_pk: int) -> HttpResponse:
+        breeder = get_object_or_404(Breeder, pk=breeder_pk)
         form = StrainForm(request.POST)
 
         if form.is_valid():
-            if form.cleaned_data['flowering_time_unit'] == 'w':
-                form.cleaned_data['flowering_time_days'] = (
-                    form.cleaned_data['flowering_time_days'] * 7
-                )
             strain = form.save(commit=False)
+            if form.cleaned_data['flowering_time_unit'] == 'w':
+                strain.flowering_time_days = strain.flowering_time_days * 7
+            strain.created_by = self.request.user
             strain.breeder = breeder
             strain.save()
 
@@ -262,18 +309,17 @@ class StrainCreateView(LoginRequiredMixin, View):
 class StrainUpdateView(LoginRequiredMixin, View):
     template_name = "grow/strain/strain_update.html"
 
-    def get(self, request: HttpRequest, breeder_slug: str, slug: str) -> HttpResponse:
-        strain = Strain.objects.get(breeder__slug=breeder_slug, slug=slug)
+    def get(self, request: HttpRequest, pk: int) -> HttpResponse:
+        self.strain = get_object_or_404(Strain, pk=pk)
         return render(request, self.template_name, context={
-            'breeder': strain.breeder,
-            'form': StrainForm(instance=strain)
+            'breeder': self.strain.breeder,
+            'form': StrainForm(instance=self.strain)
         })
 
-    def post(self, request: HttpRequest, breeder_slug: str, slug: str) -> HttpResponse:
-        breeder = get_object_or_404(Breeder, slug=breeder_slug)
-        strain = get_object_or_404(breeder.strains, slug=slug)
+    def post(self, request: HttpRequest, pk: int) -> HttpResponse:
+        self.strain = get_object_or_404(Strain, pk=pk)
 
-        form = StrainForm(request.POST, instance=strain)
+        form = StrainForm(request.POST, instance=self.strain)
 
         if form.is_valid():
             strain = form.save(commit=False)
@@ -282,13 +328,13 @@ class StrainUpdateView(LoginRequiredMixin, View):
             strain.save()
 
             return redirect(reverse("grow:strain-detail", kwargs={
-                'breeder_slug': breeder.slug,
+                'breeder_slug': strain.breeder.slug,
                 'slug': strain.slug,
             }))
 
-        form.fields['name'] = strain.name
+        form.fields['name'] = self.strain.name
 
         return render(request, self.template_name, context={
-            'breeder': breeder,
+            'breeder': self.strain.breeder,
             'form': form,
         })

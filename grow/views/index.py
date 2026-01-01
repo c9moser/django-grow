@@ -29,7 +29,7 @@ class IndexView(BaseView):
                 permission_data=Permission.PUBLIC.value).order_by(
                     'started_at')[:10]
 
-        new_strains = Strain.objects.all().order_by('-added_at')[:20]
+        new_strains = Strain.objects.all().order_by('-added_at')[:10]
 
         return render(request, self.template_name, {
             'user_growlogs': user_growlogs,

@@ -2,5 +2,16 @@
 
 {% load i18n %}
 {% block form_buttons %}
-<button type="submit" class="btn btn-success">{% translate "Save changes "%}</button>
+{% if use_bootstrap %}
+    <button type="submit" class="btn btn-success">
+        <i class="bi bi-check"></i>
+        {% translate "Save changes "%}
+    </button>
+    <a href="{% url 'grow:breeder-detail' slug=breeder.slug %}"
+        class="btn btn-secondary"
+    >
+        <i class="bi bi-x"></i>
+        {% translate "Cancel" %}
+    </a>
+{% endif %}
 {% endblock %}

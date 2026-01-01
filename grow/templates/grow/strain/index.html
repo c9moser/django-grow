@@ -33,10 +33,13 @@
                 <div class="text-end me-2">
                 {% if allowed_to_add_breeder %}
                     <a href="{% url 'grow:breeder-create' %}"
-                        class="link-body-emphasis link-opacity-75 link-underline-opacity-50 link-opacity-100-hover link-underline-opacity-75-hover"
+                        class="link-primary
+                            link-opacity-75
+                            link-underline-opacity-0
+                            link-opacity-100-hover"
                         data-bs-toggle="tooltip"
                         data-bs-placement="left"
-                        data-bs-title="Add a new strain"
+                        data-bs-title="Add a breeder"
                     ><i class="bi bi-plus-square"></i></a>
                 {% else %}
                     <i class="bi bi-box-arrow-up"
@@ -72,42 +75,61 @@
             <td>{{ breeder.growlog_count }}</td>
             <td>
             {% if use_bootstrap %}
-                <div class="text-end me-2">
-                    {% if breeder.id in breeders_allowed_to_edit %}
-                    <a href="{% url 'grow:breeder-update' slug=breeder.slug %}"
-                        class="link-body-emphasis
+                <div class="text-end me-1">
+                {% if breeder.id in breeders_allowed_to_edit %}
+                    <a href="{% url 'grow:breeder-update' pk=breeder.pk %}"
+                        class="link-primary
                             link-opacity-75
                             link-opacity-100-hover
-                            link-underline-opacity-0
-                            me-2"
+                            link-underline-opacity-0"
                         data-bs-toggle="tooltip"
                         data-bs-html="true"
                         data-bs-placement="left"
-                            data-bs-title="Edit <i>{{ breeder.name }}</i>"
-                        >
-                            <i class="bi bi-pencil-square"></i>
-                        </a>
+                        data-bs-title="{% blocktranslate with name=breeder.name %}Edit breeder <i>{{ name }}</i>{% endblocktranslate %}"
+                    ><i class="bi bi-pencil-square"></i></a>
+                {% else %}
+                    <a href="#"
+                        class="link-body-emphasis
+                            link-opacity-50
+                            link-underline-opacity-0"
+                    ><i class="bi bi-pencil-square"></i></a>
                 {% endif %}
                 {% if breeder.id in breeders_allowed_to_delete %}
-                    <a href="{% url 'grow:breeder-update' slug=breeder.slug %}"
-                        class="link-body-emphasis link-opacity-75 link-opacity-100-hover link-underline-opacity-0"
-                        data-bs-toggle="tooltip"
-                        data-bs-html="true"
-                        data-bs-placement="left"
-                        data-bs-title="Delete <i>{{ breeder.name }}</i>"
+                    <a href="{% url 'grow:breeder-update' pk=breeder.pk %}"
+                        class="link-danger
+                            link-opacity-75
+                            link-opacity-100-hover
+                            link-underline-opacity-0"
+                        hx-get="{% url 'grow:hx-breeder-delete' pk=breeder.pk %}"
+                        hx-target="#modals-here"
+                        hx-trigger="click"
+                        hx-swap="innerHTML"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modals-here"
                     >
-                        <i class="bi bi-x-square"></i>
+                        <i data-bs-toggle="tooltip"
+                            data-bs-html="true"
+                            data-bs-placement="left"
+                            data-bs-title="{% blocktranslate with name=breeder.name %}Delete breeder <i>{{ name }}</i>{% endblocktranslate %}"
+                        class="bi bi-x-square"></i>
                     </a>
+                {% else %}
+                    <a href="{% url 'grow:breeder-update' pk=breeder.pk %}"
+                        class="link-body-emphasis
+                            link-opacity-50
+                            link-underline-opacity-0"
+                    ><i class="bi bi-x-square"></i></a>
                 {% endif %}
+
             </div>
             {% else %}
                 {% if breeder.id in breeders_allowed_to_edit %}
-                <a href="{% url 'grow:breeder-update' slug=breeder.slug %}">
+                <a href="{% url 'grow:breeder-update' pk=breeder.pk %}">
                     {% translate "Edit" %}
                 </a>
                 {% endif %}
                 {% if breeder.id in breeders_allowed_to_delete %}
-                <a href="{% url 'grow:breeder-update' slug=breeder.slug %}">
+                <a href="{% url 'grow:breeder-update' pk=breeder.pk %}">
                     {% translate "Delete" %}
                 </a>
                 {% endif %}

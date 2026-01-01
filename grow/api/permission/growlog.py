@@ -1,10 +1,9 @@
 
-from ..models.growlog import Growlog
 from ..enums import PermissionCode, PermissionType
 from ..exceptions import NotPermitted
 
 
-def growlog_is_public(user, growlog: Growlog, *args,
+def growlog_is_public(user, growlog, *args,
                       on_success: PermissionCode.ALLOW,
                       on_failure: PermissionCode.CONTINUE,
                       **kwargs) -> PermissionCode:
@@ -15,7 +14,7 @@ def growlog_is_public(user, growlog: Growlog, *args,
     return on_failure
 
 
-def growlog_user_is_owner(user, growlog: Growlog, *args,
+def growlog_user_is_owner(user, growlog, *args,
                           on_success: PermissionCode.ALLOW,
                           on_failure: PermissionCode.CONTINUE,
                           **kwargs) -> PermissionCode:
@@ -26,7 +25,7 @@ def growlog_user_is_owner(user, growlog: Growlog, *args,
     return on_failure
 
 
-def growlog_user_is_friend(user, growlog: Growlog, *args,
+def growlog_user_is_friend(user, growlog, *args,
                            on_success: PermissionCode.ALLOW,
                            on_failure: PermissionCode.CONTINUE) -> PermissionCode:
     if (growlog.permission == PermissionType.FRIENDS_ONLY
@@ -37,7 +36,7 @@ def growlog_user_is_friend(user, growlog: Growlog, *args,
     return on_failure
 
 
-def growlog_user_is_member(user, growlog: Growlog, *args,
+def growlog_user_is_member(user, growlog, *args,
                            on_success: PermissionCode.ALLOW,
                            on_failure: PermissionCode.CONTINUE) -> PermissionCode:
     if (growlog.permission == PermissionType.MEMBERS_ONLY and user.is_authenticated):
@@ -47,7 +46,7 @@ def growlog_user_is_member(user, growlog: Growlog, *args,
     return PermissionCode
 
 
-def growlog_user_is_editor(user, growlog: Growlog, *args,
+def growlog_user_is_editor(user, growlog, *args,
                            on_success: PermissionCode.ALLOW,
                            on_failure: PermissionCode.RAISE_EXCEPTION) -> PermissionCode:
     if user.groups.filter(f"user-{growlog.grower.id}-growlogeditor"):

@@ -31,7 +31,7 @@
 {% if use_bootstrap %}
 <div class="h3">
     {% if allowed_to_edit %}
-    <a href="{% url 'grow:strain-update' breeder_slug=strain.breeder.slug slug=strain.slug %}"
+    <a href="{% url 'grow:strain-update' pk=strain.pk %}"
         class="link-primary
             link-opacity-75
             link-opacity-100-hover
@@ -64,12 +64,12 @@
 {% if strain.has_logo %}
     <img class="{% if use_bootstrap %}img-fluid rounded me-3 float-start{% endif %}"
         src="{{ strain.logo }}"
-        style="width:256px;"
+        style="max-width:300px;"
     >
 {% else %}
     <img class="{% if use_bootstrap %}img-fluid rounded me-3 float-start{% endif %}"
         src="{% static 'grow/img/hemp-leaf.jpg' %}"
-        style="width:256px;"
+        style="max-width:300px;"
     >
 {% endif %}
 
@@ -77,6 +77,9 @@
         <ul>
             <li>
                 <span class="fw-bold">{% translate "Flowering time:" %}</span>
+                {% if strain.flowering_time_days == 0 %}
+                {% translate "Unknown" %}
+                {% else %}
                 {% blocktranslate with ftd=strain.flowering_time_days count n=strain.flowering_time_days %}
                 {{ ftd }} day
                 {% plural %}
@@ -87,24 +90,25 @@
                 {% plural %}
                 ({{ ftw }} weeks)
                 {% endblocktranslate %}
+                {% endif %}
             </li>
             <li>
                 <span class="fw-bold">{% translate "Genetics:"%}</span>
                 {{ strain.genetics.name }}
             <li>
-                <span class="fw-bold">{% translate "This is a autflowering strain?" %}</span>
+                <span class="fw-bold">{% translate "Is this is a autoflowering strain?" %}</span>
                 {% if strain.is_automatic %}{% translate "Yes" %}{% else %}{% translate "No" %}{% endif %}
             </li>
             <li>
-                <span class="fw-bold">{% translate "You can get regular seeds?" %}</span>
+                <span class="fw-bold">{% translate "Can one get regular seeds?" %}</span>
                 {% if strain.is_regular %}{% translate "Yes" %}{% else %}{% translate "No" %}{% endif %}
             </li>
             <li>
-                <span class="fw-bold">{% translate "You can get feminized seeds?" %}</span>
+                <span class="fw-bold">{% translate "Can one get feminized seeds?" %}</span>
                 {% if strain.is_feminized %}{% translate "Yes" %}{% else %}{% translate "No" %}{% endif %}
             </li>
             <li>
-                <span class="fw-bold">{% translate "This is a clone-only strain?" %}</span>
+                <span class="fw-bold">{% translate "Is this a clone-only strain?" %}</span>
                 {% if not strain.is_feminized and not strain.is_regular %}
                     {% translate "Yes" %}
                 {% else %}

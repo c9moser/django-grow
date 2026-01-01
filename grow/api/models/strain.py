@@ -4,8 +4,9 @@ Strain models
 
 from django.db import models
 from django.db.models.functions import Upper
-from django.utils.translation import gettext_lazy as _
-from django.conf import settings
+from django.utils.translation import gettext_lazy as _, get_language
+from django.conf import settings as django_settings
+
 
 from ..enums import (
     TextType,
@@ -16,6 +17,16 @@ from ..enums import (
 
 from ..parser.bbcode import render_description_bbcode
 from ..parser.markdown import render_description_markdown
+
+
+def get_language_code_choices():
+    if hasattr(django_settings, 'LANGUAGES'):
+        return [lang for lang in django_settings.LANGUAGES]
+    else:
+        return [
+            ('de', _('German')),
+            ('en-us', _("English (United States)"))
+        ]
 
 
 class Breeder(models.Model):
@@ -84,7 +95,7 @@ class Breeder(models.Model):
     )
 
     created_by = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
+        django_settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         related_name='breeders',
@@ -93,6 +104,14 @@ class Breeder(models.Model):
 
     creator_name = models.CharField(
         max_length=255,
+        null=True,
+        blank=True,
+    )
+
+    moderator = models.ForeignKey(
+        django_settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        verbose_name=_("breeder moderator"),
         null=True,
         blank=True,
     )
@@ -168,7 +187,55 @@ class Breeder(models.Model):
         ordering = ['name']
 
 
+class BreederTranslation(models.Model):
+    breeder = models.ForeignKey(
+        Breeder,
+        on_delete=models.CASCADE,
+        related_name="translations"
+    )
+    language_code = models.CharField(
+        _("language code"),
+        max_length=16,
+        choices=get_language_code_choices()
+    )
+
+    description_type_data = models.CharField(
+        _("description type"),
+        max_length=50,
+        default=TextType.MARKDOWN.value,
+        choices=TEXT_CHOICES,
+        db_column="description_type"
+    )
+
+    @property
+    def description_type(self) -> TextType:
+        return TextType.from_string(self.description_type_data)
+
+    @description_type.setter
+    def description_type(self, text_type: TextType | str):
+        if not isinstance(text_type, TextType):
+            text_type = TextType.from_string(text_type)
+        self.description_type_data = text_type.value
+
+    description = models.TextField(
+        _("Description")
+    )
+
+    class Meta:
+        db_table = "grow_breeder_translation"
+        unique_together = [
+            ('language_code', 'breeder'),
+        ]
+
+
 class Strain(models.Model):
+    breeder = models.ForeignKey(
+        Breeder,
+        on_delete=models.CASCADE,
+        related_name="strains",
+        verbose_name=_("breeder")
+    )
+
     slug = models.SlugField(
         _("key"),
         max_length=255
@@ -196,8 +263,31 @@ class Strain(models.Model):
 
     @property
     def description_html(self):
-        if not self.description:
+        translation = None
+        try:
+            translation = self.translations.get(language_code=get_language())
+        except StrainTranslation.DoesNotExist:
+            pass
+
+        if not translation:
+            try:
+                translation = self.translations.get(language_code=get_language().split('-')[0])
+            except StrainTranslation.DoesNotExist:
+                pass
+        if not translation:
+            translations = self.translations.filter(
+                language_code__startswith=f"{get_language().split('-')[0]}-")
+            if translations:
+                translation = translations.first()
+
+        if not translation and not self.description:
             return ""
+
+        if translation:
+            if translation.description_type == TextType.BBCODE:
+                return render_description_bbcode(translation.description)
+            elif translation.description_type == TextType.MARKDOWN:
+                return render_description_markdown(translation.description_type)
 
         if self.description_type == TextType.BBCODE:
             return render_description_bbcode(self.description)
@@ -214,15 +304,7 @@ class Strain(models.Model):
     def description_type(self, text_type: TextType | str):
         if not isinstance(text_type, TextType):
             text_type = TextType.from_string(text_type)
-
         self.description_type_data = text_type.value
-
-    breeder = models.ForeignKey(
-        Breeder,
-        on_delete=models.CASCADE,
-        related_name="strains",
-        verbose_name=_("breeder")
-    )
 
     logo_url = models.URLField(
         _("logo URL"),
@@ -276,7 +358,7 @@ class Strain(models.Model):
     )
 
     created_by = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
+        django_settings.AUTH_USER_MODEL,
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
@@ -299,7 +381,9 @@ class Strain(models.Model):
         return StrainType.from_string(self.genetics_data)
 
     @genetics.setter
-    def genetics(self, genetics: StrainType):
+    def genetics(self, genetics: StrainType | str):
+        if not isinstance(genetics, StrainType):
+            genetics = StrainType.from_string(genetics)
         self.genetics_data = genetics.value
 
     @property
@@ -328,36 +412,95 @@ class Strain(models.Model):
             return self.logo_url
         return ""
 
-    class Meta:
-        db_table = "grow_strain"
-        unique_together = ('slug', 'breeder')
-        ordering = ['breeder__name', 'name']
-
     def __str__(self):
         return f"{self.breeder.name} - {self.name}"
 
+    class Meta:
+        db_table = "grow_strain"
+        unique_together = [
+            ('slug', 'breeder'),
+            ('name', 'breeder'),
+        ]
+        ordering = ['breeder__name', 'name']
 
-class StrainUserComments(models.Model):
+
+class StrainTranslation(models.Model):
+    strain = models.ForeignKey(
+        Strain,
+        on_delete=models.CASCADE,
+        verbose_name=_("strain"),
+        related_name="translations"
+    )
+    language_code = models.CharField(
+        _("Language code"),
+        max_length=16,
+        choices=get_language_code_choices()
+    )
+    description_type_data = models.CharField(
+        _("description type"),
+        max_length=50,
+        default=TextType.MARKDOWN.value,
+        choices=TEXT_CHOICES,
+        db_column="description_type"
+    )
+
+    @property
+    def description_type(self) -> TextType:
+        return TextType.from_string(self.description_type_data)
+
+    @description_type.setter
+    def description_type(self, text_type: TextType | str):
+        if not isinstance(text_type, TextType):
+            text_type = TextType.from_string(text_type)
+        self.description_type_data = text_type.value
+
+    description = models.TextField(
+        _("description")
+    )
+
+    class Meta:
+        db_table = "grow_strain_translation"
+        unique_together = [
+            ('language_code', 'strain')
+        ]
+
+
+class StrainUserComment(models.Model):
     strain = models.ForeignKey(
         Strain,
         on_delete=models.CASCADE,
         related_name="user_comments",
         verbose_name=_("strain")
     )
+    language_code = models.CharField(
+
+
+    )
     user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
+        django_settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='strain_comments',
         verbose_name=_("user"),
     )
     comment = models.TextField(
         _("comment"))
-    comment_type = models.CharField(
+    comment_type_data = models.CharField(
         _("description type"),
         max_length=50,
-        default="markdown",
-        choices=TEXT_CHOICES
+        default=TextType.MARKDOWN.value,
+        choices=TEXT_CHOICES,
+        db_column="comment_type"
     )
+
+    @property
+    def comment_type(self) -> TextType:
+        return TextType.from_string(self.comment_type_data)
+
+    @comment_type.setter
+    def comment_type(self, text_type: TextType | str):
+        if not isinstance(text_type, TextType):
+            text_type = TextType.from_string(text_type)
+        self.comment_type_data = text_type.value
 
     created_at = models.DateTimeField(
         _("created at"),
@@ -369,8 +512,10 @@ class StrainUserComments(models.Model):
     )
 
     class Meta:
-        db_table = "grow_strain_user_description"
-        unique_together = ('strain', 'user')
+        db_table = "grow_strain_user_comment"
+        unique_together = [
+            ('strain', 'user'),
+        ]
 
 
 class StrainImage(models.Model):
@@ -381,7 +526,7 @@ class StrainImage(models.Model):
         verbose_name=_("user description"),
     )
     user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
+        django_settings.AUTH_USER_MODEL,
         related_name="strain_images",
         verbose_name=_("User"),
         on_delete=models.CASCADE,
@@ -422,8 +567,10 @@ class StrainImage(models.Model):
         return TextType.from_string(self.description_type_data)
 
     @description_type.setter
-    def description_type(self, description_type: TextType):
-        self.description_type_data = description_type.value
+    def description_type(self, text_type: TextType | str):
+        if not isinstance(text_type, TextType):
+            text_type = TextType.from_string(text_type)
+        self.description_type_data = text_type.value
 
     class Meta:
         db_table = "grow_strain_image"
@@ -435,11 +582,20 @@ class StrainsInStock(models.Model):
                                related_name="stocks",
                                verbose_name=_("strain"))
     user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
+        django_settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='strains_in_stock',
         verbose_name=_("user"),
     )
+    is_regular = models.BooleanField(
+        _("regular seeds"),
+        default=False
+    )
+    is_feminized = models.BooleanField(
+        _("feminized seeds"),
+        default=True
+    )
+
     quantity = models.IntegerField(_("quantity"),
                                    default=0)
     bought_at = models.DateField(_("bought at"),
@@ -448,7 +604,40 @@ class StrainsInStock(models.Model):
     notes = models.TextField(_("notes"),
                              blank=True,
                              null=True)
+    notes_type_data = models.CharField(
+        _("text type"),
+        max_length=50,
+        choices=TEXT_CHOICES,
+        default=TextType.MARKDOWN.value,
+        db_column="notes_type",
+    )
+
+    @property
+    def notes_type(self) -> TextType:
+        return TextType.from_string(self.notes_type_data)
+
+    @notes_type.setter
+    def notes_type(self, text_type: TextType | str):
+        if not isinstance(text_type, TextType):
+            text_type = TextType.from_string(text_type)
+        self.notes_type_data = text_type.value
 
     class Meta:
         db_table = "grow_strains_in_stock"
-        unique_together = ('strain', 'user')
+
+        unique_together = [
+            ('strain', 'user', 'is_feminized'),
+        ]
+
+        constraints = [
+            # Check that is_feminized or is_regular is set
+            models.CheckConstraint(
+                name="strainsinstock_one_of_regular_feminized_set",
+                condition=(models.Q(is_regular=True) | models.Q(is_feminized=True))
+            ),
+            # Check to ensure that only one of is_feminized or is_regular is set.
+            models.CheckConstraint(
+                name="strainsinstock_one_of_regular_feminized_notset",
+                condition=(models.Q(is_regular=False) | models.Q(is_feminized=True))
+            )
+        ]
