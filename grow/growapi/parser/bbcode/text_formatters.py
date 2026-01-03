@@ -4,7 +4,6 @@ from django.urls import reverse
 from django.utils.translation import gettext as _
 
 from ... import settings
-from ... import models
 
 
 def render_url(tag_name: str, value, options, parent, context) -> str:
@@ -23,13 +22,39 @@ def render_url(tag_name: str, value, options, parent, context) -> str:
     return f"<a href=\"{url}\" referrer-policy=\"no-referrer\" rel=\"noreferrer noopener\">{value}</a>"  # noqa: E501
 
 
+def render_breeder_link(tag_name: str, value, options, parent, context) -> str:
+    try:
+        url = reverse('grow:breeder-detail', kwargs={'slug': options[tag_name]})
+        return f"<a href=\"{url}\">{value}</a>"
+    except Exception:
+        if tag_name in options:
+            return f"[breeder={options[tag_name]}]{value}"
+        return f"[breeder]{value}"
+
+
+def render_strain_link(tag_name: str, value, options, parent, context) -> str:
+    try:
+        breeder_slug, strain_slug = options[tag_name].split(':')
+
+        url = reverse('grow:straiaddn-detail', kwargs={
+            'breeder_slug': breeder_slug,
+            'slug': strain_slug
+        })
+        return f"<a href=\"{url}\">{value}</a>"
+    except Exception:
+        if tag_name in options:
+            return f"[strain={options[tag_name]}]{value}"
+        return f"[strain]{value}"
+
+
 def render_wiki_url(tag_name: str, value, options, parent, context) -> str:
+    from tinywiki.models import Page
     if tag_name in options:
         url = reverse("tinywiki:page", kwargs={'slug': options[tag_name]})
         slug = options[tag_name]
         try:
-            page = models.Page.objects.get(slug=slug)
-        except models.Page.DoesNotExist:
+            page = Page.objects.get(slug=slug)
+        except Page.DoesNotExist:
             page = None
 
     else:
@@ -50,17 +75,18 @@ def render_wiki_url(tag_name: str, value, options, parent, context) -> str:
 
 
 def render_wiki_link(tag_name: str, value, options, parent, context):
+    from tinywiki.models import Page
     if tag_name in options:
         slug = options[tag_name]
         print("slug", slug)
         try:
-            page = models.Page.objects.get(slug=slug)
+            page = Page.objects.get(slug=slug)
             title = page.title
             if slug.startswith('tw-'):
                 svg = "journal"
             else:
                 svg = "book"
-        except models.Page.DoesNotExist:
+        except Page.DoesNotExist:
             page = None
             title = _("Page not found")
             svg = "file-earmark-x"
@@ -192,12 +218,13 @@ def render_image(tag_name: str, value, options, parent, context) -> str:
 
 
 def render_wiki_image(tag_name: str, value, options, parent, context):
+    from tinywiki.models import Image
     if tag_name not in options:
         return ""
 
     try:
-        image = models.Image.objects.get(slug=options[tag_name])
-    except models.Image.DoesNotExist:
+        image = Image.objects.get(slug=options[tag_name])
+    except Image.DoesNotExist:
         return ""
 
     if settings.USE_BOOTSTRAP:
@@ -471,7 +498,7 @@ def render_youtube_video(tag_name: str, value, options, parent, context):
         div_style = ""
     if settings.USE_BOOTSTRAP:
         return f"""<div class=""{' '.join(div_classes)}" {div_style}>
-    <iframe class="{' '.join(classes)}" src="https://www.youtube.com/embgit ed/{options[tag_name]}?rel=0" allowfullscreen></iframe>
+    <iframe class="{' '.join(classes)}" src="https://www.youtube.com/embed/{options[tag_name]}?rel=0" allowfullscreen></iframe>
 </div>"""  # noqa: E501
     else:
         return f'<div {div_style}><iframe src="https://www.youtube.com/embed/{options[tag_name]}?rel=0" allowfullscreen></iframe></div>'  # noqa: E501

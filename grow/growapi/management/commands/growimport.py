@@ -2,7 +2,7 @@ from pathlib import Path
 from django.core.management.base import BaseCommand, CommandError  # noqa
 from django.contrib.auth import get_user_model
 
-from grow.api.utils.import_export import import_data
+from grow.growapi.utils.import_export import import_data
 
 
 class Command(BaseCommand):

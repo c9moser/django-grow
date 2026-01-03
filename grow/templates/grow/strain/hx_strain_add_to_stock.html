@@ -1,0 +1,73 @@
+{% load i18n widget_tweaks %}
+
+
+<div class="modal-dialog modal-dialog-lg"><div class="modal-content">
+<div class="modal-header">
+    <h5 class="modal-title">
+        {% if feminized %}
+        {% translate "Add Feminized Seeds to Stock" %}
+        {% else %}
+        {% translate "Add Regular Seeds to Stock" %}
+        {% endif %}
+    </h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{% translate "Close" %}"></button>
+</div>
+<form method="post"
+    {% if feminized %}
+    action="{% url 'grow:hx-strain-add-to-stock' strain=strain.pk feminized=1 %}"
+    {% else %}
+    action="{% url 'grow:hx-strain-add-to-stock' strain=strain.pk feminized=0 %}"
+    {% endif %}
+>
+
+<div class="modal-body">
+    {% csrf_token %}
+    <p>
+        {% if feminized %}
+        {% translate "Add feminized seeds of strain" %} <strong>{{ strain.name }}</strong> {% translate "to stock." %}
+        {% else %}
+        {% translate "Add regular seeds of strain" %} <strong>{{ strain.name }}</strong> {% translate "to stock." %}
+        {% endif %}
+    </p>
+    <p>
+        {% translate "You currently have" %}
+        {% if feminized %}
+            {% blocktranslate count n=n_seeds_in_stock %}{{ n }} feminized seed in stock.{% plural %}{{ n }} feminized seeds in stock.{% endblocktranslate %}
+        {% else %}
+            {% blocktranslate count n=n_seeds_in_stock %}{{ n }} regular seed in stock.{% plural %}{{ n }} regular seeds in stock.{% endblocktranslate %}
+        {% endif %}
+    </p>
+    <div class="input-group mb-3">
+        {% translate "Quantity" as quantity_label %}
+        <label for="{{ form.quantity.id_for_label }}" class="input-group-text">{{ quantity_label }}</label>
+        {% render_field form.quantity class="form-control" placeholder=quantity_label min="1" %}
+    </div>
+
+    <div class="input-group mb-3">
+        <span class="input-group-text">{% translate "Purchased on" %}</span>
+        <label for="{{ form.purchased_on_year.id_for_label }}" class="input-group-text">{% translate "Year" %}</label>
+        {% render_field form.purchased_on_year class="form-control" %}
+        <label for="{{ form.purchased_on_month.id_for_label }}" class="input-group-text">{% translate "Month" %}</label>
+        {% render_field form.purchased_on_month class="form-control" %}
+        <label for="{{ form.purchased_on_day.id_for_label }}" class="input-group-text">{% translate "Day" %}</label>
+        {% render_field form.purchased_on_day class="form-control" %}
+    </div>
+</div>
+<div class="modal-footer text-end">
+    <div>
+        <button type="submit" class="btn btn-success"
+            hx-trigger="click"
+            hx-target="#seeds-in-stock-div"
+            hx-swap="innerHTML"
+            {% if feminized %}
+            hx-post="{% url 'grow:hx-strain-add-to-stock' strain=strain.pk feminized=1 %}"
+            {% else %}
+            hx-post="{% url 'grow:hx-strain-add-to-stock' strain=strain.pk feminized=0 %}"
+            {% endif %}
+            data-bs-dismiss="modal"
+        >{% translate "Add seeds" %}</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% translate "Cancel" %}</button>
+    </div>
+</div>
+</form>
+</div></div>

@@ -14,7 +14,7 @@ from pathlib import Path
 from environ import Env
 from django.conf import settings
 from django.urls import reverse_lazy
-from django.utils.translation import gettext_lazy as L_, pgettext_lazy as Q_
+from django.utils.translation import pgettext_lazy as Q_
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -108,7 +108,7 @@ third_party_apps = [
 project_apps = [
     'core',
     'grow',
-    'grow.api',
+    'grow.growapi',
 ]
 
 MIDDLEWARE = [
@@ -245,6 +245,20 @@ LOCALE_PATHS = [
 if INCLUDE_WIKI:
     third_party_apps.append('tinywiki')
     TINYWIKI_HOME = Q_("wiki", "grow-home")
+    TINYWIKI_BBCODE_EXTRA_FORMATTERS = [
+        (
+            ('breeder', 'grow.growapi.parser.bbcode.text_formatters.render_breeder_link'),
+            {'standalone': True}
+        ),
+        (
+            ('strain', 'grow.growapi.parser.bbcode.text_formatters.render_strain_link'),
+            {'standalone': True}
+        ),
+    ]
+    TINYWIKI_BBCODE_EXTRA_SIMPLE_FORMATTERS = []
+
+
+SITE_TITLE = "Grow"
 
 # load local config
 _local_settings_path = BASE_DIR / 'django_project' / 'local'

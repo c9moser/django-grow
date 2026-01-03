@@ -1,0 +1,97 @@
+{% load i18n %}
+<table class="table" id="seeds-in-stock-table">
+    <thead>
+        <tr class="table-secondary">
+            <th>{% translate "Seed type"%}</th>
+            <th>{% translate "Quantity" %}</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody class="table-group-divider">
+    {% if strain.is_regular %}
+        <tr>
+            <td>{% translate "Regular seeds" %}</td>
+            <td>
+                {% blocktranslate count n=regular_seeds_in_stock %}
+                {{ n }} seed
+                {% plural %}
+                {{ n }} seeds
+                {% endblocktranslate %}
+            </td>
+            <td>
+                <div class="text-end">
+                    <a href="{% url 'grow:strain-add-to-stock' strain=strain.pk feminized=0 %}"
+                        class="link-body-emphasis
+                            link-opacity-50
+                            link-opacity-100-hover
+                            link-underline-opacity-0"
+                    ><i class="bi bi-plus-circle"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="left"
+                            data-bs-title="Add regular seeds to stock."></i>
+                    </a>
+
+                    <a href="{% url 'grow:strain-remove-from-stock' strain=strain.pk feminized=0 %}"
+                        class="link-body-emphasis
+                        link-opacity-50
+                        link-opacity-100-hover
+                        link-underline-opacity-0"
+                    ><i class="bi bi-dash-circle"
+                        data-bs-toggle="tooltip"
+                        data-bs-title="Remove regular seeds from stock."
+                        data-bs-placement="left"></i>
+                    </a>
+                </div>
+            </td>
+        </tr>
+    {% endif %}{# strain.is_regular #}
+    {% if strain.is_feminized %}
+        <tr>
+            <td>{% translate "Feminized seeds" %}</td>
+            <td>
+                {% blocktranslate count n=feminized_seeds_in_stock %}
+                {{ n }} seed
+                {% plural %}
+                {{ n }} seeds
+                {% endblocktranslate %}
+            </td>
+            <td>
+                <div class="text-end">
+                    <a href="{% url 'grow:strain-add-to-stock' strain=strain.pk feminized=1 %}"
+                        class="link-body-emphasis
+                        link-opacity-50
+                        link-opacity-100-hover
+                        link-underline-opacity-0"
+                    ><i class="bi bi-plus-circle"
+                        data-bs-toggle="tooltip"
+                        data-bs-title="Add feminized seeds to stock."
+                        data-bs-placement="left"></i>
+                    </a>
+                    <a href="{% url 'grow:strain-remove-from-stock' strain=strain.pk feminized=1 %}"
+                        class="link-body-emphasis
+                        link-opacity-50
+                        link-opacity-100-hover
+                        link-underline-opacity-0"
+                    ><i class="bi bi-dash-circle"
+                            data-bs-toggle="tooltip"
+                            data-bs-title="Remove feminized seeds from stock."
+                            data-bs-placement="left"></i>
+                    </a>
+                </div>
+            </td>
+        </tr>
+    {% endif %}{# strain.is_feminized #}
+    </tbody>
+    <tfoot class="table-group-divider">
+        <tr>
+            <th>{% translate "Total seeds" %}</th>
+            <th colspan=2 class="{% if use_bootstrap %}text-end{% endif %}">
+                {% blocktranslate count n=total_seeds_in_stock%}
+                {{ n }} seed
+                {% plural %}
+                {{ n }} seeds
+                {% endblocktranslate %}
+            </th>
+        </tr>
+    </tfoot>
+</table>

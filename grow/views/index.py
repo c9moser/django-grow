@@ -5,12 +5,13 @@ from django.http import (
 from django.shortcuts import render
 
 from ._base import BaseView
-from ..api.models import Growlog, Strain
-from ..api.enums import PermissionType as Permission
+from ..growapi.models import Growlog, Strain
+from ..growapi.enums import PermissionType as Permission
+from .. import settings
 
 
 class IndexView(BaseView):
-    template_name = "grow/index/index.html"
+    template_name = settings.GROW_TEMPLATES['grow/index']
 
     def get(self, request: HttpRequest) -> HttpResponse:
         if request.user.is_authenticated:
@@ -35,4 +36,33 @@ class IndexView(BaseView):
             'user_growlogs': user_growlogs,
             'new_growlogs': new_growlogs,
             'new_strains': new_strains
+        })
+
+
+class HxSanitizeDateDayView(BaseView):
+    template_name = settings.GROW_TEMPLATES['grow/index/sanitize-date-day']
+
+    def get(self, request: HttpRequest, year: int, month: int) -> HttpResponse:
+        if month < 1:
+            month = 1
+        elif month > 12:
+            month = 12
+
+        if year < 1900:
+            year = 1900
+        elif year > 2100:
+            year = 2100
+
+        months = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+        if year % 4 == 0:
+            if year % 100 == 0:
+                if year % 400 == 0:
+                    months[1] = 29
+            else:
+                months[1] = 29
+
+        days = months[month - 1]
+        print(days)
+        return render(request, self.template_name, context={
+            'days': list(range(1, days + 1))
         })

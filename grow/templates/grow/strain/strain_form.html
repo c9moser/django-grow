@@ -3,7 +3,7 @@
 {% block content %}
 <h1>Create Strain</h1>
 
-<form method="post" enctype="multipart/formdata">
+<form method="post" enctype="multipart/form-data">
     {% csrf_token %}
 {% if use_bootstrap %}
     <div class="form-floating mb-3">

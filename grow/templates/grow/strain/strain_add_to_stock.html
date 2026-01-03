@@ -1,0 +1,28 @@
+{% extends base_template %}
+{% load i18n widget_tweaks %}
+
+{% block content %}
+<h1>{% translate "Add seeds to stock" %}</h1>
+{% if feminized %}
+    {% translate "feminized seeds"  as seed_type %}
+{% else %}
+    {% translate "regualar seeds" as seed_type %}
+{% endif %}
+<form method="post">
+    {% csrf_token %}
+<p>
+{% blocktranslate with strain=strain.name breeder=strain.breeder.name %}
+Add feminized {{ seed_type }} of the strain {{ strain }} from {{breeder }}.
+{% endblocktranslate %}</p>
+</p>
+
+{{ form.as_p}}
+
+<div>
+    <button type="submit">{% translate "Add seeds" %}</button>
+    <button type="button"
+        onclick="location.href='{% url 'grow:strain-detail' breeder_slug=strain.breeder.slug slug=strain.slug %}'"
+    >{% translate "Cancel" %}</button>
+</div>
+</from>
+{% endblock %}

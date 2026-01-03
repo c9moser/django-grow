@@ -6,7 +6,7 @@ from django.db import models
 from django.db.models.functions import Upper
 from django.utils.translation import gettext_lazy as _, get_language
 from django.conf import settings as django_settings
-
+from datetime import date
 
 from ..enums import (
     TextType,
@@ -412,6 +412,119 @@ class Strain(models.Model):
             return self.logo_url
         return ""
 
+    def get_regular_seeds_in_stock(self, user) -> int:
+        try:
+            return self.seeds_in_stock.get(user=user, is_regular=True).quantity
+        except StrainsInStock.DoesNotExist:
+            return 0
+
+    def get_feminized_seeds_in_stock(self, user) -> int:
+        try:
+            return self.seeds_in_stock.get(user=user, is_feminized=True).quantity
+        except StrainsInStock.DoesNotExist:
+            return 0
+
+    def get_total_seeds_in_stock(self, user) -> int:
+        return (self.get_feminized_seeds_in_stock(user)
+                + self.get_regular_seeds_in_stock(user))
+
+    def add_feminized_seeds_to_stock(self,
+                                     user,
+                                     quantity: int,
+                                     purchased_on: date | None = None,
+                                     notes: str = "",
+                                     notes_type: TextType = TextType.MARKDOWN) -> int:
+
+        if self.is_feminized:
+            try:
+                sis = self.seeds_in_stock.get(is_feminized=True, user=user)
+                sis.quantity += quantity
+                if notes:
+                    sis.notes = notes
+                    sis.notes_type = notes_type
+                if sis.purchased_on is None and purchased_on is not None:
+                    sis.purchased_on = purchased_on
+                sis.save()
+
+            except StrainsInStock.DoesNotExist:
+                sis = StrainsInStock.objects.create(
+                    strain=self,
+                    user=user,
+                    quantity=quantity,
+                    is_feminized=True,
+                    is_regular=False,
+                    purchased_on=purchased_on,
+                    notes=notes,
+                    notes_type=notes_type
+                )
+            return sis.quantity
+        return 0
+
+    def remove_feminized_seeds_from_stock(self,
+                                          user,
+                                          quantity: int) -> int:
+        if self.is_feminized:
+            try:
+                sis = self.seeds_in_stock.get(is_feminized=True, user=user)
+                if sis.quantity > quantity:
+                    sis.quantity -= quantity
+                else:
+                    sis.quantity = 0
+                sis.save()
+                return sis.quantity
+            except StrainsInStock.DoesNotExist:
+                pass
+        return 0
+
+    def add_regular_seeds_to_stock(self,
+                                   user,
+                                   quantity: int,
+                                   purchased_on: date | None = None,
+                                   notes: str = "",
+                                   notes_type: TextType = TextType.MARKDOWN) -> int:
+
+        if self.is_regular:
+            try:
+                sis = self.seeds_in_stock.get(is_regular=True, user=user)
+                sis.quantity += quantity
+                if notes:
+                    sis.notes = notes
+                    sis.notes_type = notes_type
+                if sis.purchased_on is None and purchased_on is not None:
+                    sis.purchased_on = purchased_on
+                sis.save()
+
+            except StrainsInStock.DoesNotExist:
+                sis = StrainsInStock.objects.create(
+                    strain=self,
+                    user=user,
+                    quantity=quantity,
+                    purchased_on=purchased_on,
+                    is_feminized=False,
+                    is_regular=True,
+                    notes=notes,
+                    notes_type=notes_type
+                )
+            return sis.quantity
+        return 0
+
+    def remove_regualar_seeds_from_stock(self,
+                                         user,
+                                         quantity: int) -> int:
+        print("REMOVE REGULAR SEEDS")
+        if self.is_regular:
+            try:
+                sis = self.seeds_in_stock.get(is_regular=True, user=user)
+                if sis.quantity > quantity:
+                    sis.quantity -= quantity
+                else:
+                    sis.quantity = 0
+                sis.save()
+                return sis.quantity
+            except StrainsInStock.DoesNotExist:
+                pass
+        return 0
+
     def __str__(self):
         return f"{self.breeder.name} - {self.name}"
 
@@ -579,12 +692,12 @@ class StrainImage(models.Model):
 class StrainsInStock(models.Model):
     strain = models.ForeignKey(Strain,
                                on_delete=models.CASCADE,
-                               related_name="stocks",
+                               related_name="seeds_in_stock",
                                verbose_name=_("strain"))
     user = models.ForeignKey(
         django_settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name='strains_in_stock',
+        related_name='seeds_in_stock',
         verbose_name=_("user"),
     )
     is_regular = models.BooleanField(
@@ -596,14 +709,20 @@ class StrainsInStock(models.Model):
         default=True
     )
 
-    quantity = models.IntegerField(_("quantity"),
-                                   default=0)
-    bought_at = models.DateField(_("bought at"),
-                                 blank=True,
-                                 null=True)
-    notes = models.TextField(_("notes"),
-                             blank=True,
-                             null=True)
+    quantity = models.IntegerField(
+        _("quantity"),
+        default=0
+    )
+    purchased_on = models.DateField(
+        _("purchased on"),
+        blank=True,
+        null=True
+    )
+    notes = models.TextField(
+        _("notes"),
+        blank=True,
+        null=True
+    )
     notes_type_data = models.CharField(
         _("text type"),
         max_length=50,
@@ -618,7 +737,9 @@ class StrainsInStock(models.Model):
 
     @notes_type.setter
     def notes_type(self, text_type: TextType | str):
-        if not isinstance(text_type, TextType):
+        if not text_type:
+            text_type = TextType.MARKDOWN
+        elif not isinstance(text_type, TextType):
             text_type = TextType.from_string(text_type)
         self.notes_type_data = text_type.value
 
@@ -635,9 +756,6 @@ class StrainsInStock(models.Model):
                 name="strainsinstock_one_of_regular_feminized_set",
                 condition=(models.Q(is_regular=True) | models.Q(is_feminized=True))
             ),
-            # Check to ensure that only one of is_feminized or is_regular is set.
-            models.CheckConstraint(
-                name="strainsinstock_one_of_regular_feminized_notset",
-                condition=(models.Q(is_regular=False) | models.Q(is_feminized=True))
-            )
         ]
+
+        ordering = ['strain__breeder__name', 'strain__name', 'is_feminized']

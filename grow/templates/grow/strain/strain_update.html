@@ -17,7 +17,7 @@
     {% translate "Update Strain" %}
 </button>
 <button
-    onclick="locaction.href='{% url 'grow:strain-detail' breeder_slug=form.instance.breeder.slug slug=form.instance.slug %}'"
+    onclick="location.href='{% url 'grow:strain-detail' breeder_slug=form.instance.breeder.slug slug=form.instance.slug %}'"
     class="btn btn-secondary">
     {% translate "Cancel" %}
 </button>

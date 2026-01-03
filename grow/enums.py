@@ -1,4 +1,4 @@
-from .api.enums import (  # noqa F401
+from .growapi.enums import (  # noqa F401
     LengthUnit,
     LENGTH_UNITS,
     LENGTH_UNIT_CHOICES,
@@ -14,6 +14,9 @@ from .api.enums import (  # noqa F401
     StrainType,
     STRAIN_TYPES,
     SENSOR_TYPE_CHOICES,
+    TextType,
+    TEXT_TYPES,
+    TEXT_CHOICES,
     TemperatureUnit,
     TEMPERATURE_UNITS,
     TEMPERATURE_UNIT_CHOICES,

@@ -16,6 +16,8 @@ from .text_formatters import (
     render_table_data,
     render_table_row,
     render_youtube_video,
+    render_breeder_link,
+    render_strain_link,
 )
 
 from .simple_formatters import (  # noqa: F401
@@ -42,6 +44,8 @@ FORMATTERS = [
             'standalone': True
         }
     ),
+    (('breeder', render_breeder_link), {'standalone': True}),
+    (('strain', render_strain_link), {'standalone': True}),
     (
         ('codeblock', render_codeblock),
         {

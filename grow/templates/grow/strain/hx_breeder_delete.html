@@ -11,7 +11,7 @@
                 {% csrf_token %}
                 <p>
                     {% blocktranslate with slug=breeder.slug name=breeder.name %}
-                    If you really want to delete breeder {{ name }} type <i>{{ slug }}</i>
+                    If you really want to delete breeder {{ name }} type <mark>{{ slug }}</mark>
                     in the field below and hit the {{ delete_breeder_label }} button.
                     {% endblocktranslate %}
                 </p>

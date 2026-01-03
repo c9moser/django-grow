@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from grow.api.utils.import_export import export_data
+from grow.growapi.utils.import_export import export_data
 
 
 class Command(BaseCommand):

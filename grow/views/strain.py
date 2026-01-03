@@ -1,3 +1,4 @@
+from datetime import date
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
@@ -12,17 +13,20 @@ from django.views import View
 from django.views.generic import FormView
 
 from ._base import BaseView
-from ..api.models import (
+from ..growapi.models import (
     Breeder,
-    Strain
+    Strain,
+    StrainsInStock,
 )
 from .. import settings
 from ..forms import (
     DeleteWithSlugForm,
-    StrainForm
+    StrainForm,
+    StrainAddToStockForm,
+    StrainRemoveFromStockForm,
 )
 
-from ..api.permission import growlog_user_is_allowed_to_view
+from ..growapi.permission import growlog_user_is_allowed_to_view
 
 
 class BreederIndexView(BaseView):
@@ -267,6 +271,15 @@ class StrainView(BaseView):
             'growlogs': growlogs,
             'allowed_to_delete': allowed_to_delete,
             'allowed_to_edit': allowed_to_edit,
+            'regular_seeds_in_stock': (
+                strain.get_regular_seeds_in_stock(self.request.user)
+                if self.request.user.is_authenticated else 0
+            ),
+            'feminized_seeds_in_stock': (
+                strain.get_feminized_seeds_in_stock(self.request.user)
+                if self.request.user.is_authenticated else 0
+            ),
+            'total_seeds_in_stock': strain.get_total_seeds_in_stock(self.request.user),
         })
 
 
@@ -338,3 +351,408 @@ class StrainUpdateView(LoginRequiredMixin, View):
             'breeder': self.strain.breeder,
             'form': form,
         })
+
+
+class StrainDeleteView(LoginRequiredMixin, FormView):
+    template_name = settings.GROW_TEMPLATES['grow/strain/delete']
+    form_class = DeleteWithSlugForm
+
+    def get_success_url(self):
+        return reverse('grow:breeder-detail', kwargs={'slug': self.strain.breeder.slug})
+
+    def get_failed_url(self):
+        return reverse('grow:strain-detail', kwargs={
+            'breeder_slug': self.strain.breeder.slug,
+            'slug': self.strain.slug,
+        })
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['strain'] = self.strain
+        return context
+
+    def form_valid(self, form: DeleteWithSlugForm) -> HttpResponse:
+        if self.strain.slug == form.cleaned_data['slug']:
+            try:
+                self.strain.delete()
+            except Exception as ex:
+                print(f"Unable to delete strain {self.strain.name}! ({ex})")
+            return super(StrainDeleteView, self).form_valid(form)
+        return self.get_failed_url()
+
+    def form_invalid(self, form):
+        return self.get_failed_url()
+
+    def get(self, request: HttpRequest, pk: int) -> HttpResponse:
+        self.strain = get_object_or_404(Strain, pk=pk)
+        return super(StrainDeleteView, self).get(request)
+
+    def post(self, request: HttpRequest, pk: int) -> HttpResponse:
+        self.strain = get_object_or_404(Strain, pk=pk)
+        return super(StrainDeleteView, self).post(request)
+
+
+class HxStrainDeleteView(LoginRequiredMixin, FormView):
+    template_name = settings.GROW_TEMPLATES['grow/strain/hx-delete']
+    form_class = DeleteWithSlugForm
+
+    def get_success_url(self):
+        return reverse('grow:breeder-detail', kwargs={'slug': self.strain.breeder.slug})
+
+    def get_failed_url(self):
+        return reverse('grow:strain-detail', kwargs={
+            'breeder_slug': self.strain.breeder.slug,
+            'slug': self.strain.slug,
+        })
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['strain'] = self.strain
+        return context
+
+    def form_valid(self, form: DeleteWithSlugForm) -> HttpResponse:
+        if self.strain.slug == form.cleaned_data['slug']:
+            try:
+                self.strain.delete()
+            except Exception as ex:
+                print(f"Unable to delete strain {self.strain.name}! ({ex})")
+            return super(HxStrainDeleteView, self).form_valid(form)
+        return self.get_failed_url()
+
+    def form_invalid(self, form):
+        return self.get_failed_url()
+
+    def get(self, request: HttpRequest, pk: int) -> HttpResponse:
+        self.strain = get_object_or_404(Strain, pk=pk)
+        return super(HxStrainDeleteView, self).get(request)
+
+    def post(self, request: HttpRequest, pk: int) -> HttpResponse:
+        self.strain = get_object_or_404(Strain, pk=pk)
+        return super(HxStrainDeleteView, self).post(request)
+
+
+class StrainAddToStockView(LoginRequiredMixin, FormView):
+    template_name = settings.GROW_TEMPLATES['grow/strain/add_to_stock']
+    form_class = StrainAddToStockForm
+
+    def get_context_data(self, **kwargs):
+        context = super(StrainAddToStockView, self).get_context_data(**kwargs)
+        context['strain'] = self.strain
+        context['feminized'] = self.feminized
+        try:
+            context['seeds_in_stock'] = self.strain.seeds_in_stock.get(is_feminized=self.feminized)
+        except StrainsInStock.DoesNotExist:
+            context['seeds_in_stock'] = 0
+
+        return context
+
+    def get_success_url(self) -> str:
+        return reverse('grow:strain-detail', kwargs={
+            'breeder_slug': self.strain.breeder.slug,
+            'slug': self.strain.slug
+        })
+
+    def form_valid(self, form: StrainAddToStockForm):
+        print("Form is valid!")
+        year = form.cleaned_data['purchased_on_year']
+        month = form.cleaned_data['purchased_on_month']
+        day = form.cleaned_data['purchased_on_day']
+
+        def sanitize_day() -> int:
+            import calendar
+            if year and month and day:
+                last_day_of_month = calendar.monthrange(year, month)[1]
+                if day > last_day_of_month:
+                    return last_day_of_month
+            return day
+
+        purchased_on = date(year, month, sanitize_day()) if year and month and day else None
+
+        if self.feminized:
+            self.strain.add_feminized_seeds_to_stock(
+                self.request.user,
+                form.cleaned_data['quantity'],
+                purchased_on=purchased_on,
+                notes_type=form.cleaned_data['notes_type'],
+                notes=form.cleaned_data['notes'],
+            )
+        else:
+            self.strain.add_regular_seeds_to_stock(
+                self.request.user,
+                form.cleaned_data['quantity'],
+                purchased_on=purchased_on,
+                notes_type=form.cleaned_data['notes_type'],
+                notes=form.cleaned_data['notes'],
+            )
+
+        return redirect(self.get_success_url())
+
+    def form_invalid(self, form):
+        print(form.errors)
+        return super(StrainAddToStockView, self).form_invalid(form)
+
+    def get(self, request: HttpRequest, strain: int, feminized: int) -> HttpResponse:
+        self.strain = get_object_or_404(Strain, pk=strain)
+        self.feminized = bool(feminized)
+
+        return super(StrainAddToStockView, self).get(request)
+
+    def post(self, request: HttpRequest, strain: int, feminized: int) -> HttpResponse:
+        self.strain = get_object_or_404(Strain, pk=strain)
+        self.feminized = bool(feminized)
+
+        return super(StrainAddToStockView, self).post(request)
+
+
+class StrainRemoveFromStockView(LoginRequiredMixin, FormView):
+    template_name = settings.GROW_TEMPLATES['grow/strain/remove_from_stock']
+    invalid_template_name = settings.GROW_TEMPLATES['grow/strain/remove_from_stock_invalid']
+    form_class = StrainRemoveFromStockForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['strain'] = self.strain
+        context['feminized'] = self.feminized
+        context['feminized_int'] = 1 if self.feminized else 0
+        context['n_seeds_in_stock'] = self.n_seeds_in_stock
+
+        return context
+
+    def get_form(self, form_class=StrainRemoveFromStockForm):
+        form = form_class()
+        form.fields['quantity'].max_value = self.n_seeds_in_stock
+        return form
+
+    def get_success_url(self):
+        return reverse('grow:strain-detail', kwargs={
+            'breeder_slug': self.strain.breeder.slug,
+            'slug': self.strain.slug
+        })
+
+    def form_valid(self, form: StrainRemoveFromStockForm):
+        print(self.feminized)
+        if self.feminized:
+            self.strain.remove_feminized_seeds_from_stock(
+                self.request.user,
+                form.cleaned_data['quantity']
+            )
+        else:
+            self.strain.remove_regualar_seeds_from_stock(
+                self.request.user,
+                form.cleaned_data['quantity']
+            )
+        return redirect(self.get_success_url())
+
+    def form_invalid(self, form):
+        print("Form is invalid!")
+        print(form.errors)
+        return super().form_invalid(form)
+
+    def validate(self):
+        if self.n_seeds_in_stock > 0:
+            return True
+        return False
+
+    def get(self, request: HttpRequest, strain: int, feminized: int) -> HttpResponse:
+        self.strain = get_object_or_404(Strain, pk=strain)
+        self.feminized = bool(feminized)
+
+        if self.feminized:
+            self.n_seeds_in_stock = self.strain.get_feminized_seeds_in_stock(self.request.user)
+        else:
+            self.n_seeds_in_stock = self.strain.get_regular_seeds_in_stock(self.request.user)
+
+        if not self.validate():
+            return render(request, self.invalid_template_name, context=self.get_context_data())
+
+        return super(StrainRemoveFromStockView, self).get(request)
+
+    def post(self, request: HttpRequest, strain: int, feminized: int) -> HttpResponse:
+        print("POST request handler")
+        self.strain = get_object_or_404(Strain, pk=strain)
+        self.feminized = bool(feminized)
+
+        if self.feminized:
+            self.n_seeds_in_stock = self.strain.get_feminized_seeds_in_stock(self.request.user)
+        else:
+            self.n_seeds_in_stock = self.strain.get_regular_seeds_in_stock(self.request.user)
+
+        if not self.validate():
+            return render(request, self.invalid_template_name, context=self.get_context_data())
+
+        form = self.get_form_class()(request.POST)
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+
+class HxStrainAddToStockView(LoginRequiredMixin, FormView):
+    template_name = settings.GROW_TEMPLATES['grow/strain/hx-add_to_stock']
+    update_template_name = settings.GROW_TEMPLATES['grow/strain/hx-strain_in_stock_update']  # noqa: E501
+    form_class = StrainAddToStockForm
+
+    def get_context_data(self, **kwargs):
+        context = super(HxStrainAddToStockView, self).get_context_data(**kwargs)
+        context['strain'] = self.strain
+        context['feminized'] = self.feminized
+
+        if self.feminized:
+            context['n_seeds_in_stock'] = self.strain.get_feminized_seeds_in_stock(self.request.user)  # noqa: E501
+        else:
+            context['n_seeds_in_stock'] = self.strain.get_regular_seeds_in_stock(self.request.user)
+
+        return context
+
+    def get_success_url(self) -> str:
+        return reverse('grow:strain-detail', kwargs={
+            'breeder_slug': self.strain.breeder.slug,
+            'slug': self.strain.slug
+        })
+
+    def form_valid(self, form: StrainAddToStockForm):
+        print("Form is valid!")
+        year = int(form.cleaned_data['purchased_on_year'])
+        month = int(form.cleaned_data['purchased_on_month'])
+        day = int(form.cleaned_data['purchased_on_day'])
+
+        def sanitize_day() -> int:
+            import calendar
+            if year and month and day:
+                last_day_of_month = calendar.monthrange(year, month)[1]
+                if day > last_day_of_month:
+                    return last_day_of_month
+            return day
+
+        purchased_on = date(year, month, sanitize_day()) if year and month and day else None
+
+        if self.feminized:
+            self.strain.add_feminized_seeds_to_stock(
+                self.request.user,
+                form.cleaned_data['quantity'],
+                purchased_on=purchased_on,
+                notes_type=form.cleaned_data['notes_type'],
+                notes=form.cleaned_data['notes'],
+            )
+        else:
+            self.strain.add_regular_seeds_to_stock(
+                self.request.user,
+                form.cleaned_data['quantity'],
+                purchased_on=purchased_on,
+                notes_type=form.cleaned_data['notes_type'],
+                notes=form.cleaned_data['notes'],
+            )
+        return render(self.request, self.update_template_name, context=self.get_context_data(
+            success=True,
+            seeds_added=True,
+            regular_seeds_in_stock=self.strain.get_regular_seeds_in_stock(self.request.user),
+            feminized_seeds_in_stock=self.strain.get_feminized_seeds_in_stock(self.request.user),
+            total_seeds_in_stock=self.strain.get_total_seeds_in_stock(self.request.user),
+        ))
+
+    def form_invalid(self, form):
+        print(form.errors)
+        return super(HxStrainAddToStockView, self).form_invalid(form)
+
+    def get(self, request: HttpRequest, strain: int, feminized: int) -> HttpResponse:
+        self.strain = get_object_or_404(Strain, pk=strain)
+        self.feminized = bool(feminized)
+
+        return super(HxStrainAddToStockView, self).get(request)
+
+    def post(self, request: HttpRequest, strain: int, feminized: int) -> HttpResponse:
+        self.strain = get_object_or_404(Strain, pk=strain)
+        self.feminized = bool(feminized)
+
+        return super(HxStrainAddToStockView, self).post(request)
+
+
+class HxStrainRemoveFromStockView(LoginRequiredMixin, FormView):
+    template_name = settings.GROW_TEMPLATES['grow/strain/hx-remove_from_stock']
+    invalid_template_name = settings.GROW_TEMPLATES['grow/strain/hx-remove_from_stock_invalid']
+    update_template_name = settings.GROW_TEMPLATES['grow/strain/hx-strain_in_stock_update']  # noqa: E501
+
+    form_class = StrainRemoveFromStockForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['strain'] = self.strain
+        context['feminized'] = self.feminized
+        context['feminized_int'] = 1 if self.feminized else 0
+        context['n_seeds_in_stock'] = self.n_seeds_in_stock
+
+        return context
+
+    def get_form(self, form_class=StrainRemoveFromStockForm):
+        form = form_class()
+        form.fields['quantity'].max_value = self.n_seeds_in_stock
+        return form
+
+    def get_success_url(self):
+        return reverse('grow:strain-detail', kwargs={
+            'breeder_slug': self.strain.breeder.slug,
+            'slug': self.strain.slug
+        })
+
+    def form_valid(self, form: StrainRemoveFromStockForm):
+        print(self.feminized)
+        if self.feminized:
+            self.strain.remove_feminized_seeds_from_stock(
+                self.request.user,
+                form.cleaned_data['quantity']
+            )
+        else:
+            self.strain.remove_regualar_seeds_from_stock(
+                self.request.user,
+                form.cleaned_data['quantity']
+            )
+        return render(self.request, self.update_template_name, context=self.get_context_data(
+            success=True,
+            seeds_removed=True,
+            regular_seeds_in_stock=self.strain.get_regular_seeds_in_stock(self.request.user),
+            feminized_seeds_in_stock=self.strain.get_feminized_seeds_in_stock(self.request.user),
+            total_seeds_in_stock=self.strain.get_total_seeds_in_stock(self.request.user),
+        ))
+
+    def form_invalid(self, form):
+        print("Form is invalid!")
+        print(form.errors)
+        return super(HxStrainRemoveFromStockView, self).form_invalid(form)
+
+    def validate(self):
+        if self.n_seeds_in_stock > 0:
+            return True
+        return False
+
+    def get(self, request: HttpRequest, strain: int, feminized: int) -> HttpResponse:
+        self.strain = get_object_or_404(Strain, pk=strain)
+        self.feminized = bool(feminized)
+
+        if self.feminized:
+            self.n_seeds_in_stock = self.strain.get_feminized_seeds_in_stock(self.request.user)
+        else:
+            self.n_seeds_in_stock = self.strain.get_regular_seeds_in_stock(self.request.user)
+
+        if not self.validate():
+            return render(request, self.invalid_template_name, context=self.get_context_data())
+
+        return super(HxStrainRemoveFromStockView, self).get(request)
+
+    def post(self, request: HttpRequest, strain: int, feminized: int) -> HttpResponse:
+        print("POST request handler")
+        self.strain = get_object_or_404(Strain, pk=strain)
+        self.feminized = bool(feminized)
+
+        if self.feminized:
+            self.n_seeds_in_stock = self.strain.get_feminized_seeds_in_stock(self.request.user)
+        else:
+            self.n_seeds_in_stock = self.strain.get_regular_seeds_in_stock(self.request.user)
+
+        if not self.validate():
+            return render(request, self.invalid_template_name, context=self.get_context_data())
+
+        form = self.get_form_class()(request.POST)
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)

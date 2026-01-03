@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: django-grc.api 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-31 07:53+0100\n"
+"POT-Creation-Date: 2026-01-02 05:13+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Christian Moser <christian@cmoser.eu>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -179,31 +179,33 @@ msgid "This determines who can view the grow log."
 msgstr "Dies bestimmt wer den Growlog ansehen kann."
 
 #: grow/api/models/growlog.py:30 grow/api/models/location.py:24
-#: grow/api/models/sensors.py:26 grow/api/models/strain.py:23
-#: grow/api/models/strain.py:173
+#: grow/api/models/sensors.py:26 grow/api/models/strain.py:34
+#: grow/api/models/strain.py:240
 msgid "key"
 msgstr "Schlüssel"
 
 #: grow/api/models/growlog.py:36 grow/api/models/location.py:30
-#: grow/api/models/sensors.py:31 grow/api/models/strain.py:28
+#: grow/api/models/sensors.py:31 grow/api/models/strain.py:39
 msgid "name"
 msgstr "Name"
 
 #: grow/api/models/growlog.py:42 grow/api/models/growlog.py:681
 #: grow/api/models/location.py:46 grow/api/models/location.py:222
-#: grow/api/models/strain.py:32 grow/api/models/strain.py:181
-#: grow/api/models/strain.py:408 grow/api/models/strain.py:414
+#: grow/api/models/strain.py:43 grow/api/models/strain.py:248
+#: grow/api/models/strain.py:558 grow/api/models/strain.py:653
+#: grow/api/models/strain.py:659
 msgid "description"
 msgstr "Beschreibung"
 
 #: grow/api/models/growlog.py:48 grow/api/models/growlog.py:688
 #: grow/api/models/location.py:53 grow/api/models/location.py:229
-#: grow/api/models/strain.py:54 grow/api/models/strain.py:186
-#: grow/api/models/strain.py:356
+#: grow/api/models/strain.py:65 grow/api/models/strain.py:203
+#: grow/api/models/strain.py:253 grow/api/models/strain.py:540
+#: grow/api/models/strain.py:588
 msgid "description type"
 msgstr "Beschreibungstyp"
 
-#: grow/api/models/growlog.py:57 grow/api/models/strain.py:448
+#: grow/api/models/growlog.py:57 grow/api/models/strain.py:709
 msgid "notes"
 msgstr "Notizen"
 
@@ -251,8 +253,8 @@ msgstr "Berechtigung"
 msgid "growlog"
 msgstr "Growlog"
 
-#: grow/api/models/growlog.py:501 grow/api/models/strain.py:345
-#: grow/api/models/strain.py:436
+#: grow/api/models/growlog.py:501 grow/api/models/strain.py:531
+#: grow/api/models/strain.py:573 grow/api/models/strain.py:683
 msgid "strain"
 msgstr "Sorte"
 
@@ -262,7 +264,7 @@ msgstr "Sorte"
 msgid "grown from seed"
 msgstr "vom Samen gezogen"
 
-#: grow/api/models/growlog.py:511 grow/api/models/strain.py:443
+#: grow/api/models/growlog.py:511 grow/api/models/strain.py:700
 msgid "quantity"
 msgstr "Menge"
 
@@ -291,7 +293,7 @@ msgstr "Ort"
 msgid "growlog entry"
 msgstr "Growlog Eintrag"
 
-#: grow/api/models/growlog.py:675 grow/api/models/strain.py:391
+#: grow/api/models/growlog.py:675 grow/api/models/strain.py:636
 msgid "image"
 msgstr "Bild"
 
@@ -317,7 +319,7 @@ msgstr ""
 "Dies definiert, wer die Ortsdetails einsehen kann. Wenn keine "
 "Berechtigungdie Detials enzusehen existiert, wird nur der Ortstyp Angezeigt."
 
-#: grow/api/models/location.py:76 grow/api/models/strain.py:91
+#: grow/api/models/location.py:76 grow/api/models/strain.py:102
 msgid "owner"
 msgstr "Eigentümer"
 
@@ -331,9 +333,7 @@ msgstr "Lichtzyklus in Stunden"
 
 #: grow/api/models/location.py:130
 msgid "Number of hours the light is on during a 24-hour period."
-msgstr ""
-"Anzahl der Stunden in denen das Licht in einer 24 Stunden Periode "
-"eingeschaltet ist."
+msgstr "Anzahl der Stunden in denen das Licht in einer 24 Stunden Periode eingeschaltet ist."
 
 #: grow/api/models/location.py:137
 msgid "Light intensity in lumens."
@@ -389,7 +389,7 @@ msgstr "Längengrad"
 
 #: grow/api/models/location.py:212
 msgid "latitude"
-msgstr "Bretiengrad"
+msgstr "Breitengrad"
 
 #: grow/api/models/sensors.py:51
 msgid "sensor type"
@@ -417,121 +417,141 @@ msgstr "Die Lesungen"
 msgid "Compressed readings"
 msgstr "Komprimierte Lesungen"
 
-#: grow/api/models/strain.py:62 grow/api/models/strain.py:228
+#: grow/api/models/strain.py:27
+msgid "German"
+msgstr "Deutsch"
+
+#: grow/api/models/strain.py:28
+msgid "English (United States)"
+msgstr "Englisch"
+
+#: grow/api/models/strain.py:73 grow/api/models/strain.py:310
 msgid "logo URL"
 msgstr "Logo URL"
 
-#: grow/api/models/strain.py:68 grow/api/models/strain.py:234
-#, fuzzy
-#| msgid "image"
+#: grow/api/models/strain.py:79 grow/api/models/strain.py:316
 msgid "logo image"
 msgstr "Bild"
 
-#: grow/api/models/strain.py:75
+#: grow/api/models/strain.py:86
 msgid "Seedfinder URL"
 msgstr "Seedfinder URL"
 
-#: grow/api/models/strain.py:81
-#, fuzzy
-#| msgid "breeder"
+#: grow/api/models/strain.py:92
 msgid "breeder url"
 msgstr "Züchter"
 
-#: grow/api/models/strain.py:101 grow/api/models/strain.py:293
-#, fuzzy
-#| msgid "uploaded at"
+#: grow/api/models/strain.py:114
+msgid "breeder moderator"
+msgstr "Züchtermoderator"
+
+#: grow/api/models/strain.py:120 grow/api/models/strain.py:375
 msgid "added at"
-msgstr "hochgeladen am"
+msgstr "hinzugefügt am"
 
-#: grow/api/models/strain.py:177
-#, fuzzy
-#| msgid "strain type"
-msgid "strain name"
-msgstr "Sortentypus"
+#: grow/api/models/strain.py:197
+msgid "language code"
+msgstr "Sprachcode"
 
-#: grow/api/models/strain.py:224
+#: grow/api/models/strain.py:221
+msgid "Description"
+msgstr "Beschreibung"
+
+#: grow/api/models/strain.py:236
 msgid "breeder"
 msgstr "Züchter"
 
-#: grow/api/models/strain.py:241
-#, fuzzy
-#| msgid "strain type"
+#: grow/api/models/strain.py:244
+msgid "strain name"
+msgstr "Sorten name"
+
+#: grow/api/models/strain.py:323
 msgid "strain homepage"
 msgstr "Sorten Homepage"
 
-#: grow/api/models/strain.py:247
-#, fuzzy
-#| msgid "Seedfinder URL"
+#: grow/api/models/strain.py:329
 msgid "seedfinder url"
 msgstr "Seedfinder URL"
 
-#: grow/api/models/strain.py:253
+#: grow/api/models/strain.py:335
 msgid "is automatic"
 msgstr "ist eine Automatik"
 
-#: grow/api/models/strain.py:257
+#: grow/api/models/strain.py:339
 msgid "is feminized"
-msgstr "ist Feminisiert"
+msgstr "ist feminisiert"
 
-#: grow/api/models/strain.py:261
+#: grow/api/models/strain.py:343
 msgid "is regular"
-msgstr "ist Regulär"
+msgstr "ist fegulär"
 
-#: grow/api/models/strain.py:266
+#: grow/api/models/strain.py:348
 msgid "flowering time (days)"
-msgstr "Blütezeit"
+msgstr "Blütezeit (Tage)"
 
-#: grow/api/models/strain.py:271
+#: grow/api/models/strain.py:353
 msgid "strain type"
 msgstr "Sortentypus"
 
-#: grow/api/models/strain.py:284
-#, fuzzy
-#| msgid "created at"
+#: grow/api/models/strain.py:366
 msgid "created by"
 msgstr "Erstellt von"
 
-#: grow/api/models/strain.py:287
+#: grow/api/models/strain.py:369
 msgid "The name of the creator"
 msgstr "Der name des Erstellers"
 
-#: grow/api/models/strain.py:351 grow/api/models/strain.py:441
+#: grow/api/models/strain.py:535
+msgid "Language code"
+msgstr "Sprachcode"
+
+#: grow/api/models/strain.py:583 grow/api/models/strain.py:688
 msgid "user"
 msgstr "Nutzer"
 
-#: grow/api/models/strain.py:354
+#: grow/api/models/strain.py:586
 msgid "comment"
 msgstr "Kommentar"
 
-#: grow/api/models/strain.py:363
+#: grow/api/models/strain.py:606
 msgid "created at"
 msgstr "Erstellt am"
 
-#: grow/api/models/strain.py:367
+#: grow/api/models/strain.py:610
 msgid "updated at"
 msgstr "Aktualisiert am"
 
-#: grow/api/models/strain.py:381
+#: grow/api/models/strain.py:626
 msgid "user description"
 msgstr "Nutzer Beschreibung"
 
-#: grow/api/models/strain.py:386
+#: grow/api/models/strain.py:631
 msgid "User"
 msgstr "Nutzer"
 
-#: grow/api/models/strain.py:396
+#: grow/api/models/strain.py:641
 msgid "uploaded at"
 msgstr "hochgeladen am"
 
-#: grow/api/models/strain.py:401
-#, fuzzy
-#| msgid "uploaded at"
+#: grow/api/models/strain.py:646
 msgid "uploader"
 msgstr "hochgeladen von"
 
-#: grow/api/models/strain.py:445
-msgid "bought at"
-msgstr "gekauft am"
+#: grow/api/models/strain.py:691
+msgid "regular seeds"
+msgstr "reguläre Samen"
+
+#: grow/api/models/strain.py:695
+msgid "feminized seeds"
+msgstr "feminisierte Samen"
+
+#: grow/api/models/strain.py:704
+msgid "purchased on"
+msgstr "Gekauft am"
+
+#: grow/api/models/strain.py:714
+msgid "text type"
+msgstr "Texttyp"
 
 #: grow/api/parser/bbcode/text_formatters.py:65
 msgid "Page not found"
@@ -542,8 +562,6 @@ msgid "Home"
 msgstr "Start"
 
 #: grow/api/translatable.py:6
-#, fuzzy
-#| msgid "grower"
 msgid "grow-home"
 msgstr "grow-de-home"
 
@@ -554,6 +572,9 @@ msgstr "grow-de-fertilizers"
 #: grow/api/translatable.py:8
 msgid "grow-fertilizers-biobizz"
 msgstr "grow-de-fertilizers-biobizz"
+
+#~ msgid "bought at"
+#~ msgstr "gekauft am"
 
 #~ msgid "breeder URL"
 #~ msgstr "Züchter URL"

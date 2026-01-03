@@ -193,7 +193,11 @@ A total of {{ n }} growlogs have been created for the strains of <i>{{ name }}</
                         class="link-danger
                             link-opacity-50
                             link underline-opacity-0"
-
+                        hx-target="#modals-here"
+                        hx-trigger="click"
+                        hx-get="{% url 'grow:hx-strain-delete' pk=strain.pk %}"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modals-here"
                     ><i class="bi bi-x-square"
                         data-bs-toggle="tooltip"
                         data-bs-html="true"

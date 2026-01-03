@@ -26,9 +26,11 @@ GROWLOG_PERMISSION_TYPE = _("This determines who can view the grow log.")
 class Growlog(models.Model):
     #: The key(slug) for the growlog
     #: The growlog is looked up by ${BASE_URL}/userid/slug
-    key = models.SlugField(
+    slug = models.SlugField(
         _("key"),
         max_length=255,
+        editable=False,
+        unique=True,
     )
 
     #: The name of the growlog
@@ -479,9 +481,6 @@ class Growlog(models.Model):
 
     class Meta:
         db_table = "grow_growlog"
-        unique_together = [
-            ('grower', 'key')
-        ]
 
 
 class GrowlogStrain(models.Model):
