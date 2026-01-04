@@ -91,7 +91,16 @@ class StrainRemoveFromStockForm(forms.Form):
 
 class BreederFilterForm(forms.Form):
     search_query = forms.CharField(
-        label=_("Search"),
+
         required=False,
         max_length=255,
+        label=_("Filter breeders..."),
+    )
+
+
+class StrainSearchForm(forms.Form):
+    search_query = forms.CharField(
+        required=True,
+        max_length=255,
+        label=_("Search strains..."),
     )

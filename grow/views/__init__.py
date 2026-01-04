@@ -17,6 +17,7 @@ from .strain import (
     StrainCreateView,
     StrainDeleteView,
     StrainRemoveFromStockView,
+    StrainSearchView,
     StrainUpdateView,
     StrainView,
 )
@@ -43,6 +44,7 @@ __all__ = [
     'StrainCreateView',
     'StrainDeleteView',
     'StrainRemoveFromStockView',
+    'StrainSearchView',
     'StrainUpdateView',
     'StrainView',
 ]

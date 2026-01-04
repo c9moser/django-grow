@@ -4,6 +4,7 @@ from .strain import (
     StrainForm,
     StrainAddToStockForm,
     StrainRemoveFromStockForm,
+    StrainSearchForm,
 )
 
 __all__ = [
@@ -12,4 +13,5 @@ __all__ = [
     'StrainForm',
     'StrainAddToStockForm',
     'StrainRemoveFromStockForm',
+    'StrainSearchForm',
 ]

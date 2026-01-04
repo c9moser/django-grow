@@ -25,6 +25,7 @@ from ..forms import (
     StrainForm,
     StrainAddToStockForm,
     StrainRemoveFromStockForm,
+    StrainSearchForm,
 )
 
 from ..growapi.permission import growlog_user_is_allowed_to_view
@@ -82,6 +83,8 @@ class BreederIndexView(BaseView):
         labels = mark_safe(labels)
 
         return render(request, self.template_name, context={
+            'breeder_filter_form': BreederFilterForm(),
+            'strain_search_form': StrainSearchForm(),
             'breeder_count': Breeder.objects.count(),
             'breeders': breeders,
             'breeders_id': breeders_id,
@@ -854,3 +857,23 @@ class HxStrainRemoveFromStockView(LoginRequiredMixin, FormView):
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
+
+
+class StrainSearchView(BaseView):
+    template_name = settings.GROW_TEMPLATES['grow/strain/strain_search_results']
+
+    def post(self, request: HttpRequest) -> HttpResponse:
+        form = StrainSearchForm(request.POST)
+        if form.is_valid():
+            search_query = form.cleaned_data['search_query']
+        else:
+            search_query = None
+
+        if not search_query:
+            return redirect(reverse('grow:breeder-overview'))
+
+        strains = Strain.objects.filter(name__icontains=search_query).order_by(Lower("name")).order_by(Lower("breeder__name"), Lower("name"))  # noqa: E501
+
+        return render(request, self.template_name, context={
+            'strains': strains
+        })

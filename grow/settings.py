@@ -31,8 +31,7 @@ GROW_BUILTIN_TEMPLATES = {
     'grow/strain/index': 'grow/strain/index.html',
     'grow/strain/remove_from_stock': 'grow/strain/strain_remove_from_stock.html',
     'grow/strain/remove_from_stock_invalid': 'grow/strain/strain_remove_from_stock_invalid.html',
-    'grow/strain/search': 'grow/strain/strain_search.html',
-    'grow/strain/search_result': 'grow/strain/search.html',
+    'grow/strain/strain_search_results': 'grow/strain/strain_search_results.html',
     'grow/strain/update': 'grow/strain/strain_update.html',
 
     'grow/utils/hx_select_date_days_sanitize': 'grow/utils/hx_select_date_days_sanitize.html'
