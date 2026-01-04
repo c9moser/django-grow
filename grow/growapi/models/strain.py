@@ -442,7 +442,7 @@ class Strain(models.Model):
                 if notes:
                     sis.notes = notes
                     sis.notes_type = notes_type
-                if sis.purchased_on is None and purchased_on is not None:
+                if purchased_on is not None:
                     sis.purchased_on = purchased_on
                 sis.save()
 
@@ -470,6 +470,8 @@ class Strain(models.Model):
                     sis.quantity -= quantity
                 else:
                     sis.quantity = 0
+                if sis.quantity == 0:
+                    sis.purchased_on = None
                 sis.save()
                 return sis.quantity
             except StrainsInStock.DoesNotExist:
@@ -490,7 +492,7 @@ class Strain(models.Model):
                 if notes:
                     sis.notes = notes
                     sis.notes_type = notes_type
-                if sis.purchased_on is None and purchased_on is not None:
+                if purchased_on is not None:
                     sis.purchased_on = purchased_on
                 sis.save()
 
@@ -519,11 +521,31 @@ class Strain(models.Model):
                     sis.quantity -= quantity
                 else:
                     sis.quantity = 0
+                if sis.quantity == 0:
+                    sis.purchased_on = None
                 sis.save()
                 return sis.quantity
             except StrainsInStock.DoesNotExist:
                 pass
         return 0
+
+    def get_feminized_seeds_purchased_on(self, user):
+        try:
+            sis = self.seeds_in_stock.get(user=user, is_feminized=True)
+            if sis.quantity > 0:
+                return sis.purchased_on
+            return None
+        except StrainsInStock.DoesNotExist:
+            return None
+
+    def get_regular_seeds_purchased_on(self, user):
+        try:
+            sis = self.seeds_in_stock.get(user=user, is_regular=True)
+            if sis.quantity > 0:
+                return sis.purchased_on
+            return None
+        except StrainsInStock.DoesNotExist:
+            return None
 
     def __str__(self):
         return f"{self.breeder.name} - {self.name}"

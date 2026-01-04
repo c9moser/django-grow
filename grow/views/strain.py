@@ -351,9 +351,17 @@ class StrainView(BaseView):
                 strain.get_regular_seeds_in_stock(self.request.user)
                 if self.request.user.is_authenticated else 0
             ),
+            'regular_seeds_purchased_on': (
+                strain.get_regular_seeds_purchased_on(self.request.user)
+                if self.request.user.is_authenticated else None
+            ),
             'feminized_seeds_in_stock': (
                 strain.get_feminized_seeds_in_stock(self.request.user)
                 if self.request.user.is_authenticated else 0
+            ),
+            'feminized_seeds_purchased_on': (
+                strain.get_feminized_seeds_purchased_on(self.request.user)
+                if self.request.user.is_authenticated else None
             ),
             'total_seeds_in_stock': strain.get_total_seeds_in_stock(self.request.user),
         })
@@ -690,8 +698,8 @@ class HxStrainAddToStockView(LoginRequiredMixin, FormView):
                 'purchased_on_day': sis.purchased_on.day if sis.purchased_on else today.day,
                 'quantity': 1,
             })
-        except StrainsInStock.ObjectDoesNotExist:
-            form = form_class()(initial={'quantity': 1})
+        except StrainsInStock.DoesNotExist:
+            form = form_class(initial={'quantity': 1})
         return form
 
     def get_success_url(self) -> str:
@@ -705,6 +713,8 @@ class HxStrainAddToStockView(LoginRequiredMixin, FormView):
         year = int(form.cleaned_data['purchased_on_year'])
         month = int(form.cleaned_data['purchased_on_month'])
         day = int(form.cleaned_data['purchased_on_day'])
+
+        print(year, month, day)
 
         def sanitize_day() -> int:
             import calendar
@@ -738,15 +748,21 @@ class HxStrainAddToStockView(LoginRequiredMixin, FormView):
             regular_seeds_in_stock=self.strain.get_regular_seeds_in_stock(self.request.user),
             feminized_seeds_in_stock=self.strain.get_feminized_seeds_in_stock(self.request.user),
             total_seeds_in_stock=self.strain.get_total_seeds_in_stock(self.request.user),
+            feminized_seeds_purchased_on=self.strain.get_feminized_seeds_purchased_on(self.request.user),  # noqa: E501
+            regular_seeds_purchased_on=self.strain.get_regular_seeds_purchased_on(self.request.user),  # noqa: E501
         ))
 
     def form_invalid(self, form):
+        print("form invalid handler")
+        print(form.errors)
         return render(self.request, self.update_template_name, context=self.get_context_data(
             success=False,
             seeds_added=True,
             regular_seeds_in_stock=self.strain.get_regular_seeds_in_stock(self.request.user),
             feminized_seeds_in_stock=self.strain.get_feminized_seeds_in_stock(self.request.user),
             total_seeds_in_stock=self.strain.get_total_seeds_in_stock(self.request.user),
+            feminized_seeds_purchased_on=self.strain.get_feminized_seeds_purchased_on(self.request.user),  # noqa: E501
+            regular_seeds_purchased_on=self.strain.get_regular_seeds_purchased_on(self.request.user),  # noqa: E501
         ))
 
     def get(self, request: HttpRequest, strain: int, feminized: int) -> HttpResponse:
@@ -759,7 +775,12 @@ class HxStrainAddToStockView(LoginRequiredMixin, FormView):
         self.strain = get_object_or_404(Strain, pk=strain)
         self.feminized = bool(feminized)
 
-        return super(HxStrainAddToStockView, self).post(request)
+        form = self.get_form_class()(request.POST)
+
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
 
 
 class HxStrainRemoveFromStockView(LoginRequiredMixin, FormView):
@@ -807,6 +828,8 @@ class HxStrainRemoveFromStockView(LoginRequiredMixin, FormView):
             regular_seeds_in_stock=self.strain.get_regular_seeds_in_stock(self.request.user),
             feminized_seeds_in_stock=self.strain.get_feminized_seeds_in_stock(self.request.user),
             total_seeds_in_stock=self.strain.get_total_seeds_in_stock(self.request.user),
+            feminized_seeds_purchased_on=self.strain.get_feminized_seeds_purchased_on(self.request.user),  # noqa: E501
+            regular_seeds_purchased_on=self.strain.get_regular_seeds_purchased_on(self.request.user),  # noqa: E501
         ))
 
     def form_invalid(self, form):
@@ -818,6 +841,8 @@ class HxStrainRemoveFromStockView(LoginRequiredMixin, FormView):
             regular_seeds_in_stock=self.strain.get_regular_seeds_in_stock(self.request.user),
             feminized_seeds_in_stock=self.strain.get_feminized_seeds_in_stock(self.request.user),
             total_seeds_in_stock=self.strain.get_total_seeds_in_stock(self.request.user),
+            feminized_seeds_purchased_on=self.strain.get_feminized_seeds_purchased_on(self.request.user),  # noqa: E501
+            regular_seeds_purchased_on=self.strain.get_regular_seeds_purchased_on(self.request.user),  # noqa: E501
         ))
 
     def validate(self):

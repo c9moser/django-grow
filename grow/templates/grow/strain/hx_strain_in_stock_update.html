@@ -4,6 +4,7 @@
         <tr class="table-secondary">
             <th>{% translate "Seed type"%}</th>
             <th>{% translate "Quantity" %}</th>
+            <th>{% translate "Purchased on" %}</th>
             <th></th>
         </tr>
     </thead>
@@ -17,6 +18,13 @@
                 {% plural %}
                 {{ n }} seeds
                 {% endblocktranslate %}
+            </td>
+            <td>
+                {% if regular_seeds_purchased_on %}
+                    {{ regular_seeds_purchased_on|date }}
+                {% else %}
+                    {% translate "Unknown" %}
+                {% endif %}
             </td>
             <td>
                 <div class="text-end">
@@ -68,6 +76,13 @@
                 {% endblocktranslate %}
             </td>
             <td>
+                {% if feminized_seeds_purchased_on %}
+                    {{ feminized_seeds_purchased_on|date }}
+                {% else %}
+                    {% translate "Unknown" %}
+                {% endif %}
+            </td>
+            <td>
                 <div class="text-end">
                     <a href="#"
                         hx-get="{% url 'grow:hx-strain-add-to-stock' strain=strain.pk feminized=1 %}"
@@ -109,7 +124,7 @@
     <tfoot class="table-group-divider">
         <tr>
             <th>{% translate "Total seeds" %}</th>
-            <th colspan=2 class="{% if use_bootstrap %}text-end{% endif %}">
+            <th colspan=3 class="{% if use_bootstrap %}text-end{% endif %}">
                 {% blocktranslate count n=total_seeds_in_stock%}
                 {{ n }} seed
                 {% plural %}

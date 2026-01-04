@@ -34,7 +34,7 @@
             <label for="{{ strain_search_form.search_query.id_for_label }}" class="form-label visually-hidden">
                 {{ strain_search_form.search_query.label }}
             </label>
-            <span class="input-group-text">{% translate "Search strains" %}</span>
+            <span class="input-group-text rounded-start">{% translate "Search strains" %}</span>
 
             {% render_field strain_search_form.search_query placeholder=strain_search_form.search_query.label class="form-control" %}
             <button class="btn btn-outline-primary" type="submit" id="button-search-strains">
