@@ -87,3 +87,11 @@ class StrainRemoveFromStockForm(forms.Form):
     quantity = forms.IntegerField(
         label=_("Quantity")
     )
+
+
+class BreederFilterForm(forms.Form):
+    search_query = forms.CharField(
+        label=_("Search"),
+        required=False,
+        max_length=255,
+    )

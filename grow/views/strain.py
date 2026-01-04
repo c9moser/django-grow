@@ -20,6 +20,7 @@ from ..growapi.models import (
 )
 from .. import settings
 from ..forms import (
+    BreederFilterForm,
     DeleteWithSlugForm,
     StrainForm,
     StrainAddToStockForm,
@@ -82,6 +83,78 @@ class BreederIndexView(BaseView):
 
         return render(request, self.template_name, context={
             'breeder_count': Breeder.objects.count(),
+            'breeders': breeders,
+            'breeders_id': breeders_id,
+            'labels': labels,
+            'breeders_allowed_to_edit': breeders_allowed_to_edit,
+            'breeders_allowed_to_delete': breeders_allowed_to_delete,
+            'allowed_to_add_breeder': allowed_to_add_breeder,
+            'group_breeders': group_breeders,
+        })
+
+
+class HxBreederFilterView(BaseView):
+    template_name = settings.GROW_TEMPLATES['grow/breeder/hx-breeder-filter']
+
+    def post(self, request: HttpRequest) -> HttpResponse:
+        form = BreederFilterForm(request.POST)
+        if form.is_valid():
+            search_query = form.cleaned_data['search_query']
+        else:
+            search_query = None
+
+        if search_query:
+            breeders = Breeder.objects.filter(name__icontains=search_query).order_by(Lower("name"))
+        else:
+            breeders = Breeder.objects.all().order_by(Lower("name"))
+
+        if request.user.is_authenticated:
+            breeders_allowed_to_edit = [
+                breeder.id for breeder in Breeder.objects.all()
+            ]  # TODO: add logic
+            breeders_allowed_to_delete = [
+                breeder.id for breeder in Breeder.objects.all()
+                if breeder.growlog_count == 0
+            ]
+            allowed_to_add_breeder = True  # TODO: add logic
+        else:
+            breeders_allowed_to_edit = []
+            breeders_allowed_to_delete = []
+            allowed_to_add_breeder = False
+
+        breeders_id = []
+        labels_id = []
+        breeder_ids = []
+
+        breeder_id_format = "breeder-{}"
+        for breeder in breeders:
+            if breeder.name[0].isdigit():
+                if 'breeder-num' in breeder_ids:
+                    breeders_id.append((breeder, None, None))
+                else:
+                    breeder_ids.append('breeder-num')
+                    breeders_id.append((breeder, 'breeder-num', '0-9'))
+                    labels_id.append('breeder-num', '0-9')
+            else:
+                id = breeder_id_format.format(breeder.name[0].lower())
+                if id in breeder_ids:
+                    breeders_id.append((breeder, None, None))
+                else:
+                    breeder_ids.append(id)
+                    labels_id.append((breeder.name[0].upper(), id))
+                    breeders_id.append((breeder, id, breeder.name[0].upper()))
+
+        group_breeders = (not search_query and breeders.count() > 30)
+
+        if settings.USE_BOOTSTRAP:
+            label_format = "<a class=\"link-body-emphasis link-opacity-50 link-opacity-100-hover link-underline-opacity-50 link-underline-opacity-75-hover\" href=\"#{id}\">{label}</a>"  # noqa: E501
+        else:
+            label_format = "<a href=\"#{id}\">{label}</a>"
+        labels = ', '.join(label_format.format(id=id, label=label) for label, id in labels_id)
+        labels = mark_safe(labels)
+
+        return render(request, self.template_name, context={
+            'breeder_count': breeders.count(),
             'breeders': breeders,
             'breeders_id': breeders_id,
             'labels': labels,

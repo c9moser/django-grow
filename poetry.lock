@@ -510,7 +510,7 @@ pillow = ">=12.0.0,<13.0.0"
 type = "git"
 url = "https://git.cmoser.eu/tinytools/tinywiki.git"
 reference = "HEAD"
-resolved_reference = "7e0f01ef1e95c02ea7e1a4c41cf604f924493e3d"
+resolved_reference = "8c3b30187da2670bafdcfa42e2e8bebd796d7ac1"
 
 [[package]]
 name = "django-widget-tweaks"

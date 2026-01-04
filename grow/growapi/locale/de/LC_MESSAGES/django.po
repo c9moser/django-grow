@@ -430,7 +430,7 @@ msgstr "Seedfinder URL"
 
 #: grow/growapi/models/strain.py:92
 msgid "breeder url"
-msgstr "Züchter"
+msgstr "Züchter URL"
 
 #: grow/growapi/models/strain.py:114
 msgid "breeder moderator"

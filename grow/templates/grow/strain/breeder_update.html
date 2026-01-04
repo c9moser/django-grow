@@ -7,14 +7,32 @@
 {% block form_buttons %}
 {% if use_bootstrap %}
     <button type="submit" class="btn btn-success">
-        <i class="bi bi-check"></i>
-        {% translate "Save changes "%}
-    </button>
-    <a href="{% url 'grow:breeder-detail' slug=breeder.slug %}"
-        class="btn btn-secondary"
+    <i class="bi bi-check"></i>
+    {% translate "Save changes "%}
+     </button>
+<a href="{% url 'grow:breeder-overview' %}"
+    class="btn btn-secondary"
+>
+    <i class="bi bi-x"></i>
+    {% translate "Back to breeder overview" %}
+</a>
+<a href="{% url 'grow:breeder-detail' slug=breeder.slug %}"
+    class="btn btn-secondary"
+>
+    <i class="bi bi-x"></i>
+    {% translate "Back to breeder detail" %}
+</a>
+{% else %}
+    <button type="submit">{% translate "Save changes" %}</button>
+    <button type="button"
+        onclick="location.href='{% url 'grow:breeder-overview' %}'"
     >
-        <i class="bi bi-x"></i>
-        {% translate "Cancel" %}
-    </a>
+        {% translate "Back to breeder overview" %}
+    </button>
+    <button type="button"
+        onclick="location.href='{% url 'grow:breeder-detail' slug=breeder.slug %}'"
+    >
+        {% translate "Back to breeder detail" %}
+    </button>
 {% endif %}
 {% endblock %}

@@ -16,6 +16,7 @@ from .views import (
     StrainUpdateView,
     StrainView,
     HxBreederDeleteView,
+    HxBreederFilterView,
     HxSanitizeDateDayView,
     HxStrainDeleteView,
     HxStrainAddToStockView,
@@ -56,6 +57,9 @@ urlpatterns = [
     path("__hx__/strain/delete/<int:pk>/", HxStrainDeleteView.as_view(), name="hx-strain-delete"),
     # path("__hx__/strain/image-upload/<int:pk>/", HxStrainImageUploadView.as_view(), name=hx-strain-image-upload),
 
+    path("__hx__/breeder/filter/",
+         HxBreederFilterView.as_view(),
+         name="hx-breeder-filter"),
     path("__hx__/select_date_days_sanitize/<int:year>/<int:month>/",
          HxSelectDateDaysSanitizeView.as_view(),
          name="hx-select-date-days-sanitize"),

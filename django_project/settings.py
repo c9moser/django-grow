@@ -256,6 +256,7 @@ if INCLUDE_WIKI:
         ),
     ]
     TINYWIKI_BBCODE_EXTRA_SIMPLE_FORMATTERS = []
+    TINYWIKI_BRAND_NAME = "Grow: Wiki"
 
 
 SITE_TITLE = "Grow"

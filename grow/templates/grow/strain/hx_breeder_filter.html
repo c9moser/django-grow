@@ -1,51 +1,6 @@
-{% extends base_template %}
 {% load i18n %}
-
-{% block title %}{{ grow_site_title }}: <span class="{% if use_bootstrap %}fs-2{% endif %}">{% translate "Breeder overview" %}</span>{% endblock title %}
-{% block head_title %}{{ grow_head_title }}{% endblock %}
-
-{% block content %}
-{% if use_bootstrap %}
-<nav aria-label="breadcrumb">
-    {% url "grow:home" as grow_home %}
-    <ol class="breadcrumb" style="--bs-breadcrumb-divider:'&#10093;';">
-    {% if grow_home == "/" %}
-        <li class="breadcrumb-item"><a href="{{ grow_home }}">{% translate "Home" %}</a></li>
-    {% else %}
-        <li class="breadcrumb-item"><a href="/">{% translate "Home" %}</a></li>
-        <li class="breadcrumb-item"><a href="{{ grow_home }}">Grow</a></li>
-    {% endif %}
-        <li class="breadcrumb-item active">{% translate "Breeders" %}</li>
-    </ol>
-</nav>
-{% endif %}
-
-<h1>Breeders</h1>
-
-<div>
-    <form id="breeder-filter-form"
-        method="post"
-        hx-post="{% url 'grow:hx-breeder-filter' %}"
-        hx-trigger="keyup changed delay:500ms"
-        hx-target="#breeder-overview-div"
-        hx-swap="innerHTML"
-        class="mb-3"
-    >
-        {% csrf_token %}
-        <input
-            type="text"
-            name="search_query"
-            placeholder="{% translate 'Filter breeders...' %}"
-            class="form-control"
-            value="{{ search_query }}"
-        >
-    </form>
-</div>
-<div class="mb-3" id="breeder-overview-div">
-    <p>{{ labels }}</p>
-
+<p>{{ labels }}</p>
 <table {% if use_bootstrap %}class="table table-hover"{% endif %} id="breeder-overview-table">
-
     <thead>
         <tr>
             <th>{% translate "Name" %}</th>
@@ -59,13 +14,14 @@
                         class="link-primary
                             link-opacity-75
                             link-underline-opacity-0
-                            link-opacity-100-hover"
+                            link-opacity-100-hover
+                            tooltip-item"
                         data-bs-toggle="tooltip"
                         data-bs-placement="left"
                         data-bs-title="Add a breeder"
                     ><i class="bi bi-plus-square"></i></a>
                 {% else %}
-                    <i class="bi bi-box-arrow-up"
+                    <i class="bi bi-box-arrow-up tooltip-item"
                         data-bs-toggle="tooltip"
                         data-bs-title="Breeder actions"
                     ></i>
@@ -104,7 +60,8 @@
                         class="link-primary
                             link-opacity-75
                             link-opacity-100-hover
-                            link-underline-opacity-0"
+                            link-underline-opacity-0
+                            tooltip-item"
                         data-bs-toggle="tooltip"
                         data-bs-html="true"
                         data-bs-placement="left"
@@ -114,7 +71,8 @@
                     <a href="#"
                         class="link-body-emphasis
                             link-opacity-50
-                            link-underline-opacity-0"
+                            link-underline-opacity-0
+                            tooltip-item"
                     ><i class="bi bi-pencil-square"></i></a>
                 {% endif %}
                 {% if breeder.id in breeders_allowed_to_delete %}
@@ -129,12 +87,13 @@
                         hx-swap="innerHTML"
                         data-bs-toggle="modal"
                         data-bs-target="#modals-here"
+
                     >
                         <i data-bs-toggle="tooltip"
                             data-bs-html="true"
                             data-bs-placement="left"
                             data-bs-title="{% blocktranslate with name=breeder.name %}Delete breeder <i>{{ name }}</i>{% endblocktranslate %}"
-                        class="bi bi-x-square"></i>
+                        class="bi bi-x-square tooltip-item"></i>
                     </a>
                 {% else %}
                     <a href="{% url 'grow:breeder-update' pk=breeder.pk %}"
@@ -162,19 +121,14 @@
         {% endfor %}
     </tbody>
 </table>
-</div>
-{% endblock content %}
 
-{% block extra_body %}
-{% if use_bootstrap %}
-<div id="modal-here"
-    class="modal fade"
-    style="display: none"
-    aria-hidden="false"
-    tabindex=-1>
-    <div class="modal-dialog modal-lg modal<p>{{ labels }}</p>-dialog-centerd" role="document">
-        <div class="modal-content"></div>
-    </div>
-</div>
-{% endif %}
-{% endblock extra_body %}
+<script>
+    htmx.process(document.getElementById('breeder-overview-table'));
+    /* Initialize Bootstrap tooltips for newly added elements */
+    document.querySelectorAll('.tooltip-item').forEach(function (el) {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('.tooltip-item'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+    });
+</script>
