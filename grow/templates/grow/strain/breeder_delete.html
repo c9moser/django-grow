@@ -1,5 +1,9 @@
 {% extends base_template %}
 {% block content %}
+{% load i18n %}
+{% block head_title %}{{ grow_head_title }}{% endblock %}
+{% block title %}{{ grow_site_title }}: {% blocktranslate with name=breeder.name %}Delete breeder {{ name }}{% endblocktranslate %}{% endblock %}
+
 <form method="post">
     {% csrf_token %}
 {% translate "Delete Breeder" as delete_breeder_label %}
@@ -9,13 +13,18 @@
         in the field below and hit the {{ delete_breeder_label }} button.
         {% endblocktranslate %}
     </p>
+
     {{ form.as_p }}
+
     <div>
         <button type="submit">
             {{ delete_breeder_label }}
         </button>
+        <button type="button" onclick="location.href='{% url 'grow:breeder-overview' %}'">
+            {% translate "Back to breeder overview" %}
+        </button>
         <button type="button" onclick="location.href='{% url 'grow:breeder-detail' slug=breeder.slug %}'">
-            {% translate "Cancel" %}
+            {% translate "Back to breeder" %}
         </button>
     </div>
 </form>

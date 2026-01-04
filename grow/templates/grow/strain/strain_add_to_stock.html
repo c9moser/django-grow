@@ -1,6 +1,9 @@
 {% extends base_template %}
 {% load i18n widget_tweaks %}
 
+{% block head_title %}{{ grow_head_title }}{% endblock %}
+{% block title %}{{ grow_site_title }}: {% translate "Add seeds to stock" %}{% endblock %}
+
 {% block content %}
 <h1>{% translate "Add seeds to stock" %}</h1>
 {% if feminized %}

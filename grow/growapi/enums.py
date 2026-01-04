@@ -269,7 +269,7 @@ class StrainType(StrEnum):
     MOSTLY_SATIVA = "mostly_sativa"
     HYBRID = "hybrid"
     HYBRID_RUDERALIS = "hybrid_ruderalis"
-    RUDERAILIS = "ruderalis"
+    RUDERALIS = "ruderalis"
 
     @staticmethod
     def from_string(strain_str: str) -> 'StrainType':
@@ -283,7 +283,7 @@ class StrainType(StrEnum):
             "hybrid_ruderalis": StrainType.HYBRID_RUDERALIS,
             "mostly_indica": StrainType.MOSTLY_INDICA,
             "mostly_sativa": StrainType.MOSTLY_SATIVA,
-            "ruderalis": StrainType.RUDERAILIS,
+            "ruderalis": StrainType.RUDERALIS,
         }
         try:
             return mapping.get(strain_str.lower())
@@ -296,13 +296,13 @@ class StrainType(StrEnum):
             StrainType.UNKNOWN: _("unknown"),
             StrainType.INDICA: _("indica"),
             StrainType.SATIVA: _("sativa"),
-            StrainType.HYBRID: _("indica/sativa hybrid"),
-            StrainType.INDICA_RUDERALIS: _("indica/ruderalis hybrid"),
-            StrainType.SATIVA_RUDERALIS: _("sativa/ruderalis hybrid"),
-            StrainType.HYBRID_RUDERALIS: _("indica/sativa/ruderalis hybrid"),
+            StrainType.HYBRID: _("indica/sativa"),
+            StrainType.INDICA_RUDERALIS: _("indica/ruderalis"),
+            StrainType.SATIVA_RUDERALIS: _("sativa/ruderalis"),
+            StrainType.HYBRID_RUDERALIS: _("indica/sativa/ruderalis"),
             StrainType.MOSTLY_INDICA: _("mostly indica"),
             StrainType.MOSTLY_SATIVA: _("mostly sativa"),
-            StrainType.RUDERAILIS: _("ruderalis"),
+            StrainType.RUDERALIS: _("ruderalis"),
         }
         return mapping[self]
 
@@ -325,13 +325,15 @@ STRAIN_TYPES = [
     StrainType.UNKNOWN,
     StrainType.INDICA,
     StrainType.SATIVA,
-    StrainType.RUDERAILIS,
-    StrainType.INDICA_RUDERALIS,
-    StrainType.SATIVA_RUDERALIS,
+    StrainType.RUDERALIS,
     StrainType.MOSTLY_INDICA,
     StrainType.MOSTLY_SATIVA,
     StrainType.HYBRID,
+    StrainType.INDICA_RUDERALIS,
+    StrainType.SATIVA_RUDERALIS,
     StrainType.HYBRID_RUDERALIS,
+
+
 ]
 STRAIN_TYPE_CHOICES = [(st.value, st.name_lazy) for st in STRAIN_TYPES]
 

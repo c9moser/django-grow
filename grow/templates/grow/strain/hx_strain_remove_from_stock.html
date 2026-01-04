@@ -15,15 +15,13 @@
         <div class="modal-body">
             {% csrf_token %}
             <p>{% blocktranslate with strain_name=strain.name breeder_name=strain.breeder.name%}Remove seeds from stock for <i>{{ strain_name }}</i> from <i>{{ breeder_name }}</i>.{% endblocktranslate %}</p>
-            {% if feminized %}
-                {% translate "feminized seeds" as seed_type_plural %}
-                {% translate "feminized seed" as seed_type_singular %}
-            {% else %}
-                {% translate "regular seeds" as seed_type_plural %}
-                {% translate "regular seed" as seed_type_singular %}
-            {% endif %}
+
             <p>
-            {% blocktranslate count n=n_seeds_in_stock %}You have {{ n }} {{ seed_type_singular }} in stock.{% plural %}You have {{ n }} {{ seed_type_plural }} in stock.{% endblocktranslate %}
+            {% if feminized %}
+            {% blocktranslate count n=n_seeds_in_stock %}You have one feminized seed in stock. How many do you want to remove?{% plural %}You have {{ n }} feminized seeds in stock. How many do you want to remove?{% endblocktranslate %}
+            {% else %}
+            {% blocktranslate count n=n_seeds_in_stock %}You have one regular seed in stock. How many do you want to remove?{% plural %}You have {{ n }} regular seeds in stock. How many do you want to remove?{% endblocktranslate %}
+            {% endif %}
             </p>
             <div class="form-floating mb-3">
                 {% translate "Quantity" as quantity_label %}

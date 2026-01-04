@@ -1,25 +1,40 @@
 {% extends "grow/strain/strain_form.html" %}
 {% load i18n %}
+
+{% block head_title %}{{ grow_head_title }}{% endblock %}
+{% block title %}{{ grow_site_title }}: {% translate "Update strain" %}{% endblock %}
+
 {% block form_buttons %}
 {% if use_bootstrap %}
 <button type="submit" class="btn btn-success">
     <i class="bi bi-check"></i>
     {% translate "Update Strain" %}
 </button>
+<a href="{% url 'grow:breeder-detail' slug=form.instance.breeder.slug %}"
+    class="btn btn-secondary"
+>
+    <i class="bi bi-x"></i>
+    {% translate "Back to breeder" %}
+</a>
 <a href="{% url 'grow:strain-detail' breeder_slug=form.instance.breeder.slug slug=form.instance.slug %}"
     class="btn btn-secondary"
 >
     <i class="bi bi-x"></i>
-    {% translate "Cancel" %}
+    {% translate "Back to strain" %}
 </a>
 {% else %}
 <button type="submit">
     {% translate "Update Strain" %}
 </button>
 <button
+    onclick="location.href='{% url 'grow:breeder-detail' slug=form.instance.breeder.slug %}'"
+    class="btn btn-secondary">
+    {% translate "Back to breeder" %}
+</button>
+<button
     onclick="location.href='{% url 'grow:strain-detail' breeder_slug=form.instance.breeder.slug slug=form.instance.slug %}'"
     class="btn btn-secondary">
-    {% translate "Cancel" %}
+    {% translate "Back to strain" %}
 </button>
 {% endif %}
 {% endblock %}

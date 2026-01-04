@@ -1,5 +1,9 @@
 {% extends base_template %}
 {% load i18n %}
+
+{% block head_title %}{{ grow_head_title }}{% endblock %}
+{% block title %}{{ grow_site_title }}: {% translate "Delete strain" %}{% endblock %}
+
 {% block content %}
 <form method="post">
     {% csrf_token %}

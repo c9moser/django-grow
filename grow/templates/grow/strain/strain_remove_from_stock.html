@@ -1,24 +1,25 @@
 {% extends base_template %}
 {% load i18n %}
+{% block head_title %}{{ grow_head_title }}{% endblock %}
+{% block title %}{{ grow_site_title }}: {% translate "Remove seeds from stock" %}{% endblock %}
 
 {% block content %}
 <h1>{% translate "Remove seeds from stock" %}</h1>
 <form method="post" action="{% url 'grow:strain-remove-from-stock' strain=strain.pk feminized=feminized_int %}">
-{% if feminized %}
-{% translate "feminized seeds" as seed_type_plural %}
-{% translate "feminized seed" as seed_type_singular %}
-{% else %}
-{% translate "regular seeds" as seed_type_plural %}
-{% translate "regular seed" as seed_type_singular %}
-{% endif %}
 <p>
+{% if feminized %}
 {% blocktranslate with strain_name=strain.name breeder_name=strain.breeder.name count n=n_seeds_in_stock %}
-You have {{ n }} {{ seed_type_singular }} for strain <i>{{ strain_name }}</i> from <i>{{ breeder_name }}</i>
-in stock. How many would you like to remove?
+You have one feminized seed for strain <i>{{ strain_name }}</i> from <i>{{ breeder_name }}</i> in stock. How many would you like to remove?
 {% plural %}
-You have {{ n }} {{ seed_type_plural }} for strain <i>{{ strain_name }}</i> from <i>{{ breeder_name }}</i>
-in stock. How many would you like to remove?
+You have {{ n }} feminized seeds for strain <i>{{ strain_name }}</i> from <i>{{ breeder_name }}</i> in stock. How many would you like to remove?
 {% endblocktranslate %}
+{% else %}
+{% blocktranslate with strain_name=strain.name breeder_name=strain.breeder.name count n=n_seeds_in_stock %}
+You have one regular seed for strain <i>{{ strain_name }}</i> from <i>{{ breeder_name }}</i> in stock. How many would you like to remove?
+{% plural %}
+You have {{ n }} regular seeds for strain <i>{{ strain_name }}</i> from <i>{{ breeder_name }}</i> in stock. How many would you like to remove?
+{% endblocktranslate %}
+{% endif %}
 </p>
 
 {% csrf_token %}

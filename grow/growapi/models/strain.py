@@ -307,7 +307,7 @@ class Strain(models.Model):
         self.description_type_data = text_type.value
 
     logo_url = models.URLField(
-        _("logo URL"),
+        _("logo url"),
         blank=True,
         null=True
     )

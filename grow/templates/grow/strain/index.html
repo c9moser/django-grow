@@ -1,7 +1,8 @@
 {% extends base_template %}
 {% load i18n %}
 
-{% block title %}{% translate "Grow: Breeder overview" %}{% endblock title %}
+{% block title %}{{ grow_site_title }}: {% translate "Breeder overview" %}{% endblock title %}
+{% block head_title %}{{ grow_head_title }}{% endblock %}
 
 {% block content %}
 {% if use_bootstrap %}

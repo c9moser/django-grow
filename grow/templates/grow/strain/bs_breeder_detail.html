@@ -6,7 +6,6 @@
 {% block title %}{{ grow_site_title }}: {% blocktranslate with name=breeder.name %}Breeder {{ name }}{% endblocktranslate %}{% endblock %}
 
 {% block content %}
-{% if use_bootstrap %}
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb" style="--bs-breadcrumb-divider:'&#10093;';">
     {% url "grow:home" as grow_home %}
@@ -24,18 +23,16 @@
         <li class="breadcrumb-item active">{{ breeder.name }}</li>
     </ol>
 </nav>
-{% endif %}
 
 
-{% if use_bootstrap %}
+
 <div class="h3">
     {% if allowed_to_edit %}
     <a href="{% url 'grow:breeder-update' pk=breeder.pk %}"
         class="link-primary
             link-opacity-75
             link-opacity-100-hover
-            link-underline-opacity-0
-            {% if allowed_to_delete %}me-2{% endif %}"
+            link-underline-opacity-0"
         data-bs-toggle="tooltip"
         data-bs-placement="bottom"
         data-bs-title="{% translate 'Edit breeder' %}"
@@ -62,15 +59,11 @@
     </a>
     {% endif %}
 </div>
-{% else %}
-    {% if allowed_to_edit %}<a href="{% url 'grow:breeder-create' pk=breeder.pk %}">{% translate "Edit breeder" %}</a>{% endif %}
-    {% if allowed_to_delete %}<a href="{% url 'grow:breeder-delete' pk=breeder.pk %}">{% translate "Delete breeder" %}</a>{% endif %}
-{% endif %}
 
 
 <h1>{{ breeder.name }}</h1>
 {% if breeder.has_logo %}
-<img class="{% if use_bootstrap %}img-fluid rounded float-start me-3{% endif%}"
+<img class="img-fluid rounded float-start me-3"
     alt="{% translate 'Breeder logo' %}" src="{{ breeder.logo }}"
     style="max-width:256px;">
 {% endif %}
@@ -107,7 +100,7 @@ A total of {{ n }} growlogs have been created for the strains of <i>{{ name }}</
 
 <h2>Strains</h2>
 
-<table class="{% if use_bootstrap %}table table-hover{% endif %}"
+<table class="table table-hover"
     id="strain-table"
 >
     <thead>
@@ -117,7 +110,6 @@ A total of {{ n }} growlogs have been created for the strains of <i>{{ name }}</
             <th>Flowering time</th>
             <th>Growlogs</th>
             <th><div class="text-end me-2">
-            {% if use_bootstrap %}
                 {% if allowed_to_add_strains %}
                 <a href="{% url 'grow:strain-create' breeder_pk=breeder.pk %}"
                     class="link-primary
@@ -135,17 +127,10 @@ A total of {{ n }} growlogs have been created for the strains of <i>{{ name }}</
                         link-underline-opacity-0"
                 ><i class="bi bi-plus-square"></i></a>
                 {% endif %}
-            {% else %}
-                {% if allowed_to_add_strains %}
-                <a href="{% url 'grow:strain-create' %}">Add</a>
-                {% else %}
-                Actions
-                {% endif %}
-            {% endif %}
             </div></th>
         </tr>
     </thead>
-    <tbody class="{% if use_bootstrap %}table-group-divider{% endif %}">
+    <tbody class="table-group-divider">
     {% for strain in breeder.strains_sorted %}
         <tr id="{{ breeder.slug }}-{{ strain.slug }}">
             <td>
@@ -169,7 +154,6 @@ A total of {{ n }} growlogs have been created for the strains of <i>{{ name }}</
                 {% endblocktranslate %}
             </td>
             <td>
-            {% if use_bootstrap %}
                 <div class="text-end me-2">
                 {% if strain.id in strains_allowed_to_edit %}
                     <a href="{% url 'grow:strain-update' pk=strain.pk %}"
@@ -214,35 +198,9 @@ A total of {{ n }} growlogs have been created for the strains of <i>{{ name }}</
                 ><i class="bi bi-x-square"></i></a>
                 {% endif %}
                 </div>
-            {% else %}
-                {% if strain.id in strains_allowed_to_edit %}
-                <a href="{% url 'grow:strain-update' pk=strain.pk %}">
-                    Edit
-                </a>
-                {% endif %}
-                {% if strain.id in strains_allowd_to_delete %}
-                <a href="{% url 'grow:strain-delete' pk=strain.pk %}">
-                    Delete
-                </a>
-                {% endif %}
-            {% endif %}
             </td>
         </tr>
     {% endfor %}
     </tbody>
 </table>
 {% endblock content %}
-
-{% block extra_body %}
-{% if use_bootstrap %}
-<div id="modal-here"
-    class="modal fade"
-    style="display: none"
-    aria-hidden="false"
-    tabindex=-1>
-    <div class="modal-dialog modal-lg modal-dialog-centerd" role="document">
-        <div class="modal-content"></div>
-    </div>
-</div>
-{% endif %}
-{% endblock extra_body %}

@@ -1,6 +1,9 @@
 {% extends "grow/strain/breeder_form.html" %}
-
 {% load i18n %}
+
+{% block head_title %}{{ grow_head_title }}{% endblock %}
+{% block title %}{{ grow_site_title }}: {% translate "Update breeder" %}{% endblock %}
+
 {% block form_buttons %}
 {% if use_bootstrap %}
     <button type="submit" class="btn btn-success">

@@ -1,7 +1,8 @@
 {% load i18n widget_tweaks %}
 
 
-<div class="modal-dialog modal-dialog-lg"><div class="modal-content">
+<div class="modal-dialog modal-dialog-lg" id="modal-dialog">
+<div class="modal-content">
 <div class="modal-header">
     <h5 class="modal-title">
         {% if feminized %}
@@ -24,17 +25,17 @@
     {% csrf_token %}
     <p>
         {% if feminized %}
-        {% translate "Add feminized seeds of strain" %} <strong>{{ strain.name }}</strong> {% translate "to stock." %}
+        {% blocktranslate with strain_name=strain.name %}Add feminized seeds of strain <strong>{{ strain_name }}</strong> to stock.{% endblocktranslate %}
         {% else %}
-        {% translate "Add regular seeds of strain" %} <strong>{{ strain.name }}</strong> {% translate "to stock." %}
+        {% blocktranslate with strain_name=strain.name %}Add regular seeds of strain <strong>{{ strain_name }}</strong> to stock.{% endblocktranslate %}
         {% endif %}
     </p>
     <p>
         {% translate "You currently have" %}
         {% if feminized %}
-            {% blocktranslate count n=n_seeds_in_stock %}{{ n }} feminized seed in stock.{% plural %}{{ n }} feminized seeds in stock.{% endblocktranslate %}
+            {% blocktranslate count n=n_seeds_in_stock %}One feminized seed in stock.{% plural %}{{ n }} feminized seeds in stock.{% endblocktranslate %}
         {% else %}
-            {% blocktranslate count n=n_seeds_in_stock %}{{ n }} regular seed in stock.{% plural %}{{ n }} regular seeds in stock.{% endblocktranslate %}
+            {% blocktranslate count n=n_seeds_in_stock %}One regular seed in stock.{% plural %}{{ n }} regular seeds in stock.{% endblocktranslate %}
         {% endif %}
     </p>
     <div class="input-group mb-3">
@@ -69,5 +70,26 @@
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% translate "Cancel" %}</button>
     </div>
 </div>
+<button id="sanitize-date-fields-btn" type="button" class="visually-hidden"
+    hx-trigger="click"
+    hx-swap="innerHTML"
+    hx-target="#{{ form.purchased_on_day.id_for_label }}"></button>
 </form>
-</div></div>
+<script>
+    htmx.process(document.getElementById('modal-dialog'));
+
+    function sanitize_date_fields() {
+        var year = document.getElementById("id_purchased_on_year").value;
+        var month = document.getElementById("id_purchased_on_month").value;
+        var button = document.getElementById("sanitize-date-fields-btn");
+        url = "{% url 'grow:home' %}" + "__hx__/select_date_days_sanitize/" + year + "/" + month + "/";
+        button.setAttribute("hx-get", url);
+        htmx.process(button);
+        button.click();
+    }
+
+    document.getElementById("id_purchased_on_year").addEventListener("change", sanitize_date_fields);
+    document.getElementById("id_purchased_on_month").addEventListener("change", sanitize_date_fields);
+    htmx.process(document.getElementById('modal-dialog'));
+
+</script>

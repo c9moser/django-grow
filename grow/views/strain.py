@@ -604,6 +604,20 @@ class HxStrainAddToStockView(LoginRequiredMixin, FormView):
 
         return context
 
+    def get_form(self, form_class=StrainAddToStockForm):
+        try:
+            sis = self.strain.seeds_in_stock.get(user=self.request.user, is_feminized=self.feminized)
+            today = date.today()
+            form = form_class(initial={
+                'purchased_on_year': sis.purchased_on.year if sis.purchased_on else today.year,
+                'purchased_on_month': sis.purchased_on.month if sis.purchased_on else today.month,
+                'purchased_on_day': sis.purchased_on.day if sis.purchased_on else today.day,
+                'quantity': 1,
+            })
+        except StrainsInStock.ObjectDoesNotExist:
+            form = form_class()(initial={'quantity': 1})
+        return form
+
     def get_success_url(self) -> str:
         return reverse('grow:strain-detail', kwargs={
             'breeder_slug': self.strain.breeder.slug,
@@ -651,8 +665,13 @@ class HxStrainAddToStockView(LoginRequiredMixin, FormView):
         ))
 
     def form_invalid(self, form):
-        print(form.errors)
-        return super(HxStrainAddToStockView, self).form_invalid(form)
+        return render(self.request, self.update_template_name, context=self.get_context_data(
+            success=False,
+            seeds_added=True,
+            regular_seeds_in_stock=self.strain.get_regular_seeds_in_stock(self.request.user),
+            feminized_seeds_in_stock=self.strain.get_feminized_seeds_in_stock(self.request.user),
+            total_seeds_in_stock=self.strain.get_total_seeds_in_stock(self.request.user),
+        ))
 
     def get(self, request: HttpRequest, strain: int, feminized: int) -> HttpResponse:
         self.strain = get_object_or_404(Strain, pk=strain)
@@ -717,7 +736,13 @@ class HxStrainRemoveFromStockView(LoginRequiredMixin, FormView):
     def form_invalid(self, form):
         print("Form is invalid!")
         print(form.errors)
-        return super(HxStrainRemoveFromStockView, self).form_invalid(form)
+        return render(self.request, self.update_template_name, context=self.get_context_data(
+            success=False,
+            seeds_added=False,
+            regular_seeds_in_stock=self.strain.get_regular_seeds_in_stock(self.request.user),
+            feminized_seeds_in_stock=self.strain.get_feminized_seeds_in_stock(self.request.user),
+            total_seeds_in_stock=self.strain.get_total_seeds_in_stock(self.request.user),
+        ))
 
     def validate(self):
         if self.n_seeds_in_stock > 0:

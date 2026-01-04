@@ -63,7 +63,7 @@ def export_data(filename: str | Path | None) -> bool:
                 'uploader_name': (
                     strain_image.uplaoder_name
                     if strain_image.uploader_name
-                    else strain_image.uploaded_by.username
+                    else strain_image.uploaded_by.username if strain_image.uploaded_by else "GROW"
                 )
             }
             si_archname = _strain_image_archname_format.format(
@@ -116,7 +116,7 @@ def export_data(filename: str | Path | None) -> bool:
                 'creator_name': (
                     breeder.creator_name
                     if breeder.creator_name
-                    else breeder.created_by.username
+                    else breeder.created_by.username if breeder.created_by else "GROW"
                 ),
                 'breeder_url': breeder.breeder_url,
                 'seedfinder_url': breeder.seedfinder_url,

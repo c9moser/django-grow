@@ -1,4 +1,6 @@
 from django.urls import path
+
+from grow.views.utils import HxSelectDateDaysSanitizeView
 from . import settings
 from .views import (
     IndexView,
@@ -24,13 +26,13 @@ app_name = "grow"
 
 urlpatterns = [
     path("", IndexView.as_view(), name="home"),
-    path("strain/", BreederIndexView.as_view(), name="breeder-overview"),
+    path("strains/", BreederIndexView.as_view(), name="breeder-overview"),
+    path("strains/<slug:slug>/", BreederView.as_view(), name="breeder-detail"),
+    path("strains/<slug:breeder_slug>/<slug:slug>/", StrainView.as_view(), name="strain-detail"),
     path("breeder/create/", BreederCreateView.as_view(), name="breeder-create"),
     path("breeder/update/<int:pk>/", BreederUpdateView.as_view(), name="breeder-update"),
     path("breeder/delete/<int:pk>/", BreederDeleteView.as_view(), name="breeder-delete"),
-    path("breeder/view/<slug:slug>/", BreederView.as_view(), name="breeder-detail"),
     path("strain/create/<int:breeder_pk>", StrainCreateView.as_view(), name="strain-create"),
-    path("strain/view/<slug:breeder_slug>/<slug:slug>/", StrainView.as_view(), name="strain-detail"),
     path("strain/update/<int:pk>/", StrainUpdateView.as_view(), name="strain-update"),
     path("strain/delete/<int:pk>/", StrainDeleteView.as_view(), name="strain-delete"),
     path("strain/add_to_stock/<int:strain>/<int:feminized>/",
@@ -53,5 +55,9 @@ urlpatterns = [
          name="hx-strain-remove-from-stock"),
     path("__hx__/strain/delete/<int:pk>/", HxStrainDeleteView.as_view(), name="hx-strain-delete"),
     # path("__hx__/strain/image-upload/<int:pk>/", HxStrainImageUploadView.as_view(), name=hx-strain-image-upload),
+
+    path("__hx__/select_date_days_sanitize/<int:year>/<int:month>/",
+         HxSelectDateDaysSanitizeView.as_view(),
+         name="hx-select-date-days-sanitize"),
 
 ]
