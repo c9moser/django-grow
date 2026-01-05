@@ -2,7 +2,7 @@ from django import forms
 from django.utils.translation import gettext_lazy as _
 from django.utils.timezone import now
 
-from ..growapi.models import Strain
+from ..growapi.models import Strain, StrainImage, BreederTranslation, StrainTranslation
 from ..enums import TextType, TEXT_CHOICES
 
 
@@ -113,3 +113,34 @@ class StrainFilterForm(forms.Form):
         max_length=255,
         label=_("Filter strains..."),
     )
+
+
+class StrainImageUploadForm(forms.ModelForm):
+    class Meta:
+        model = StrainImage
+        fields = [
+            'image',
+            'caption',
+            'description_type_data',
+            'description',
+        ]
+
+
+class BreederTranslationForm(forms.ModelForm):
+    class Meta:
+        model = BreederTranslation
+        fields = [
+            'language_code',
+            'description_type_data',
+            'description',
+        ]
+
+
+class StrainTranslationForm(forms.ModelForm):
+    class Meta:
+        model = StrainTranslation
+        fields = [
+            'language_code',
+            'description_type_data',
+            'description',
+        ]

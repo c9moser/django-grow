@@ -141,20 +141,54 @@
         {% endif %}
     </p>
     <p>
+        <a href="#pictures">{% translate "Jump to pictures" %}</a><br>
         {% if strain.is_regular or strain.is_feminized %}
         <a href="#seeds-in-stock-table">{% translate "Jump to seeds in stock" %}</a><br>
         {% endif %}
-        <a href="#growlogs">{% translate "Jump to growlogs" %}</a
+        <a href="#growlogs">{% translate "Jump to growlogs" %}</a>
     </p>
 </div> {# col-md-7 #}
-
-
-    {% if strain.has_description %}
-    <h2>{% translate "Strain description" %}</h2>
-    {{ strain.description_html }}
-    {% endif %}
 </div>
 
+{% if strain.has_description %}
+<h2>{% translate "Strain description" %}</h2>
+{{ strain.description_html }}
+{% endif %}
+
+
+<h2 id="pictures">{% translate "Pictures" %}</h2>
+<p>
+<a href="{% url 'grow:strain-image-upload' strain_pk=strain.pk %}"
+    class="{% if use_bootstrap %}btn btn-outline-primary{% else %}mb-3{% endif %}"
+>{% if use_bootstrap%}
+    <i class="bi bi-upload me-2 link-image"></i>{% translate "Upload picture" %}
+{% else %}
+    {% translate "Upload picture" %}
+{% endif %}
+</a></p>
+{% if strain_images %}
+<div class="row row-cols-1 row-cols-md-3 g-4 mb-3">
+    {% for picture in strain_images %}
+    <div class="col">
+        <div class="{% if use_bootstrap %}card h-100 border-1{% endif %}">
+            <img src="{{ picture.image.url }}" class="card-img-top {% if use_bootstrap %}img-fluid{% endif %}" alt="{{ picture.caption }}">
+            {% if picture.caption %}
+            <div class="card-body p-2">
+                <p class="card-text">{{ picture.caption }}</p>
+            </div>
+            {% endif %}
+        </div>
+    </div >
+    {% endfor %}
+</div>
+{% else %}
+<p>
+{% blocktranslate %}
+There are currently no pictures for this strain.
+You could upload pictures of your grow to show others how this strain looks like during growth and flowering.
+{% endblocktranslate %}
+</p>
+{% endif %}
 
 {% if request.user.is_authenticated %}
 {% if strain.is_regular or strain.is_feminized %}

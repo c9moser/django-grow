@@ -10,7 +10,7 @@ from django.core.files.images import ImageFile
 from django.contrib.auth import get_user_model
 from ..exceptions import NotFileError, FileFormatError
 from .. import settings
-from ..models import Breeder, Strain, StrainImage
+from ..models import Breeder, Strain, StrainImage, StrainTranslation, BreederTranslation
 from ..enums import TextType, StrainType
 
 
@@ -38,6 +38,7 @@ def export_data(filename: str | Path | None) -> bool:
             'is_automatic': strain.is_automatic,
             'is_feminized': strain.is_feminized,
             'is_regular': strain.is_regular,
+            'is_discontinued': strain.is_discontinued,
             'genotype': strain.genotype.value,
             'description_type': strain.description_type.value,
             'description': strain.description,
@@ -77,6 +78,15 @@ def export_data(filename: str | Path | None) -> bool:
                 data['images'] = [si_data]
             else:
                 data['images'].append(si_data)
+
+        if 'translations' not in data:
+            data['translations'] = {}
+
+        for strain_translation in strain.translations.all():
+            data['translations'][strain_translation.language_code] = {
+                'description_type': strain_translation.description_type.value,
+                'description': strain_translation.description,
+            }
 
         return data
     # ## END export_strain()
@@ -138,6 +148,14 @@ def export_data(filename: str | Path | None) -> bool:
                         for strain in breeder.strains.all().order_by('slug')
                     )
                 )
+            if 'translations' not in breeder_data:
+                breeder_data['translations'] = {}
+
+            for breeder_translation in breeder.translations.all():
+                breeder_data['translations'][breeder_translation.language_code] = {
+                    'description_type': breeder_translation.description_type.value,
+                    'description': breeder_translation.description,
+                }
 
             zf.writestr(f"breeder/{breeder.slug}.json",
                         json.dumps(breeder_data, ensure_ascii=False, indent=4))
@@ -164,7 +182,7 @@ def export_data(filename: str | Path | None) -> bool:
     return True
 
 
-def import_data(filename: str | Path, user=None, mdoerator=None) -> bool:
+def import_data(filename: str | Path, user=None, moderator=None) -> bool:
     def get_creator_user(user, name: str | None):
         if not name:
             return user
@@ -188,6 +206,8 @@ def import_data(filename: str | Path, user=None, mdoerator=None) -> bool:
             breeder.breeder_url = data['breeder_url']
             breeder.seedfinder_url = data['seedfinder_url']
             breeder.logo_url = data['logo_url']
+            if not breeder.moderator and moderator:
+                breeder.moderator = moderator
             breeder.save()
 
         except Breeder.DoesNotExist:
@@ -199,11 +219,11 @@ def import_data(filename: str | Path, user=None, mdoerator=None) -> bool:
                 breeder_url=data['breeder_url'],
                 seedfinder_url=data['seedfinder_url'],
                 logo_url=data['logo_url'],
+                moderator=moderator,
                 created_by=get_creator_user(user, data['creator_name'])
             )
 
         if 'logo_image' in data:
-
             if (not breeder.logo_image
                     or os.path.basename(breeder.logo_image.path) != data['logo_image']):
                 zimage = _breeder_logo_archname_format.format(basename=data['logo_image'])
@@ -214,6 +234,24 @@ def import_data(filename: str | Path, user=None, mdoerator=None) -> bool:
                     breeder.save()
                 except Exception as ex:
                     print(f"Unable to import breeder.logo_image! ({str(ex)})")
+
+        for lang_code, translation_data in data.get('translations', {}).items():
+            try:
+                breeder_translation = breeder.translations.get(language_code=lang_code)
+                breeder_translation.description_type = TextType.from_string(
+                    translation_data['description_type']
+                )
+                breeder_translation.description = translation_data['description']
+                breeder_translation.save()
+            except BreederTranslation.DoesNotExist:
+                BreederTranslation.objects.create(
+                    breeder=breeder,
+                    language_code=lang_code,
+                    description_type_data=TextType.from_string(
+                        translation_data['description_type']
+                    ).value,
+                    description=translation_data['description'],
+                )
 
         if 'strains' in data:
             for strain_slug, strain_data in data['strains'].items():
@@ -298,6 +336,25 @@ def import_data(filename: str | Path, user=None, mdoerator=None) -> bool:
                     image=img_file,
                 )
                 strain_images.append(db_image)
+
+        for lang_code, translation_data in data.get('translations', {}).items():
+            try:
+                strain_translation = strain.translations.get(language_code=lang_code)
+                strain_translation.description_type = TextType.from_string(
+                    translation_data['description_type']
+                )
+                strain_translation.description = translation_data['description']
+                strain_translation.save()
+            except StrainTranslation.DoesNotExist:
+                StrainTranslation.objects.create(
+                    strain=strain,
+                    language_code=lang_code,
+                    description_type_data=TextType.from_string(
+                        translation_data['description_type']
+                    ).value,
+                    description=translation_data['description'],
+                )
+
     # ## END import_strain()
 
     if not isinstance(str, Path):

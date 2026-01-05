@@ -1,0 +1,13 @@
+{% if use_bootstrap %}
+<div class="form-floating mb-3">
+    {% if 'description' in form.errors %}
+    {% render_field form.description class="form-control is-invalid" style="height: 22rem;" placeholder=form.description.label %}
+    {% else %}
+    {% render_field form.description class="form-control" style="height: 22rem;" placeholder=form.description.label %}
+    {% endif %}
+    <label for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
+</div>
+{% else %}
+<label for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
+{% render_field form.description %}
+{% endif %}

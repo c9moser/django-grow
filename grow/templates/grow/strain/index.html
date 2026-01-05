@@ -22,6 +22,12 @@
 {% endif %}
 
 <h1>Breeders</h1>
+<p>
+{% blocktranslate %}This is an overview of all breeders in the system. You can filter the breeders by typing in the filter field below.{% endblocktranslate %}
+</p>
+<p>
+{% blocktranslate %}Currently there are {{ breeder_count }} breeders and {{ strain_count }} strains in the system.{% endblocktranslate %}
+</p>
 
 <div class="mb-2">
     <form id="strain-search-form"

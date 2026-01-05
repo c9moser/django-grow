@@ -43,7 +43,9 @@ class Command(BaseCommand):
             try:
                 moderator = UserModel.objects.get(username=options['moderator_username'])
             except UserModel.DoesNotExist:
-                raise CommandError(f"No user with username \"{options['moderator_username']}\" exists!")
+                raise CommandError(
+                    f"No user with username \"{options['moderator_username']}\" exists!"
+                )
         elif options['moderator_email']:
             try:
                 moderator = UserModel.objects.get(email=options['moderator_email'])

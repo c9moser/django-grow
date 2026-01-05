@@ -6,9 +6,11 @@ from .location import (  # noqa
 
 from .strain import (  # noqa
     Breeder,
+    BreederTranslation,
     Strain,
     StrainImage,
     StrainsInStock,
+    StrainTranslation
 )
 
 from .sensors import (  # noqa

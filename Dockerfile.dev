@@ -1,0 +1,27 @@
+FROM docker.io/library/python:3.14-slim-trixie
+
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV GROW_MEDIA_ROOT=/data/media
+ENV GROW_STATIC_ROOT=/data/static
+
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    libpq-dev \
+    gettext \
+    && pip install --upgrade pip setuptools wheel \
+    && rm -rf /var/lib/apt/lists/* \
+    && mkdir -p /app /data/static /data/media /data/run
+
+VOLUME /data/media
+VOLUME /data/static
+VOLUME /data/run
+
+WORKDIR /app
+COPY ./requirements/dev.txt /app/requirements/dev.txt
+RUN pip install -r /app/requirements/dev.txt
+
+COPY . /app/
+
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: django-grc.api 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-05 04:21+0100\n"
+"POT-Creation-Date: 2026-01-05 11:56+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Christian Moser <christian@cmoser.eu>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -204,7 +204,7 @@ msgstr "Beschreibung"
 msgid "description type"
 msgstr "Beschreibungstyp"
 
-#: grow/growapi/models/growlog.py:59 grow/growapi/models/strain.py:749
+#: grow/growapi/models/growlog.py:59 grow/growapi/models/strain.py:756
 msgid "notes"
 msgstr "Notizen"
 
@@ -249,7 +249,7 @@ msgid "growlog"
 msgstr "Growlog"
 
 #: grow/growapi/models/growlog.py:500 grow/growapi/models/strain.py:571
-#: grow/growapi/models/strain.py:613 grow/growapi/models/strain.py:723
+#: grow/growapi/models/strain.py:613 grow/growapi/models/strain.py:730
 msgid "strain"
 msgstr "Sorte"
 
@@ -257,7 +257,7 @@ msgstr "Sorte"
 msgid "grown from seed"
 msgstr "vom Samen gezogen"
 
-#: grow/growapi/models/growlog.py:510 grow/growapi/models/strain.py:740
+#: grow/growapi/models/growlog.py:510 grow/growapi/models/strain.py:747
 msgid "quantity"
 msgstr "Menge"
 
@@ -497,14 +497,14 @@ msgid "The name of the creator"
 msgstr "Der name des Erstellers"
 
 #: grow/growapi/models/strain.py:380
-msgid "discontinued"
+msgid "is discontinued"
 msgstr ""
 
 #: grow/growapi/models/strain.py:575
 msgid "Language code"
 msgstr "Sprachcode"
 
-#: grow/growapi/models/strain.py:623 grow/growapi/models/strain.py:728
+#: grow/growapi/models/strain.py:623 grow/growapi/models/strain.py:735
 msgid "user"
 msgstr "Nutzer"
 
@@ -536,19 +536,25 @@ msgstr "hochgeladen am"
 msgid "uploader"
 msgstr "hochgeladen von"
 
-#: grow/growapi/models/strain.py:731
+#: grow/growapi/models/strain.py:706
+#, fuzzy
+#| msgid "location"
+msgid "caption"
+msgstr "Ort"
+
+#: grow/growapi/models/strain.py:738
 msgid "regular seeds"
 msgstr "reguläre Samen"
 
-#: grow/growapi/models/strain.py:735
+#: grow/growapi/models/strain.py:742
 msgid "feminized seeds"
 msgstr "feminisierte Samen"
 
-#: grow/growapi/models/strain.py:744
+#: grow/growapi/models/strain.py:751
 msgid "purchased on"
 msgstr "Gekauft am"
 
-#: grow/growapi/models/strain.py:754
+#: grow/growapi/models/strain.py:761
 msgid "text type"
 msgstr "Texttyp"
 

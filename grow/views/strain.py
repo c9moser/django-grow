@@ -2,6 +2,7 @@ from datetime import date
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
+from django.utils.translation import gettext as _, get_language
 from django.views.generic.edit import (
     CreateView,
     UpdateView,
@@ -16,18 +17,24 @@ from ._base import BaseView
 
 from ..growapi.models import (
     Breeder,
+    BreederTranslation,
     Strain,
     StrainsInStock,
+    StrainTranslation,
 )
 from .. import settings
+
 from ..forms import (
     BreederFilterForm,
+    BreederTranslationForm,
     DeleteWithSlugForm,
     StrainForm,
+    StrainImageUploadForm,
     StrainAddToStockForm,
     StrainRemoveFromStockForm,
     StrainSearchForm,
     StrainFilterForm,
+    StrainTranslationForm,
 )
 
 from ..growapi.permission import growlog_user_is_allowed_to_view
@@ -88,6 +95,7 @@ class BreederIndexView(BaseView):
             'breeder_filter_form': BreederFilterForm(),
             'strain_search_form': StrainSearchForm(),
             'breeder_count': Breeder.objects.count(),
+            'strain_count': Strain.objects.count(),
             'breeders': breeders,
             'breeders_id': breeders_id,
             'labels': labels,
@@ -194,6 +202,8 @@ class BreederView(BaseView):
         else:
             strains_allowed_to_delete = []
 
+        allowed_to_translate = request.user.is_authenticated  # TODO: add logic
+
         strains = breeder.strains.all().order_by('name')
         return render(request, self.template_name, context={
             'breeder': breeder,
@@ -204,6 +214,7 @@ class BreederView(BaseView):
             'strains_allowed_to_edit': strains_allowed_to_edit,
             'strains_allowed_to_delete': strains_allowed_to_delete,
             'filter_strains_form': StrainFilterForm(),
+            'allowed_to_translate': allowed_to_translate,
         })
 
 
@@ -230,6 +241,7 @@ class HxStrainFilterView(BaseView):
             # TODO: add logic
             strains_allowed_to_delete = [strain.id for strain in strains if strain.growlog_count == 0]  # noqa: E501
             allowed_to_add_strains = True  # TODO: add logic
+            allowed_to_translate = True  # TODO: add logic
         else:
             strains_allowed_to_edit = []
             strains_allowed_to_delete = []
@@ -241,6 +253,7 @@ class HxStrainFilterView(BaseView):
             'strains_allowed_to_edit': strains_allowed_to_edit,
             'strains_allowed_to_delete': strains_allowed_to_delete,
             'allowed_to_add_strains': allowed_to_add_strains,
+            'allowed_to_translate': allowed_to_translate,
         })
 
 
@@ -404,6 +417,7 @@ class StrainView(BaseView):
                 if self.request.user.is_authenticated else None
             ),
             'total_seeds_in_stock': strain.get_total_seeds_in_stock(self.request.user),
+            'strain_images': strain.images.all().order_by('-uploaded_at')[:3],
         })
 
 
@@ -942,4 +956,132 @@ class StrainSearchView(BaseView):
 
         return render(request, self.template_name, context={
             'strains': strains
+        })
+
+
+class StrainImageUploadView(LoginRequiredMixin, View):
+    template_name = settings.GROW_TEMPLATES['grow/strain/image_upload']
+
+    def get(self, request: HttpRequest, strain_pk: int) -> HttpResponse:
+        strain = get_object_or_404(Strain, pk=strain_pk)
+
+        return render(request, self.template_name, context={
+            'strain': strain,
+            'form': StrainImageUploadForm(),
+        })
+
+    def post(self, request: HttpRequest, strain_pk: int) -> HttpResponse:
+        strain = get_object_or_404(Strain, pk=strain_pk)
+        form = StrainImageUploadForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            strain_image = form.save(commit=False)
+            strain_image.strain = strain
+            strain_image.user = request.user
+            strain_image.save()
+
+            return redirect(reverse("grow:strain-detail", kwargs={
+                'breeder_slug': strain.breeder.slug,
+                'slug': strain.slug,
+            }))
+
+        print("form invalid")
+        print(form.errors)
+        return render(request, self.template_name, context={
+            'strain': strain,
+            'form': form,
+        })
+
+
+class BreederTranslationView(LoginRequiredMixin, View):
+    template_name = settings.GROW_TEMPLATES['grow/breeder/translation']
+
+    def get(self, request: HttpRequest, pk: int) -> HttpResponse:
+        breeder = get_object_or_404(Breeder, pk=pk)
+        lang_code = get_language()
+        if not lang_code.startswith('en'):
+            lang_code = lang_code.split('-')[0]
+
+        existing_translation = BreederTranslation.objects.filter(breeder=breeder,
+                                                                 language_code=lang_code).first()
+        if existing_translation:
+            form = BreederTranslationForm(instance=existing_translation)
+        else:
+            form = BreederTranslationForm(initial={'language_code': lang_code})
+
+        return render(request, self.template_name, context={
+            'breeder': breeder,
+            'form': form,
+        })
+
+    def post(self, request: HttpRequest, pk: int) -> HttpResponse:
+        breeder = get_object_or_404(Breeder, pk=pk)
+
+        existing_translation = BreederTranslation.objects.filter(
+            breeder=breeder,
+            language_code=request.POST.get('language_code').strip()
+        ).first()
+        if existing_translation:
+            form = BreederTranslationForm(request.POST, instance=existing_translation)
+        else:
+            form = BreederTranslationForm(request.POST)
+
+        if form.is_valid():
+            translation = form.save(commit=False)
+            translation.breeder = breeder
+            translation.created_by = request.user
+            translation.language_code = form.cleaned_data['language_code']
+            translation.description = form.cleaned_data['description']
+            translation.description_type_data = form.cleaned_data['description_type_data']
+            translation.save()
+
+            return redirect(reverse("grow:breeder-detail", kwargs={
+                'slug': breeder.slug,
+            }))
+        else:
+            print("form invalid")
+            print(form.errors)
+
+        return render(request, self.template_name, context={
+            'breeder': breeder,
+            'form': form,
+        })
+
+
+class StrainTranslationView(LoginRequiredMixin, View):
+    template_name = settings.GROW_TEMPLATES['grow/strain/translation']
+
+    def get(self, request: HttpRequest, pk: int) -> HttpResponse:
+        strain = get_object_or_404(Strain, pk=pk)
+
+        form = StrainTranslationForm()
+
+        return render(request, self.template_name, context={
+            'strain': strain,
+            'form': form,
+        })
+
+    def post(self, request: HttpRequest, pk: int) -> HttpResponse:
+        strain = get_object_or_404(Strain, pk=pk)
+
+        form = StrainTranslationForm(request.POST)
+
+        if form.is_valid():
+            translation = form.save(commit=False)
+            translation.strain = strain
+            translation.created_by = request.user
+            translation.language_code = form.cleaned_data['language_code']
+            translation.name = form.cleaned_data['name']
+            translation.description = form.cleaned_data['description']
+            translation.description_type_data = form.cleaned_data['description_type_data']
+            translation.save()
+
+            return redirect(reverse("grow:strain-detail", kwargs={
+                'breeder_slug': strain.breeder.slug,
+                'slug': strain.slug,
+            }))
+
+        return render(request, self.template_name, context={
+            'strain': strain,
+            'form': form,
         })

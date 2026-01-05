@@ -47,15 +47,35 @@ class Breeder(models.Model):
 
     @property
     def description_html(self) -> str:
-        if not self.description:
-            return ""
 
-        if self.description_type == TextType.BBCODE:
-            return render_description_bbcode(self.description)
-        elif self.description_type == TextType.MARKDOWN:
-            return render_description_markdown(self.description)
+        if self.translations:
+            translation = None
+            try:
+                translation = self.translations.get(language_code=get_language())
+            except BreederTranslation.DoesNotExist:
+                pass
+            if not translation:
+                try:
+                    translation = self.translations.get(language_code=get_language().split('-')[0])
+                except BreederTranslation.DoesNotExist:
+                    pass
+
+        if translation:
+            print("USING TRANSLATION")
+            description_type = translation.description_type
+            description = translation.description if translation.description else self.description
         else:
-            return self.description
+            print("USING DEFAULT")
+            description_type = self.description_type
+            description = self.description
+
+        if description:
+            if description_type == TextType.BBCODE:
+                return render_description_bbcode(description)
+            elif description_type == TextType.MARKDOWN:
+                return render_description_markdown(description)
+            return description
+        return ""
 
     @property
     def has_description(self) -> bool:
@@ -221,6 +241,15 @@ class BreederTranslation(models.Model):
         _("Description")
     )
 
+    @property
+    def description_html(self) -> str:
+        if self.description_type == TextType.BBCODE:
+            return mark_safe(render_description_bbcode(self.description))
+        elif self.description_type == TextType.MARKDOWN:
+            return render_description_markdown(self.description)
+        else:
+            return self.description
+
     class Meta:
         db_table = "grow_breeder_translation"
         unique_together = [
@@ -264,37 +293,32 @@ class Strain(models.Model):
     @property
     def description_html(self):
         translation = None
-        try:
-            translation = self.translations.get(language_code=get_language())
-        except StrainTranslation.DoesNotExist:
-            pass
-
-        if not translation:
+        if self.translations:
             try:
-                translation = self.translations.get(language_code=get_language().split('-')[0])
+                translation = self.translations.get(language_code=get_language())
             except StrainTranslation.DoesNotExist:
                 pass
-        if not translation:
-            translations = self.translations.filter(
-                language_code__startswith=f"{get_language().split('-')[0]}-")
-            if translations:
-                translation = translations.first()
-
-        if not translation and not self.description:
-            return ""
-
+            if not translation:
+                try:
+                    translation = self.translations.get(language_code=get_language().split('-')[0])
+                except StrainTranslation.DoesNotExist:
+                    pass
         if translation:
-            if translation.description_type == TextType.BBCODE:
-                return render_description_bbcode(translation.description)
-            elif translation.description_type == TextType.MARKDOWN:
-                return render_description_markdown(translation.description_type)
+            print("USING TRANSLATION")
+            description_type = translation.description_type
+            description = translation.description if translation.description else self.description
+        else:
+            print("USING DEFAULT")
+            description_type = self.description_type
+            description = self.description
 
-        if self.description_type == TextType.BBCODE:
-            return render_description_bbcode(self.description)
-        elif self.description_type == TextType.MARKDOWN:
-            return render_description_markdown(self.description)
-
-        return self.description
+        if description:
+            if description_type == TextType.BBCODE:
+                return render_description_bbcode(description)
+            elif description_type == TextType.MARKDOWN:
+                return render_description_markdown(description)
+            return description
+        return ""
 
     @property
     def description_type(self) -> TextType:
@@ -700,6 +724,13 @@ class StrainImage(models.Model):
         max_length=50,
         default=TextType.MARKDOWN.value,
         choices=TEXT_CHOICES
+    )
+
+    caption = models.CharField(
+        _("caption"),
+        max_length=255,
+        null=True,
+        blank=True
     )
 
     @property
