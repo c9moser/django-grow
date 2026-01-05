@@ -21,7 +21,7 @@
             <tr>
                 <th>{% translate "Breeder" %}</th>
                 <th>{% translate "Strain name" %}</th>
-                <th>{% translate "Type" %}</th>
+                <th>{% translate "Genotype" %}</th>
                 <th>{% translate "Flowering Time" %}</th>
             </tr>
         </thead>
@@ -35,11 +35,13 @@
                     </a>
                 </td>
                 <td>
-                    <a href="{% url 'grow:strain-detail' breeder_slug=strain.breeder.slug slug=strain.slug %}">
+                    <a href="{% url 'grow:strain-detail' breeder_slug=strain.breeder.slug slug=strain.slug %}"
+                        class="{% if strain.is_discontinued %}text-decoration-line-through text-muted{% endif %}"
+                    >
                         {{ strain.name }}
                     </a>
                 </td>
-                <td>{{ strain.genetics.name }}</td>
+                <td>{{ strain.genotype.name }}</td>
                 <td>
                     {% blocktranslate count n=strain.flowering_time_days %}{{ n }} day{% plural %}{{ n }} days{% endblocktranslate %}
                 </td>

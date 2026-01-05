@@ -38,7 +38,7 @@ def export_data(filename: str | Path | None) -> bool:
             'is_automatic': strain.is_automatic,
             'is_feminized': strain.is_feminized,
             'is_regular': strain.is_regular,
-            'genetics': strain.genetics.value,
+            'genotype': strain.genotype.value,
             'description_type': strain.description_type.value,
             'description': strain.description,
             'logo_url': strain.logo_url,
@@ -164,7 +164,7 @@ def export_data(filename: str | Path | None) -> bool:
     return True
 
 
-def import_data(filename: str | Path, user=None) -> bool:
+def import_data(filename: str | Path, user=None, mdoerator=None) -> bool:
     def get_creator_user(user, name: str | None):
         if not name:
             return user
@@ -228,7 +228,7 @@ def import_data(filename: str | Path, user=None) -> bool:
             strain.creator_name = data['creator_name']
             strain.description = data['description']
             strain.description_type = TextType.from_string(data['description_type'])
-            strain.genetics = StrainType.from_string(data['genetics'])
+            strain.genotype = StrainType.from_string(data['genotype'])
             strain.logo_url = data['logo_url']
             strain.strain_url = data['strain_url']
             strain.seedfinder_url = data['seedfinder_url']
@@ -245,7 +245,7 @@ def import_data(filename: str | Path, user=None) -> bool:
                 description=data['description'],
                 description_type_data=TextType.from_string(data['description_type']).value,
                 flowering_time_days=data['flowering_time_days'],
-                genetics=StrainType.from_string(data['genetics']),
+                genotype=StrainType.from_string(data['genotype']),
                 is_automatic=data['is_automatic'],
                 is_feminized=data['is_feminized'],
                 is_regular=data['is_regular'],

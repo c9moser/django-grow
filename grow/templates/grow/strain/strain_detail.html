@@ -72,19 +72,21 @@
 
 <h1>{{ strain.breeder.name }} - {{ strain.name }}</h1>
 
-<div>
+<div class="row mb-3">
+    <div class="col-md-5 mb-3">
 {% if strain.has_logo %}
-    <img class="{% if use_bootstrap %}img-fluid rounded me-3 float-start{% endif %}"
+    <img class="{% if use_bootstrap %}img-fluid rounded{% endif %}"
         src="{{ strain.logo }}"
-        style="max-width:300px;"
+        style="max-width:100%;"
     >
 {% else %}
-    <img class="{% if use_bootstrap %}img-fluid rounded me-3 float-start{% endif %}"
+    <img class="{% if use_bootstrap %}img-fluid rounded {% endif %}"
         src="{% static 'grow/img/hemp-leaf.jpg' %}"
-        style="max-width:300px;"
+        style="max-width:100%;"
     >
 {% endif %}
-
+    </div>
+    <div class="col-md-7 mb-3">
     <p>
         <ul>
             <li>
@@ -97,16 +99,12 @@
                 {% plural %}
                 {{ ftd }} days
                 {% endblocktranslate %}
-                {% blocktranslate with ftw=strain.flowering_time_weeks count n=strain.flowering_time_weeks %}
-                ({{ ftw }} week)
-                {% plural %}
-                ({{ ftw }} weeks)
-                {% endblocktranslate %}
+                {% blocktranslate with ftw=strain.flowering_time_weeks count n=strain.flowering_time_weeks %}({{ ftw }} week){% plural %}({{ ftw }} weeks){% endblocktranslate %}
                 {% endif %}
             </li>
             <li>
-                <span class="fw-bold">{% translate "Genetics:"%}</span>
-                {{ strain.genetics.name }}
+                <span class="fw-bold">{% translate "Genotype:"%}</span>
+                {{ strain.genotype.name }}
             <li>
                 <span class="fw-bold">{% translate "Is this is a autoflowering strain?" %}</span>
                 {% if strain.is_automatic %}{% translate "Yes" %}{% else %}{% translate "No" %}{% endif %}
@@ -127,6 +125,10 @@
                     {% translate "No" %}
                 {% endif %}
             </li>
+            <li>
+                <span class="fw-bold">{% translate "Is this strain still available?" %}</span>
+                {% if strain.is_discontinued %}{% translate "No" %}{% else %}{% translate "Yes" %}{% endif %}
+            </li>
         </ul>
     </p>
 
@@ -144,6 +146,9 @@
         {% endif %}
         <a href="#growlogs">{% translate "Jump to growlogs" %}</a
     </p>
+</div> {# col-md-7 #}
+
+
     {% if strain.has_description %}
     <h2>{% translate "Strain description" %}</h2>
     {{ strain.description_html }}

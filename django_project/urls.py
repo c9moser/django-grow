@@ -17,6 +17,9 @@ Including another URLconf
 from django.urls import path, include
 from django.conf import settings
 from django.contrib import admin
+from allauth.account.decorators import secure_admin_login
+
+
 
 urlpatterns = [
     path('accounts/', include('allauth.urls')),
@@ -35,3 +38,9 @@ if settings.DEBUG:
     urlpatterns.insert(0, path('__reload__/', include('django_browser_reload.urls')))
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+admin.autodiscover()
+admin.site.site_header = "Grow Administration"
+admin.site.site_title = "Grow Admin"
+admin.site.index_title = "Grow Admin Portal"
+admin.site.login = secure_admin_login(admin.site.login)

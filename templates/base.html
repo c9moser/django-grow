@@ -25,8 +25,8 @@
             }
         </style>
     </head>
-    <body style="margin-bottom:56px;" id="body">
-        <div class="container-fluid">
+    <body style="" id="body">
+        <div class="container-fluid mb-3" style="min-height:calc(100vh - 40px);">
             <header class="row bg-success text-white px-4 d-none d-lg-block ">
                 <span class="display-6">{% block title %}
                     {% if site_title %}{{ site_title }}
@@ -207,17 +207,17 @@
                     <h1>It works!</h1>
                     {% endblock content %}
                 </div>
-
-            </div>
-            <div class="row fixed-bottom d-none d-lg-block">
-                <footer class="col-lg-12 bg-success text-white py-2 px-4 fs-6 d-flex justify-content-between">
-                    <div>
-                        <a class="text-reset fw-bold text-decoration-none" href="#">django-grow</a>
-                    </div>
-                    <div>&copy; 2025 - 2026 Christian Moser</div>
-                </footer>
             </div>
         </div>
+        <div>
+            <footer class="col-lg-12 bg-success text-white py-2 px-4 fs-6 d-flex justify-content-between">
+                <div>
+                    <a class="text-reset fw-bold text-decoration-none" href="#">django-grow</a>
+                </div>
+                <div>&copy; 2025 - 2026 Christian Moser</div>
+            </footer>
+        </div>
+
         <div id="modals-here"
             class="modal modal-blur fade"
             style="display: none"

@@ -349,12 +349,12 @@ class Strain(models.Model):
         default=0
     )
 
-    genetics_data = models.CharField(
-        _("strain type"),
+    genotype_data = models.CharField(
+        _("genotype"),
         max_length=127,
         choices=STRAIN_TYPE_CHOICES,
         default=StrainType.UNKNOWN.value,
-        db_column="genetics",
+        db_column="genotype",
     )
 
     created_by = models.ForeignKey(
@@ -376,15 +376,20 @@ class Strain(models.Model):
         auto_now_add=True,
     )
 
-    @property
-    def genetics(self) -> StrainType:
-        return StrainType.from_string(self.genetics_data)
+    is_discontinued = models.BooleanField(
+        _("is discontinued"),
+        default=False
+    )
 
-    @genetics.setter
-    def genetics(self, genetics: StrainType | str):
+    @property
+    def genotype(self) -> StrainType:
+        return StrainType.from_string(self.genotype_data)
+
+    @genotype.setter
+    def genotype(self, genetics: StrainType | str):
         if not isinstance(genetics, StrainType):
-            genetics = StrainType.from_string(genetics)
-        self.genetics_data = genetics.value
+            genotype = StrainType.from_string(genetics)
+        self.genotype_data = genotype.value
 
     @property
     def growlog_count(self):

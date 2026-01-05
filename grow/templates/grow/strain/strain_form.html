@@ -20,9 +20,12 @@
         </ul>
     </div>
     {% endif %}
-
     <div class="form-floating mb-3">
+        {% if 'name' in form.errors %}
+        {% render_field form.name class="form-control is-invalid" placeholder=form.name.label %}
+        {% else %}
         {% render_field form.name class="form-control" placeholder=form.name.label %}
+        {% endif %}
         <label for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
     </div>
 
@@ -36,7 +39,11 @@
     </div>
     {% endif %}
     <div class="form-floating mb-3">
+        {% if 'slug' in form.errors %}
+        {% render_field form.slug class="form-control is-invalid" placeholder=form.slug.label %}
+        {% else %}
         {% render_field form.slug class="form-control" placeholder=form.slug.label %}
+        {% endif %}
         <label for="{{ form.slug.id_for_label }}">{{ form.slug.label }}</label>
     </div>
     <div class="form-floating mb-3">
@@ -44,26 +51,21 @@
     </div>
 
     <div class="input-group input-group-lg mb-3">
-        <label id="{{ form.genetics_data.id_for_label }}" class="input-group-text">{% translate "Genetics" %}</label>
-        {% render_field form.genetics_data class="form-control" %}
+        <label id="{{ form.genotype_data.id_for_label }}" class="input-group-text">{% translate "Genotype" %}</label>
+        {% if 'genotype_data' in form.errors %}
+        {% render_field form.genotype_data class="form-control is-invalid" %}
+        {% else %}
+        {% render_field form.genotype_data class="form-control" %}
+        {% endif %}
     </div>
 
-    {% if 'flowering_time_days' in form.errors %}
-    <div class="bg-danger text-white p-3">
-        <ul>
-        {% for error in form.errors.flowering_time_days %}
-            <li>{{ error }}</li>
-        {% endfor %}
-        </ul>
-    </div>
-    {% endif %}
     <div class="input-group mb-3">
         <span class="input-group-text">
             <span class="me-2 text-truncate ">{% translate "Regular" %}</span>
             <label for="{{ form.is_regular.id_for_label }}" class="visually-hidden">
                 {{ form.is_regular.label }}
             </label>
-            {% render_field form.is_regular class="form-check-input" %}
+            {% render_field form.is_regular class="form-check-input " %}
         </span>
 
 
@@ -82,10 +84,32 @@
             </label>
             {% render_field form.is_automatic class="form-check-input" %}
         </span>
+
+        <span class="input-group-text">
+            <div class="text-truncate me-2">{% translate "Discontinued" %}</div>
+            <label for="{{ form.is_discontinued.id_for_label }}" class="visually-hidden">
+                {{ form.is_discontinued.label }}
+            </label>
+            {% render_field form.is_discontinued class="form-check-input" %}
+        </span>
     </div>
+
+    {% if 'flowering_time_days' in form.errors %}
+    <div class="bg-danger text-white p-3">
+        <ul>
+        {% for error in form.errors.flowering_time_days %}
+            <li>{{ error }}</li>
+        {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
     <div class="input-group mb-3" id='flowering_time_div'>
         <div class="form-floating">
+            {% if 'flowering_time_days' in form.errors %}
+            {% render_field form.flowering_time_days class="form-control is-invalid" style="min-width:75px;" placeholder=form.flowering_time_days %}
+            {% else %}
             {% render_field form.flowering_time_days class="form-control" style="min-width:75px;" placeholder=form.flowering_time_days %}
+            {% endif %}
             <label for="{{ form.flowering_time_days.id_for_label }}">
                 {{ form.flowering_time_days.label }}
             </label>
@@ -94,22 +118,38 @@
     </div>
 
     <div class="form-floating mb-3">
+        {% if 'logo_url' in form.errors %}
+        {% render_field form.logo_url class="form-control is-invalid" placeholder=form.logo_url.label %}
+        {% else %}
         {% render_field form.logo_url class="form-control" placeholder=form.logo_url.label %}
+        {% endif %}
         <label for="{{ form.logo_url.id_for_label }}">{{ form.logo_url.label }}</label>
     </div>
 
     <div class="form-floating mb-3">
+        {% if 'logo_image' in form.errors %}
+        {% render_field form.logo_image class="form-control is-invalid" placeholder=form.logo_image.label %}
+        {% else %}
         {% render_field form.logo_image class="form-control" placeholder=form.logo_image.label %}
+        {% endif %}
         <label for="{{ form.logo_image.id_for_label }}">{{ form.logo_image.label }}</label>
     </div>
 
     <div class="form-floating mb-3">
+        {% if 'strain_url' in form.errors %}
+        {% render_field form.strain_url class="form-control is-invalid" placeholder=form.strain_url.label %}
+        {% else %}
         {% render_field form.strain_url class="form-control" placeholder=form.strain_url.label %}
+        {% endif %}
         <label for="{{ form.strain_url.id_for_label }}">{{ form.strain_url.label }}</label>
     </div>
 
     <div class="form-floating mb-3">
+        {% if 'seedfinder_url' in form.errors %}
+        {% render_field form.seedfinder_url class="form-control is-invalid" placeholder=form.seedfinder_url.label %}
+        {% else %}
         {% render_field form.seedfinder_url class="form-control" placeholder=form.seedfinder_url.label %}
+        {% endif %}
         <label for="{{ form.seedfinder_url.id_for_label }}">{{ form.seedfinder_url.label }}</label>
     </div>
 
@@ -121,7 +161,11 @@
     </div>
 
     <div class="form-floating mb-3">
-        {% render_field form.description class="form-control" style="height:20rem;"%}
+        {% if 'description' in form.errors %}
+        {% render_field form.description class="form-control is-invalid" style="height:20rem;" %}
+        {% else %}
+        {% render_field form.description class="form-control" style="height:20rem;" %}
+        {% endif %}
         <label for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
     </div>
 

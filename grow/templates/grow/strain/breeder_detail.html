@@ -127,10 +127,10 @@ A total of {{ n }} growlogs have been created for the strains of <i>{{ name }}</
 >
     <thead>
         <tr>
-            <th>Strain</th>
-            <th>Genetics</th>
-            <th>Flowering time</th>
-            <th>Growlogs</th>
+            <th>{% translate "Strain" %}</th>
+            <th>{% translate "Genotype" %}</th>
+            <th>{% translate "Flowering time" %}</th>
+            <th>{% translate "Growlogs" %}</th>
             <th>
             {% if use_bootstrap%}
             <div class="text-end me-2">
@@ -166,11 +166,13 @@ A total of {{ n }} growlogs have been created for the strains of <i>{{ name }}</
     {% for strain in breeder.strains_sorted %}
         <tr id="{{ breeder.slug }}-{{ strain.slug }}">
             <td>
-                <a href="{% url 'grow:strain-detail' breeder_slug=breeder.slug slug=strain.slug %}">
+                <a href="{% url 'grow:strain-detail' breeder_slug=breeder.slug slug=strain.slug %}"
+                    class="{% if strain.is_discontinued %}text-decoration-line-through text-muted{% endif %}"
+                >
                     {{ strain.name }}
                 </a>
             </td>
-            <td>{{ strain.genetics.name }}</td>
+            <td>{{ strain.genotype.name }}</td>
             <td>
                 {% if strain.flowering_time_days %}
                 {% blocktranslate with days=strain.flowering_time_days count n=strain.flowering_time_days%}{{ days }} day{% plural %}{{ days }} days{% endblocktranslate %}

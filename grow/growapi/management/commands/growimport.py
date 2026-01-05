@@ -12,6 +12,8 @@ class Command(BaseCommand):
         parser.add_argument("file", nargs=1, type=str)
         parser.add_argument("--username", type=str)
         parser.add_argument("--email", type=str)
+        parser.add_argument("--moderator-username", type=str)
+        parser.add_argument("--moderator-email", type=str)
 
     def handle(self, *args, **options):
         if not options['file']:
@@ -36,5 +38,17 @@ class Command(BaseCommand):
             except UserModel.DoesNotExist:
                 raise CommandError(f"No user with email \"{options['email']}\" exists!")
 
+        moderator = None
+        if options['moderator_username']:
+            try:
+                moderator = UserModel.objects.get(username=options['moderator_username'])
+            except UserModel.DoesNotExist:
+                raise CommandError(f"No user with username \"{options['moderator_username']}\" exists!")
+        elif options['moderator_email']:
+            try:
+                moderator = UserModel.objects.get(email=options['moderator_email'])
+            except UserModel.DoesNotExist:
+                raise CommandError(f"No user with email \"{options['moderator_email']}\" exists!")
         print(f"Importing from {filename} ...")
-        import_data(filename=filename, user=user)
+
+        import_data(filename=filename, user=user, moderator=moderator)
