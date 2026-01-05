@@ -1,7 +1,7 @@
 {% extends base_template %}
 {% load static i18n tz %}
 
-{% block title %}{{ grow_site_title }}: {{ strain.breeder.name }} - {{ strain.name }} {% endblock %}
+{% block title %}{{ grow_site_title }} <span class="fs-2">{{ strain.breeder.name }} - {{ strain.name }}</span>{% endblock %}
 {% block head_title %}{{ grow_head_title }}{% endblock %}
 
 {% block content %}
@@ -30,8 +30,9 @@
 </nav>
 {% endif %}
 
+
+<div class="{% if use_bootstrap %}fs-3{% endif %}">
 {% if use_bootstrap %}
-<div class="h3">
     {% if allowed_to_edit %}
     <a href="{% url 'grow:strain-update' pk=strain.pk %}"
         class="link-primary
@@ -63,8 +64,12 @@
             data-bs-title="{% translate 'Delete strain' %}"></i>
     </a>
     {% endif %}
-</div>
+{% else %}
+    {% if allowed_to_edit %}<a href="{% url 'grow:strain-update' pk=strain.pk %}">{% translate "Edit strain" %}</a>{% endif %}
+    {% if allowed_to_delete %}<a href="{% url 'grow:strain-delete' pk=strain.pk %}">{% translate "Delete strain" %}</a>{% endif %}
 {% endif %}
+</div>
+
 <h1>{{ strain.breeder.name }} - {{ strain.name }}</h1>
 
 <div>
@@ -132,6 +137,12 @@
         {% if strain.seedfinder_url %}
         <a href="{{ strain.seedfinder_url }}">{% translate "View on SeedFinder.eu" %}</a>
         {% endif %}
+    </p>
+    <p>
+        {% if strain.is_regular or strain.is_feminized %}
+        <a href="#seeds-in-stock-table">{% translate "Jump to seeds in stock" %}</a><br>
+        {% endif %}
+        <a href="#growlogs">{% translate "Jump to growlogs" %}</a
     </p>
     {% if strain.has_description %}
     <h2>{% translate "Strain description" %}</h2>
@@ -304,7 +315,7 @@
 {% endif %}{# strain has seeds #}
 {% endif %}{# request.user.is_authenticated #}
 
-<h2>Growlogs</h2>
+<h2 id="growlogs">Growlogs</h2>
 {% if growlogs %}
 <table class="{% if use_bootstrap%}table{% endif %}">
     <thead>

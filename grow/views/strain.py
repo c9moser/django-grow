@@ -13,6 +13,7 @@ from django.views import View
 from django.views.generic import FormView
 
 from ._base import BaseView
+
 from ..growapi.models import (
     Breeder,
     Strain,
@@ -26,6 +27,7 @@ from ..forms import (
     StrainAddToStockForm,
     StrainRemoveFromStockForm,
     StrainSearchForm,
+    StrainFilterForm,
 )
 
 from ..growapi.permission import growlog_user_is_allowed_to_view
@@ -147,7 +149,7 @@ class HxBreederFilterView(BaseView):
                     labels_id.append((breeder.name[0].upper(), id))
                     breeders_id.append((breeder, id, breeder.name[0].upper()))
 
-        group_breeders = (not search_query and breeders.count() > 30)
+        group_breeders = (breeders.count() > 30)
 
         if settings.USE_BOOTSTRAP:
             label_format = "<a class=\"link-body-emphasis link-opacity-50 link-opacity-100-hover link-underline-opacity-50 link-underline-opacity-75-hover\" href=\"#{id}\">{label}</a>"  # noqa: E501
@@ -201,6 +203,44 @@ class BreederView(BaseView):
             'strains': strains,
             'strains_allowed_to_edit': strains_allowed_to_edit,
             'strains_allowed_to_delete': strains_allowed_to_delete,
+            'filter_strains_form': StrainFilterForm(),
+        })
+
+
+class HxStrainFilterView(BaseView):
+    template_name = settings.GROW_TEMPLATES['grow/strain/hx-strain-filter']
+
+    def post(self, request: HttpRequest, breeder_pk: int) -> HttpResponse:
+        form = StrainFilterForm(request.POST)
+        if form.is_valid():
+            search_query = form.cleaned_data['search_query']
+        else:
+            search_query = None
+
+        breeder = get_object_or_404(Breeder, pk=breeder_pk)
+
+        if search_query:
+            strains = breeder.strains.filter(name__icontains=search_query).order_by(Lower("name"))
+        else:
+            strains = breeder.strains.all().order_by(Lower("name"))
+
+        if request.user.is_authenticated:
+            # TODO: add logic
+            strains_allowed_to_edit = [strain.id for strain in strains]
+            # TODO: add logic
+            strains_allowed_to_delete = [strain.id for strain in strains if strain.growlog_count == 0]  # noqa: E501
+            allowed_to_add_strains = True  # TODO: add logic
+        else:
+            strains_allowed_to_edit = []
+            strains_allowed_to_delete = []
+            allowed_to_add_strains = False
+
+        return render(request, self.template_name, context={
+            'breeder': breeder,
+            'strains': strains,
+            'strains_allowed_to_edit': strains_allowed_to_edit,
+            'strains_allowed_to_delete': strains_allowed_to_delete,
+            'allowed_to_add_strains': allowed_to_add_strains,
         })
 
 
@@ -690,7 +730,8 @@ class HxStrainAddToStockView(LoginRequiredMixin, FormView):
 
     def get_form(self, form_class=StrainAddToStockForm):
         try:
-            sis = self.strain.seeds_in_stock.get(user=self.request.user, is_feminized=self.feminized)
+            sis = self.strain.seeds_in_stock.get(user=self.request.user,
+                                                 is_feminized=self.feminized)
             today = date.today()
             form = form_class(initial={
                 'purchased_on_year': sis.purchased_on.year if sis.purchased_on else today.year,

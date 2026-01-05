@@ -18,11 +18,12 @@ from .views import (
     StrainView,
     HxBreederDeleteView,
     HxBreederFilterView,
-    HxSanitizeDateDayView,
     HxStrainDeleteView,
+    HxStrainFilterView,
     HxStrainAddToStockView,
     HxStrainRemoveFromStockView,
 )
+from .views.utils import HxSelectDateDaysSanitizeView
 
 app_name = "grow"
 
@@ -46,9 +47,12 @@ urlpatterns = [
          name="strain-remove-from-stock"),
     # path("strain/image-upload/<int:pk>/", StrainUploadImageView.as_view(), name="strain-image-upload"),
     path("__hx__/sanitize_date_day/<int:year>/<int:month>/",
-         HxSanitizeDateDayView.as_view(),
+         HxSelectDateDaysSanitizeView.as_view(),
          name="hx-sanitize-date-day"),
     path("__hx__/breeder/delete/<int:pk>", HxBreederDeleteView.as_view(), name="hx-breeder-delete"),
+    path("__hx__/breeder/filter-strains/<int:breeder_pk>/",
+         HxStrainFilterView.as_view(),
+         name="hx-strain-search"),
     path("__hx__/strain/delete/<int:pk>", HxStrainDeleteView.as_view(), name="hx-strain-delete"),
     path("__hx__/strain/add_to_stock/<int:strain>/<int:feminized>/",
          HxStrainAddToStockView.as_view(),

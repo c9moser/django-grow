@@ -37,32 +37,3 @@ class IndexView(BaseView):
             'new_growlogs': new_growlogs,
             'new_strains': new_strains
         })
-
-
-class HxSanitizeDateDayView(BaseView):
-    template_name = settings.GROW_TEMPLATES['grow/index/sanitize-date-day']
-
-    def get(self, request: HttpRequest, year: int, month: int) -> HttpResponse:
-        if month < 1:
-            month = 1
-        elif month > 12:
-            month = 12
-
-        if year < 1900:
-            year = 1900
-        elif year > 2100:
-            year = 2100
-
-        months = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
-        if year % 4 == 0:
-            if year % 100 == 0:
-                if year % 400 == 0:
-                    months[1] = 29
-            else:
-                months[1] = 29
-
-        days = months[month - 1]
-        print(days)
-        return render(request, self.template_name, context={
-            'days': list(range(1, days + 1))
-        })

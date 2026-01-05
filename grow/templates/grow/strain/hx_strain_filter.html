@@ -1,127 +1,4 @@
-{% extends base_template %}
-{% load i18n widget_tweaks %}
-
-
-{% block head_title %}{{ grow_head_title }}{% endblock %}
-{% block title %}{{ grow_site_title }}: {% blocktranslate with name=breeder.name %}Breeder {{ name }}{% endblocktranslate %}{% endblock %}
-
-{% block content %}
-{% if use_bootstrap%}
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb" style="--bs-breadcrumb-divider:'&#10093;';">
-    {% url "grow:home" as grow_home %}
-    {% if grow_home == '/' %}
-        <li class="breadcrumb-item"><a href="{{ grow_home }}">{% translate "Home" %}</a></li>
-    {% else %}
-        <li class="breadcrumb-item"><a href="/">{% translate "Home" %}</a></li>
-        <li class="breadcrumb-item"><a href="{{ grow_home }}">Grow</a></li>
-    {% endif %}
-        <li class="breadcrumb-item">
-            <a href="{% url "grow:breeder-overview" %}">
-                {% translate "Strains" %}
-            </a>
-        </li>
-        <li class="breadcrumb-item active">{{ breeder.name }}</li>
-    </ol>
-</nav>
-{% endif %}
-
-{% if use_bootstrap %}
-<div class="h3">
-    {% if allowed_to_edit %}
-    <a href="{% url 'grow:breeder-update' pk=breeder.pk %}"
-        class="link-primary
-            link-opacity-75
-            link-opacity-100-hover
-            link-underline-opacity-0"
-        data-bs-toggle="tooltip"
-        data-bs-placement="bottom"
-        data-bs-title="{% translate 'Edit breeder' %}"
-    ><i class="bi bi-pencil-square"></i></a>
-    {% endif %}
-    {% if allowed_to_delete %}
-    <a href="#"
-        class="link-danger
-            link-opacity-75
-            link-opacity-100-hover
-            link-underline-opacity-0"
-        hx-get="{% url 'grow:hx-breeder-delete' pk=breeder.pk %}"
-        hx-target="#modals-here"
-        hx-swap="innerHTML"
-        hx-trigger="click"
-        data-bs-toggle="modal"
-        data-bs-target="#modals-here"
-    >
-        <span data-bs-toggle="tooltip"
-            data-bs-placement="bottom"
-            data-bs-title="{% translate 'Delete breeder' %}">
-            <i class="bi bi-x-square"></i>
-        </span>
-    </a>
-    {% endif %}
-</div>
-{% else %}
-{% if allowed_to_edit %}<a href="{% url 'grow:breeder-create' %}">{% translate "Edit breeder" %}</a>{% endif %}
-{% if allowed_to_delete %}<a href="{% url 'grow:breeder-delete' pk=breeder.pk %}">{% translate "Delete breeder" %}</a>{% endif %}
-{% endif %}
-
-
-<h1>{{ breeder.name }}</h1>
-{% if breeder.has_logo %}
-<img class=""
-    alt="{% translate 'Breeder logo' %}" src="{{ breeder.logo }}"
-    style="max-width:256px; float:left">
-{% endif %}
-
-<p>
-{% blocktranslate with name=breeder.name count n_strains=breeder.strains.count %}
-There is one strain in the database for the breeder <i>{{ name }}</i>.
-{% plural %}
-There are {{ n_strains }} strains in the database for breeder <i>{{ name }}</i>.
-{% endblocktranslate%}
-{% blocktranslate with n_strains=breeder.strains_with_growlogs_count count n=breeder.strains_with_growlogs_count %}
-One strain appears in growlogs.
-{% plural %}
-{{ n_strains }} strains appear in growlogs.
-{% endblocktranslate %}
-{% blocktranslate with name=breeder.name count n=breeder.growlog_count %}
-A total of one growlog has been created for the strains of <i>{{ name }}</i>.
-{% plural %}
-A total of {{ n }} growlogs have been created for the strains of <i>{{ name }}</i>.
-{% endblocktranslate %}
-</p>
-<p>
-{% if breeder.breeder_url %}
-    <a class="me-2" href="{{ breeder.breeder_url }}" target="_blank">{% translate "Breeder's homepage" %}</a>
-{% endif %}
-{% if breeder.seedfinder_url %}
-    <a href="{{ breeder.seedfinder_url }}" target="_blank">{% translate "Breeder on SeedFinder.eu" %}</a>
-{% endif %}
-</p>
-<p>
-    <a href="#strains">{% translate "Jump to strains" %}</a>
-</p>
-
-{% if breeder.has_description %}
-<h2>{% translate  "Breeder information" %}</h2>
-{{ breeder.description_html }}
-{% endif %}
-
-<h2 id="strains">{% translate "Strains" %}</h2>
-<form method="post"
-    hx-post="{% url 'grow:hx-strain-search' breeder_pk=breeder.pk %}"
-    hx-target="#strain-table-div"
-    hx-swap="innerHTML"
-    hx-trigger="keyup changed delay:500ms"
->
-    {% csrf_token %}
-    {% if use_bootstrap %}
-    {% render_field filter_strains_form.search_query class="form-control mb-3" placeholder=filter_strains_form.search_query.label %}
-    {% else %}
-    {% render_field filter_strains_form.search_query placeholder=filter_strains_form.search_query.label %}
-    {% endif %}
-</form>
-<div id="strain-table-div">
+{% load i18n%}
 <table id="strain-table"
     class="{% if use_bootstrap%}table table-hover{% endif %}"
 >
@@ -139,7 +16,8 @@ A total of {{ n }} growlogs have been created for the strains of <i>{{ name }}</
                         class="link-primary
                             link-opacity-75
                             link-opacity-100-hover
-                            link-underline-opacity-0"
+                            link-underline-opacity-0
+                            tooltip-item"
                         data-bs-toggle="tooltip"
                         data-bs-html="true"
                         data-bs-title="{% blocktranslate with name=breeder.name %}Add strain to breeder <i>{{ name }}</i>{% endblocktranslate %}"
@@ -163,7 +41,7 @@ A total of {{ n }} growlogs have been created for the strains of <i>{{ name }}</
         </tr>
     </thead>
     <tbody class="{% if use_bootstrap %}table-group-divider{% endif %}">
-    {% for strain in breeder.strains_sorted %}
+    {% for strain in strains %}
         <tr id="{{ breeder.slug }}-{{ strain.slug }}">
             <td>
                 <a href="{% url 'grow:strain-detail' breeder_slug=breeder.slug slug=strain.slug %}">
@@ -193,7 +71,8 @@ A total of {{ n }} growlogs have been created for the strains of <i>{{ name }}</
                         class="link-primary
                             link-opacity-75
                             link-opacity-100-hover
-                            link-underline-opacity-0"
+                            link-underline-opacity-0
+                            tooltip-item"
                         data-bs-toggle="tooltip"
                         data-bs-html="true"
                         data-bs-title="{% blocktranslate with name=strain.name %}Edit strain <i>{{ name }}</i>{% endblocktranslate %}"
@@ -209,7 +88,8 @@ A total of {{ n }} growlogs have been created for the strains of <i>{{ name }}</
                     <a href="#"
                         class="link-danger
                             link-opacity-50
-                            link underline-opacity-0"
+                            link-underline-opacity-0
+                            tooltip-item"
                         hx-target="#modals-here"
                         hx-trigger="click"
                         hx-get="{% url 'grow:hx-strain-delete' pk=strain.pk %}"
@@ -226,7 +106,7 @@ A total of {{ n }} growlogs have been created for the strains of <i>{{ name }}</
                 <a href="#{{ breeder.slug}}-{{ strain.slug }}"
                         class="link-body-emphasis
                             link-opacity-50
-                            link underline-opacity-0"
+                            link-underline-opacity-0"
                 ><i class="bi bi-x-square"></i></a>
                 {% endif %}
                 </div>
@@ -247,5 +127,9 @@ A total of {{ n }} growlogs have been created for the strains of <i>{{ name }}</
     {% endfor %}
     </tbody>
 </table>
-</div>
-{% endblock content %}
+<script>
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('.tooltip-item'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl)
+    });
+</script>

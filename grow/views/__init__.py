@@ -1,7 +1,6 @@
 from .index import (
     IndexView,
-    HxSanitizeDateDayView,
-)  # noqa
+)
 from .strain import (
     BreederIndexView,
     BreederView,
@@ -16,6 +15,7 @@ from .strain import (
     StrainAddToStockView,
     StrainCreateView,
     StrainDeleteView,
+    HxStrainFilterView,
     StrainRemoveFromStockView,
     StrainSearchView,
     StrainUpdateView,
@@ -37,6 +37,7 @@ __all__ = [
     'HxSanitizeDateDayView',
     'HxStrainAddToStockView',
     'HxStrainDeleteView',
+    'HxStrainFilterView',
     'HxStrainRemoveFromStockView',
     'HxSelectDateDaysSanitizeView',
     'IndexView',

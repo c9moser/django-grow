@@ -3,6 +3,7 @@ from .strain import (
     BreederFilterForm,
     StrainForm,
     StrainAddToStockForm,
+    StrainFilterForm,
     StrainRemoveFromStockForm,
     StrainSearchForm,
 )
@@ -12,6 +13,7 @@ __all__ = [
     'BreederFilterForm',
     'StrainForm',
     'StrainAddToStockForm',
+    'StrainFilterForm',
     'StrainRemoveFromStockForm',
     'StrainSearchForm',
 ]

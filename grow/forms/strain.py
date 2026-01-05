@@ -104,3 +104,11 @@ class StrainSearchForm(forms.Form):
         max_length=255,
         label=_("Search strains..."),
     )
+
+
+class StrainFilterForm(forms.Form):
+    search_query = forms.CharField(
+        required=False,
+        max_length=255,
+        label=_("Filter strains..."),
+    )

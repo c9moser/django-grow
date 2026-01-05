@@ -15,15 +15,14 @@ GROW_BUILTIN_TEMPLATES = {
     'grow/breeder/hx-breeder-filter': 'grow/strain/hx_breeder_filter.html',
     'grow/breeder/update': 'grow/strain/breeder_update.html',
     'grow/index': 'grow/index/index.html',
-    'grow/index/sanitize-date-day': 'grow/index/hx_sanitize_date_day.html',
     'grow/strain': 'grow/strain/index.html',
     'grow/strain/add_to_stock': 'grow/strain/strain_add_to_stock.html',
-
     'grow/strain/create': 'grow/strain/strain_create.html',
     'grow/strain/delete': 'grow/strain/strain_delete.html',
     'grow/strain/detail': 'grow/strain/strain_detail.html',
     'grow/strain/hx-add_to_stock': 'grow/strain/hx_strain_add_to_stock.html',
     'grow/strain/hx-delete': 'grow/strain/hx_strain_delete.html',
+    'grow/strain/hx-strain-filter': 'grow/strain/hx_strain_filter.html',
     'grow/strain/hx-remove_from_stock': 'grow/strain/hx_strain_remove_from_stock.html',
     'grow/strain/hx-remove_from_stock_invalid': 'grow/strain/hx_strain_remove_from_stock_invalid.html',
     'grow/strain/hx-strain_in_stock_update': 'grow/strain/hx_strain_in_stock_update.html',
@@ -33,7 +32,6 @@ GROW_BUILTIN_TEMPLATES = {
     'grow/strain/remove_from_stock_invalid': 'grow/strain/strain_remove_from_stock_invalid.html',
     'grow/strain/strain_search_results': 'grow/strain/strain_search_results.html',
     'grow/strain/update': 'grow/strain/strain_update.html',
-
     'grow/utils/hx_select_date_days_sanitize': 'grow/utils/hx_select_date_days_sanitize.html'
 }
 

@@ -3,6 +3,7 @@ from .. import settings
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 
+
 class HxSelectDateDaysSanitizeView(BaseView):
     template_name = settings.GROW_TEMPLATES['grow/utils/hx_select_date_days_sanitize']
 
