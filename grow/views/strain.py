@@ -1179,9 +1179,9 @@ class StrainTranslationView(LoginRequiredMixin, View):
         existing_translation = strain.translations.filter(language_code=lang_code).first()
 
         short_lang_code = lang_code.split('-')[0]
-        seedfinder_url = strain.breeder.seedfinder_url
+        seedfinder_url = strain.seedfinder_url
         if short_lang_code in ['de', 'fr', 'es', 'en']:
-            if strain.breeder.seedfinder_url:
+            if strain.seedfinder_url:
                 seedfinder_url = re.sub('(/en/|/de/|/fr/|/es/)',
                                         f'/{short_lang_code}/',
                                         strain.seedfinder_url)  # noqa: E501
@@ -1255,9 +1255,9 @@ class HxStrainTranslationView(LoginRequiredMixin, View):
         existing_translation = strain.translations.filter(language_code=lang_code).first()
 
         short_lang_code = lang_code.split('-')[0]
-        seedfinder_url = strain.breeder.seedfinder_url
+        seedfinder_url = strain.seedfinder_url
         if short_lang_code in ['de', 'fr', 'es', 'en']:
-            if strain.breeder.seedfinder_url:
+            if strain.seedfinder_url:
                 seedfinder_url = re.sub('(/en/|/de/|/fr/|/es/)', f'/{short_lang_code}/',
                                         strain.seedfinder_url)
 

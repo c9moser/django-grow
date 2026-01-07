@@ -46,8 +46,7 @@
             <td>
                 <a href="{% url 'grow:strain-detail' breeder_slug=breeder.slug slug=strain.slug %}"
                     class="{% if strain.is_discontinued %}text-decoration-line-through text-muted{% endif %}"
-                    {{ strain.name }}
-                </a>
+                >{{ strain.locale_name }}</a>
             </td>
             <td>{{ strain.genotype.name }}</td>
             <td>

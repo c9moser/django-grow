@@ -8,7 +8,7 @@
 {% if use_bootstrap %}
 <nav aria-label="breadcrumb">
     {% url "grow:home" as grow_home %}
-    <ol class="breadcrumb" style="--bs-breadcrumb-divider:'&#10093;';">
+    <ol class="breadcrumb">
     {% if grow_home == "/" %}
         <li class="breadcrumb-item"><a href="{{ grow_home }}">{% translate "Home" %}</a></li>
     {% else %}
