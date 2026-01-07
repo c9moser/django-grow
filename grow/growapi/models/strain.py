@@ -22,7 +22,7 @@ from ..enums import (
 
 from ..parser.bbcode import render_description_bbcode
 from ..parser.markdown import render_description_markdown
-
+from ..parser.plaintext import render_plaintext
 
 def get_language_code_choices():
     if hasattr(django_settings, 'LANGUAGES'):
@@ -108,6 +108,8 @@ class Breeder(models.Model):
             return render_description_bbcode(self.description)
         elif self.description_type == TextType.MARKDOWN:
             return render_description_markdown(self.description)
+        elif self.description_type == TextType.PLAIN:
+            return render_plaintext(self.description)
         else:
             return self.description
 
@@ -538,6 +540,8 @@ class BreederTranslation(models.Model):
             return render_description_bbcode(self.description)
         elif self.description_type == TextType.MARKDOWN:
             return render_description_markdown(self.description)
+        elif self.description_type == TextType.PLAIN:
+            return render_plaintext(self.description)
         else:
             return self.description
 
@@ -589,7 +593,7 @@ class Strain(models.Model):
         translation = None
         if self.translations:
             try:
-                self.translations.get(language_code=get_language())
+                translation = self.translations.get(language_code=get_language())
             except StrainTranslation.DoesNotExist:
                 pass
             if not translation:
@@ -642,6 +646,8 @@ class Strain(models.Model):
             return render_description_bbcode(self.description)
         elif self.description_type == TextType.MARKDOWN:
             return render_description_markdown(self.description)
+        elif self.description_type == TextType.PLAIN:
+            return render_plaintext(self.description)
         else:
             return self.description
 
@@ -1301,6 +1307,8 @@ class StrainTranslation(models.Model):
                 return render_description_bbcode(self.description)
             elif self.description_type == TextType.MARKDOWN:
                 return render_description_markdown(self.description)
+            elif self.description_type == TextType.PLAIN:
+                return render_plaintext(self.description)
             else:
                 return self.description
         return ""
@@ -1559,6 +1567,25 @@ class StrainsInStock(models.Model):
         blank=True,
         null=True
     )
+
+    @property
+    def notes_html(self) -> SafeString | str:
+        """
+        Renders the notes to HTML based on its type.
+
+        :return: The HTML rendered notes.
+        :rtype: SafeString | str
+        """
+        if self.notes:
+            if self.notes_type == TextType.BBCODE:
+                return render_description_bbcode(self.notes)
+            elif self.notes_type == TextType.MARKDOWN:
+                return render_description_markdown(self.notes)
+            elif self.notes_type == TextType.PLAIN:
+                return render_plaintext(self.notes)
+            else:
+                return self.notes
+        return ""
 
     #: The type of the notes text
     #: type: str

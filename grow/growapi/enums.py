@@ -213,12 +213,14 @@ class TextType(StrEnum):
 
     MARKDOWN = "markdown"
     BBCODE = "bbcode"
+    PLAIN = "plaintext"
 
     @staticmethod
     def from_string(text_str: str) -> 'TextType':
         mapping = {
             "bbcode": TextType.BBCODE,
             "markdown": TextType.MARKDOWN,
+            "plaintext": TextType.PLAIN
         }
         try:
             return mapping.get(text_str.lower())
@@ -230,6 +232,7 @@ class TextType(StrEnum):
         mapping = {
             TextType.MARKDOWN: _("markdown"),
             TextType.BBCODE: _("bbcode"),
+            TextType.PLAIN: _("plain text"),
         }
         return mapping[self]
 
@@ -251,8 +254,8 @@ class TextType(StrEnum):
 TEXT_TYPES = [
     TextType.MARKDOWN,
     TextType.BBCODE,
+    TextType.PLAIN,
 ]
-
 TEXT_CHOICES = [(tt.value, tt.name_lazy) for tt in TEXT_TYPES]
 
 
