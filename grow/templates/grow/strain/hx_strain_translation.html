@@ -1,0 +1,67 @@
+{% load i18n widget_tweaks%}
+{% if use_bootstrap %}
+<div class="mb-3 form-floating">
+    {% if 'name' in form.errors %}
+    {% render_field form.name class="form-control is-invalid" placeholder=form.name.label %}
+    {% else %}
+    {% render_field form.name class="form-control" placeholder=form.name.label %}
+    {% endif %}
+    <label for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+</div>
+
+<div class="mb-3 form-floating">
+    {% if 'strain_url' in form.errors %}
+    {% render_field form.strain_url class="form-control is-invalid" placeholder=form.strain_url.label %}
+    {% else %}
+    {% render_field form.strain_url class="form-control" placeholder=form.strain_url.label %}
+    {% endif %}
+    <label for="{{ form.strain_url.id_for_label }}">{{ form.strain_url.label }}</label>
+</div>
+
+<div class="mb-3 form-floating">
+    {% if 'seedfinder_url' in form.errors %}
+    {% render_field form.seedfinder_url class="form-control is-invalid" placeholder=form.seedfinder_url.label %}
+    {% else %}
+    {% render_field form.seedfinder_url class="form-control" placeholder=form.seedfinder_url.label %}
+    {% endif %}
+    <label for="{{ form.seedfinder_url.id_for_label }}">{{ form.seedfinder_url.label }}</label>
+</div>
+<div class="input-group mb-3">
+    <span class="input-group-text">{{ form.description_type_data.label }}</span>
+    <label for="{{ form.description_type_data.id_for_label }}" class="visually-hidden">{{ form.description_type_data.label }}</label>
+    {% if 'form.description_type_data' in form.errors %}
+    {% render_field form.description_type_data class="form-control is-invalid" placeholder=form.description.label %}
+    {% else %}
+    {% render_field form.description_type_data class="form-control" placeholder=form.description.label %}
+    {% endif %}
+</div>
+<div class="form-floating mb-3">
+    {% if 'description' in form.errors %}
+    {% render_field form.description class="form-control is-invalid" style="height: 22rem;" placeholder=form.description.label %}
+    {% else %}
+    {% render_field form.description class="form-control" style="height: 22rem;" placeholder=form.description.label %}
+    {% endif %}
+    <label for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
+</div>
+{% else %}
+<p>
+    <label for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+    {% render_field form.name %}
+</p>
+<p>
+    <label for="{{ form.strain_url.id_for_label }}">{{ form.strain_url.label }}</label>
+    {% render_field form.strain_url %}
+</p>
+<p>
+    <label for="{{ form.seedfinder_url.id_for_label }}">{{ form.seedfinder_url.label }}</label>
+    {% render_field form.seedfinder_url %}
+</p>
+<p>
+    <label for="{{ form.description_type_data.id_for_label }}" class="visually-hidden">{{ form.description_type_data.label }}</label>
+    {% render_field form.description_type_data %}
+</p>
+<p>
+    <label for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
+    {% render_field form.description %}
+</p>
+{% endif %}

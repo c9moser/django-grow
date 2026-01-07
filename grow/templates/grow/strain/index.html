@@ -85,7 +85,7 @@
 <table {% if use_bootstrap %}class="table table-hover"{% endif %} id="breeder-overview-table">
 
     <thead>
-        <tr>
+        <tr class="{% if use_bootstrap %}table-success{% endif %}">
             <th>{% translate "Name" %}</th>
             <th>{% translate "Strains" %}</th>
             <th>{% translate "Growlogs" %}</th>

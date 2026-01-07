@@ -14,7 +14,7 @@ from pathlib import Path
 from environ import Env
 from django.conf import settings
 from django.urls import reverse_lazy
-from django.utils.translation import pgettext_lazy as Q_
+from django.utils.translation import gettext_lazy as L_
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -41,7 +41,15 @@ env = Env(
     GROW_ADMIN_URL=(str, "admin/"),
     GROW_ACCOUNT_LOGIN_METHODS=(list, ['email']),
     GROW_LOGIN_REQUIRED=(bool, False),
-    GROW_INCLUDE_WIKI=(bool, True)
+    GROW_INCLUDE_WIKI=(bool, True),
+    GROW_HEAD_TITLE=(str, 'Grow'),
+    GROW_SITE_TITLE=(str, 'Grow'),
+    GROW_COOKIES_CONSENT_REQUIRED=(bool, False),
+    GROW_COOKIES_CONSENT_NAME=(str, 'cookies_consent'),
+    GROW_AGE_GATE_REQUIRED=(bool, False),
+    GROW_AGE_GATE_NAME=(str, 'age_gate_passed'),
+    GROW_AGE_GATE_MINIMUM_AGE=(int, 18),
+    GROW_AGE_GATE_REJECTED_URL=(str, '/age-gate/'),
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -142,7 +150,6 @@ TEMPLATES = [
         },
     },
 ]
-BASE_TEMPLATE = "base.html"
 
 WSGI_APPLICATION = 'django_project.wsgi.application'
 
@@ -240,11 +247,12 @@ INCLUDE_WIKI = env.bool('GROW_INCLUDE_WIKI')
 
 LOCALE_PATHS = [
     BASE_DIR / "locale",
+    BASE_DIR / "django_project" / "locale",
 ]
 
 if INCLUDE_WIKI:
     third_party_apps.append('tinywiki')
-    TINYWIKI_HOME = Q_("wiki", "grow-home")
+    TINYWIKI_HOME = L_("grow-home")
     TINYWIKI_BBCODE_EXTRA_FORMATTERS = [
         (
             ('breeder', 'grow.growapi.parser.bbcode.text_formatters.render_breeder_link'),
@@ -260,6 +268,13 @@ if INCLUDE_WIKI:
 
 
 SITE_TITLE = "Grow"
+AGE_GATE_REQUIRED = env.bool('GROW_AGE_GATE_REQUIRED')
+AGE_GATE_NAME = env('GROW_AGE_GATE_NAME')
+AGE_GATE_MINIMUM_AGE = env.int('GROW_AGE_GATE_MINIMUM_AGE')
+AGE_GATE_REJECTED_URL = env('GROW_AGE_GATE_REJECTED_URL')
+COOKIES_CONSENT_REQUIRED = env.bool('GROW_COOKIES_CONSENT_REQUIRED')
+COOKIES_CONSENT_NAME = env('GROW_COOKIES_CONSENT_NAME')
+
 
 # load local config
 _local_settings_path = BASE_DIR / 'django_project' / 'local'
@@ -274,6 +289,11 @@ else:
         from .local.settings_prod import *  # noqa
 
 del _local_settings_path
+
+if USE_BOOTSTRAP:
+    BASE_TEMPLATE = "grow/bs_base.html"
+else:
+    BASE_TEMPLATE = "grow/base.html"
 
 if DEBUG:
     third_party_apps.insert(0, 'django_browser_reload')

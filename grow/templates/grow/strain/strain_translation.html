@@ -1,0 +1,140 @@
+{% extends base_template %}
+{% load i18n widget_tweaks %}
+{% block subtitle %}{% trans "Strain Translation" %}{% endblock %}
+
+{% block content %}
+<h1>{% trans "Strain Translation" %}</h1>
+<p>
+{% blocktranslate with name=strain.name %}Translate the strain <i>{{ name }}</i> into another language.{% endblocktranslate %}
+</p>
+<form method="post">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    {% if use_bootstrap %}
+    <div class="form-floating mb-3">
+        <input type="text" id="strain_name" class="form-control" value="{{ strain.breeder.name }} - {{ strain.name }}" disabled>
+        <label for="strain_name">{% trans "Strain" %}</label>
+    </div>
+    <div class="input-group mb-3">
+        <span class="input-group-text">{% translate "Language" %}</span>
+        <label for="{{ form.language_code.id_for_label }}" class="visually-hidden">{{ form.language_code.label }}></label>
+        {% render_field form.language_code class="form-control" %}
+    </div>
+    {% else %}
+        <p>
+            <label for="strain_name">{% trans "Strain" %}</label>
+            <input type="text" id="strain_name" value="{{ strain.breeder.name }} - {{ strain.name }}" disabled>
+        </p>
+        <p>
+        <label for="{{ form.language_code.id_for_label }}">{{ form.language_code.label }}</label>
+        {% render_field form.language_code onload="setup()" %}
+        </p>
+    {% endif %}
+
+    <div id="translation-form-fields">
+        {% if use_bootstrap %}
+        <div class="mb-3 form-floating">
+            {% if 'name' in form.errors %}
+            {% render_field form.name class="form-control is-invalid" placeholder=form.name.label %}
+            {% else %}
+            {% render_field form.name class="form-control" placeholder=form.name.label %}
+            {% endif %}
+            <label for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+        </div>
+
+        <div class="mb-3 form-floating">
+            {% if 'strain_url' in form.errors %}
+            {% render_field form.strain_url class="form-control is-invalid" placeholder=form.strain_url.label %}
+            {% else %}
+            {% render_field form.strain_url class="form-control" placeholder=form.strain_url.label %}
+            {% endif %}
+            <label for="{{ form.strain_url.id_for_label }}">{{ form.strain_url.label }}</label>
+        </div>
+
+        <div class="mb-3 form-floating">
+            {% if 'seedfinder_url' in form.errors %}
+            {% render_field form.seedfinder_url class="form-control is-invalid" placeholder=form.seedfinder_url.label %}
+            {% else %}
+            {% render_field form.seedfinder_url class="form-control" placeholder=form.seedfinder_url.label %}
+            {% endif %}
+            <label for="{{ form.seedfinder_url.id_for_label }}">{{ form.seedfinder_url.label }}</label>
+        </div>
+        <div class="input-group mb-3">
+            <span class="input-group-text">{{ form.description_type_data.label }}</span>
+            <label for="{{ form.description_type_data.id_for_label }}" class="visually-hidden">{{ form.description_type_data.label }}</label>
+            {% if 'form.description_type_data' in form.errors %}
+            {% render_field form.description_type_data class="form-control is-invalid" placeholder=form.description.label %}
+            {% else %}
+            {% render_field form.description_type_data class="form-control" placeholder=form.description.label %}
+            {% endif %}
+        </div>
+        <div class="form-floating mb-3">
+            {% if 'description' in form.errors %}
+            {% render_field form.description class="form-control is-invalid" style="height: 22rem;" placeholder=form.description.label %}
+            {% else %}
+            {% render_field form.description class="form-control" style="height: 22rem;" placeholder=form.description.label %}
+            {% endif %}
+            <label for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
+        </div>
+        {% else %}
+        <p>
+            <label for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+            {% render_field form.name %}
+        </p>
+        <p>
+            <label for="{{ form.strain_url.id_for_label }}">{{ form.strain_url.label }}</label>
+            {% render_field form.strain_url %}
+        </p>
+        <p>
+            <label for="{{ form.seedfinder_url.id_for_label }}">{{ form.seedfinder_url.label }}</label>
+            {% render_field form.seedfinder_url %}
+        </p>
+        <p>
+            <label for="{{ form.description_type_data.id_for_label }}" class="visually-hidden">{{ form.description_type_data.label }}</label>
+            {% render_field form.description_type_data %}
+        </p>
+        <p>
+            <label for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
+            {% render_field form.description %}
+        </p>
+        {% endif %}
+    </div>
+    {% if use_bootstrap %}
+    <div class="text-end form-buttons">
+        <button type="submit" class="btn btn btn-success">{% trans "Save translation"%}</button>
+        <a btn href="{% url 'grow:strain-detail' breeder_slug=strain.breeder.slug slug=strain.slug %}"
+            class="btn btn-secondary">{% translate "Back to strain" %}</a>
+    </div>
+    {% else %}
+    <div class="form-buttons">
+        <button type="submit">{% trans "Save translation"%}</button>
+    </div>
+    {% endif %}
+</form>
+<script>setup();</script>
+
+{% endblock content %}
+
+{% block scripts %}
+<script>
+    function setup() {
+        const langCode = document.getElementById("{{ form.language_code.id_for_label }}");
+        langCode.addEventListener("change", translationLanguageChanged);
+        console.log("Setup complete");
+    }
+
+    function translationLanguageChanged() {
+
+        var langCode = document.getElementById("{{ form.language_code.id_for_label }}");
+        const hxUrl = "{% url 'grow:hx-strain-translation' pk=strain.pk %}?lang_code=" + encodeURIComponent(langCode.value);
+        langCode.setAttribute('hx-get', hxUrl);
+        langCode.setAttribute('hx-target', '#translation-form-fields');
+        langCode.setAttribute('hx-swap', 'innerHTML');
+        langCode.setAttribute('hx-trigger', 'click');
+        htmx.process( langCode );
+        htmx.on(langCode, 'click', translationLanguageChanged);
+        langCode.click();
+        htmx.off(langCode, 'click', translationLanguageChanged);
+    }
+</script>
+{% endblock scripts%}

@@ -1,7 +1,7 @@
 {% extends base_template %}
 {% load static i18n tz %}
 
-{% block title %}{{ grow_site_title }} <span class="fs-2">{{ strain.breeder.name }} - {{ strain.name }}</span>{% endblock %}
+{% block subtitle %}{{ strain.breeder.name }} - {{ strain.name }}{% endblock %}
 {% block head_title %}{{ grow_head_title }}{% endblock %}
 
 {% block content %}
@@ -46,6 +46,17 @@
         <i class="bi bi-pencil-square"></i>
     </a>
     {% endif %}
+    {% if allowed_to_translate %}
+    <a href="{% url 'grow:strain-translate' pk=strain.pk %}"
+        class="link-success
+            link-opacity-75
+            link-opacity-100-hover
+            link-underline-opacity-0"
+        data-bs-toggle="tooltip"
+        data-bs-placement="bottom"
+        data-bs-title="{% translate 'Translate strain' %}"
+    ><i class="bi bi-translate"></i></a>
+    {% endif %}
     {% if allowed_to_delete %}
     <a href="#"
         class="link-danger
@@ -66,6 +77,7 @@
     {% endif %}
 {% else %}
     {% if allowed_to_edit %}<a href="{% url 'grow:strain-update' pk=strain.pk %}">{% translate "Edit strain" %}</a>{% endif %}
+    {% if allowed_to_translate %}<a href="{% url 'grow:strain-translate' pk=strain.pk %}">{% translate "Translate strain" %}</a>{% endif %}
     {% if allowed_to_delete %}<a href="{% url 'grow:strain-delete' pk=strain.pk %}">{% translate "Delete strain" %}</a>{% endif %}
 {% endif %}
 </div>
@@ -133,33 +145,48 @@
     </p>
 
     <p>
-        {% if strain.strain_url %}
-        <a class="{% if strain.seedfinder_url %}me-2{% endif %}" href="{{ strain.strain_url }}">{% translate "Strain Homepage" %}</a>
+        {% if strain_url %}
+        <a  href="{{ strain_url }}">
+            <i class="bi bi-house-door-fill link-image"></i>
+            {% translate "Strain Homepage" %}
+        </a>
+        {% if seedfinder_url %}<br>{% endif %}
         {% endif %}
-        {% if strain.seedfinder_url %}
-        <a href="{{ strain.seedfinder_url }}">{% translate "View on SeedFinder.eu" %}</a>
+        {% if seedfinder_url %}
+        <a href="{{ seedfinder_url }}">
+            <i class="bi bi-bookmark-star link-image"></i>
+            {% translate "View on SeedFinder.eu" %}</a>
         {% endif %}
     </p>
     <p>
-        <a href="#pictures">{% translate "Jump to pictures" %}</a><br>
+        <a href="#pictures" class="{% if use_bootstrap %}link-success{% endif %}">
+            <i class="bi bi-arrow-down-short link-image"></i>
+            {% translate "Jump to pictures" %}
+        </a><br>
         {% if strain.is_regular or strain.is_feminized %}
-        <a href="#seeds-in-stock-table">{% translate "Jump to seeds in stock" %}</a><br>
+        <a href="#seeds-in-stock-table" class="{% if use_bootstrap %}link-success{% endif %}">
+            <i class="bi bi-arrow-down-short link-image"></i>
+            {% translate "Jump to seeds in stock" %}
+        </a><br>
         {% endif %}
-        <a href="#growlogs">{% translate "Jump to growlogs" %}</a>
+        <a href="#growlogs" class="{% if use_bootstrap %}link-success{% endif %}">
+            <i class="bi bi-arrow-down-short link-image"></i>
+            {% translate "Jump to growlogs" %}
+        </a>
     </p>
 </div> {# col-md-7 #}
 </div>
 
-{% if strain.has_description %}
+{% if description_html %}
 <h2>{% translate "Strain description" %}</h2>
-{{ strain.description_html }}
+{{ description_html }}
 {% endif %}
 
 
 <h2 id="pictures">{% translate "Pictures" %}</h2>
 <p>
 <a href="{% url 'grow:strain-image-upload' strain_pk=strain.pk %}"
-    class="{% if use_bootstrap %}btn btn-outline-primary{% else %}mb-3{% endif %}"
+    class="{% if use_bootstrap %}btn btn-outline-success{% else %}mb-3{% endif %}"
 >{% if use_bootstrap%}
     <i class="bi bi-upload me-2 link-image"></i>{% translate "Upload picture" %}
 {% else %}
@@ -196,7 +223,7 @@ You could upload pictures of your grow to show others how this strain looks like
 <div id="seeds-in-stock-div">
 <table class="{% if use_bootstrap %}table{% endif %}" id="seeds-in-stock-table">
     <thead>
-        <tr class="{% if use_bootstrap %}table-secondary{% endif %}">
+        <tr class="{% if use_bootstrap %}table-success{% endif %}">
             <th>{% translate "Seed type"%}</th>
             <th>{% translate "Quantity" %}</th>
             <th>{% translate "Purchased on" %}</th>
@@ -377,5 +404,4 @@ can see how this strain grows and flowers. Others might want to learn from what 
 {% endblocktranslate %}
 </p>
 {% endif %}
-
 {% endblock content %}

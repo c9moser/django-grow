@@ -21,10 +21,12 @@ from .views import (
     StrainView,
     HxBreederDeleteView,
     HxBreederFilterView,
+    HxBreederTranslationView,
     HxStrainDeleteView,
     HxStrainFilterView,
     HxStrainAddToStockView,
     HxStrainRemoveFromStockView,
+    HxStrainTranslationView,
 )
 from .views.utils import HxSelectDateDaysSanitizeView
 
@@ -32,15 +34,20 @@ app_name = "grow"
 
 urlpatterns = [
     path("", IndexView.as_view(), name="home"),
+    # Views for Breeders and Strains details
     path("strains/", BreederIndexView.as_view(), name="breeder-overview"),
     path("strains/<slug:slug>/", BreederView.as_view(), name="breeder-detail"),
     path("strains/<slug:breeder_slug>/<slug:slug>/", StrainView.as_view(), name="strain-detail"),
+
+    # Views for creating, updating, deleting Breeders
     path("breeder/create/", BreederCreateView.as_view(), name="breeder-create"),
     path("breeder/update/<int:pk>/", BreederUpdateView.as_view(), name="breeder-update"),
     path("breeder/delete/<int:pk>/", BreederDeleteView.as_view(), name="breeder-delete"),
     path("breeder/translate/<int:pk>/",
          BreederTranslationView.as_view(),
          name="breeder-translate"),
+
+     # Views for creating, updating, deleting Strains
     path("strain/create/<int:breeder_pk>",
          StrainCreateView.as_view(),
          name="strain-create"),
@@ -59,7 +66,8 @@ urlpatterns = [
     path("strain/remove_from_stock/<int:strain>/<int:feminized>/",
          StrainRemoveFromStockView.as_view(),
          name="strain-remove-from-stock"),
-    # path("strain/image-upload/<int:pk>/", StrainUploadImageView.as_view(), name="strain-image-upload"),
+
+    # HTMX Views
     path("__hx__/sanitize_date_day/<int:year>/<int:month>/",
          HxSelectDateDaysSanitizeView.as_view(),
          name="hx-sanitize-date-day"),
@@ -67,6 +75,9 @@ urlpatterns = [
     path("__hx__/breeder/filter-strains/<int:breeder_pk>/",
          HxStrainFilterView.as_view(),
          name="hx-strain-search"),
+    path("__hx__/breeder/translation/<int:pk>/",
+         HxBreederTranslationView.as_view(),
+         name="hx-breeder-translation"),
     path("__hx__/strain/delete/<int:pk>", HxStrainDeleteView.as_view(), name="hx-strain-delete"),
     path("__hx__/strain/add_to_stock/<int:strain>/<int:feminized>/",
          HxStrainAddToStockView.as_view(),
@@ -75,8 +86,9 @@ urlpatterns = [
          HxStrainRemoveFromStockView.as_view(),
          name="hx-strain-remove-from-stock"),
     path("__hx__/strain/delete/<int:pk>/", HxStrainDeleteView.as_view(), name="hx-strain-delete"),
-    # path("__hx__/strain/image-upload/<int:pk>/", HxStrainImageUploadView.as_view(), name=hx-strain-image-upload),
-
+    path("__hx__/strain/translation/<int:pk>/",
+         HxStrainTranslationView.as_view(),
+         name="hx-strain-translation"),
     path("__hx__/breeder/filter/",
          HxBreederFilterView.as_view(),
          name="hx-breeder-filter"),

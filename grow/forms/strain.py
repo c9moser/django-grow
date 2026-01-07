@@ -131,6 +131,9 @@ class BreederTranslationForm(forms.ModelForm):
         model = BreederTranslation
         fields = [
             'language_code',
+            'name',
+            'breeder_url',
+            'seedfinder_url',
             'description_type_data',
             'description',
         ]
@@ -141,6 +144,9 @@ class StrainTranslationForm(forms.ModelForm):
         model = StrainTranslation
         fields = [
             'language_code',
+            'name',
+            'strain_url',
+            'seedfinder_url',
             'description_type_data',
             'description',
         ]

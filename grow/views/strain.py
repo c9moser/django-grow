@@ -1,8 +1,10 @@
 from datetime import date
-from django.http import HttpRequest, HttpResponse
+import re
+
+from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
-from django.utils.translation import gettext as _, get_language
+from django.utils.translation import get_language
 from django.views.generic.edit import (
     CreateView,
     UpdateView,
@@ -17,10 +19,8 @@ from ._base import BaseView
 
 from ..growapi.models import (
     Breeder,
-    BreederTranslation,
     Strain,
     StrainsInStock,
-    StrainTranslation,
 )
 from .. import settings
 
@@ -82,7 +82,7 @@ class BreederIndexView(BaseView):
                     labels_id.append((breeder.name[0].upper(), id))
                     breeders_id.append((breeder, id, breeder.name[0].upper()))
 
-        group_breeders = (Breeder.objects.all().count() > 30)
+        group_breeders = (len(breeder_ids) > 3)
 
         if settings.USE_BOOTSTRAP:
             label_format = "<a class=\"link-body-emphasis link-opacity-50 link-opacity-100-hover link-underline-opacity-50 link-underline-opacity-75-hover\" href=\"#{id}\">{label}</a>"  # noqa: E501
@@ -204,6 +204,17 @@ class BreederView(BaseView):
 
         allowed_to_translate = request.user.is_authenticated  # TODO: add logic
 
+        if 'language_code' in request.GET:
+            language_code = request.GET['language_code']
+        elif 'lang_code' in request.GET:
+            language_code = request.GET['lang_code']
+        elif 'lang' in request.GET:
+            language_code = request.GET['lang']
+        else:
+            language_code = get_language()
+
+        translation = breeder.get_translation(language_code)
+
         strains = breeder.strains.all().order_by('name')
         return render(request, self.template_name, context={
             'breeder': breeder,
@@ -215,6 +226,16 @@ class BreederView(BaseView):
             'strains_allowed_to_delete': strains_allowed_to_delete,
             'filter_strains_form': StrainFilterForm(),
             'allowed_to_translate': allowed_to_translate,
+            'breeder_translation': translation,
+            'breeder_url': (translation.breeder_url
+                            if translation and translation.breeder_url
+                            else breeder.breeder_url),
+            'seedfinder_url': (translation.seedfinder_url
+                               if translation and translation.seedfinder_url
+                               else breeder.seedfinder_url),
+            'breeder_description_html': (translation.description_html
+                                         if translation and translation.description
+                                         else breeder.description_html),
         })
 
 
@@ -387,6 +408,19 @@ class StrainView(BaseView):
     def get(self, request: HttpRequest, breeder_slug: str, slug: str) -> HttpResponse:
         breeder = get_object_or_404(Breeder, slug=breeder_slug)
         strain = get_object_or_404(breeder.strains, slug=slug)
+
+        language_code = get_language()
+
+        if 'language_code' in request.GET:
+            language_code = request.GET['language_code']
+        elif 'lang_code' in request.GET:
+            language_code = request.GET['lang_code']
+        elif 'lang' in request.GET:
+            language_code = request.GET['lang']
+
+        translation = strain.get_translation(language_code)
+        breeder_translation = breeder.get_translation(language_code)
+
         growlogs = [
             growlog_strain.growlog
             for growlog_strain in strain.growlog_strains.all().order_by(Lower('growlog__name'))
@@ -394,12 +428,14 @@ class StrainView(BaseView):
         ]
         allowed_to_edit = request.user.is_authenticated
         allowed_to_delete = request.user.is_authenticated and strain.growlog_count == 0
+        allowed_to_translate = request.user.is_authenticated  # TODO: add logic
 
         return render(request, self.template_name, context={
             'strain': strain,
             'growlogs': growlogs,
             'allowed_to_delete': allowed_to_delete,
             'allowed_to_edit': allowed_to_edit,
+            'allowed_to_translate': allowed_to_translate,
             'regular_seeds_in_stock': (
                 strain.get_regular_seeds_in_stock(self.request.user)
                 if self.request.user.is_authenticated else 0
@@ -418,6 +454,27 @@ class StrainView(BaseView):
             ),
             'total_seeds_in_stock': strain.get_total_seeds_in_stock(self.request.user),
             'strain_images': strain.images.all().order_by('-uploaded_at')[:3],
+            'strain_translation': translation,
+            'strain_url': (translation.strain_url
+                           if translation and translation.strain_url
+                           else strain.strain_url),
+            'seedfinder_url': (translation.seedfinder_url
+                               if translation and translation.seedfinder_url
+                               else strain.seedfinder_url),
+            'description_html': (translation.description_html
+                                 if translation and translation.description
+                                 else strain.description_html),
+            'strain_name': translation.name if translation and translation.name else strain.name,
+            'breeder_translation': breeder_translation,
+            'breeder_url': (breeder_translation.breeder_url
+                            if breeder_translation and breeder_translation.breeder_url
+                            else breeder.breeder_url),
+            'seedfinder_breeder_url': (breeder_translation.seedfinder_url
+                                       if breeder_translation and breeder_translation.seedfinder_url
+                                       else breeder.seedfinder_url),
+            'breeder_name': (breeder_translation.name
+                             if breeder_translation and breeder_translation.name
+                             else breeder.name),
         })
 
 
@@ -1002,12 +1059,26 @@ class BreederTranslationView(LoginRequiredMixin, View):
         if not lang_code.startswith('en'):
             lang_code = lang_code.split('-')[0]
 
-        existing_translation = BreederTranslation.objects.filter(breeder=breeder,
-                                                                 language_code=lang_code).first()
+        short_lang_code = lang_code.split('-')[0]
+
+        seedfinder_url = breeder.seedfinder_url
+
+        if short_lang_code in ['de', 'fr', 'es', 'en']:
+            if breeder.seedfinder_url:
+                seedfinder_url = re.sub('(/en/|/de/|/fr/|/es/)',
+                                        f'/{short_lang_code}/',
+                                        breeder.seedfinder_url)
+
+        existing_translation = breeder.translations.filter(language_code=lang_code).first()
+
         if existing_translation:
             form = BreederTranslationForm(instance=existing_translation)
         else:
-            form = BreederTranslationForm(initial={'language_code': lang_code})
+            form = BreederTranslationForm(initial={
+                'language_code': lang_code,
+                'name': breeder.name,
+                'breeder_url': breeder.breeder_url,
+                'seedfinder_url': seedfinder_url})
 
         return render(request, self.template_name, context={
             'breeder': breeder,
@@ -1017,10 +1088,11 @@ class BreederTranslationView(LoginRequiredMixin, View):
     def post(self, request: HttpRequest, pk: int) -> HttpResponse:
         breeder = get_object_or_404(Breeder, pk=pk)
 
-        existing_translation = BreederTranslation.objects.filter(
-            breeder=breeder,
-            language_code=request.POST.get('language_code').strip()
-        ).first()
+        language_code = request.POST.get('language_code').strip()
+        if not (re.match(r'^[a-z]{2}(-[a-z]{2})?$', language_code)):
+            raise Http404("Invalid language code format!")
+
+        existing_translation = breeder.translations.filter(language_code=language_code).first()
         if existing_translation:
             form = BreederTranslationForm(request.POST, instance=existing_translation)
         else:
@@ -1029,6 +1101,9 @@ class BreederTranslationView(LoginRequiredMixin, View):
         if form.is_valid():
             translation = form.save(commit=False)
             translation.breeder = breeder
+            translation.name = form.cleaned_data['name']
+            translation.breeder_url = form.cleaned_data['breeder_url']
+            translation.seedfinder_url = form.cleaned_data['seedfinder_url']
             translation.created_by = request.user
             translation.language_code = form.cleaned_data['language_code']
             translation.description = form.cleaned_data['description']
@@ -1048,13 +1123,78 @@ class BreederTranslationView(LoginRequiredMixin, View):
         })
 
 
+class HxBreederTranslationView(LoginRequiredMixin, View):
+    template_name = settings.GROW_TEMPLATES['grow/breeder/hx-translation']
+
+    def get(self, request: HttpRequest, pk: int) -> HttpResponse:
+        breeder = get_object_or_404(Breeder, pk=pk)
+        if 'lang_code' not in request.GET:
+            lang_code = get_language()
+        else:
+            lang_code = request.GET.get('lang_code')
+            if not (re.match(r'^[a-z]{2}(-[a-z]{2})?$', lang_code)):
+                raise Http404("Invalid language code format!")
+
+        if not lang_code.startswith('en'):
+            lang_code = lang_code.split('-')[0]
+
+        existing_translation = breeder.translations.filter(language_code=lang_code).first()
+
+        if existing_translation:
+            form = BreederTranslationForm(instance=existing_translation)
+        else:
+            short_lang_code = lang_code.split('-')[0]
+
+            seedfinder_url = breeder.seedfinder_url
+
+            if short_lang_code in ['de', 'fr', 'es', 'en']:
+                if breeder.seedfinder_url:
+                    seedfinder_url = re.sub('(/en/|/de/|/fr/|/es/)',
+                                            f'/{short_lang_code}/',
+                                            breeder.seedfinder_url)
+
+                form = BreederTranslationForm(initial={
+                    'language_code': lang_code,
+                    'name': breeder.name,
+                    'breeder_url': breeder.breeder_url,
+                    'seedfinder_url': seedfinder_url
+                })
+
+        return render(request, self.template_name, context={
+            'breeder': breeder,
+            'form': form,
+        })
+
+
 class StrainTranslationView(LoginRequiredMixin, View):
     template_name = settings.GROW_TEMPLATES['grow/strain/translation']
 
     def get(self, request: HttpRequest, pk: int) -> HttpResponse:
         strain = get_object_or_404(Strain, pk=pk)
 
-        form = StrainTranslationForm()
+        lang_code = get_language()
+        if not lang_code.startswith('en'):
+            lang_code = lang_code.split('-')[0]
+
+        existing_translation = strain.translations.filter(language_code=lang_code).first()
+
+        short_lang_code = lang_code.split('-')[0]
+        seedfinder_url = strain.breeder.seedfinder_url
+        if short_lang_code in ['de', 'fr', 'es', 'en']:
+            if strain.breeder.seedfinder_url:
+                seedfinder_url = re.sub('(/en/|/de/|/fr/|/es/)',
+                                        f'/{short_lang_code}/',
+                                        strain.seedfinder_url)  # noqa: E501
+
+        if existing_translation:
+            form = StrainTranslationForm(instance=existing_translation)
+        else:
+            form = StrainTranslationForm(initial={
+                'language_code': lang_code,
+                'name': strain.name,
+                'strain_url': strain.strain_url,
+                'seedfinder_url': seedfinder_url,
+            })
 
         return render(request, self.template_name, context={
             'strain': strain,
@@ -1064,7 +1204,16 @@ class StrainTranslationView(LoginRequiredMixin, View):
     def post(self, request: HttpRequest, pk: int) -> HttpResponse:
         strain = get_object_or_404(Strain, pk=pk)
 
-        form = StrainTranslationForm(request.POST)
+        language_code = request.POST.get('language_code').strip()
+        if not (re.match(r'^[a-z]{2}(-[a-z]{2})?$', language_code)):
+            raise Http404("Invalid language code format!")
+
+        existing_translation = strain.translations.filter(language_code=language_code).first()
+
+        if existing_translation:
+            form = StrainTranslationForm(request.POST, instance=existing_translation)
+        else:
+            form = StrainTranslationForm(request.POST)
 
         if form.is_valid():
             translation = form.save(commit=False)
@@ -1080,6 +1229,47 @@ class StrainTranslationView(LoginRequiredMixin, View):
                 'breeder_slug': strain.breeder.slug,
                 'slug': strain.slug,
             }))
+
+        return render(request, self.template_name, context={
+            'strain': strain,
+            'form': form,
+        })
+
+
+class HxStrainTranslationView(LoginRequiredMixin, View):
+    template_name = settings.GROW_TEMPLATES['grow/strain/hx-translation']
+
+    def get(self, request: HttpRequest, pk: int) -> HttpResponse:
+        strain = get_object_or_404(Strain, pk=pk)
+
+        if 'lang_code' not in request.GET:
+            lang_code = get_language()
+        else:
+            lang_code = request.GET.get('lang_code')
+            if not (re.match(r'^[a-z]{2}(-[a-z]{2})?$', lang_code)):
+                raise Http404("Invalid language code format!")
+
+        if not lang_code.startswith('en'):
+            lang_code = lang_code.split('-')[0]
+
+        existing_translation = strain.translations.filter(language_code=lang_code).first()
+
+        short_lang_code = lang_code.split('-')[0]
+        seedfinder_url = strain.breeder.seedfinder_url
+        if short_lang_code in ['de', 'fr', 'es', 'en']:
+            if strain.breeder.seedfinder_url:
+                seedfinder_url = re.sub('(/en/|/de/|/fr/|/es/)', f'/{short_lang_code}/',
+                                        strain.seedfinder_url)
+
+        if existing_translation:
+            form = StrainTranslationForm(instance=existing_translation)
+        else:
+            form = StrainTranslationForm(initial={
+                'language_code': lang_code,
+                'name': strain.name,
+                'strain_url': strain.strain_url,
+                'seedfinder_url': seedfinder_url,
+            })
 
         return render(request, self.template_name, context={
             'strain': strain,

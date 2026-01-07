@@ -64,17 +64,17 @@ def export_data(filename: str | Path | None) -> bool:
                 'uploader_name': (
                     strain_image.uplaoder_name
                     if strain_image.uploader_name
-                    else strain_image.uploaded_by.username if strain_image.uploaded_by else "GROW"
+                    else strain_image.uploader.username if strain_image.uploader else "GROW"
                 )
             }
             si_archname = _strain_image_archname_format.format(
-                breeder_slug=strain.breeder.slug(),
+                breeder_slug=strain.breeder.slug,
                 strain_slug=strain.slug,
                 basename=os.path.basename(strain_image.image.path),
             )
             zf.write(strain_image.image.path, si_archname)
 
-            if not data['images']:
+            if 'images' not in data:
                 data['images'] = [si_data]
             else:
                 data['images'].append(si_data)
@@ -84,6 +84,9 @@ def export_data(filename: str | Path | None) -> bool:
 
         for strain_translation in strain.translations.all():
             data['translations'][strain_translation.language_code] = {
+                'name': strain_translation.name,
+                'seedfinder_url': strain_translation.seedfinder_url,
+                'strain_url': strain_translation.strain_url,
                 'description_type': strain_translation.description_type.value,
                 'description': strain_translation.description,
             }
@@ -153,6 +156,9 @@ def export_data(filename: str | Path | None) -> bool:
 
             for breeder_translation in breeder.translations.all():
                 breeder_data['translations'][breeder_translation.language_code] = {
+                    'name': breeder_translation.name,
+                    'breeder_url': breeder_translation.breeder_url,
+                    'seedfinder_url': breeder_translation.seedfinder_url,
                     'description_type': breeder_translation.description_type.value,
                     'description': breeder_translation.description,
                 }
@@ -238,6 +244,9 @@ def import_data(filename: str | Path, user=None, moderator=None) -> bool:
         for lang_code, translation_data in data.get('translations', {}).items():
             try:
                 breeder_translation = breeder.translations.get(language_code=lang_code)
+                breeder_translation.name = translation_data['name']
+                breeder_translation.breeder_url = translation_data['breeder_url']
+                breeder_translation.seedfinder_url = translation_data['seedfinder_url']
                 breeder_translation.description_type = TextType.from_string(
                     translation_data['description_type']
                 )
@@ -247,6 +256,9 @@ def import_data(filename: str | Path, user=None, moderator=None) -> bool:
                 BreederTranslation.objects.create(
                     breeder=breeder,
                     language_code=lang_code,
+                    name=translation_data['name'],
+                    breeder_url=translation_data['breeder_url'],
+                    seedfinder_url=translation_data['seedfinder_url'],
                     description_type_data=TextType.from_string(
                         translation_data['description_type']
                     ).value,
@@ -330,7 +342,7 @@ def import_data(filename: str | Path, user=None, moderator=None) -> bool:
                 db_image = StrainImage.objects.create(
                     strain=strain,
                     uploader_name=data['uploader_name'],
-                    uploaded_by=get_creator_user(user, data['uploader_name']),
+                    uploader=get_creator_user(user, data['uploader_name']),
                     description=data['description'],
                     description_type_data=TextType.from_string(data['description_type']).value,
                     image=img_file,
@@ -340,6 +352,9 @@ def import_data(filename: str | Path, user=None, moderator=None) -> bool:
         for lang_code, translation_data in data.get('translations', {}).items():
             try:
                 strain_translation = strain.translations.get(language_code=lang_code)
+                strain_translation.name = translation_data['name']
+                strain_translation.seedfinder_url = translation_data['seedfinder_url']
+                strain_translation.strain_url = translation_data['strain_url']
                 strain_translation.description_type = TextType.from_string(
                     translation_data['description_type']
                 )
@@ -349,6 +364,9 @@ def import_data(filename: str | Path, user=None, moderator=None) -> bool:
                 StrainTranslation.objects.create(
                     strain=strain,
                     language_code=lang_code,
+                    name=translation_data['name'],
+                    seedfinder_url=translation_data['seedfinder_url'],
+                    strain_url=translation_data['strain_url'],
                     description_type_data=TextType.from_string(
                         translation_data['description_type']
                     ).value,

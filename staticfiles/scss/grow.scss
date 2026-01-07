@@ -1,0 +1,63 @@
+
+@use "../../node_modules/bootstrap/scss/bootstrap";
+
+.body-container {
+    min-height: calc(100vh - 40px);
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+}
+.header-logo {
+    height: 46px;
+    width: 46px;
+    @extend .img-fluid;
+    @extend .float-start;
+    margin-right: 1rem;
+}
+
+.header-title {
+    @extend .text-white;
+    @extend .h1;
+    font-weight: 500;
+}
+
+.header-subtitle {
+    margin-left: 1rem;
+    opacity: 0.8;
+    @extend .d-inline-block;
+    @extend .text-truncate;
+    @extend .fs-3;
+}
+
+footer {
+    height: 40px;
+    @extend .text-white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    @extend .p-2;
+}
+
+:root {
+    --bs-breadcrumb-divider: '\279C';
+}
+
+/* Light theme adjustments */
+/*
+[data-bs-theme="light"] {
+    --bs-body-bg: #f1e5ae;
+}
+*/
+
+/* Dark theme adjustments */
+/*
+[data-bs-theme="dark"] {
+    --bs-body-bg: #121212;
+    --bs-body-color: #e0e0e0;
+    --bs-link-color: #8ab4f8;
+    --bs-link-hover-color: #a3c9ff;
+}
+*/

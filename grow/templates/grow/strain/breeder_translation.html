@@ -17,10 +17,11 @@
 
     {% if use_bootstrap %}
     <div class="form-floating mb-3">
+        {% url "grow:hx-breeder-translation" pk=breeder.pk  as hx_translation_url %}
         {% if 'language_code' in form.errors %}
-        {% render_field form.language_code class="form-control is-invalid" placeholder=form.language_code.label %}
+        {% render_field form.language_code class="form-control is-invalid" placeholder=form.language_code.label onload="setup();" %}
         {% else %}
-        {% render_field form.language_code class="form-control" placeholder=form.language_code.label %}
+        {% render_field form.language_code class="form-control" placeholder=form.language_code.label onload="setup();" %}
         {% endif %}
         <label for="{{ form.language_code.id_for_label }}">{{ form.language_code.label }}</label>
     </div>
@@ -31,6 +32,30 @@
 
     <div id="translation-form-fields">
         {% if use_bootstrap %}
+        <div class="mb-3 form-floating">
+            {% if 'name' in form.errors %}
+            {% render_field form.name class="form-control is-invalid" placeholder=form.name.label %}
+            {% else %}
+            {% render_field form.name class="form-control" placeholder=form.name.label %}
+            {% endif %}
+            <label for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+        </div>
+        <div class="mb-3 form-floating">
+            {% if 'breeder_url' in form.errors %}
+            {% render_field form.breeder_url class="form-control is-invalid" placeholder=form.breeder_url.label %}
+            {% else %}
+            {% render_field form.breeder_url class="form-control" placeholder=form.breeder_url.label %}
+            {% endif %}
+            <label for="{{ form.breeder_url.id_for_label }}">{{ form.breeder_url.label }}</label>
+        </div>
+        <div class="mb-3 form-floating">
+            {% if 'seedfinder_url' in form.errors %}
+            {% render_field form.seedfinder_url class="form-control is-invalid" placeholder=form.seedfinder_url.label %}
+            {% else %}
+            {% render_field form.seedfinder_url class="form-control" placeholder=form.seedfinder_url.label %}
+            {% endif %}
+            <label for="{{ form.seedfinder_url.id_for_label }}">{{ form.seedfinder_url.label }}</label>
+        </div>
         <div class="input-group mb-3">
             <span class="input-group-text">{{ form.description_type_data.label }}</span>
             <label for="{{ form.description_type_data.id_for_label }}" class="visually-hidden">{{ form.description_type_data.label }}</label>
@@ -49,6 +74,18 @@
             <label for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
         </div>
         {% else %}
+        <p>
+            <label for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+            {% render_field form.name %}
+        </p>
+        <p>
+            <label for="{{ form.breeder_url.id_for_label }}">{{ form.breeder_url.label }}</label>
+            {% render_field form.breeder_url %}
+        </p>
+        <p>
+            <label for="{{ form.seedfinder_url.id_for_label }}">{{ form.seedfinder_url.label }}</label>
+            {% render_field form.seedfinder_url %}
+        </p>
         <p>
             <label for="{{ form.description_type_data.id_for_label }}" class="visually-hidden">{{ form.description_type_data.label }}</label>
             {% render_field form.description_type_data %}
@@ -69,4 +106,32 @@
         <button type="button" onclick="location.href='{% url 'grow:breeder-detail' slug=breeder.slug  %}'">{% translate "Back to breeder" %}</button>
         {% endif %}
     </div>
+    <script>
+        setup();
+    </script>
+</form>
 {% endblock content %}
+
+{% block scripts %}
+<script>
+    function setup() {
+        const langCode = document.getElementById("id_language_code");
+        langCode.addEventListener("change", translationLanguageChanged);
+        console.log("Setup complete");
+    }
+
+    function translationLanguageChanged() {
+
+        var langCode = document.getElementById("{{ form.language_code.id_for_label }}");
+        const hxUrl = "{% url 'grow:hx-breeder-translation' pk=breeder.pk %}?lang_code=" + encodeURIComponent(langCode.value);
+        langCode.setAttribute('hx-get', hxUrl);
+        langCode.setAttribute('hx-target', '#translation-form-fields');
+        langCode.setAttribute('hx-swap', 'innerHTML');
+        langCode.setAttribute('hx-trigger', 'click');
+        htmx.process( langCode );
+        htmx.on(langCode, 'click', translationLanguageChanged);
+        langCode.click();
+        htmx.off(langCode, 'click', translationLanguageChanged);
+    }
+</script>
+{% endblock scripts%}

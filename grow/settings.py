@@ -1,8 +1,8 @@
 from django.conf import settings
 from .growapi.settings import *  # noqa
 
-BASE_TEMPLATE = getattr(settings, "BASE_TEMPLATE", "grow/base.html")
-USE_BOOTSTRAP = getattr(settings, "USE_BOOTSTRAP", False)
+USE_BOOTSTRAP = getattr(settings, "USE_BOOTSTRAP", True)
+BASE_TEMPLATE = getattr(settings, "BASE_TEMPLATE", "grow/bs_base.html") # if USE_BOOTSTRAP else "grow/base.html")
 LOGIN_REQUIRED = getattr(settings, "LOGIN_REQUIRED", False)
 GROW_SITE_TITLE = getattr(settings, "GROW_SITE_TITLE", getattr(settings, "SITE_TITLE", "Grow"))
 GROW_HEAD_TITLE = getattr(settings, "GROW_HEAD_TITLE", getattr(settings, "HEAD_TITLE", GROW_SITE_TITLE))
@@ -14,6 +14,7 @@ GROW_BUILTIN_TEMPLATES = {
     'grow/breeder/translation': 'grow/strain/breeder_translation.html',
     'grow/breeder/hx-delete': 'grow/strain/hx_breeder_delete.html',
     'grow/breeder/hx-breeder-filter': 'grow/strain/hx_breeder_filter.html',
+    'grow/breeder/hx-translation': 'grow/strain/hx_breeder_translation.html',
     'grow/breeder/update': 'grow/strain/breeder_update.html',
     'grow/index': 'grow/index/index.html',
     'grow/strain': 'grow/strain/index.html',
@@ -27,6 +28,7 @@ GROW_BUILTIN_TEMPLATES = {
     'grow/strain/hx-remove_from_stock': 'grow/strain/hx_strain_remove_from_stock.html',
     'grow/strain/hx-remove_from_stock_invalid': 'grow/strain/hx_strain_remove_from_stock_invalid.html',
     'grow/strain/hx-strain_in_stock_update': 'grow/strain/hx_strain_in_stock_update.html',
+    'grow/strain/hx-translation': 'grow/strain/hx_strain_translation.html',
     'grow/strain/hx-search': 'grow/strain/hx_strain_search.html',
     'grow/strain/image_upload': 'grow/strain/strain_image_upload.html',
     'grow/strain/index': 'grow/strain/index.html',
@@ -46,5 +48,6 @@ else:
     for _id, _template_name in GROW_BUILTIN_TEMPLATES.items():
         GROW_TEMPLATES.setdefault(_id, _template_name)
     del _id, _template_name
+
 
 SITE_TITLE = getattr(settings, "SITE_TITLE", "Grow")
