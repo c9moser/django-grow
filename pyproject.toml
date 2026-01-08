@@ -36,3 +36,12 @@ dev = [
 postgresql = [
     "psycopg2 (>=2.9.11,<3.0.0)"
 ]
+postgres = [
+    "psycopg2 (>=2.9.11,<3.0.0)"
+]
+mysql = [
+    "mysqlclient (>=2.2.7,<3.0.0)"
+]
+firebird = [
+    "django-firebird (>=2.2.2,<3.0.0)"
+]

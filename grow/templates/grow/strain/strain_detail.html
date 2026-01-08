@@ -172,6 +172,10 @@
         <a href="#growlogs" class="{% if use_bootstrap %}link-success{% endif %}">
             <i class="bi bi-arrow-down-short link-image"></i>
             {% translate "Jump to growlogs" %}
+        </a><br>
+        <a href="#comments" class="{% if use_bootstrap %}link-success{% endif %}">
+            <i class="bi bi-arrow-down-short link-image"></i>
+            {% translate "Jump to comments" %}
         </a>
     </p>
 </div> {# col-md-7 #}
@@ -404,4 +408,76 @@ can see how this strain grows and flowers. Others might want to learn from what 
 {% endblocktranslate %}
 </p>
 {% endif %}
+<h2 id="comments">{% translate "Comments" %}</h2>
+{% if use_bootstrap %}
+    <a href="#" class="btn btn-outline-success mb-3">
+        <i class="bi bi-plus-circle me-2 link-image"></i>{% translate "Add comment" %}
+    </a>
+    <a href="#" class="btn btn-outline-success mb-3 ms-2">
+        <i class="bi bi-journal-text me-2 link-image"></i>
+        {% translate "View all comments" %}
+    </a>
+{% else %}
+    <button onclick="location.href='#';" class="mb-3">
+        {% translate "Add comment" %}
+    </button>
+{% endif %}
+
+<div id="user-comments-div">
+    {% for comment in comments %}
+    <div class="card w-100 mb-3">
+        <div class="card-header">
+            <span class="fw-bold">{{ comment.user.username }}</span>
+            &nbsp;|&nbsp;
+            <span class="text-muted">
+                {{ comment.created_at|date:"SHORT_DATETIME_FORMAT" }}
+            </span>
+            <div class="text-end">
+        {% if request.user.pk == comment.user.pk %}
+            {% if use_bootstrap %}
+                <a href="#{#{% url 'grow:strain-comment-update' pk=comment.pk %}#}"
+                    class="link-primary
+                        link-opacity-75
+                        link-opacity-100-hover
+                        link-underline-opacity-0"
+                >
+                    <i class="bi bi-pencil-square"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="bottom"
+                        data-bs-title="{% translate 'Edit comment' %}"></i>
+                </a>
+                <a href="#"
+                    class="link-danger
+                        link-opacity-75
+                        link-opacity-100-hover
+                        link-underline-opacity-0"
+                    hx-get="{#{% url 'grow:hx-strain-comment-delete' pk=comment.pk %}#}"
+                    hx-swap="innerHTML"
+                    hx-target="#modals-here"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modals-here"
+                >
+                    <i class="bi bi-x-square"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="bottom"
+                        data-bs-title="{% translate 'Delete comment' %}"></i>
+                </a>
+
+            {% else %}
+                <a href="#{#{% url 'grow:strain-comment-update' pk=comment.pk %}#}">{% translate "Edit comment" %}</a>
+                <a href="#{#{% url 'grow:strain-comment-delete' pk=comment.pk %}#}">{% translate "Delete comment" %}</a>
+            {% endif %} {# use_bootstrap #}
+        {% endif %} {# request.user.pk == comment.user.pk #}
+            </div>
+        </div>
+        <div class="card-body">
+            <p class="card-text">{{ comment.text_html }}</p>
+        </div>
+    </div>
+    {% empty %}
+    <p>
+    {% translate "There are currently no comments for this strain. Be the first to add one!" %}
+    </p>
+    {% endfor %}
+</div>
 {% endblock content %}

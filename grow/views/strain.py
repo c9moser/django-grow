@@ -1,10 +1,11 @@
 from datetime import date
 import re
 
+from django.conf import settings as django_settings
 from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
-from django.utils.translation import get_language
+from django.utils.translation import get_language, activate
 from django.views.generic.edit import (
     CreateView,
     UpdateView,
@@ -183,6 +184,34 @@ class BreederView(BaseView):
 
     def get(self, request: HttpRequest, slug: str) -> HttpResponse:
         breeder = get_object_or_404(Breeder, slug=slug)
+
+        language_code = get_language()
+
+        if 'language_code' in request.GET:
+            language_code = request.GET['language_code']
+        elif 'lang_code' in request.GET:
+            language_code = request.GET['lang_code']
+        elif 'lang' in request.GET:
+            language_code = request.GET['lang']
+
+        if language_code == 'en':
+            language_code = 'en-us'
+
+        translation = breeder.get_translation(language_code)
+
+        supported_languages = [
+            i[0] for i in getattr(
+                django_settings,
+                'LANGUAGES',
+                [
+                    ('en-us',),
+                    ('de',)
+                ])
+        ]
+
+        if language_code not in supported_languages:
+            activate(language_code)
+
         allowed_to_edit = request.user.is_authenticated  # TODO: add logic
         allowed_to_delete = request.user.is_authenticated  # TODO: allowed_to_delete
         allowed_to_add_strains = request.user.is_authenticated  # TODO: add logic
@@ -418,8 +447,25 @@ class StrainView(BaseView):
         elif 'lang' in request.GET:
             language_code = request.GET['lang']
 
+        if language_code == 'en':
+            language_code = 'en-us'
+
+        supported_languages = [
+            i[0] for i in getattr(
+                django_settings,
+                'LANGUAGES',
+                [
+                    ('en-us',),
+                    ('de',)
+                ])
+        ]
+
+        if language_code not in supported_languages:
+            activate(language_code)
+
         translation = strain.get_translation(language_code)
         breeder_translation = breeder.get_translation(language_code)
+        comments = strain.comments.filter(language_code=language_code).order_by('-created_at')[:10]
 
         growlogs = [
             growlog_strain.growlog
@@ -475,6 +521,7 @@ class StrainView(BaseView):
             'breeder_name': (breeder_translation.name
                              if breeder_translation and breeder_translation.name
                              else breeder.name),
+            'comments': comments,
         })
 
 
@@ -505,8 +552,6 @@ class StrainCreateView(LoginRequiredMixin, View):
                 'breeder_slug': breeder.slug,
                 'slug': strain.slug,
             }))
-
-        form.fields['name'] = strain.name
 
         return render(request, self.template_name, context={
             'breeder': breeder,

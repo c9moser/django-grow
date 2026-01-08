@@ -1331,7 +1331,7 @@ class StrainUserComment(models.Model):
     strain = models.ForeignKey(
         Strain,
         on_delete=models.CASCADE,
-        related_name="user_comments",
+        related_name="comments",
         verbose_name=_("strain")
     )
 
@@ -1356,7 +1356,25 @@ class StrainUserComment(models.Model):
     #: The comment text
     #: type: str
     comment = models.TextField(
-        _("comment"))
+        _("comment")
+    )
+
+    @property
+    def comment_html(self) -> SafeString | str:
+        """
+        Renders the comment to HTML based on its type.
+
+        :return: The HTML rendered comment.
+        :rtype: SafeString | str
+        """
+        if self.comment_type == TextType.BBCODE:
+            return render_description_bbcode(self.comment)
+        elif self.comment_type == TextType.MARKDOWN:
+            return render_description_markdown(self.comment)
+        elif self.comment_type == TextType.PLAIN:
+            return render_plaintext(self.comment)
+        else:
+            return self.comment
 
     #: The type of the comment text
     #: type: str

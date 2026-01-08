@@ -19,7 +19,7 @@ _strain_logo_archname_format = "breeder/strains/{breeder_slug}/{strain_slug}/log
 _strain_image_archname_format = "breeder/strains/{breeder_slug}/{strain_slug}/images/{basename}"
 
 
-def export_data(filename: str | Path | None) -> bool:
+def export_data(filename: str | Path | None, include_images: bool = False) -> bool:
     def export_strain(zfile: zipfile.ZipFile, strain: Strain) -> str:
         data = {
             'name': strain.name,
@@ -53,31 +53,33 @@ def export_data(filename: str | Path | None) -> bool:
             zf.write(strain.logo_image.path, logo_arch_name)
             data['logo_image'] = os.path.basename(strain.logo_image)
 
-        for strain_image in strain.images.all():
-            if not os.path.exists(strain_image.image.path):
-                continue
+        if include_images:
+            for strain_image in strain.images.all():
+                if not os.path.exists(strain_image.image.path):
+                    continue
 
-            si_data = {
-                'description_type': strain_image.description_type.value,
-                'description': strain_image.description,
-                'image': os.path.basename(strain_image.image.path),
-                'uploader_name': (
-                    strain_image.uplaoder_name
-                    if strain_image.uploader_name
-                    else strain_image.uploader.username if strain_image.uploader else "GROW"
+                si_data = {
+                    'description_type': strain_image.description_type.value,
+                    'description': strain_image.description,
+                    'image': os.path.basename(strain_image.image.path),
+                    'caption': strain_image.caption,
+                    'uploader_name': (
+                        strain_image.uploader_name
+                        if strain_image.uploader_name
+                        else strain_image.uploader.username if strain_image.uploader else "GROW"
+                    )
+                }
+                si_archname = _strain_image_archname_format.format(
+                    breeder_slug=strain.breeder.slug,
+                    strain_slug=strain.slug,
+                    basename=os.path.basename(strain_image.image.path),
                 )
-            }
-            si_archname = _strain_image_archname_format.format(
-                breeder_slug=strain.breeder.slug,
-                strain_slug=strain.slug,
-                basename=os.path.basename(strain_image.image.path),
-            )
-            zf.write(strain_image.image.path, si_archname)
+                zf.write(strain_image.image.path, si_archname)
 
-            if 'images' not in data:
-                data['images'] = [si_data]
-            else:
-                data['images'].append(si_data)
+                if 'images' not in data:
+                    data['images'] = [si_data]
+                else:
+                    data['images'].append(si_data)
 
         if 'translations' not in data:
             data['translations'] = {}

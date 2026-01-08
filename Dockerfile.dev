@@ -7,9 +7,11 @@ ENV GROW_STATIC_ROOT=/data/static
 
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    libpq-dev \
-    gettext \
+	build-essential \
+	libpq-dev \
+	gettext \
+	gettext-dev \
+	git \
     && pip install --upgrade pip setuptools wheel \
     && rm -rf /var/lib/apt/lists/* \
     && mkdir -p /app /data/static /data/media /data/run
@@ -24,4 +26,9 @@ RUN pip install -r /app/requirements/dev.txt
 
 COPY . /app/
 
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+RUN chmod +x /app/runserver.sh
+
+ENTRYPOINT ["/app/runserver.sh"]
+
+CMD ["runserver", "0.0.0.0:8000"]
+

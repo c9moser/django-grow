@@ -12,12 +12,10 @@
     </div>
 
     {% if 'name' in form.errors %}
-    <div class="bg-danger text-white p-3">
-        <ul>
+    <div>
         {% for error in form.errors.name %}
-            <li>{{ error }}</li>
+            <div class="alert alert-danger mb-3">{{ error }}</div>
         {% endfor %}
-        </ul>
     </div>
     {% endif %}
     <div class="form-floating mb-3">
@@ -30,12 +28,10 @@
     </div>
 
     {% if 'slug' in form.errors %}
-    <div class="bg-danger text-white p-3">
-        <ul>
+    <div>
         {% for error in form.errors.slug %}
-            <li>{{ error }}</li>
+            <div class="alert alert-danger">{{ error }}</div>
         {% endfor %}
-        </ul>
     </div>
     {% endif %}
     <div class="form-floating mb-3">
@@ -50,6 +46,13 @@
 
     </div>
 
+    {% if 'genotype_data' in form.errors %}
+    <div>
+        {% for error in form.errors.genotype_data %}
+            <div class="alert alert-danger mb-3">{{ error }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
     <div class="input-group input-group-lg mb-3">
         <label id="{{ form.genotype_data.id_for_label }}" class="input-group-text">{% translate "Genotype" %}</label>
         {% if 'genotype_data' in form.errors %}
@@ -95,12 +98,10 @@
     </div>
 
     {% if 'flowering_time_days' in form.errors %}
-    <div class="bg-danger text-white p-3">
-        <ul>
+    <div>
         {% for error in form.errors.flowering_time_days %}
-            <li>{{ error }}</li>
+            <div class="alert alert-danger mb-3">{{ error }}</div>
         {% endfor %}
-        </ul>
     </div>
     {% endif %}
     <div class="input-group mb-3" id='flowering_time_div'>
@@ -117,6 +118,13 @@
         {{ form.flowering_time_unit }}
     </div>
 
+    {% if 'logo_url' in form.errors %}
+    <div>
+        {% for error in form.errors.logo_url %}
+            <div class="alert alert-danger mb-3">{{ error }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
     <div class="form-floating mb-3">
         {% if 'logo_url' in form.errors %}
         {% render_field form.logo_url class="form-control is-invalid" placeholder=form.logo_url.label %}
@@ -135,6 +143,13 @@
         <label for="{{ form.logo_image.id_for_label }}">{{ form.logo_image.label }}</label>
     </div>
 
+    {% if 'strain_url' in form.errors %}
+    <div>
+        {% for error in form.errors.strain_url %}
+            <div class="alert alert-danger mb-3">{{ error }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
     <div class="form-floating mb-3">
         {% if 'strain_url' in form.errors %}
         {% render_field form.strain_url class="form-control is-invalid" placeholder=form.strain_url.label %}
@@ -144,6 +159,13 @@
         <label for="{{ form.strain_url.id_for_label }}">{{ form.strain_url.label }}</label>
     </div>
 
+    {% if 'seedfinder_url' in form.errors %}
+    <div>
+        {% for error in form.errors.seedfinder_url %}
+            <div class="alert alert-danger mb-3">{{ error }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
     <div class="form-floating mb-3">
         {% if 'seedfinder_url' in form.errors %}
         {% render_field form.seedfinder_url class="form-control is-invalid" placeholder=form.seedfinder_url.label %}
@@ -153,6 +175,13 @@
         <label for="{{ form.seedfinder_url.id_for_label }}">{{ form.seedfinder_url.label }}</label>
     </div>
 
+    {% if 'description_type_data' in form.errors %}
+    <div>
+        {% for error in form.errors.description_type_data %}
+            <div class="alert alert-danger mb-3">{{ error }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
     <div class="input-group input-group-lg mb-3">
         <label for="{{ form.description_type_data.id_for_label }}" class="input-group-text">
             {{ form.description_type_data.label }}
@@ -160,6 +189,13 @@
         {% render_field form.description_type_data class="form-control" %}
     </div>
 
+    {% if 'description' in form.errors %}
+    <div>
+        {% for error in form.errors.description %}
+            <div class="alert alert-danger mb-3">{{ error }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
     <div class="form-floating mb-3">
         {% if 'description' in form.errors %}
         {% render_field form.description class="form-control is-invalid" style="height:20rem;" %}
