@@ -1356,6 +1356,7 @@ class StrainCommentCreateView(LoginRequiredMixin, View):
             'form': form
         })
 
+
 class StrainCommentUpdateView(LoginRequiredMixin, View):
     template_name = settings.GROW_TEMPLATES['grow/strain/comment_update']
 
@@ -1369,8 +1370,6 @@ class StrainCommentUpdateView(LoginRequiredMixin, View):
             'strain': comment.strain,
             'form': StrainCommentForm(instance=comment),
         })
-
-
 
     def post(self, request: HttpRequest, comment_pk: int) -> HttpResponse:
         comment = get_object_or_404(StrainUserComment, pk=comment_pk)

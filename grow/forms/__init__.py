@@ -23,4 +23,5 @@ __all__ = [
     'StrainRemoveFromStockForm',
     'StrainSearchForm',
     'StrainTranslationForm',
+    'StrainCommentForm'
 ]

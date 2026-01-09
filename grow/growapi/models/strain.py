@@ -24,6 +24,7 @@ from ..parser.bbcode import render_description_bbcode
 from ..parser.markdown import render_description_markdown
 from ..parser.plaintext import render_plaintext
 
+
 def get_language_code_choices():
     if hasattr(django_settings, 'LANGUAGES'):
         return [lang for lang in django_settings.LANGUAGES]
