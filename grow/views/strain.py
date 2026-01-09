@@ -1371,6 +1371,7 @@ class StrainCommentUpdateView(LoginRequiredMixin, View):
         })
 
 
+
     def post(self, request: HttpRequest, comment_pk: int) -> HttpResponse:
         comment = get_object_or_404(StrainUserComment, pk=comment_pk)
         form = StrainCommentForm(request.POST, instance=comment)
