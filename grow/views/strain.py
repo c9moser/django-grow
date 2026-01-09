@@ -1142,7 +1142,9 @@ class BreederTranslationView(LoginRequiredMixin, View):
             translation.name = form.cleaned_data['name']
             translation.breeder_url = form.cleaned_data['breeder_url']
             translation.seedfinder_url = form.cleaned_data['seedfinder_url']
-            translation.created_by = request.user
+            if not existing_translation:
+                translation.user = request.user
+            translation.edited_by = request.user
             translation.language_code = form.cleaned_data['language_code']
             translation.description = form.cleaned_data['description']
             translation.description_type_data = form.cleaned_data['description_type_data']
@@ -1256,7 +1258,9 @@ class StrainTranslationView(LoginRequiredMixin, View):
         if form.is_valid():
             translation = form.save(commit=False)
             translation.strain = strain
-            translation.created_by = request.user
+            if not existing_translation:
+                translation.user = request.user
+            translation.edited_by = request.user
             translation.language_code = form.cleaned_data['language_code']
             translation.name = form.cleaned_data['name']
             translation.description = form.cleaned_data['description']
