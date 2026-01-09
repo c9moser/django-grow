@@ -11,6 +11,8 @@ from .views import (
     BreederUpdateView,
     BreederTranslationView,
     StrainAddToStockView,
+    StrainCommentCreateView,
+    StrainCommentUpdateView,
     StrainCreateView,
     StrainDeleteView,
     StrainImageUploadView,
@@ -66,6 +68,12 @@ urlpatterns = [
     path("strain/remove_from_stock/<int:strain>/<int:feminized>/",
          StrainRemoveFromStockView.as_view(),
          name="strain-remove-from-stock"),
+     path("strain/add_comment/<int:strain_pk>/",
+         StrainCommentCreateView.as_view(),
+         name="strain-comment-add"),
+     path("strain/update_comment/<int:pk>/",
+         StrainCommentUpdateView.as_view(),
+         name="strain-comment-update"),
 
     # HTMX Views
     path("__hx__/sanitize_date_day/<int:year>/<int:month>/",

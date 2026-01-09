@@ -200,8 +200,6 @@ class BreederView(BaseView):
         if language_code == 'en':
             language_code = 'en-us'
 
-        translation = breeder.get_translation(language_code)
-
         supported_languages = [
             i[0] for i in getattr(
                 django_settings,
@@ -212,8 +210,10 @@ class BreederView(BaseView):
                 ])
         ]
 
-        if language_code not in supported_languages:
+        if language_code in supported_languages:
             activate(language_code)
+
+        translation = breeder.get_translation(language_code)
 
         allowed_to_edit = request.user.is_authenticated  # TODO: add logic
         allowed_to_delete = request.user.is_authenticated  # TODO: allowed_to_delete
@@ -235,18 +235,6 @@ class BreederView(BaseView):
             strains_allowed_to_delete = []
 
         allowed_to_translate = request.user.is_authenticated  # TODO: add logic
-
-        if 'language_code' in request.GET:
-            language_code = request.GET['language_code']
-        elif 'lang_code' in request.GET:
-            language_code = request.GET['lang_code']
-        elif 'lang' in request.GET:
-            language_code = request.GET['lang']
-        else:
-            language_code = get_language()
-
-        translation = breeder.get_translation(language_code)
-
         strains = breeder.strains.all().order_by('name')
         return render(request, self.template_name, context={
             'breeder': breeder,
@@ -268,6 +256,7 @@ class BreederView(BaseView):
             'breeder_description_html': (translation.description_html
                                          if translation and translation.description
                                          else breeder.description_html),
+            'translation': translation,
         })
 
 
@@ -525,6 +514,7 @@ class StrainView(BaseView):
                              if breeder_translation and breeder_translation.name
                              else breeder.name),
             'comments': comments,
+            'translation': translation,
         })
 
 

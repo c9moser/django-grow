@@ -95,7 +95,24 @@
 {% endif %}
     </div>
     <div class="col-md-8 mb-3">
-
+        {% if breeder.created_by %}
+        <div class="alert alert-info" role="alert">
+        {% blocktranslate with username=breeder.created_by.username date=breeder.created_at|date:"SHORT_DATE_FORMAT" %}Added by {{ username }} on {{ date }}.{% endblocktranslate %}
+        </div>
+        {% elif breeder.creator_name %}
+        <div class="alert alert-info" role="alert">
+        {% blocktranslate with username=breeder.creator_name date=breeder.added_at|date:"SHORT_DATE_FORMAT" %}Added by {{ username }} on {{ date }}.{% endblocktranslate %}
+        </div>
+        {% else %}
+        <div class="alert alert-info" role="alert">
+        {% blocktranslate with date=breeder.added_at|date:"SHORT_DATE_FORMAT" %}Added on {{ date }}.{% endblocktranslate %}
+        </div>
+        {% endif %}
+        {% if translation and translation.user %}
+        <div class="alert alert-info" role="alert">
+        {% blocktranslate with username=translation.user.username date=translation.updated_at|date:"SHORT_DATE_FORMAT" %}Translated by {{ username }} on {{ date }}.{% endblocktranslate %}
+        </div>
+        {% endif %}
     <p>
 {% blocktranslate with name=breeder.name count n_strains=breeder.strains.count %}
 There is one strain in the database for the breeder <i>{{ name }}</i>.
@@ -174,6 +191,7 @@ A total of {{ n }} growlogs have been created for the strains of <i>{{ name }}</
         <tr class="{% if use_bootstrap %}table-success{% endif %}">
             <th>{% translate "Strain" %}</th>
             <th>{% translate "Genotype" %}</th>
+            <th>RFA</th>
             <th>{% translate "Flowering time" %}</th>
             <th>{% translate "Growlogs" %}</th>
             <th>
@@ -218,6 +236,9 @@ A total of {{ n }} growlogs have been created for the strains of <i>{{ name }}</
                 </a>
             </td>
             <td>{{ strain.genotype.name }}</td>
+            <td>
+                {% if strain.is_regular %}R{% endif %}{% if strain.is_feminized %}F{% endif %}{% if strain.is_automatic %}A{% endif %}
+            </td>
             <td>
                 {% if strain.flowering_time_days %}
                 {% blocktranslate with days=strain.flowering_time_days count n=strain.flowering_time_days%}{{ days }} day{% plural %}{{ days }} days{% endblocktranslate %}

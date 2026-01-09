@@ -316,6 +316,21 @@ class Breeder(models.Model):
     )
 
     @property
+    def created_at(self) -> date:
+        """
+        The date when the breeder was created.
+
+        :return: The creation date.
+        :rtype: date
+        """
+        return self.added_at
+
+    updated_at = models.DateTimeField(
+        _("updated at"),
+        auto_now=True
+    )
+
+    @property
     def description_type(self) -> TextType:
         """
         The type of the description text.
@@ -545,6 +560,31 @@ class BreederTranslation(models.Model):
             return render_plaintext(self.description)
         else:
             return self.description
+
+    user = models.ForeignKey(
+        django_settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        verbose_name=_("translator"),
+    )
+
+    created_at = models.DateTimeField(
+        _("created at"),
+        auto_now_add=True
+    )
+
+    updated_at = models.DateTimeField(
+        _("updated at"),
+        auto_now=True
+    )
+
+    uodated_by = models.ForeignKey(
+        django_settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='updated_breeder_translations',
+        verbose_name=_("updated by"),
+    )
 
     class Meta:
         db_table = "grow_breeder_translation"
@@ -877,15 +917,16 @@ class Strain(models.Model):
         return StrainType.from_string(self.genotype_data)
 
     @genotype.setter
-    def genotype(self, genetics: StrainType | str):
+    def genotype(self, genotype: StrainType | str):
         """
         Set the genotype of the strain.
 
         :param genetics: The genotype to set.
         :type genetics: StrainType | str
         """
-        if not isinstance(genetics, StrainType):
-            genotype = StrainType.from_string(genetics)
+        if not isinstance(genotype, StrainType):
+            genotype = StrainType.from_string(genotype)
+
         self.genotype_data = genotype.value
 
     @property
@@ -1314,6 +1355,31 @@ class StrainTranslation(models.Model):
                 return self.description
         return ""
 
+    user = models.ForeignKey(
+        django_settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        verbose_name=_("translator"),
+    )
+
+    created_at = models.DateTimeField(
+        _("created at"),
+        auto_now_add=True
+    )
+
+    updated_at = models.DateTimeField(
+        _("updated at"),
+        auto_now=True,
+    )
+
+    updated_by = models.ForeignKey(
+        django_settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="updated_strain_translations",
+        verbose_name=_("updated by"),
+    )
+
     class Meta:
         db_table = "grow_strain_translation"
         unique_together = [
@@ -1340,8 +1406,10 @@ class StrainUserComment(models.Model):
     #:
     #: type: str
     language_code = models.CharField(
-
-
+        _("language"),
+        max_length=16,
+        choices=get_language_code_choices(),
+        default=get_language(),
     )
 
     #: The user who made the comment

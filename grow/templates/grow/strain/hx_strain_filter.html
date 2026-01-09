@@ -6,6 +6,7 @@
         <tr>
             <th>{% translate "Strain" %}</th>
             <th>{% translate "Genotype" %}</th>
+            <th>RFA</th>
             <th>{% translate "Flowering time" %}</th>
             <th>{% translate "Growlogs" %}</th>
             <th>
@@ -49,6 +50,9 @@
                 >{{ strain.locale_name }}</a>
             </td>
             <td>{{ strain.genotype.name }}</td>
+            <td>
+                {% if strain.is_regular %}R{% endif %}{% if strain.is_feminized %}F{% endif %}{% if strain.is_auto_flowering %}A{% endif %}
+            </td>
             <td>
                 {% if strain.flowering_time_days %}
                 {% blocktranslate with days=strain.flowering_time_days count n=strain.flowering_time_days%}{{ days }} day{% plural %}{{ days }} days{% endblocktranslate %}

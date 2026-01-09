@@ -162,6 +162,7 @@ class StrainCommentForm(forms.ModelForm):
     class Meta:
         model = StrainUserComment
         fields = [
+            "language_code",
             "comment_type_data",
             "comment",
         ]

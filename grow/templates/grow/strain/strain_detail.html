@@ -99,6 +99,43 @@
 {% endif %}
     </div>
     <div class="col-md-7 mb-3">
+
+    <div class="alert alert-info p-2 mb-3" role="alert">
+    {% if strain.created_by %}
+        {% blocktranslate with username=strain.created_by.username date=strain.added_at|date:"SHORT_DATE_FORMAT" %}
+        Strain added by {{ username }} on {{ date }}.
+        {% endblocktranslate %}
+    {% elif strain.creator_name %}
+        {% blocktranslate with username=strain.creator_name date=strain.added_at|date:"SHORT_DATE_FORMAT" %}
+        Strain added by {{ username }} on {{ date }}.
+        {% endblocktranslate %}
+    {% else %}
+        {% blocktranslate with date=strain.created_at|date:"SHORT_DATE_FORMAT" %}
+        Strain added on {{ date }}.
+        {% endblocktranslate %}
+    {% endif %}
+    </div>
+    {% if translation %}
+    {% if translation.user %}
+    <div class="alert alert-info p-2 mb-3" role="alert">
+        {% blocktranslate with username=translation.user.username date=translation.created_at|date:"SHORT_DATE_FORMAT" %}
+        This is a translation added by {{ username }} on {{ date }}.
+        {% endblocktranslate %}
+    </div>
+    {% elif translation.translator_name %}
+    <div class="alert alert-info p-2 mb-3" role="alert">
+        {% blocktranslate with username=translation.translator_name date=translation.created_at|date:"SHORT_DATE_FORMAT" %}
+        This is a translation added by {{ username }} on {{ date }}.
+        {% endblocktranslate %}
+    </div>
+    {% else %}
+    <div class="alert alert-info p-2 mb-3" role="alert">
+        {% blocktranslate with date=translation.created_at|date:"SHORT_DATE_FORMAT" %}
+        This is a translation added on {{ date }}.
+        {% endblocktranslate %}
+    </div>
+    {% endif %}
+    {% endif %}
     <p>
         <ul>
             <li>
@@ -410,7 +447,7 @@ can see how this strain grows and flowers. Others might want to learn from what 
 {% endif %}
 <h2 id="comments">{% translate "Comments" %}</h2>
 {% if use_bootstrap %}
-    <a href="#" class="btn btn-outline-success mb-3">
+    <a href="{% url 'grow:strain-comment-add' strain_pk=strain.pk %}" class="btn btn-outline-success mb-3">
         <i class="bi bi-plus-circle me-2 link-image"></i>{% translate "Add comment" %}
     </a>
     <a href="#" class="btn btn-outline-success mb-3 ms-2">
@@ -418,7 +455,7 @@ can see how this strain grows and flowers. Others might want to learn from what 
         {% translate "View all comments" %}
     </a>
 {% else %}
-    <button onclick="location.href='#';" class="mb-3">
+    <button onclick="location.href='{% url 'grow:strain-comment-add' strain_pk=strain.pk %}';" class="mb-3">
         {% translate "Add comment" %}
     </button>
 {% endif %}
@@ -435,7 +472,7 @@ can see how this strain grows and flowers. Others might want to learn from what 
             <div class="text-end">
         {% if request.user.pk == comment.user.pk %}
             {% if use_bootstrap %}
-                <a href="#{#{% url 'grow:strain-comment-update' pk=comment.pk %}#}"
+                <a href="{% url 'grow:strain-comment-update' pk=comment.pk %}#}"
                     class="link-primary
                         link-opacity-75
                         link-opacity-100-hover
@@ -464,7 +501,7 @@ can see how this strain grows and flowers. Others might want to learn from what 
                 </a>
 
             {% else %}
-                <a href="#{#{% url 'grow:strain-comment-update' pk=comment.pk %}#}">{% translate "Edit comment" %}</a>
+                <a href="{% url 'grow:strain-comment-update' pk=comment.pk %}">{% translate "Edit comment" %}</a>
                 <a href="#{#{% url 'grow:strain-comment-delete' pk=comment.pk %}#}">{% translate "Delete comment" %}</a>
             {% endif %} {# use_bootstrap #}
         {% endif %} {# request.user.pk == comment.user.pk #}
