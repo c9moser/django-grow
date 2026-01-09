@@ -16,6 +16,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from django.views.generic import FormView
 
+from grow.growapi.models.strain import StrainUserComment
+
 from ._base import BaseView
 
 from ..growapi.models import (
@@ -36,6 +38,7 @@ from ..forms import (
     StrainSearchForm,
     StrainFilterForm,
     StrainTranslationForm,
+    StrainCommentForm,
 )
 
 from ..growapi.permission import growlog_user_is_allowed_to_view
@@ -1319,4 +1322,71 @@ class HxStrainTranslationView(LoginRequiredMixin, View):
         return render(request, self.template_name, context={
             'strain': strain,
             'form': form,
+        })
+
+
+class StrainCommentCreateView(LoginRequiredMixin, View):
+    template_name = settings.GROW_TEMPLATES['grow/strain/comment_create']
+
+    def get(self, request: HttpRequest, strain_pk: int) -> HttpResponse:
+        strain = get_object_or_404(Strain, pk=strain_pk)
+
+        return render(request, self.template_name, context={
+            'strain': strain,
+            'form': StrainCommentForm(),
+        })
+
+    def post(self, request: HttpRequest, strain_pk: int) -> HttpResponse:
+        strain = get_object_or_404(Strain, pk=strain_pk)
+        form = StrainCommentForm(request.POST)
+
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.strain = strain
+            comment.user = request.user
+            comment.save()
+
+            return redirect(reverse("grow:strain-detail", kwargs={
+                'breeder_slug': strain.breeder.slug,
+                'slug': strain.slug,
+            }))
+
+        return render(request, self.template_name, context={
+            'strain': strain,
+            'form': form
+        })
+
+class StrainCommentUpdateView(LoginRequiredMixin, View):
+    template_name = settings.GROW_TEMPLATES['grow/strain/comment_update']
+
+    def get(self, request: HttpRequest, comment_pk: int) -> HttpResponse:
+        comment = get_object_or_404(StrainUserComment, pk=comment_pk)
+
+        if not request.user == comment.user:
+            raise Http404("You do not have permission to edit this comment!")
+
+        return render(request, self.template_name, context={
+            'strain': comment.strain,
+            'form': StrainCommentForm(instance=comment),
+        })
+
+
+    def post(self, request: HttpRequest, comment_pk: int) -> HttpResponse:
+        comment = get_object_or_404(StrainUserComment, pk=comment_pk)
+        form = StrainCommentForm(request.POST, instance=comment)
+
+        if not request.user == comment.user:
+            raise Http404("You do not have permission to edit this comment!")
+
+        if form.is_valid():
+            form.save()
+
+            return redirect(reverse("grow:strain-detail", kwargs={
+                'breeder_slug': comment.strain.breeder.slug,
+                'slug': comment.strain.slug,
+            }))
+
+        return render(request, self.template_name, context={
+            'strain': comment.strain,
+            'form': form
         })

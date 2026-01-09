@@ -4,6 +4,7 @@ from .strain import (
     BreederTranslationForm,
     StrainForm,
     StrainAddToStockForm,
+    StrainCommentForm,
     StrainFilterForm,
     StrainImageUploadForm,
     StrainRemoveFromStockForm,

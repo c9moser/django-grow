@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-05 11:56+0100\n"
+"POT-Creation-Date: 2026-01-09 02:20+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,76 +34,20 @@ msgstr "Passwort"
 msgid "Log me in"
 msgstr "Melde mich an"
 
-#: templates/base.html:50 templates/tinywiki/home/bs-wiki-content.html:9
+#: templates/tinywiki/home/bs-wiki-content.html:9
 #: templates/tinywiki/home/home.html:14
 msgid "Home"
 msgstr "Start"
 
-#: templates/base.html:60
-msgid "Strains"
-msgstr "Sorten"
-
-#: templates/base.html:65
-msgid "Search for strains"
-msgstr "Nach Sorten suchen"
-
-#: templates/base.html:72
-msgid "Breeders"
-msgstr "Züchter"
-
-#: templates/base.html:78
-msgid "New Breeder"
-msgstr "Neuer Züchter"
-
-#: templates/base.html:94 templates/tinywiki/home/bs-wiki-content.html:11
+#: templates/tinywiki/home/bs-wiki-content.html:11
 #: templates/tinywiki/home/home.html:15 templates/tinywiki/page/bs-view.html:28
 msgid "Wiki"
 msgstr "Wiki"
 
-#: templates/base.html:102
-msgid "Wiki home"
-msgstr "Wiki Start"
-
-#: templates/base.html:112
-msgid "BBCode Guide"
-msgstr "BBCode Anleitung"
-
-#: templates/base.html:121
-msgid "Markdown Guide"
-msgstr "Makrdown Anleitung"
-
-#: templates/base.html:131 templates/tinywiki/home/bs-wiki-content.html:13
+#: templates/tinywiki/home/bs-wiki-content.html:13
 #: templates/tinywiki/home/bs-wiki-content.html:18
 msgid "Table of Contents"
 msgstr "Inhaltsverzeichnis"
-
-#: templates/base.html:142
-msgid "Login"
-msgstr "Anmelden"
-
-#: templates/base.html:146
-msgid "Sign up"
-msgstr "Registrieren"
-
-#: templates/base.html:161
-msgid "My Infos"
-msgstr "Meine Infos"
-
-#: templates/base.html:167
-msgid "Profile"
-msgstr "Profil"
-
-#: templates/base.html:173
-msgid "My Friends"
-msgstr "Meine Freunde"
-
-#: templates/base.html:179
-msgid "Settings"
-msgstr "Einstellungen"
-
-#: templates/base.html:190
-msgid "Log out"
-msgstr "Abmelden"
 
 #: templates/tinywiki/home/home.html:23
 msgid "Welcome to the Grow Wiki"
@@ -180,6 +124,48 @@ msgstr "Seite löschen"
 #: templates/tinywiki/page/edit.html:7
 msgid "Save Changes"
 msgstr "Änderungen speichern"
+
+#~ msgid "Strains"
+#~ msgstr "Sorten"
+
+#~ msgid "Search for strains"
+#~ msgstr "Nach Sorten suchen"
+
+#~ msgid "Breeders"
+#~ msgstr "Züchter"
+
+#~ msgid "New Breeder"
+#~ msgstr "Neuer Züchter"
+
+#~ msgid "Wiki home"
+#~ msgstr "Wiki Start"
+
+#~ msgid "BBCode Guide"
+#~ msgstr "BBCode Anleitung"
+
+#~ msgid "Markdown Guide"
+#~ msgstr "Makrdown Anleitung"
+
+#~ msgid "Login"
+#~ msgstr "Anmelden"
+
+#~ msgid "Sign up"
+#~ msgstr "Registrieren"
+
+#~ msgid "My Infos"
+#~ msgstr "Meine Infos"
+
+#~ msgid "Profile"
+#~ msgstr "Profil"
+
+#~ msgid "My Friends"
+#~ msgstr "Meine Freunde"
+
+#~ msgid "Settings"
+#~ msgstr "Einstellungen"
+
+#~ msgid "Log out"
+#~ msgstr "Abmelden"
 
 #~ msgid "Delete Wiki-Page"
 #~ msgstr "Wiki-Seite löschen"

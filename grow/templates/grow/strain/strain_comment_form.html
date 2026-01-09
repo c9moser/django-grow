@@ -1,0 +1,41 @@
+{% extends base_template %}
+{% load i18n widget_tweaks %}
+{% block content %}
+<h1>{% blocktranslate with name=strain.locale_name %}Add Comment to <i>{{ name }}</i>{% endblocktranslate %}</h1>
+<form method="post">
+    {% csrf_token %}
+    {% if use_bootstrap %}
+        <div class="input-group mb-3">
+            <span class="input-group-text">{% translate "Language" %}</span>
+            <label class="visually-hidden" for="{{ form.language_code.id_for_label }}">{% translate "Language" %}</label>
+            {% render_field form.language_code class="form-select" %}
+        </div>
+        <div class="input-group mb-3">
+            <span class="input-group-text">{% translate "Text type" %}</span>
+            <label class="visually-hidden" for="{{ form.comment_type.id_for_label }}">{% translate "Comment" %}</label>
+            {% render_field form.comment_type class="form-control" rows="4" %}
+        </div>
+        <div class="form-floating mb-3">
+            <label for="{{ form.comment.id_for_label }}" class="form-label">{% translate "Comment text" %}</label>
+            {% render_field form.comment class="form-control" rows="6" %}
+        </div>
+    {% else %}
+        <div>
+            <label for="{{ form.language_code.id_for_label }}">{% translate "Language" %}</label>
+            {% render_field form.language_code %}
+        </div>
+        <div>
+            <label for="{{ form.comment_type.id_for_label }}">{% translate "Comment type" %}</label>
+            {% render_field form.comment_type %}
+        </div>
+        <div>
+            <label for="{{ form.comment.id_for_label }}">{% translate "Comment text" %}</label>
+            {% render_field form.comment %}
+        </div>
+    {% endif %}
+
+    <div class="{% if use_bootstrap %}text-end{% endif %}">
+        {% block form_buttons %}{% endblock%}
+    </div>
+</form>
+{% endblock %}

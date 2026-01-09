@@ -2,7 +2,13 @@ from django import forms
 from django.utils.translation import gettext_lazy as _
 from django.utils.timezone import now
 
-from ..growapi.models import Strain, StrainImage, BreederTranslation, StrainTranslation
+from ..growapi.models import (
+    Strain,
+    StrainImage,
+    BreederTranslation,
+    StrainTranslation,
+    StrainUserComment,
+)
 from ..enums import TextType, TEXT_CHOICES
 
 
@@ -149,4 +155,13 @@ class StrainTranslationForm(forms.ModelForm):
             'seedfinder_url',
             'description_type_data',
             'description',
+        ]
+
+
+class StrainCommentForm(forms.ModelForm):
+    class Meta:
+        model = StrainUserComment
+        fields = [
+            "comment_type_data",
+            "comment",
         ]

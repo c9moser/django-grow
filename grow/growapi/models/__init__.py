@@ -10,7 +10,8 @@ from .strain import (  # noqa
     Strain,
     StrainImage,
     StrainsInStock,
-    StrainTranslation
+    StrainTranslation,
+    StrainUserComment,
 )
 
 from .sensors import (  # noqa

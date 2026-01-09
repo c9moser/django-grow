@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 from pathlib import Path
 from environ import Env
+import os
 from django.conf import settings
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as L_
@@ -20,7 +21,7 @@ from django.utils.translation import gettext_lazy as L_
 BASE_DIR = Path(__file__).resolve().parent.parent
 LOCAL_SETTINGS_DIR = Path(__file__).resolve().parent / 'local'
 env = Env(
-    GROW_DEBUG=(bool, False),
+    GROW_DEBUG=(bool, bool(os.environ.get('GROW_DEBUG', "0"))),
     GROW_SECRET_KEY=(str, 'django-insecure-#zp@r)@gr(f%o3y3*g1dup_z+@lt$o)mgq#8ne%llaz4vh82lf'),
     GROW_ALLOWED_HOSTS=(list, ['*']),
     GROW_DATABASE=(str, f'sqlite:////{BASE_DIR / "db.sqlite3"}'),
@@ -53,13 +54,15 @@ env = Env(
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env.bool('GROW_DEBUG')
+
 
 if (BASE_DIR / '.env').is_file():
     env.read_env(BASE_DIR / '.env')
 if (LOCAL_SETTINGS_DIR / '.env').exists():
     env.read_env(LOCAL_SETTINGS_DIR / '.env')
 
+print("GROW_DEBUG", env('GROW_DEBUG'))
+DEBUG = env.bool('GROW_DEBUG')
 
 if DEBUG and (BASE_DIR / '.env-dev').is_file():
     env.read_env(BASE_DIR / '.env-dev')
@@ -87,7 +90,7 @@ if (LOCAL_SETTINGS_DIR / 'secret_key_fallabcks').is_file():
             line.strip() for line in skf.readlines() if line.strip()
         ]
 
-ALLOWED_HOSTS = env('GROW_ALLOWED_HOSTS')
+ALLOWED_HOSTS = env.list('GROW_ALLOWED_HOSTS')
 
 
 # Application definition

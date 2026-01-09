@@ -17,6 +17,7 @@ dependencies = [
     "django-tinywiki @ git+https://git.cmoser.eu/tinytools/tinywiki.git",
     "markdown (>=3.10,<4.0)",
     "bbcode (>=1.1.0,<2.0.0)",
+    "flake8 (>=7.3.0,<8.0.0)",
 ]
 
 [tool.poetry]
@@ -38,9 +39,6 @@ postgresql = [
 ]
 postgres = [
     "psycopg2 (>=2.9.11,<3.0.0)"
-]
-mysql = [
-    "mysqlclient (>=2.2.7,<3.0.0)"
 ]
 firebird = [
     "django-firebird (>=2.2.2,<3.0.0)"
