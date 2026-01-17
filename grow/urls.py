@@ -33,9 +33,10 @@ from .views import (
 )
 from .views.utils import HxSelectDateDaysSanitizeView
 
+from django.conf.urls.i18n import i18n_patterns
 app_name = "grow"
 
-urlpatterns = [
+strain_patterns = i18n_patterns(
     path("", IndexView.as_view(), name="home"),
     # Views for Breeders and Strains details
     path("strains/", BreederIndexView.as_view(), name="breeder-overview"),
@@ -107,5 +108,8 @@ urlpatterns = [
     path("__hx__/select_date_days_sanitize/<int:year>/<int:month>/",
          HxSelectDateDaysSanitizeView.as_view(),
          name="hx-select-date-days-sanitize"),
+)
 
+urlpatterns = [
+     *strain_patterns,
 ]
