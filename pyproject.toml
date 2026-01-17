@@ -14,10 +14,10 @@ dependencies = [
     "pillow (>=12.0.0,<13.0.0)",
     "django-environ (>=0.12.0,<0.13.0)",
     "django-widget-tweaks (>=1.5.0,<2.0.0)",
-    "django-tinywiki @ git+https://git.cmoser.eu/tinytools/tinywiki.git",
     "markdown (>=3.10,<4.0)",
     "bbcode (>=1.1.0,<2.0.0)",
     "flake8 (>=7.3.0,<8.0.0)",
+    "django-tinywiki @ git+https://git.cmoser.eu/tinytools/django-tinywiki.git",
 ]
 
 [tool.poetry]

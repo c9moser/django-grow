@@ -520,9 +520,9 @@ pillow = ">=12.0.0,<13.0.0"
 
 [package.source]
 type = "git"
-url = "https://git.cmoser.eu/tinytools/tinywiki.git"
+url = "https://git.cmoser.eu/tinytools/django-tinywiki.git"
 reference = "HEAD"
-resolved_reference = "8c3b30187da2670bafdcfa42e2e8bebd796d7ac1"
+resolved_reference = "450ea2e8452e709a796e58c338cb6fd711394ffe"
 
 [[package]]
 name = "django-widget-tweaks"
@@ -915,4 +915,4 @@ zstd = ["backports-zstd (>=1.0.0) ; python_version < \"3.14\""]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.11,<3.15"
-content-hash = "cc8cab4932b96fb3aa47ae8abc9d39d39a5e026ca757749d6b93138b8c33ad99"
+content-hash = "3a890d5da4d10596de089add37ff12da2d118bc4a32eb968f1ea3201ff9cc47b"
