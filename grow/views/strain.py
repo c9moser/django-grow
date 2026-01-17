@@ -490,7 +490,7 @@ class StrainView(BaseView):
                 strain.get_feminized_seeds_purchased_on(self.request.user)
                 if self.request.user.is_authenticated else None
             ),
-            'total_seeds_in_stock': strain.get_total_seeds_in_stock(self.request.user),
+            'total_seeds_in_stock': strain.get_total_seeds_in_stock(self.request.user) if self.request.user.is_authenticated else 0,  # noqa: E501
             'strain_images': strain.images.all().order_by('-uploaded_at')[:3],
             'strain_translation': translation,
             'strain_url': (translation.strain_url
