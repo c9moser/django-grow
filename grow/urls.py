@@ -2,8 +2,8 @@ from django.urls import path
 
 from grow.views.utils import HxSelectDateDaysSanitizeView
 from . import settings
-from .views import (
-    IndexView,
+from .views.index import IndexView
+from .views.strain import (
     BreederIndexView,
     BreederView,
     BreederCreateView,
@@ -29,6 +29,7 @@ from .views import (
     HxStrainFilterView,
     HxStrainAddToStockView,
     HxStrainRemoveFromStockView,
+    HxStrainSearchView,
     HxStrainTranslationView,
 )
 from .views.utils import HxSelectDateDaysSanitizeView
@@ -108,6 +109,7 @@ strain_patterns = [
     path("__hx__/select_date_days_sanitize/<int:year>/<int:month>/",
          HxSelectDateDaysSanitizeView.as_view(),
          name="hx-select-date-days-sanitize"),
+    path("__hx__/strain/search/", HxStrainSearchView.as_view(), name="hx-strain-search"),
 ]
 
 urlpatterns = [

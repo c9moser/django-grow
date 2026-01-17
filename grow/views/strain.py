@@ -1414,3 +1414,14 @@ class StrainGallerySlidesView(View):
             'first_image': first_image,
             'use_bootstrap': True,
         })
+
+
+class HxStrainSearchView(BaseView):
+    template_name = settings.GROW_TEMPLATES['grow/strain/hx-search']
+
+    def get(self, request: HttpRequest) -> HttpResponse:
+        form = StrainSearchForm()
+
+        return render(request, self.template_name, context={
+            'form': form,
+        })

@@ -73,10 +73,13 @@
                             >{% translate "Strains" %}</a>
                             <ul class="dropdown-menu dropdown-menu-center" aria-labelledby="navbar-strain-dropdown">
                                 <li>
-                                    <button type="button" class="dropdown-item">
-                                        <i class="bi bi-search"></i>
-                                        {% translate "Search for strains" %}
-                                    </button>
+                                    <button type="button" class="dropdown-item"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#modals-here"
+                                        hx-get="{% url 'grow:hx-strain-search' %}"
+                                        hx-target="#modals-here"
+                                        hx-swap="innerHTML"
+                                    ><i class="bi bi-search"></i> {% translate "Search for strains" %}</button>
                                 </li>
                                 <li><hr class="dropdown divider"></li>
                                 <li>
