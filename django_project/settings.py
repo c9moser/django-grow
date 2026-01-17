@@ -194,7 +194,7 @@ AUTHENTICATION_BACKENDS = [
 
 LANGUAGE_CODE = env('GROW_LANGUAGE_CODE')
 LANGUAGES = [
-    ('en', 'English (US)'),
+    ('en', 'English'),
     ('de', 'Deutsch'),
 ]
 TIME_ZONE = env('GROW_TIME_ZONE')
