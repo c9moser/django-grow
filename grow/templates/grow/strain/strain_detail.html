@@ -183,14 +183,14 @@
 
     <p>
         {% if strain_url %}
-        <a  href="{{ strain_url }}">
+        <a  href="{{ strain_url }}" target="_blank" rel="noopener noreferrer">
             <i class="bi bi-house-door-fill link-image"></i>
             {% translate "Strain Homepage" %}
         </a>
         {% if seedfinder_url %}<br>{% endif %}
         {% endif %}
         {% if seedfinder_url %}
-        <a href="{{ seedfinder_url }}">
+        <a href="{{ seedfinder_url }}" target="_blank" rel="noopener noreferrer">
             <i class="bi bi-bookmark-star link-image"></i>
             {% translate "View on SeedFinder.eu" %}</a>
         {% endif %}
@@ -226,14 +226,23 @@
 
 <h2 id="pictures">{% translate "Pictures" %}</h2>
 <p>
-<a href="{% url 'grow:strain-image-upload' strain_pk=strain.pk %}"
-    class="{% if use_bootstrap %}btn btn-outline-success{% else %}mb-3{% endif %}"
->{% if use_bootstrap%}
-    <i class="bi bi-upload me-2 link-image"></i>{% translate "Upload picture" %}
-{% else %}
-    {% translate "Upload picture" %}
-{% endif %}
-</a></p>
+    <a href="{% url 'grow:strain-image-upload' strain_pk=strain.pk %}"
+        class="{% if use_bootstrap %}btn btn-outline-success{% else %}mb-3{% endif %}"
+    >{% if use_bootstrap%}
+        <i class="bi bi-upload me-2 link-image"></i>{% translate "Upload picture" %}
+    {% else %}
+        {% translate "Upload picture" %}
+    {% endif %}
+    </a>
+    <a href="{% url 'grow:strain-gallery' strain_pk=strain.pk %}"
+        class="{% if use_bootstrap %}btn btn-outline-primary{% else %}mb-3{% endif %}"
+    >{% if use_bootstrap %}
+        <i class="bi bi-images me-2 link-image"></i>{% translate "View gallery" %}
+    {% else %}
+        {% translate "View gallery" %}
+    {% endif %}
+    </a>
+</p>
 {% if strain_images %}
 <div class="row row-cols-1 row-cols-md-3 g-4 mb-3">
     {% for picture in strain_images %}
@@ -241,8 +250,19 @@
         <div class="{% if use_bootstrap %}card h-100 border-1{% endif %}">
             <img src="{{ picture.image.url }}" class="card-img-top {% if use_bootstrap %}img-fluid{% endif %}" alt="{{ picture.caption }}">
             {% if picture.caption %}
-            <div class="card-body p-2">
-                <p class="card-text">{{ picture.caption }}</p>
+            <div class="card-body p-1 d-flex flex-column">
+                <div class="mt-auto">
+                {% if picture.description %}
+                    <p class="card-text mt-auto">{{ picture.description }}</p>
+                {% elif picture.caption %}
+                    <p class="card-text mt-auto">{{ picture.caption }}</p>
+                {% else %}
+                    <p class="card-text mt-auto">
+                        {{ strain.breeder.locale_name }} - {{ strain.locale_name }}
+                    </p>
+                {% endif %}
+                    <p>By <i>{{ picture.uploader.username }}</i>
+                </div>
             </div>
             {% endif %}
         </div>

@@ -1072,7 +1072,7 @@ class StrainImageUploadView(LoginRequiredMixin, View):
         if form.is_valid():
             strain_image = form.save(commit=False)
             strain_image.strain = strain
-            strain_image.user = request.user
+            strain_image.uploader = request.user
             strain_image.save()
 
             return redirect(reverse("grow:strain-detail", kwargs={
@@ -1383,4 +1383,34 @@ class StrainCommentUpdateView(LoginRequiredMixin, View):
         return render(request, self.template_name, context={
             'strain': comment.strain,
             'form': form
+        })
+
+
+class StrainGalleryView(View):
+    template_name = settings.GROW_TEMPLATES['grow/strain/gallery']
+
+    def get(self, request: HttpRequest, strain_pk: int) -> HttpResponse:
+        strain = get_object_or_404(Strain, pk=strain_pk)
+        strain_images = strain.images.order_by('-uploaded_at')
+
+        return render(request, self.template_name, context={
+            'strain': strain,
+            'strain_images': strain_images,
+            'use_bootstrap': True,
+        })
+
+
+class StrainGallerySlidesView(View):
+    template_name = settings.GROW_TEMPLATES['grow/strain/gallery_slides']
+
+    def get(self, request: HttpRequest, strain_pk: int) -> HttpResponse:
+        strain = get_object_or_404(Strain, pk=strain_pk)
+        strain_images = strain.images.order_by('-uploaded_at')
+        first_image = strain_images.first() if strain_images else None
+
+        return render(request, self.template_name, context={
+            'strain': strain,
+            'strain_images': strain_images,
+            'first_image': first_image,
+            'use_bootstrap': True,
         })

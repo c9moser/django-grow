@@ -29,6 +29,8 @@ GROW_BUILTIN_TEMPLATES = {
     'grow/strain/comment_update': 'grow/strain/strain_comment_update.html',
     'grow/strain/delete': 'grow/strain/strain_delete.html',
     'grow/strain/detail': 'grow/strain/strain_detail.html',
+    'grow/strain/gallery': 'grow/strain/strain_gallery.html',
+    'grow/strain/gallery_slides': 'grow/strain/strain_gallery_slides.html',
     'grow/strain/hx-add_to_stock': 'grow/strain/hx_strain_add_to_stock.html',
     'grow/strain/hx-delete': 'grow/strain/hx_strain_delete.html',
     'grow/strain/hx-strain-filter': 'grow/strain/hx_strain_filter.html',

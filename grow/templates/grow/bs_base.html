@@ -11,9 +11,11 @@
          <link rel="stylesheet" href="{% static 'css/grow.css' %}">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
         <link rel="icon" type="image/x-icon" href="{% static 'grow/img/favicon.ico' %}">
+        {% block extra_css %}{% endblock %}
+
         <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.min.js" integrity="sha384-/TgkGk7p307TH7EXJDuUlgG3Ce1UVolAOFopFekQkkXihi5u/6OCvVKyz1W+idaz" crossorigin="anonymous"></script>
 
-        {% block extra_css %}{% endblock %}
+
         <script>
             document.documentElement.setAttribute('data-bs-theme',
                 (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'))
@@ -48,7 +50,7 @@
                     </div>
                         {% endblock title %}
                     <div class="header-subtitle">
-                        {% block subtitle %}{% if subtitle %}{{ subtitle }}{% endif %}{% endblock subtitle %}</span>
+                        {% block subtitle %}{% if subtitle %}{{ subtitle }}{% endif %}{% endblock subtitle %}
                     </div>
                 </div>
             </header>
@@ -89,9 +91,76 @@
                                         {% translate "New Breeder" %}
                                     </a>
                                 </li>
-
                             </ul>
                         </li>
+
+                        {# "My Grow" Dropdown #}
+                        {% if user.is_authenticated %}
+                        <li class="nav-item dropdown-center">
+                            <a class="nav-link dropdown-toggle text-white"
+                                href="#"
+                                id="navbar-mygrow-dropdown"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                            >{% translate 'My Grow' %}</a>
+                            <ul class="dropdown-menu dropdown-menu-center" aria-labelledby="navbar-mygrow-dropdown">
+                                <li>
+                                    <a
+                                        class="dropdown-item"
+                                        href="#"
+                                    >
+                                        <i class="bi bi-clipboard-plus"></i>
+                                        {% translate "New Growlog" %}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a
+                                        class="dropdown-item"
+                                        href="#"
+                                    >
+                                        <i class="bi bi-house-add"></i>
+                                        {% translate "New Location" %}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item"
+                                        href="#"
+                                    >
+                                        <i class="bi bi-thermometer"></i>
+                                        {% translate "New Sensor" %}
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-group-divider"></li>
+                                <li>
+                                    <a
+                                        class="dropdown-item"
+                                        href="#"
+                                    >
+                                        <i class="bi bi-clipboard-data"></i>
+                                        {% translate "My Growlogs" %}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a
+                                        class="dropdown-item"
+                                        href="#"
+                                    >
+                                        <i class="bi bi-house-check"></i>
+                                        {% translate "My Locations" %}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a
+                                        class="dropdown-item"
+                                        href="#"
+                                    >
+                                        <i class="bi bi-thermometer-half"></i>
+                                        {% translate "My Sensors" %}
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        {% endif %}
 
                         {# Wiki Dropdown #}
                         {% if include_wiki %}
@@ -160,10 +229,10 @@
                     {% else %}
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-white"
-                            href="#" id="navbar-user-dropdown"
-                            role="button"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false"
+                                href="#" id="navbar-user-dropdown"
+                                role="button"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
                             >{{ user.username }}</a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbar-user-dropdown">
                                 <li>

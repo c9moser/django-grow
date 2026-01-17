@@ -1,6 +1,8 @@
 {
   "dependencies": {
     "bootstrap": "^5.3.8",
+    "jquery": "^3.7.1",
+    "lightbox2": "^2.11.5",
     "sass": "^1.97.1"
   }
 }
