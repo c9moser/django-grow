@@ -24,8 +24,8 @@ from django.conf.urls.i18n import i18n_patterns
 urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('api/', include('grow.growapi.urls')),
-    path('', include('core.urls')),
-    path('', include('grow.urls')),
+    i18n_patterns(*path('', include('core.urls'))),
+    i18n_patterns(*path('', include('grow.urls'))),
 ]
 if settings.ADMIN_URL:
     urlpatterns.insert(0, path(settings.ADMIN_URL, admin.site.urls))
