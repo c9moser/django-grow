@@ -1,3 +1,3 @@
-# grc
+# django-grow
 
-Grow Room Controller
+Grow App for manage Growlogs
