@@ -16,11 +16,11 @@
 
 {% for location in locations %}
 <div class="card mb-3">
-    <div class="card-header">
+    <div class="card-header bg-success text-white">
         <div class="d-flex justify-content-between">
             <h5 class="card-title mb-0">{{ location.location_type.name }} - {{ location.name }}</h5>
             <h5 class="card-title mb-0 text-end">
-                <a href="{% url 'grow:location-update' pk=location.id %}" class="btn btn-sm btn-outline-primary">
+                <a href="{% url 'grow:location-update' pk=location.id %}" class="btn btn-sm btn-outline-light">
                     <i class="bi bi-pencil"></i>
                 </a>
                 <button type="button"
