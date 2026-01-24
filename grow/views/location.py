@@ -10,6 +10,7 @@ from ..growapi.models.location import Location, OutdoorLocation, GrowRoom
 from ..enums import LocationType
 from django.utils.translation import gettext as _
 
+
 class LocationIndexView(LoginRequiredMixin, BaseView):
     template_name = settings.GROW_TEMPLATES['grow/location/index']
 

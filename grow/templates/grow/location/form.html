@@ -160,6 +160,7 @@
                     {% endif %}
                     <span class="input-group-text">{% translate "Watts" %}</span>
                 </div>
+
             {% elif form.location_type_data.value == "outdoor" %}
 
                 {% if form.errors.latitude %}
@@ -175,9 +176,9 @@
                         {% render_field form.latitude class="form-control" %}
                     {% endif %}
                 </div>
-            {% endif %}
 
-            {% if form.errors.longitude %}
+
+                {% if form.errors.longitude %}
                 {% for error in form.errors.longitude %}
                     <div class="alert alert-danger">{{ error }}</div>
                 {% endfor %}
@@ -190,6 +191,7 @@
                         {% render_field form.longitude class="form-control" %}
                     {% endif %}
                 </div>
+            {% endif %}
         </div>
         {% if form.description_type_data.errors %}
             {% for error in form.description_type_data.errors %}
