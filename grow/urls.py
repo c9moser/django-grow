@@ -1,6 +1,5 @@
 from django.urls import path
 
-from grow.views.utils import HxSelectDateDaysSanitizeView
 from . import settings
 from .views.index import IndexView
 from .views.strain import (
@@ -32,9 +31,19 @@ from .views.strain import (
     HxStrainSearchView,
     HxStrainTranslationView,
 )
+
+from .views.location import (
+     HxLocationTypeChangeView,
+     LocationIndexView,
+     LocationCreateView,
+     LocationUpdateView,
+     LocationDeleteView,
+     HxLocationTypeChangeView,
+     HxLocationDeleteView,
+)
+
 from .views.utils import HxSelectDateDaysSanitizeView
 
-from django.conf.urls.i18n import i18n_patterns
 app_name = "grow"
 
 strain_patterns = [
@@ -112,6 +121,20 @@ strain_patterns = [
     path("__hx__/strain/search/", HxStrainSearchView.as_view(), name="hx-strain-search"),
 ]
 
+
+location_patterns = [
+     path("location/", LocationIndexView.as_view(), name="location-index"),
+     path("location/create/", LocationCreateView.as_view(), name="location-create"),
+     path("location/update/<int:pk>/", LocationUpdateView.as_view(), name="location-update"),
+     path("location/delete/<int:pk>/", LocationDeleteView.as_view(), name="location-delete"),
+     #path("location/detail/<int:pk>/", LocationDetailView.as_view(), name="location-detail"),
+     path("__hx__/location/type-change/<int:pk>/",
+          HxLocationTypeChangeView.as_view(),
+          name="hx-location-type-change"),
+     path("__hx__/location/delete/<int:pk>/", HxLocationDeleteView.as_view(), name="hx-location-delete"),
+]
+
 urlpatterns = [
      *strain_patterns,
+     *location_patterns,
 ]

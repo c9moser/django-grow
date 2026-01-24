@@ -1,0 +1,8 @@
+{% extends "grow/location/form.html" %}
+{% load i18n%}
+{% block subtitle%}{% translate "Edit Location" %}{% endblock subtitle %}
+{% block heading %}{% translate "Edit Location" %}{% endblock heading %}
+{% block form_buttons %}
+    <button type="submit" class="btn btn-primary">{% translate "Save changes" %}</button>
+    <button type="button" class="btn btn-secondary" onclick="window.history.back();">{% translate "Cancel" %}</button>
+{% endblock form_buttons %}

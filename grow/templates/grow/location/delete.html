@@ -1,0 +1,28 @@
+{% extends base_template %}
+{% load i18n widget_tweaks %}
+{% block subtitle %}{% translate "Delete Location" %}{% endblock subtitle %}
+{% block heading %}{% translate "Delete Location" %}{% endblock heading %}
+
+{% block content %}
+<h1>{% translate "Delete Location" %}</h1>
+{% if error %}
+<div class="alert alert-danger">
+    {{ error }}
+</div>
+<a href="{% url 'grow:location-index' %}" class="btn btn-secondary">{% translate "Back to Locations" %}</a>
+{% else %}
+<form method="post" action="">
+    {% csrf_token %}
+    <p>
+        {% blocktranslate with location_name=location.name %}Are you sure you want to delete the location <i>{{ location.name }}</i>?{% endblocktranslate %}
+    </p>
+    {% if use_bootstrap %}
+        <button type="submit" class="btn btn-danger">{% translate "Delete Location" %}</button>
+        <a href="{% url 'grow:location-index' %}" class="btn btn-secondary">{% translate "Cancel" %}</a>
+    {% else %}
+        <button type="submit">{% translate "Delete Location" %}</button>
+        <button type="button" onclick="window.location.href='{% url 'grow:location-index' %}';">{% translate "Cancel" %}</button>
+    {% endif %}
+</form>
+{% endif %}
+{% endblock content %}

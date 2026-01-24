@@ -110,7 +110,7 @@ msgstr "Speichern und Anzeigen"
 
 #: templates/tinywiki/page/bs-view.html:26
 msgid "Start"
-msgstr ""
+msgstr "Start"
 
 #: templates/tinywiki/page/bs-view.html:39
 msgid "Edit Page"

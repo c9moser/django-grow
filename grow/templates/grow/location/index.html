@@ -1,0 +1,117 @@
+{% extends base_template%}
+{% load i18n l10n %}
+{% block subtitle %}{% translate "My Locations" %}{% endblock subtitle %}
+{% block heading %}{% translate "My Locations" %}{% endblock heading %}
+
+{% block content %}
+<h1>{% translate "My Locations" %}</h1>
+<p>
+    {% translate "Manage your growing locations where you cultivate your strains." %}
+</p>
+<p>
+    <a href="{% url 'grow:location-create' %}" class="btn btn-outline-success mb-3">
+        <i class="bi bi-house-add"></i> {% translate "Create new location" %}
+    </a>
+</p>
+
+{% for location in locations %}
+<div class="card mb-3">
+    <div class="card-header">
+        <div class="d-flex justify-content-between">
+            <h5 class="card-title mb-0">{{ location.location_type.name }} - {{ location.name }}</h5>
+            <h5 class="card-title mb-0 text-end">
+                <a href="{% url 'grow:location-update' pk=location.id %}" class="btn btn-sm btn-outline-primary">
+                    <i class="bi bi-pencil"></i>
+                </a>
+                <button type="button"
+                    hx-get="{% url 'grow:hx-location-delete' pk=location.id %}"
+                    class="btn btn-sm btn-outline-danger"
+                    hx-target="#modals-here"
+                    hx-trigger="click"
+                    hx-swap="innerHTML"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modals-here"
+                >
+                        <i class="bi bi-trash"></i>
+                </button>
+            </h5>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="alert alert-success mb-3">
+            <b>{% translate "Location Key:" %}</b> <i>{{ location.key }}</i>
+        </div>
+        <div class="alert alert-info mb-3">
+            <b>{% translate "Permission:" %}</b> <i>{{ location.permission.name }}</i>
+        </div>
+
+        {% if location.location_type.value == 'indoor' and location.grow_room %}
+        <p class="card-text">
+            <ul>
+                <li>
+                    <b>{% translate "Dimensions:" %}</b> {{ location.grow_room.width }}cm
+                    x {{ location.grow_room.height }}cm
+                    x {{ location.grow_room.depth }}cm
+                </li>
+                {% if location.grow_room.area %}
+                <li>
+                    <b>{% translate "Area:" %}</b> {{ location.grow_room.area }} m<sup>2</sup>
+                </li>
+                {% endif %}
+                {% if location.grow_room.volume %}
+                <li>
+                    <b>{% translate "Volume:" %}</b> {{ location.grow_room.volume }} m<sup>3</sup>
+                </li>
+                {% endif %}
+                <li>
+                    <b>{% translate "Lighting:" %}</b>
+                    {{ location.grow_room.light_type.name }},
+                    {{ location.grow_room.light_power_consumption }} Watts
+                </li>
+                <li>
+                    <b>{% translate "Ventilation:" %}</b>
+                    {{ location.grow_room.ventilation_intensity }} m³/h,
+                    {{ location.grow_room.ventilation_power_consumption }} Watts
+                </li>
+            </ul>
+        </p>
+        {% elif location.location_type.value == 'outdoor' and location.outdoor_location %}
+        <p class="card-text">
+            <ul>
+                <li>
+                    <b>{% translate "Coordinates:" %}</b>
+                    {% if location.outdoor_location.latitude and location.outdoor_location.longitude %}
+                        {{ location.outdoor_location.latitude }}, {{ location.outdoor_location.longitude }}
+                    {% else %}
+                        {% translate "Not specified" %}
+                    {% endif %}
+                </li>
+                {% if location.outdoor_location.latitude and location.outdoor_location.longitude %}
+                <li>
+                    <b>{% translate "Map:" %}</b>
+                    <a href="https://maps.google.com/?q={{ location.outdoor_location.latitude|unlocalize }},{{ location.outdoor_location.longitude|unlocalize }}"
+                        target="_blank"
+                        rel="noopener"
+                        title="{% translate "View on Google Maps" %}"
+                        class="ms-2 link-primary"
+                    >
+                        <i class="bi bi-globe link-icon"></i>
+                        {% translate "View on Google Maps" %}
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </p>
+        {% endif %}
+        {% if location.description %}
+        <h4 class="card-subtitle mb-2 text-muted">{% translate "Description" %}</h4>
+        <p class="card-text">{{ location.description_html }}</p>
+        {% endif %}
+    </div>
+</div>
+{% empty %}
+<alert class="alert alert-info" role="alert">
+    {% translate "You have not created any locations yet." %}
+</alert>
+{% endfor %}
+{% endblock %}

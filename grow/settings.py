@@ -8,7 +8,7 @@ GROW_SITE_TITLE = getattr(settings, "GROW_SITE_TITLE", getattr(settings, "SITE_T
 GROW_HEAD_TITLE = getattr(settings, "GROW_HEAD_TITLE", getattr(settings, "HEAD_TITLE", GROW_SITE_TITLE))
 
 GROW_BUILTIN_TEMPLATES = {
-    # breeder views
+    # breeder templates
     'grow/breeder/create': 'grow/strain/breeder_create.html',
     'grow/breeder/delete': 'grow/strain/breeder_delete.html',
     'grow/breeder/detail': 'grow/strain/breeder_detail.html',
@@ -21,7 +21,16 @@ GROW_BUILTIN_TEMPLATES = {
     # home
     'grow/index': 'grow/index/index.html',
 
-    # strain views
+    # location templates
+    'grow/location/index': 'grow/location/index.html',
+    'grow/location/create': 'grow/location/create.html',
+    'grow/location/update': 'grow/location/update.html',
+    'grow/location/delete': 'grow/location/delete.html',
+    'grow/location/detail': 'grow/location/detail.html',
+    'grow/location/hx-type-change': 'grow/location/hx_locationtype_change.html',
+    'grow/location/hx-delete': 'grow/location/hx_delete.html',
+
+    # strain templates
     'grow/strain': 'grow/strain/index.html',
     'grow/strain/add_to_stock': 'grow/strain/strain_add_to_stock.html',
     'grow/strain/create': 'grow/strain/strain_create.html',

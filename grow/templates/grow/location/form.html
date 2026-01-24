@@ -1,0 +1,275 @@
+{% extends base_template %}
+{% load i18n widget_tweaks %}
+
+{% block content %}
+<h1>{% block heading %}{% endblock heading %}</h1>
+<form method="post">
+    {% csrf_token %}
+
+    {% if use_bootstrap %}
+        <div class="form-floating form-floating-lg mb-3">
+            {% if form.name.errors %}
+                {% for error in form.name.errors %}
+                    <div class="alert alert-danger">{{ error }}</div>
+                {% endfor %}
+                {% render_field form.name class="form-control is-invalid" %}
+            {% else %}
+                {% render_field form.name class="form-control" %}
+            {% endif %}
+            <label for="{{ form.name.id_for_label }}" class="form-label">{{ form.name.label }}</label>
+        </div>
+        {% if form.errors.key %}
+        {% for error in form.errors.key %}
+            <div class="alert alert-danger">{{ error }}</div>
+        {% endfor %}
+        {% endif %}
+        <div class="form-floating form-floating-lg mb-3">
+            {% if form.key.errors %}
+                {% render_field form.key class="form-control is-invalid" placeholder=form.key.label %}
+            {% else %}
+                {% render_field form.key class="form-control" placeholder=form.key.label %}
+            {% endif %}
+            <label for="{{ form.key.id_for_label }}" class="form-label">{{ form.key.label }}</label>
+        </div>
+
+        {% if form.location_type_data.errors %}
+                {% for error in form.location_type_data.errors %}
+                    <div class="alert alert-danger">{{ error }}</div>
+                {% endfor %}
+        {% endif %}
+        <div class="input-group input-group-lg mb-3">
+            <span class="input-group-text">{% translate "Location Type" %}</span>
+            {% if form.location_type_data.errors %}
+                {% render_field form.location_type_data class="form-select is-invalid" hx-trigger="change" hx-get=hx_lt_change_url hx-target="#location-extra" hx-swap="innerHTML" %}
+            {% else %}
+                {% render_field form.location_type_data class="form-select" hx-trigger="change" hx-get=hx_lt_change_url hx-target="#location-extra" hx-swap="innerHTML" %}
+            {% endif %}
+        </div>
+
+
+
+        <div class="input-group mb-3">
+            <span class="input-group-text">{% translate "Permission" %}</span>
+            <label for="{{ form.permission_data.id_for_label }}" class="form-label visually-hidden">{{ form.permission_data.label }}</label>
+            {% if form.permission_data.errors %}
+                {% render_field form.permission_data class="form-select is-invalid" %}
+            {% else %}
+                {% render_field form.permission_data class="form-select" %}
+            {% endif %}
+        </div>
+
+        <div id="location-extra">
+            {% if form.location_type_data.value == "indoor" %}
+                {% if form.errors.width %}
+                    {% for error in form.width.errors %}
+                        <div class="alert alert-danger">{{ error }}</div>
+                    {% endfor %}
+                {% endif %}
+
+                <div class="input-group mb-3">
+                    <span class="input-group-text">{% translate "Room Width" %}</span>
+                    {% if form.errors.width %}
+                        {% render_field form.width class="form-control is-invalid" %}
+                    {% else %}
+                        {% render_field form.width class="form-control" %}
+                    {% endif %}
+                    <span class="input-group-text">cm</span>
+                </div>
+
+
+                {% if form.errors.height %}
+                    {% for error in form.errors.height %}
+                        <div class="alert alert-danger">{{ error }}</div>
+                    {% endfor %}
+                {% endif %}
+                <div class="input-group mb-3">
+                    <span class="input-group-text">{% translate "Room Height" %}</span>
+                    {% if form.errors.height %}
+                        {% render_field form.height class="form-control is-invalid" %}
+                    {% else %}
+                        {% render_field form.height class="form-control" %}
+                    {% endif %}
+                    <span class="input-group-text">cm</span>
+                </div>
+
+                {% if form.errors.depth %}
+                    {% for error in form.errors.depth %}
+                        <div class="alert alert-danger">{{ error }}</div>
+                    {% endfor %}
+                {% endif %}
+                <div class="input-group mb-3">
+                    <span class="input-group-text">{% translate "Room Depth" %}</span>
+                    {% if form.depth.errors %}
+                        {% render_field form.depth class="form-control is-invalid" %}
+                    {% else %}
+                        {% render_field form.depth class="form-control" %}
+                    {% endif %}
+                    <span class="input-group-text">cm</span>
+                </div>
+
+                {% if form.errors.light_type %}
+                    {% for error in form.errors.light_type %}
+                        <div class="alert alert-danger">{{ error }}</div>
+                    {% endfor %}
+                {% endif %}
+                {% if form.errors.light_power_consumption %}
+                    {% for error in form.errors.light_power_consumption %}
+                        <div class="alert alert-danger">{{ error }}</div>
+                    {% endfor %}
+                {% endif %}
+                <div class="input-group mb-3">
+                    <span class="input-group-text">{% translate "Lighting:" %}</span>
+                    {% if form.errors.light_type %}
+                        {% render_field form.light_type class="form-select is-invalid" %}
+                    {% else %}
+                        {% render_field form.light_type class="form-select" %}
+                    {% endif %}
+                    <span class="input-group-text">{% translate "Intensity" %}</span>
+                    {% if form.errors.light_power_consumption %}
+                        {% render_field form.light_power_consumption class="form-control is-invalid" %}
+                    {% else %}
+                        {% render_field form.light_power_consumption class="form-control" %}
+                    {% endif %}
+                    <span class="input-group-text">{% translate "Watts" %}</span>
+                </div>
+                {% if form.errors.ventilation_intensity %}
+                {% for error in form.errors.ventilation_intensity %}
+                    <div class="alert alert-danger">{{ error }}</div>
+                {% endfor %}
+                {% endif %}
+                {% if form.errors.ventilation_power_consumption %}
+                {% for error in form.errors.ventilation_power_consumption %}
+                    <div class="alert alert-danger">{{ error }}</div>
+                {% endfor %}
+                {% endif %}
+                <div class="input-group mb-3">
+                    <span class="input-group-text">{% translate "Ventilation" %}</span>
+                    <label class="visually-hidden" for="{{ form.ventilation_intensity.id_for_label }}">{{ form.ventilation_intensity.label }}</label>
+                    {% if form.errors.ventilation_intensity %}
+                        {% render_field form.ventilation_intensity class="form-control is-invalid" %}
+                    {% else %}
+                        {% render_field form.ventilation_intensity class="form-control" %}
+                    {% endif %}
+                    <span class="input-group-text">m<sup>3</sup>/h</span>
+                    <label class="visually-hidden" for="{{ form.ventilation_power_consumption.id_for_label }}">{{ form.ventilation_power_consumption.label }}</label>
+                    <span class="input-group-text">{% translate "Power" %}</span>
+                    {% if form.errors.ventilation_power_consumption %}
+                        {% render_field form.ventilation_power_consumption class="form-control is-invalid" %}
+                    {% else %}
+                        {% render_field form.ventilation_power_consumption class="form-control" %}
+                    {% endif %}
+                    <span class="input-group-text">{% translate "Watts" %}</span>
+                </div>
+            {% elif form.location_type_data.value == "outdoor" %}
+
+                {% if form.errors.latitude %}
+                {% for error in form.errors.latitude %}
+                    <div class="alert alert-danger">{{ error }}</div>
+                {% endfor %}
+                {% endif %}
+                <div class="input-group mb-3">
+                    <span class="input-group-text">{% translate "Latitude" %}</span>
+                    {% if form.errors.latitude %}
+                        {% render_field form.latitude class="form-control is-invalid" %}
+                    {% else %}
+                        {% render_field form.latitude class="form-control" %}
+                    {% endif %}
+                </div>
+            {% endif %}
+
+            {% if form.errors.longitude %}
+                {% for error in form.errors.longitude %}
+                    <div class="alert alert-danger">{{ error }}</div>
+                {% endfor %}
+                {% endif %}
+                <div class="input-group mb-3">
+                    <span class="input-group-text">{% translate "Longitude" %}</span>
+                    {% if form.errors.longitude %}
+                        {% render_field form.longitude class="form-control is-invalid" %}
+                    {% else %}
+                        {% render_field form.longitude class="form-control" %}
+                    {% endif %}
+                </div>
+        </div>
+        {% if form.description_type_data.errors %}
+            {% for error in form.description_type_data.errors %}
+            <div class="alert alert-danger">{{ error }}</div>
+            {% endfor %}
+        {% endif %}
+        <div class="input-group mb-3">
+            <span class="input-group-text">{% translate "Description text type" %}</span>
+            <label for="{{ form.description_type_data.id_for_label }}" class="form-label visually-hidden">{{ form.description_type_data.label }}</label>
+            {% if form.description_type_data.errors %}
+                {% render_field form.description_type_data class="form-select is-invalid" %}
+            {% else %}
+                {% render_field form.description_type_data class="form-select" %}
+            {% endif %}
+        </div>
+        {% if "form.description" in errors%}
+            <div class="text-danger">{{ error }}
+            {% for error in form.description.errors %}
+                <ul>
+                    <li>{{ error }}</li>
+                </ul>
+            {% endfor %}
+        {% endif %}
+        {% if form.description.errors %}
+            {% for error in form.description.errors %}
+                <div class="alert alert-danger">{{ error }}</div>
+            {% endfor %}
+        {% endif %}
+        <div class="form-floating mb-3">
+            {% if form.description.errors %}
+                {% render_field form.description class="form-control is-invalid" style="height: 25rem; resize: none;"%}
+            {% else %}
+                {% render_field form.description class="form-control" style="height: 25rem; resize: none;" %}
+            {% endif %}
+            <label for="{{ form.description.id_for_label }}" class="form-label">{{ form.description.label }}</label>
+        </div>
+    {% else %}
+        <p>
+            {% if "form.name" in errors%}
+            <div class="text-danger">{{ error }}
+                {% for error in form.name.errors %}
+                <ul>
+                    <li>{{ error }}</li>
+                </ul>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <label for="{{ form.name.id_for_label }}" class="form-label">{{ form.name.label }}</label>
+            {% render_field form.name %}
+        </p>
+        <p>
+            <label for="{{ form.description_type_data.id_for_label }}" class="form-label">{{ form.description_type_data.label }}</label>
+            {% render_field form.description_type_data %}
+        </p>
+        <p>
+            <label for="{{ form.description.id_for_label }}" class="form-label">{{ form.description.label }}</label>
+            {% render_field form.description %}
+        </p>
+    {% endif %}
+
+    <div class="{% if use_bootstrap %}text-end{% endif %}">
+        {% block form_buttons %}{% endblock form_buttons %}
+    </div>
+</form>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    onLocationTypeChange = function() {
+        var locationTypeSelect = document.getElementById("{{ form.location_type_data.id_for_label }}");
+        const selectedType = locationTypeSelect.value;
+        const locationExtraDiv = document.getElementById("location-extra");
+
+        locationTypeSelect.setAttribute("hx-get", "{% url 'grow:hx-location-type-change' pk=location_pk %}?location_type=" + selectedType);
+        locationTypeSelect.setAttribute("hx-trigger", "click")
+        htmx.process(locationTypeSelect);
+        htmx.trigger(locationTypeSelect, "click");
+        htmx.off(locationTypeSelect, "click");
+    };
+
+    document.getElementById("{{ form.location_type_data.id_for_label }}").addEventListener("change", onLocationTypeChange);
+</script>
+{% endblock extra_scripts%}

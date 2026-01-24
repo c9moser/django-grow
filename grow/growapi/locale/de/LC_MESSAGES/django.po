@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: django-grc.api 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-11 00:50+0100\n"
+"POT-Creation-Date: 2026-01-24 10:40+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Christian Moser <christian@cmoser.eu>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -137,7 +137,7 @@ msgstr "Luftfeuchtigkeit"
 msgid "soil moisture"
 msgstr "Bodenfeuchtigkeit"
 
-#: grow/growapi/enums.py:435 grow/growapi/models/location.py:136
+#: grow/growapi/enums.py:435 grow/growapi/models/location.py:177
 msgid "light intensity"
 msgstr "Lichtintensität"
 
@@ -181,19 +181,19 @@ msgstr "Kelvin"
 msgid "This determines who can view the grow log."
 msgstr "Dies bestimmt wer den Growlog ansehen kann."
 
-#: grow/growapi/models/growlog.py:30 grow/growapi/models/location.py:24
+#: grow/growapi/models/growlog.py:30 grow/growapi/models/location.py:25
 #: grow/growapi/models/sensors.py:26 grow/growapi/models/strain.py:47
 #: grow/growapi/models/strain.py:612
 msgid "key"
 msgstr "Schlüssel"
 
-#: grow/growapi/models/growlog.py:38 grow/growapi/models/location.py:30
+#: grow/growapi/models/growlog.py:38 grow/growapi/models/location.py:31
 #: grow/growapi/models/sensors.py:31 grow/growapi/models/strain.py:58
 msgid "name"
 msgstr "Name"
 
 #: grow/growapi/models/growlog.py:44 grow/growapi/models/growlog.py:680
-#: grow/growapi/models/location.py:46 grow/growapi/models/location.py:222
+#: grow/growapi/models/location.py:46 grow/growapi/models/location.py:277
 #: grow/growapi/models/strain.py:95 grow/growapi/models/strain.py:653
 #: grow/growapi/models/strain.py:1334 grow/growapi/models/strain.py:1551
 #: grow/growapi/models/strain.py:1559
@@ -201,7 +201,7 @@ msgid "description"
 msgstr "Beschreibung"
 
 #: grow/growapi/models/growlog.py:50 grow/growapi/models/growlog.py:687
-#: grow/growapi/models/location.py:53 grow/growapi/models/location.py:229
+#: grow/growapi/models/location.py:70 grow/growapi/models/location.py:284
 #: grow/growapi/models/strain.py:188 grow/growapi/models/strain.py:510
 #: grow/growapi/models/strain.py:661 grow/growapi/models/strain.py:1302
 #: grow/growapi/models/strain.py:1451
@@ -281,8 +281,8 @@ msgstr "Inhalt"
 msgid "content type"
 msgstr "Inhaltstyp"
 
-#: grow/growapi/models/growlog.py:552 grow/growapi/models/location.py:114
-#: grow/growapi/models/location.py:200 grow/growapi/models/sensors.py:46
+#: grow/growapi/models/growlog.py:552 grow/growapi/models/location.py:147
+#: grow/growapi/models/location.py:255 grow/growapi/models/sensors.py:46
 msgid "location"
 msgstr "Ort"
 
@@ -298,15 +298,15 @@ msgstr "Bild"
 msgid "is plant image"
 msgstr "ist ein Pflanezenbild"
 
-#: grow/growapi/models/location.py:37
+#: grow/growapi/models/location.py:38
 msgid "location type"
 msgstr "Ortstyp"
 
-#: grow/growapi/models/location.py:63
+#: grow/growapi/models/location.py:96
 msgid "Permission"
 msgstr "Berechtigung"
 
-#: grow/growapi/models/location.py:64
+#: grow/growapi/models/location.py:97
 msgid ""
 "This defines who can view the location details. If not permitted to view "
 "details only the location type is shown."
@@ -314,77 +314,67 @@ msgstr ""
 "Dies definiert, wer die Ortsdetails einsehen kann. Wenn keine "
 "Berechtigungdie Detials enzusehen existiert, wird nur der Ortstyp Angezeigt."
 
-#: grow/growapi/models/location.py:76 grow/growapi/models/strain.py:287
+#: grow/growapi/models/location.py:109 grow/growapi/models/strain.py:287
 msgid "owner"
 msgstr "Eigentümer"
 
-#: grow/growapi/models/location.py:121
+#: grow/growapi/models/location.py:154
 msgid "lighting"
 msgstr "Beleuchtung"
 
-#: grow/growapi/models/location.py:129
-msgid "light cycle hours"
-msgstr "Lichtzyklus in Stunden"
-
-#: grow/growapi/models/location.py:130
-msgid "Number of hours the light is on during a 24-hour period."
-msgstr ""
-"Anzahl der Stunden in denen das Licht in einer 24 Stunden Periode "
-"eingeschaltet ist."
-
-#: grow/growapi/models/location.py:137
+#: grow/growapi/models/location.py:178
 msgid "Light intensity in lumens."
 msgstr "Licht Intensität in Lumen."
 
-#: grow/growapi/models/location.py:143
+#: grow/growapi/models/location.py:184
 msgid "light power consumption"
 msgstr "Stromverbrauch des Lichts"
 
-#: grow/growapi/models/location.py:144 grow/growapi/models/location.py:158
+#: grow/growapi/models/location.py:185 grow/growapi/models/location.py:199
 msgid "Power consumption in Watts."
 msgstr "Stromverbrauch in Watt"
 
-#: grow/growapi/models/location.py:150
+#: grow/growapi/models/location.py:191
 msgid "ventilation intensity"
 msgstr "Intensität der Belüftung"
 
-#: grow/growapi/models/location.py:151
+#: grow/growapi/models/location.py:192
 msgid "Ventilation intensity in cubic meters per hour."
 msgstr "Intensität der Blüftung in Kubikmeter pro Stunde"
 
-#: grow/growapi/models/location.py:157
+#: grow/growapi/models/location.py:198
 msgid "ventilation power consumption"
 msgstr "Stromverbrauch der Belüftung"
 
-#: grow/growapi/models/location.py:164
+#: grow/growapi/models/location.py:205
 msgid "width"
 msgstr "Breite"
 
-#: grow/growapi/models/location.py:166
+#: grow/growapi/models/location.py:207
 msgid "Width in centimeters."
 msgstr "Breite in Zentimeter"
 
-#: grow/growapi/models/location.py:171
+#: grow/growapi/models/location.py:212
 msgid "height"
 msgstr "Höhe"
 
-#: grow/growapi/models/location.py:173
+#: grow/growapi/models/location.py:214
 msgid "Height in centimeters."
 msgstr "Höhe in Zentimeter"
 
-#: grow/growapi/models/location.py:178
+#: grow/growapi/models/location.py:219
 msgid "depth"
 msgstr "Tiefe"
 
-#: grow/growapi/models/location.py:180
+#: grow/growapi/models/location.py:221
 msgid "Depth in centimeters."
 msgstr "Tiefe in Zenitmeter"
 
-#: grow/growapi/models/location.py:205
+#: grow/growapi/models/location.py:260
 msgid "longitude"
 msgstr "Längengrad"
 
-#: grow/growapi/models/location.py:212
+#: grow/growapi/models/location.py:267
 msgid "latitude"
 msgstr "Breitengrad"
 
@@ -612,6 +602,14 @@ msgstr "grow-de-fertilizers"
 #: grow/growapi/translatable.py:8
 msgid "grow-fertilizers-biobizz"
 msgstr "grow-de-fertilizers-biobizz"
+
+#~ msgid "light cycle hours"
+#~ msgstr "Lichtzyklus in Stunden"
+
+#~ msgid "Number of hours the light is on during a 24-hour period."
+#~ msgstr ""
+#~ "Anzahl der Stunden in denen das Licht in einer 24 Stunden Periode "
+#~ "eingeschaltet ist."
 
 #~ msgid "strain type"
 #~ msgstr "Sortentypus"

@@ -8,7 +8,7 @@
         <title>{% block head_title %}{{ grow_head_title}}{% endblock %}</title>
         <meta name="description" content="{% block meta_description %}{% endblock %}">
         <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous"> -->
-         <link rel="stylesheet" href="{% static 'css/grow.css' %}">
+         <link rel="stylesheet" href="{% static 'grow/css/grow.css' %}">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
         <link rel="icon" type="image/x-icon" href="{% static 'grow/img/favicon.ico' %}">
         {% block extra_css %}{% endblock %}
@@ -119,7 +119,7 @@
                                 <li>
                                     <a
                                         class="dropdown-item"
-                                        href="#"
+                                        href="{% url 'grow:location-create' %}"
                                     >
                                         <i class="bi bi-house-add"></i>
                                         {% translate "New Location" %}
@@ -146,7 +146,7 @@
                                 <li>
                                     <a
                                         class="dropdown-item"
-                                        href="#"
+                                        href="{% url 'grow:location-index' %}"
                                     >
                                         <i class="bi bi-house-check"></i>
                                         {% translate "My Locations" %}

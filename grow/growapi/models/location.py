@@ -5,6 +5,7 @@ Location models
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
+from django.utils.safestring import mark_safe
 
 from ..enums import (
     LocationType,
@@ -23,6 +24,8 @@ class Location(models.Model):
     key = models.SlugField(
         _("key"),
         max_length=255,
+        null=False,
+        blank=False,
     )
 
     #: The location name
@@ -38,7 +41,6 @@ class Location(models.Model):
         max_length=50,
         choices=LOCATION_CHOICES,
         default=LocationType.INDOOR.value,
-        editable=False
     )
 
     #: The description of the location
@@ -48,13 +50,46 @@ class Location(models.Model):
         null=True
     )
 
+    @property
+    def description_html(self) -> str:
+        """
+        Returns the HTML representation of the description.
+        """
+        if self.description:
+            if self.description_type == TextType.MARKDOWN:
+                from grow.growapi.parser.markdown import render_description_markdown
+                return render_description_markdown(self.description)
+            elif self.description_type == TextType.BBCODE:
+                from grow.growapi.parser.bbcode import render_description_bbcode
+                return render_description_bbcode(self.description)
+            elif self.description_type == TextType.PLAIN:
+                return mark_safe(self.description.replace("\n", "<br>"))
+        else:
+            return ""
+
     #: The TextType of the description
-    description_type = models.CharField(
+    description_type_data = models.CharField(
         _("description type"),
         max_length=50,
         default=TextType.MARKDOWN.value,
-        choices=TEXT_CHOICES
+        choices=TEXT_CHOICES,
+        db_column='description_type'
     )
+
+    @property
+    def description_type(self) -> TextType:
+        """
+        Get/Set the :py:class:`TextType` of the description.
+        """
+        return TextType.from_string(self.description_type_data)
+
+    @description_type.setter
+    def description_type(self, texttype: TextType | str):
+        if isinstance(texttype, str):
+            texttype = TextType.from_string(texttype)
+        elif not isinstance(texttype, TextType):
+            raise ValueError("description_type must be a TextType or str")
+        self.description_type_data = texttype.value()
 
     #: The visibility of the location
     #:
@@ -84,7 +119,7 @@ class Location(models.Model):
         If the the user is not permitted to view the location,
         only the location type is shown.
         """
-        return LocationType(self.location_type_data)
+        return LocationType.from_string(self.location_type_data)
 
     @location_type.setter
     def location_type(self, value: LocationType):
@@ -93,6 +128,13 @@ class Location(models.Model):
     @property
     def permission(self):
         return PermissionType.from_string(self.permission_data)
+
+    @property
+    def growlogs(self):
+        growlogs = set()
+        for entry in self.growlog_entries.all():
+            growlogs.add(entry.growlog)
+        return growlogs
 
     class Meta:
         db_table = "grow_location"
@@ -124,12 +166,20 @@ class GrowRoom(models.Model):
         default=GrowLightType.LED.value,
     )
 
-    #: The light cycle in hours
-    light_cycle_hours = models.PositiveIntegerField(
-        _("light cycle hours"),
-        help_text=_("Number of hours the light is on during a 24-hour period."),
-        default=12
-    )
+    @property
+    def light_type(self) -> GrowLightType:
+        """
+        Get/Set the :py:class:`GrowLightType` of the growroom.
+        """
+        return GrowLightType.from_string(self.light_type_data)
+
+    @light_type.setter
+    def light_type(self, lighttype: GrowLightType | str):
+        if isinstance(lighttype, str):
+            lighttype = GrowLightType.from_string(lighttype)
+        elif not isinstance(lighttype, GrowLightType):
+            raise ValueError("light_type must be a GrowLightType or str")
+        self.light_type_data = lighttype.value
 
     #: The maximum light intensity in lumens
     light_intensity = models.PositiveIntegerField(
@@ -146,7 +196,7 @@ class GrowRoom(models.Model):
     )
 
     #: The maximum ventilation intensity
-    ventilation_intesity = models.PositiveIntegerField(
+    ventilation_intensity = models.PositiveIntegerField(
         _("ventilation intensity"),
         help_text=_("Ventilation intensity in cubic meters per hour."),
         default=0
@@ -180,6 +230,20 @@ class GrowRoom(models.Model):
         help_text=_("Depth in centimeters.")
     )
 
+    @property
+    def area(self):
+        """
+        Returns the area of the growroom in square meters.
+        """
+        return (self.width * self.depth) / 10000
+
+    @property
+    def volume(self):
+        """
+        Returns the volume of the growroom in cubic meters.
+        """
+        return (self.width * self.depth * self.height) / 1000000
+
     class Meta:
         db_table = "grow_growroom"
 
@@ -196,22 +260,26 @@ class OutdoorLocation(models.Model):
     location = models.OneToOneField(
         Location,
         on_delete=models.CASCADE,
-        related_name="outdoor_locations",
+        related_name="outdoor_location",
         verbose_name=_("location")
     )
 
     #: the longitude of the location
-    logitude = models.DecimalField(
+    longitude = models.DecimalField(
         _("longitude"),
-        max_digits=9,
+        max_digits=10,
         decimal_places=6,
+        null=True,
+        blank=True
     )
 
     #: The latitude of the location
     latitude = models.DecimalField(
         _("latitude"),
         max_digits=10,
-        decimal_places=3,
+        decimal_places=6,
+        null=True,
+        blank=True
     )
 
     #: additional notes personal notes
