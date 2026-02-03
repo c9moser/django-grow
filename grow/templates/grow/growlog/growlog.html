@@ -1,0 +1,62 @@
+{% extends base_template %}
+{% load i18n %}
+{% block subtitle %}{% translate "Grow Log" %}{% endblock subtitle %}
+
+{% block content %}
+<h1>{{ growlog.name }}</h1>
+<div class="mb-3">
+    <a href="#{#{% url 'grow:growlog-update' pk=growlog.id %}#}" class="btn btn-outline-primary"
+        bs-toggle="tooltip" bs-placement="bottom" bs-title="{% translate 'Edit Grow Log' %}"
+    ><i class="bi bi-pencil-square"></i></a>
+    <a href="#{#{% url 'grow:growlog-delete' pk=growlog.id %}#}" class="btn btn-outline-danger"
+        bs-toggle="tooltip" bs-placement="bottom" bs-title="{% translate 'Delete Grow Log' %}"
+    ><i class="bi bi-trash"></i></a>
+</div>
+<p>
+    {% translate "This is the grow log for your cultivation activities. Here you can track and manage your grows." %}
+</p>
+{% if growlog.description %}
+<h2>{% translate "Description" %}</h2>
+<p>{{ growlog.description_html }}</p>
+{% endif %}
+<h2>{% translate "Entries" %}</h2>
+{% if growlog.entries.exists %}
+{% for entry in growlog.entries.all %}
+<div class="card mb-3">
+    <div class="card-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <h5 class="card-title">{{ entry.date|date:"x X" }}</h5>
+
+            <div class="text-end">
+                <a href="#{#{% url 'grow:growlog-entry-update' pk=entry.id %}#}" class="btn btn-sm btn-outline-primary"
+                    bs-toggle="tooltip" bs-placement="bottom" bs-title="{% translate 'Edit Entry' %}"
+                ><i class="bi bi-pencil-square"></i></a>
+                <a href="#{#{% url 'grow:growlog-entry-delete' pk=entry.id %}#}" class="btn btn-sm btn-outline-danger"
+                    bs-toggle="tooltip" bs-placement="bottom" bs-title="{% translate 'Delete Entry' %}"
+                ><i class="bi bi-trash"></i></a>
+            </div>
+            <div>
+                <div class="text-muted mb-1">{% blocktranslate count age=entry.age%}<b>Age:</b> {{ age }} day{% plural %}<b>Age:</b> {{ age }} days{% endblocktranslate %}</div>
+                {% if entry.flowering_time >= 0 %}
+                <div class="text-muted mb-1">{% blocktranslate count ft=entry.flowering_time%}<b>Flowering Time:</b> {{ ft }} day{% plural %}<b>Flowering Time:</b> {{ ft }} days{% endblocktranslate %}</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        {{ entry.content_html }}
+    </div>
+    {% if entry.images %}
+    <div class="card-footer text-muted">
+        <div class="row col-2 col-md-4 g-2">
+            {% for image in entry.images.all %}
+            <div class="col">
+                <a href="{{ image.image.url }}" target="_blank">
+                    <img src="{{ image.image.url }}" class="img-fluid img-thumbnail" alt="{% translate 'Grow Log Entry Image' %}">
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif%}
+</div>

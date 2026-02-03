@@ -528,6 +528,18 @@ class GrowlogEntry(models.Model):
     timestamp = models.DateTimeField(_("timestamp"),
                                      auto_now_add=True)
 
+    @property
+    def age(self) -> int:
+        """Get the age in days since the growlog started."""
+        return (self.timestamp - self.growlog.started_at).days
+
+    @property
+    def flowering_time(self) -> int:
+        """Get the flowering time in days since flowering started."""
+        if self.growlog.flowering_at is None:
+            return -1
+        return (self.timestamp.date() - self.growlog.flowering_at).days
+
     #: The content of the entry
     #:
     #: **Note:** Must contain a text
