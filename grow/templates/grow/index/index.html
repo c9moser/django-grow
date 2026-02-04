@@ -85,7 +85,7 @@
 {% endif %}
 
 {% if new_strains %}
-<h2>New Strains</h2>
+<h2>{% translate "New Strains" %}</h2>
 <table {% if use_bootstrap %}class="table"{% endif %}>
     <thead>
         <th>{% translate "Breeder" %}</th>
@@ -100,11 +100,11 @@
             <td><a href="{% url 'grow:strain-detail' breeder_slug=strain.breeder.slug slug=strain.slug %}">{{ strain.name }}</a></td>
             <td>{{ strain.genetics.name }}</td>
             <td>
-                {% blocktranslate with days=strain.flowering_time_days count n=strain.flowering_time_days %}
-                {{ days }} day
-                {% plural %}
-                {{ days }} days
-                {% endblocktranslate%}
+                {% if strain.flowering_time_days == 0 %}
+                {% translate "Unknown" %}
+                {% else %}
+                {% blocktranslate with days=strain.flowering_time_days count n=strain.flowering_time_days %}{{ days }} day{% plural %}{{ days }} days{% endblocktranslate%}
+                {% endif%}
             </td>
         </tr>
         {% endfor %}

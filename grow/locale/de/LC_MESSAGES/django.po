@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-24 10:40+0100\n"
+"POT-Creation-Date: 2026-02-04 23:50+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: DE\n"
@@ -38,6 +38,7 @@ msgstr "Höhe"
 #: grow/forms/location.py:17 grow/forms/location.py:93
 msgid "Height of the location in centimeters."
 msgstr "Höhe des Standorts in Zentimetern."
+
 #: grow/forms/location.py:21 grow/forms/location.py:97
 #: grow/templates/grow/location/hx_locationtype_change.html:27
 msgid "Depth"
@@ -46,6 +47,7 @@ msgstr "Tiefe"
 #: grow/forms/location.py:23 grow/forms/location.py:99
 msgid "Depth of the location in centimeters."
 msgstr "Tiefe des Standorts in Zentimetern."
+
 #: grow/forms/location.py:27 grow/forms/location.py:103
 msgid "Light Type"
 msgstr "Lichttyp"
@@ -61,6 +63,7 @@ msgstr "Leistungsaufnahme der Beleuchtung (Watt)"
 #: grow/forms/location.py:37 grow/forms/location.py:113
 msgid "Power consumption of the lighting in Watts."
 msgstr "Leistungsaufnahme der Beleuchtung in Watt."
+
 #: grow/forms/location.py:42 grow/forms/location.py:118
 msgid "Ventilation Power Consumption (Watts)"
 msgstr "Leistungsaufnahme der Belüftung (Watt)"
@@ -78,7 +81,7 @@ msgid "Ventilation intensity in cubic meters per hour."
 msgstr "Belüftungsintensität in Kubikmetern pro Stunde."
 
 #: grow/forms/location.py:56 grow/forms/location.py:132
-#: grow/templates/grow/location/form.html:186
+#: grow/templates/grow/location/form.html:187
 #: grow/templates/grow/location/hx_locationtype_change.html:98
 msgid "Longitude"
 msgstr "Längengrad"
@@ -86,11 +89,13 @@ msgstr "Längengrad"
 #: grow/forms/location.py:60 grow/forms/location.py:136
 msgid "Longitude coordinate of the location."
 msgstr "Längengrad-Koordinate des Standorts."
+
 #: grow/forms/location.py:64 grow/forms/location.py:140
-#: grow/templates/grow/location/form.html:171
+#: grow/templates/grow/location/form.html:172
 #: grow/templates/grow/location/hx_locationtype_change.html:92
 msgid "Latitude"
 msgstr "Breitengrad"
+
 #: grow/forms/location.py:68 grow/forms/location.py:144
 msgid "Latitude coordinate of the location."
 msgstr "Breitengrad-Koordinate des Standorts."
@@ -131,7 +136,7 @@ msgstr "Notizen"
 msgid "Filter breeders..."
 msgstr "Züchter filtern..."
 
-#: grow/forms/strain.py:112 grow/templates/grow/strain/index.html:53
+#: grow/forms/strain.py:112 grow/templates/grow/strain/index.html:52
 msgid "Search strains..."
 msgstr "Suche Sorten..."
 
@@ -151,12 +156,12 @@ msgstr "Voreingestellte Ortsberechtigungen"
 msgid "unit of length"
 msgstr "Längeneinheit"
 
-#: grow/templates/grow/bs_base.html:63 grow/templates/grow/index/index.html:9
-#: grow/templates/grow/index/index.html:11
+#: grow/templates/grow/bs_base.html:63 grow/templates/grow/index/index.html:8
+#: grow/templates/grow/index/index.html:10
 #: grow/templates/grow/strain/breeder_detail.html:16
 #: grow/templates/grow/strain/breeder_detail.html:18
-#: grow/templates/grow/strain/index.html:14
-#: grow/templates/grow/strain/index.html:16
+#: grow/templates/grow/strain/index.html:13
+#: grow/templates/grow/strain/index.html:15
 #: grow/templates/grow/strain/strain_detail.html:13
 #: grow/templates/grow/strain/strain_detail.html:15
 msgid "Home"
@@ -166,7 +171,8 @@ msgstr "Start"
 #: grow/templates/grow/strain/breeder_detail.html:23
 #: grow/templates/grow/strain/breeder_detail.html:172
 #: grow/templates/grow/strain/hx_breeder_filter.html:7
-#: grow/templates/grow/strain/index.html:90
+#: grow/templates/grow/strain/index.html:18
+#: grow/templates/grow/strain/index.html:89
 #: grow/templates/grow/strain/strain_detail.html:20
 msgid "Strains"
 msgstr "Sorten"
@@ -176,7 +182,7 @@ msgstr "Sorten"
 msgid "Search for strains"
 msgstr "Nach Sorten suchen"
 
-#: grow/templates/grow/bs_base.html:88 grow/templates/grow/strain/index.html:19
+#: grow/templates/grow/bs_base.html:88
 msgid "Breeders"
 msgstr "Züchter"
 
@@ -263,105 +269,171 @@ msgstr "Einstellungen"
 msgid "Log out"
 msgstr "Abmelden"
 
-#: grow/templates/grow/index/index.html:20
+#: grow/templates/grow/growlog/growlog.html:3
+msgid "Grow Log"
+msgstr "Growlog"
+
+#: grow/templates/grow/growlog/growlog.html:9
+msgid "Edit Grow Log"
+msgstr "Growlog bearbeiten"
+
+#: grow/templates/grow/growlog/growlog.html:12
+msgid "Delete Grow Log"
+msgstr "Growlog löschen"
+
+#: grow/templates/grow/growlog/growlog.html:16
+msgid ""
+"This is the grow log for your cultivation activities. Here you can track and "
+"manage your grows."
+msgstr "Dies ist das Growlog für deine Anbautätigkeiten. Hier kannst du deine Grows verfolgen und verwalten."
+
+#: grow/templates/grow/growlog/growlog.html:19
+#: grow/templates/grow/location/index.html:107
+msgid "Description"
+msgstr "Beschreibung"
+
+#: grow/templates/grow/growlog/growlog.html:22
+msgid "Entries"
+msgstr "Einträge"
+
+#: grow/templates/grow/growlog/growlog.html:32
+msgid "Edit Entry"
+msgstr "Eintrag bearbeiten"
+
+#: grow/templates/grow/growlog/growlog.html:35
+msgid "Delete Entry"
+msgstr "Eintrag löschen"
+
+#: grow/templates/grow/growlog/growlog.html:39
+#, python-format
+msgid "<b>Age:</b> %(age)s day"
+msgid_plural "<b>Age:</b> %(age)s days"
+msgstr[0] "<b>Alter:</b> %(age)s Tag"
+msgstr[1] "<b>Alter:</b> %(age)s Tage"
+
+#: grow/templates/grow/growlog/growlog.html:41
+#, python-format
+msgid "<b>Flowering Time:</b> %(ft)s day"
+msgid_plural "<b>Flowering Time:</b> %(ft)s days"
+msgstr[0] "<b>Blütezeit:</b> %(ft)s Tag"
+msgstr[1] "<b>Blütezeit:</b> %(ft)s Tage"
+
+#: grow/templates/grow/growlog/growlog.html:55
+msgid "Grow Log Entry Image"
+msgstr "Growlog Eintragsbild"
+
+#: grow/templates/grow/index/index.html:11
+#: grow/templates/grow/strain/breeder_detail.html:19
+#: grow/templates/grow/strain/index.html:16
+#: grow/templates/grow/strain/strain_detail.html:16
+msgid "Grow"
+msgstr "Grow"
+
+#: grow/templates/grow/index/index.html:19
 #, python-format
 msgid "Welcome to Grow, %(user_short_name)s"
 msgstr "Willkommen bei Grow, %(user_short_name)s"
 
-#: grow/templates/grow/index/index.html:23
+#: grow/templates/grow/index/index.html:22
 msgid "Welcome to Grow"
 msgstr "Willkommen bei Grow"
 
-#: grow/templates/grow/index/index.html:28
+#: grow/templates/grow/index/index.html:27
 msgid "My active Growlogs"
 msgstr "Meine aktiven Growlogs"
 
-#: grow/templates/grow/index/index.html:29
+#: grow/templates/grow/index/index.html:28
 msgid "Create a new Growlog"
-msgstr "Ertelle einen neuen Growlog"
-
-#: grow/templates/grow/index/index.html:34
-#: grow/templates/grow/index/index.html:63
+msgstr "Erstelle einen neuen Growlog"
+#: grow/templates/grow/index/index.html:33
+#: grow/templates/grow/index/index.html:62
 msgid "Title"
 msgstr "Titel"
 
-#: grow/templates/grow/index/index.html:35
-#: grow/templates/grow/index/index.html:65
+#: grow/templates/grow/index/index.html:34
+#: grow/templates/grow/index/index.html:64
 msgid "Locations"
 msgstr "Orte"
 
-#: grow/templates/grow/index/index.html:36
-#: grow/templates/grow/index/index.html:66
+#: grow/templates/grow/index/index.html:35
+#: grow/templates/grow/index/index.html:65
 msgid "Plant age"
 msgstr "Pflanzenalter"
 
-#: grow/templates/grow/index/index.html:37
-#: grow/templates/grow/index/index.html:67
-#: grow/templates/grow/index/index.html:95
+#: grow/templates/grow/index/index.html:36
+#: grow/templates/grow/index/index.html:66
+#: grow/templates/grow/index/index.html:94
 #: grow/templates/grow/strain/breeder_detail.html:195
 #: grow/templates/grow/strain/hx_strain_filter.html:10
 msgid "Flowering time"
 msgstr "Blütezeit"
 
+#: grow/templates/grow/index/index.html:44
 #: grow/templates/grow/index/index.html:45
-#: grow/templates/grow/index/index.html:46
+#: grow/templates/grow/index/index.html:75
 #: grow/templates/grow/index/index.html:76
-#: grow/templates/grow/index/index.html:77
 #, python-format
 msgid "%(weeks)s week"
 msgid_plural "%(weeks)s weeks"
 msgstr[0] "%(weeks)s Woche"
 msgstr[1] "%(weeks)s Wochen"
 
-#: grow/templates/grow/index/index.html:53
+#: grow/templates/grow/index/index.html:52
 msgid "You have no Growlogs! How about creating one?"
 msgstr "Du hast keine Growlogs! Wie wäre es, wenn du einen ertellst?"
 
-#: grow/templates/grow/index/index.html:58
+#: grow/templates/grow/index/index.html:57
 msgid "New growlogs"
 msgstr "Neue Growlogs"
 
-#: grow/templates/grow/index/index.html:64
+#: grow/templates/grow/index/index.html:63
 msgid "User"
 msgstr "Nutzer"
 
-#: grow/templates/grow/index/index.html:84
+#: grow/templates/grow/index/index.html:83
 msgid "There are no new growlogs of other users you are allowed to view!"
 msgstr "Es gibt keine neuen Growlogs anderer Nutzer, die die ansehen darfst!"
 
-#: grow/templates/grow/index/index.html:92
+#: grow/templates/grow/index/index.html:88
+msgid "New Strains"
+msgstr "Neue Sorten"
+
+#: grow/templates/grow/index/index.html:91
 #: grow/templates/grow/strain/strain_form.html:11
 #: grow/templates/grow/strain/strain_form.html:211
 #: grow/templates/grow/strain/strain_search_results.html:22
 msgid "Breeder"
 msgstr "Züchter"
 
-#: grow/templates/grow/index/index.html:93
+#: grow/templates/grow/index/index.html:92
 #: grow/templates/grow/strain/hx_breeder_filter.html:6
-#: grow/templates/grow/strain/index.html:89
+#: grow/templates/grow/strain/index.html:88
 msgid "Name"
 msgstr "Name"
 
-#: grow/templates/grow/index/index.html:94
+#: grow/templates/grow/index/index.html:93
 msgid "Genetics"
 msgstr "Genetik"
 
 #: grow/templates/grow/index/index.html:104
+#: grow/templates/grow/strain/breeder_detail.html:246
+#: grow/templates/grow/strain/hx_strain_filter.html:60
+#: grow/templates/grow/strain/hx_strain_in_stock_update.html:26
+#: grow/templates/grow/strain/hx_strain_in_stock_update.html:82
+#: grow/templates/grow/strain/strain_detail.html:144
+#: grow/templates/grow/strain/strain_detail.html:309
+#: grow/templates/grow/strain/strain_detail.html:376
+msgid "Unknown"
+msgstr "Unbekannt"
+
+#: grow/templates/grow/index/index.html:106
+#: grow/templates/grow/strain/breeder_detail.html:244
+#: grow/templates/grow/strain/hx_strain_filter.html:58
 #, python-format
-msgid ""
-"\n"
-"                %(days)s day\n"
-"                "
-msgid_plural ""
-"\n"
-"                %(days)s days\n"
-"                "
-msgstr[0] ""
-"\n"
-"%(days)s Tag"
-msgstr[1] ""
-"\n"
-"%(days)s Tage"
+msgid "%(days)s day"
+msgid_plural "%(days)s days"
+msgstr[0] "%(days)s Tag"
+msgstr[1] "%(days)s Tage"
 
 #: grow/templates/grow/location/create.html:3
 #: grow/templates/grow/location/create.html:4
@@ -370,6 +442,9 @@ msgid "Create Location"
 msgstr "Neuer Ort"
 
 #: grow/templates/grow/location/create.html:7
+#: grow/templates/grow/location/delete.html:21
+#: grow/templates/grow/location/delete.html:24
+#: grow/templates/grow/location/hx_delete.html:35
 #: grow/templates/grow/location/update.html:7
 #: grow/templates/grow/strain/hx_breeder_delete.html:33
 #: grow/templates/grow/strain/hx_strain_add_to_stock.html:70
@@ -381,9 +456,27 @@ msgstr "Neuer Ort"
 msgid "Cancel"
 msgstr "Abbrechen"
 
+#: grow/templates/grow/location/delete.html:3
+#: grow/templates/grow/location/delete.html:4
+#: grow/templates/grow/location/delete.html:7
+#: grow/templates/grow/location/delete.html:20
+#: grow/templates/grow/location/delete.html:23
+#: grow/templates/grow/location/hx_delete.html:5
+#: grow/templates/grow/location/hx_delete.html:8
+msgid "Delete Location"
+msgstr "Ort löschen"
+
+#: grow/templates/grow/location/delete.html:12
+#: grow/templates/grow/location/hx_delete.html:15
+msgid "Back to Locations"
+msgstr "Zurück zu den Orten"
+
+#: grow/templates/grow/location/delete.html:17
+#, python-format
+msgid "Are you sure you want to delete the location <i>%(location.name)s</i>?"
+msgstr "Bist du sicher, dass du den Ort <i>%(location.name)s</i> löschen möchtest?"
+
 #: grow/templates/grow/location/form.html:41
-#, fuzzy
-#| msgid "Locations"
 msgid "Location Type"
 msgstr "Ortstyp"
 
@@ -394,6 +487,7 @@ msgstr "Berechtigung"
 #: grow/templates/grow/location/form.html:70
 msgid "Room Width"
 msgstr "Raumbreite"
+
 #: grow/templates/grow/location/form.html:86
 msgid "Room Height"
 msgstr "Raumhöhe"
@@ -401,11 +495,13 @@ msgstr "Raumhöhe"
 #: grow/templates/grow/location/form.html:101
 msgid "Room Depth"
 msgstr "Raumtiefe"
+
 #: grow/templates/grow/location/form.html:121
 #: grow/templates/grow/location/hx_locationtype_change.html:47
-#: grow/templates/grow/location/index.html:59
+#: grow/templates/grow/location/index.html:67
 msgid "Lighting:"
 msgstr "Beleuchtung:"
+
 #: grow/templates/grow/location/form.html:127
 #: grow/templates/grow/location/hx_locationtype_change.html:53
 msgid "Intensity"
@@ -428,9 +524,13 @@ msgstr "Belüftung"
 msgid "Power"
 msgstr "Leistungsaufnahme"
 
-#: grow/templates/grow/location/form.html:200
+#: grow/templates/grow/location/form.html:202
 msgid "Description text type"
 msgstr "Beschreibungstexttyp"
+
+#: grow/templates/grow/location/hx_delete.html:22
+msgid "Do you really want to delete location <i>%(name)s</i>?"
+msgstr "Willst du den Ort <i>%(name)s</i> wirklich löschen"
 
 #: grow/templates/grow/location/index.html:9
 msgid "Manage your growing locations where you cultivate your strains."
@@ -440,52 +540,48 @@ msgstr "Verwalte deine Anbauorte, an denen du deine Sorten anbaust."
 msgid "Create new location"
 msgstr "Erstelle einen neuen Ort"
 
-#: grow/templates/grow/location/index.html:34
-
+#: grow/templates/grow/location/index.html:42
 msgid "Location Key:"
 msgstr "Ortsschlüssel:"
 
-#: grow/templates/grow/location/index.html:37
+#: grow/templates/grow/location/index.html:45
 msgid "Permission:"
 msgstr "Berechtigung:"
 
-#: grow/templates/grow/location/index.html:44
+#: grow/templates/grow/location/index.html:52
 msgid "Dimensions:"
 msgstr "Dimensionen:"
 
-#: grow/templates/grow/location/index.html:50
+#: grow/templates/grow/location/index.html:58
 msgid "Area:"
 msgstr "Fläche:"
-#: grow/templates/grow/location/index.html:55
+
+#: grow/templates/grow/location/index.html:63
 msgid "Volume:"
 msgstr "Volumen:"
 
-#: grow/templates/grow/location/index.html:64
+#: grow/templates/grow/location/index.html:72
 msgid "Ventilation:"
 msgstr "Belüftung:"
-#: grow/templates/grow/location/index.html:74
+
+#: grow/templates/grow/location/index.html:82
 msgid "Coordinates:"
 msgstr "Koordinaten:"
 
-#: grow/templates/grow/location/index.html:78
+#: grow/templates/grow/location/index.html:86
 msgid "Not specified"
 msgstr "Nicht angegeben"
 
-#: grow/templates/grow/location/index.html:83
+#: grow/templates/grow/location/index.html:91
 msgid "Map:"
 msgstr "Karte:"
 
-#: grow/templates/grow/location/index.html:87
-#: grow/templates/grow/location/index.html:91
+#: grow/templates/grow/location/index.html:95
+#: grow/templates/grow/location/index.html:99
 msgid "View on Google Maps"
 msgstr "Auf Google Maps ansehen"
 
-#: grow/templates/grow/location/index.html:99
-
-msgid "Description"
-msgstr "Beschreibung"
-
-#: grow/templates/grow/location/index.html:106
+#: grow/templates/grow/location/index.html:114
 msgid "You have not created any locations yet."
 msgstr "Du hast noch keine Orte erstellt."
 
@@ -671,7 +767,7 @@ msgstr "Genotyp"
 #: grow/templates/grow/strain/breeder_detail.html:196
 #: grow/templates/grow/strain/hx_breeder_filter.html:8
 #: grow/templates/grow/strain/hx_strain_filter.html:11
-#: grow/templates/grow/strain/index.html:91
+#: grow/templates/grow/strain/index.html:90
 msgid "Growlogs"
 msgstr "Growlogs"
 
@@ -680,24 +776,6 @@ msgstr "Growlogs"
 #, python-format
 msgid "Add strain to breeder <i>%(name)s</i>"
 msgstr "Füge eine Sorte zu Züchter <i>%(name)s</i> hinzu"
-
-#: grow/templates/grow/strain/breeder_detail.html:244
-#: grow/templates/grow/strain/hx_strain_filter.html:58
-#, python-format
-msgid "%(days)s day"
-msgid_plural "%(days)s days"
-msgstr[0] "%(days)s Tag"
-msgstr[1] "%(days)s Tage"
-
-#: grow/templates/grow/strain/breeder_detail.html:246
-#: grow/templates/grow/strain/hx_strain_filter.html:60
-#: grow/templates/grow/strain/hx_strain_in_stock_update.html:26
-#: grow/templates/grow/strain/hx_strain_in_stock_update.html:82
-#: grow/templates/grow/strain/strain_detail.html:144
-#: grow/templates/grow/strain/strain_detail.html:309
-#: grow/templates/grow/strain/strain_detail.html:376
-msgid "Unknown"
-msgstr "Unbekannt"
 
 #: grow/templates/grow/strain/breeder_detail.html:250
 #: grow/templates/grow/strain/hx_strain_filter.html:64
@@ -787,29 +865,29 @@ msgstr ""
 "Knopf."
 
 #: grow/templates/grow/strain/hx_breeder_filter.html:32
-#: grow/templates/grow/strain/index.html:114
+#: grow/templates/grow/strain/index.html:113
 msgid "Add breeder"
 msgstr "Züchter hinzufügen"
 
 #: grow/templates/grow/strain/hx_breeder_filter.html:68
-#: grow/templates/grow/strain/index.html:149
+#: grow/templates/grow/strain/index.html:148
 #, python-format
 msgid "Edit breeder <i>%(name)s</i>"
 msgstr "Züchter <i>%(name)s</i> bearbeiten"
 
 #: grow/templates/grow/strain/hx_breeder_filter.html:95
-#: grow/templates/grow/strain/index.html:174
+#: grow/templates/grow/strain/index.html:173
 #, python-format
 msgid "Delete breeder <i>%(name)s</i>"
 msgstr "Züchter breeder <i>%(name)s</i> löschen"
 
 #: grow/templates/grow/strain/hx_breeder_filter.html:110
-#: grow/templates/grow/strain/index.html:189
+#: grow/templates/grow/strain/index.html:188
 msgid "Edit"
 msgstr "Bearbeiten"
 
 #: grow/templates/grow/strain/hx_breeder_filter.html:115
-#: grow/templates/grow/strain/index.html:194
+#: grow/templates/grow/strain/index.html:193
 msgid "Delete"
 msgstr "Löschen"
 
@@ -1015,7 +1093,7 @@ msgstr "Suchbegriff"
 msgid "Breeder overview"
 msgstr "Züchterübersicht"
 
-#: grow/templates/grow/strain/index.html:26
+#: grow/templates/grow/strain/index.html:25
 msgid ""
 "This is an overview of all breeders in the system. You can filter the "
 "breeders by typing in the filter field below."
@@ -1023,7 +1101,7 @@ msgstr ""
 "Dies ist eine Übersicht aller Züchter im System. Du kannst die Züchter "
 "filtern, indem du im untenstehenden Filterfeld tippst."
 
-#: grow/templates/grow/strain/index.html:29
+#: grow/templates/grow/strain/index.html:28
 #, python-format
 msgid ""
 "Currently there are %(breeder_count)s breeders and %(strain_count)s strains "
@@ -1032,8 +1110,8 @@ msgstr ""
 "Derzeit gibt es %(breeder_count)s Züchter und %(strain_count)s Sorten im "
 "System."
 
-#: grow/templates/grow/strain/index.html:43
-#: grow/templates/grow/strain/index.html:48
+#: grow/templates/grow/strain/index.html:42
+#: grow/templates/grow/strain/index.html:47
 msgid "Search strains"
 msgstr "Sorten suchen"
 
@@ -1546,8 +1624,26 @@ msgstr "Sorte aktualisieren"
 msgid "Update Strain"
 msgstr "Sorte aktualisieren"
 
-#~ msgid "Add Growlog"
-#~ msgstr "Growlog hinzufügen"
+#: grow/views/location.py:223 grow/views/location.py:235
+#: grow/views/location.py:248 grow/views/location.py:259
+msgid "Location cannot be deleted because it has associated growlogs."
+msgstr "Der Standort kann nicht gelöscht werden, da er mit Growlogs verknüpft ist."
+
+#, python-format
+#~ msgid ""
+#~ "\n"
+#~ "                %(days)s day\n"
+#~ "                "
+#~ msgid_plural ""
+#~ "\n"
+#~ "                %(days)s days\n"
+#~ "                "
+#~ msgstr[0] ""
+#~ "\n"
+#~ "%(days)s Tag"
+#~ msgstr[1] ""
+#~ "\n"
+#~ "%(days)s Tage"
 
 #, python-format
 #~ msgid "Breeder %(name)s"
