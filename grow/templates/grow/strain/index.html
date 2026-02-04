@@ -8,15 +8,14 @@
 {% block content %}
 {% if use_bootstrap %}
 <nav aria-label="breadcrumb">
-    {% url "grow:home" as grow_home %}
-    <ol class="breadcrumb" style="--bs-breadcrumb-divider:'&#10093;';">
-    {% if grow_home == "/" %}
-        <li class="breadcrumb-item"><a href="{{ grow_home }}">{% translate "Home" %}</a></li>
+    <ol class="breadcrumb">
+    {% if GROW_IS_MAIN_APP%}
+        <li class="breadcrumb-item"><a href="{% url 'grow:home' %}">{% translate "Home" %}</a></li>
     {% else %}
         <li class="breadcrumb-item"><a href="/">{% translate "Home" %}</a></li>
-        <li class="breadcrumb-item"><a href="{{ grow_home }}">Grow</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'grow:home' %}">{% translate "Grow" %}</a></li>
     {% endif %}
-        <li class="breadcrumb-item active">{% translate "Breeders" %}</li>
+        <li class="breadcrumb-item active">{% translate "Strains" %}</li>
     </ol>
 </nav>
 {% endif %}

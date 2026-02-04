@@ -6,6 +6,7 @@ BASE_TEMPLATE = getattr(settings, "BASE_TEMPLATE", "grow/bs_base.html") # if USE
 LOGIN_REQUIRED = getattr(settings, "LOGIN_REQUIRED", False)
 GROW_SITE_TITLE = getattr(settings, "GROW_SITE_TITLE", getattr(settings, "SITE_TITLE", "Grow"))
 GROW_HEAD_TITLE = getattr(settings, "GROW_HEAD_TITLE", getattr(settings, "HEAD_TITLE", GROW_SITE_TITLE))
+GROW_IS_MAIN_APP = getattr(settings, "GROW_IS_MAIN_APP", False)
 
 GROW_BUILTIN_TEMPLATES = {
     # breeder templates

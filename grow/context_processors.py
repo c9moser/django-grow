@@ -14,4 +14,5 @@ def grow(request: HttpRequest) -> dict[str, Any]:
         'grow_site_title': settings.GROW_SITE_TITLE,
         'site_title': settings.GROW_SITE_TITLE,
         'grow_head_title': settings.GROW_HEAD_TITLE,
+        'GROW_IS_MAIN_APP': settings.GROW_IS_MAIN_APP,
     }

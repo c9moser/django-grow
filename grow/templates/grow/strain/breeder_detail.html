@@ -11,12 +11,12 @@
 
 <nav aria-label="breadcrumb"
     <ol class="breadcrumb" >
-    {% url "grow:home" as grow_home %}
-    {% if grow_home == '/' %}
-        <li class="breadcrumb-item"><a href="{{ grow_home }}">{% translate "Home" %}</a></li>
+
+    {% if GROW_IS_MAIN_APP %}
+        <li class="breadcrumb-item"><a href="{% url 'grow:home' %}">{% translate "Home" %}</a></li>
     {% else %}
         <li class="breadcrumb-item"><a href="/">{% translate "Home" %}</a></li>
-        <li class="breadcrumb-item"><a href="{{ grow_home }}">Grow</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'grow:home' %}">{% translate "Grow" %}</a></li>
     {% endif %}
         <li class="breadcrumb-item">
             <a href="{% url "grow:breeder-overview" %}">
