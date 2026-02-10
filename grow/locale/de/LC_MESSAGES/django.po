@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-10 22:30+0100\n"
+"POT-Creation-Date: 2026-02-10 23:13+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: DE\n"
@@ -113,7 +113,7 @@ msgstr "Wochen"
 #: grow/templates/grow/strain/hx_strain_in_stock_update.html:6
 #: grow/templates/grow/strain/hx_strain_remove_from_stock.html:27
 #: grow/templates/grow/strain/strain_detail.html:289
-#: grow/templates/grow/user/info.html:75
+#: grow/templates/grow/user/info.html:77
 msgid "Quantity"
 msgstr "Anzahl"
 
@@ -369,7 +369,7 @@ msgstr "Pflanzenalter"
 #: grow/templates/grow/index/index.html:94
 #: grow/templates/grow/strain/breeder_detail.html:195
 #: grow/templates/grow/strain/hx_strain_filter.html:10
-#: grow/templates/grow/user/info.html:111
+#: grow/templates/grow/user/info.html:76 grow/templates/grow/user/info.html:115
 msgid "Flowering time"
 msgstr "Blütezeit"
 
@@ -413,8 +413,8 @@ msgstr "Züchter"
 #: grow/templates/grow/index/index.html:92
 #: grow/templates/grow/strain/hx_breeder_filter.html:6
 #: grow/templates/grow/strain/index.html:88
-#: grow/templates/grow/user/info.html:108
-#: grow/templates/grow/user/info.html:136
+#: grow/templates/grow/user/info.html:112
+#: grow/templates/grow/user/info.html:140
 msgid "Name"
 msgstr "Name"
 
@@ -771,6 +771,7 @@ msgstr "Sorte"
 #: grow/templates/grow/strain/hx_strain_filter.html:8
 #: grow/templates/grow/strain/strain_form.html:57
 #: grow/templates/grow/strain/strain_search_results.html:24
+#: grow/templates/grow/user/info.html:75
 msgid "Genotype"
 msgstr "Genotyp"
 
@@ -1666,6 +1667,7 @@ msgstr[0] " Du hast zur Zeit einen Samen auf Lager."
 msgstr[1] " Du hast zur Zeit %(n)s Samen auf Lager."
 
 #: grow/templates/grow/user/info.html:39
+#, python-format
 msgid "Of them, one is feminized."
 msgid_plural "Of them, %(n)s are feminized."
 msgstr[0] "Einer von ihnen ist feminisiert."
@@ -1691,6 +1693,7 @@ msgid "All of your seeds are autoflowering."
 msgstr "Alle deine Samen sind selbstblühend."
 
 #: grow/templates/grow/user/info.html:50
+#, python-format
 msgid "One is an autoflowering seed."
 msgid_plural "%(n)s are autoflowering seeds."
 msgstr[0] "Einer von ihnen ist selbstblühend."
@@ -1720,98 +1723,107 @@ msgstr "Du hast keine photoperiodischen Samen auf Lager."
 
 #: grow/templates/grow/user/info.html:67
 msgid "You can add more seeds to your stock in the strain detail page."
-msgstr "Du kannst weitere Samen auf der Detailseite der Sorte zu deinem Lager hinzufügen."
+msgstr ""
+"Du kannst weitere Samen auf der Detailseite der Sorte zu deinem Lager "
+"hinzufügen."
 
 #: grow/templates/grow/user/info.html:74
 msgid "Type"
 msgstr "Typ"
 
-#: grow/templates/grow/user/info.html:86
+#: grow/templates/grow/user/info.html:88
 msgid "feminized"
 msgstr "Feminisiert"
 
-#: grow/templates/grow/user/info.html:86
+#: grow/templates/grow/user/info.html:88
 msgid "regular"
 msgstr "Regulär"
 
-#: grow/templates/grow/user/info.html:86
+#: grow/templates/grow/user/info.html:88
 msgid "autoflowering"
 msgstr "Autoflowering"
 
-#: grow/templates/grow/user/info.html:92
+#: grow/templates/grow/user/info.html:91
+#, python-format
+msgid "One day"
+msgid_plural "%(n)s days"
+msgstr[0] "Einen Tag"
+msgstr[1] "%(n)s Tage"
+
+#: grow/templates/grow/user/info.html:96
 msgid "You have no seeds in stock."
 msgstr "Du hast keine Samen auf Lager."
 
-#: grow/templates/grow/user/info.html:98
+#: grow/templates/grow/user/info.html:102
 msgid "My grow logs"
 msgstr "Meine Growlogs"
 
-#: grow/templates/grow/user/info.html:100
+#: grow/templates/grow/user/info.html:104
 #, python-format
 msgid "You currently have one grow log."
 msgid_plural "You currently have %(n)s grow logs."
 msgstr[0] "Du hast zur Zeit einen Growlog."
 msgstr[1] "Du hast zur Zeit %(n)s Growlogs."
 
-#: grow/templates/grow/user/info.html:101
+#: grow/templates/grow/user/info.html:105
 #, python-format
 msgid "One of them is finished."
 msgid_plural "%(n)s of them are finished."
 msgstr[0] "Einer von ihnen ist abgeschlossen."
 msgstr[1] "%(n)s von ihnen sind abgeschlossen."
 
-#: grow/templates/grow/user/info.html:102
+#: grow/templates/grow/user/info.html:106
 #, python-format
 msgid "One of them is still active."
 msgid_plural "%(n)s of them are still active."
 msgstr[0] "Einer von ihnen ist noch aktiv."
 msgstr[1] "%(n)s von ihnen sind noch aktiv."
 
-#: grow/templates/grow/user/info.html:104
+#: grow/templates/grow/user/info.html:108
 msgid "Active grow logs"
 msgstr "Aktive Growlogs"
 
-#: grow/templates/grow/user/info.html:109
-#: grow/templates/grow/user/info.html:137
+#: grow/templates/grow/user/info.html:113
+#: grow/templates/grow/user/info.html:141
 msgid "Started at"
 msgstr "Gestartet am"
 
-#: grow/templates/grow/user/info.html:110
+#: grow/templates/grow/user/info.html:114
 msgid "Age"
 msgstr "Alter"
 
-#: grow/templates/grow/user/info.html:121
+#: grow/templates/grow/user/info.html:125
 #, python-format
 msgid "One day old."
 msgid_plural "%(n)s days old."
 msgstr[0] "Einen Tag alt."
 msgstr[1] "%(n)s Tage alt."
 
-#: grow/templates/grow/user/info.html:122
-#: grow/templates/grow/user/info.html:150
+#: grow/templates/grow/user/info.html:126
+#: grow/templates/grow/user/info.html:154
 #, python-format
 msgid "One day."
 msgid_plural "%(n)s days."
-msgstr[0] "Ein Tag."
+msgstr[0] "Einen Tag."
 msgstr[1] "%(n)s Tage."
 
-#: grow/templates/grow/user/info.html:126
+#: grow/templates/grow/user/info.html:130
 msgid "You have no active grow logs."
 msgstr "Du hast keine aktiven Growlogs."
 
-#: grow/templates/grow/user/info.html:132
+#: grow/templates/grow/user/info.html:136
 msgid "Finished grow logs"
 msgstr "Abgeschlossene Growlogs"
 
-#: grow/templates/grow/user/info.html:138
+#: grow/templates/grow/user/info.html:142
 msgid "Finished at"
 msgstr "Abgeschlossen am"
 
-#: grow/templates/grow/user/info.html:139
+#: grow/templates/grow/user/info.html:143
 msgid "Duration"
 msgstr "Dauer"
 
-#: grow/templates/grow/user/info.html:154
+#: grow/templates/grow/user/info.html:158
 msgid "You have no finished grow logs."
 msgstr "Du hast keine abgeschlossenen Growlogs."
 

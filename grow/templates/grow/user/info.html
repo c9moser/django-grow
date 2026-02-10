@@ -72,6 +72,8 @@
         <tr class="{% if use_bootstrap %}table-success{% endif %}">
             <th>{% translate "Strain" %}</th>
             <th>{% translate "Type" %}</th>
+            <th>{% translate "Genotype" %}</th>
+            <th>{% translate "Flowering time" %}</th>
             <th>{% translate "Quantity" %}</th>
         </tr>
     </thead>
@@ -85,6 +87,8 @@
         <td>
             {% if seed.strain.is_feminized %}{% translate "feminized" %}{% else %}{% translate "regular" %}{% endif %}{% if seed.strain.is_autoflowering %}, {% translate "autoflowering" %}{% endif %}
         </td>
+        <td>{{ seed.strain.genotype.name }}</td>
+        <td>{% blocktranslate count n=seed.strain.flowering_time_days %}One day{% plural %}{{ n }} days{% endblocktranslate %}</td>
         <td>{{ seed.quantity }}</td>
         </tr>
     {% empty %}
