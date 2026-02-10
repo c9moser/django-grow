@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-04 23:50+0100\n"
+"POT-Creation-Date: 2026-02-10 22:30+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: DE\n"
@@ -113,6 +113,7 @@ msgstr "Wochen"
 #: grow/templates/grow/strain/hx_strain_in_stock_update.html:6
 #: grow/templates/grow/strain/hx_strain_remove_from_stock.html:27
 #: grow/templates/grow/strain/strain_detail.html:289
+#: grow/templates/grow/user/info.html:75
 msgid "Quantity"
 msgstr "Anzahl"
 
@@ -190,82 +191,82 @@ msgstr "Züchter"
 msgid "New Breeder"
 msgstr "Neuer Züchter"
 
-#: grow/templates/grow/bs_base.html:108
+#: grow/templates/grow/bs_base.html:108 grow/templates/grow/user/info.html:9
 msgid "My Grow"
 msgstr "Mein Grow"
 
-#: grow/templates/grow/bs_base.html:116
+#: grow/templates/grow/bs_base.html:116 grow/templates/grow/bs_base.html:254
+msgid "My Infos"
+msgstr "Meine Infos"
+
+#: grow/templates/grow/bs_base.html:126
 msgid "New Growlog"
 msgstr "Neuer Growlog"
 
-#: grow/templates/grow/bs_base.html:125
+#: grow/templates/grow/bs_base.html:135
 msgid "New Location"
 msgstr "Neuer Ort"
 
-#: grow/templates/grow/bs_base.html:133
+#: grow/templates/grow/bs_base.html:143
 msgid "New Sensor"
 msgstr "Neuer Sensor"
 
-#: grow/templates/grow/bs_base.html:143
+#: grow/templates/grow/bs_base.html:153
 msgid "My Growlogs"
 msgstr "Meine Growlogs"
 
-#: grow/templates/grow/bs_base.html:152
+#: grow/templates/grow/bs_base.html:162
 #: grow/templates/grow/location/index.html:3
 #: grow/templates/grow/location/index.html:4
 #: grow/templates/grow/location/index.html:7
 msgid "My Locations"
 msgstr "Meine Orte"
 
-#: grow/templates/grow/bs_base.html:161
+#: grow/templates/grow/bs_base.html:171
 msgid "My Sensors"
 msgstr "Meine Sensoren"
 
-#: grow/templates/grow/bs_base.html:177
+#: grow/templates/grow/bs_base.html:187
 msgid "Wiki"
 msgstr "Wiki"
 
-#: grow/templates/grow/bs_base.html:185
+#: grow/templates/grow/bs_base.html:195
 msgid "Wiki home"
 msgstr "Wiki Startseite"
 
-#: grow/templates/grow/bs_base.html:195
+#: grow/templates/grow/bs_base.html:205
 msgid "BBCode Guide"
 msgstr "BBCode Anleitung"
 
-#: grow/templates/grow/bs_base.html:204
+#: grow/templates/grow/bs_base.html:214
 msgid "Markdown Guide"
 msgstr "Markdown Anleitung"
 
-#: grow/templates/grow/bs_base.html:214
+#: grow/templates/grow/bs_base.html:224
 msgid "Table of Contents"
 msgstr "Inhaltsverzeichnis"
 
-#: grow/templates/grow/bs_base.html:225
+#: grow/templates/grow/bs_base.html:235
 msgid "Login"
 msgstr "Anmelden"
 
-#: grow/templates/grow/bs_base.html:229
+#: grow/templates/grow/bs_base.html:239
 msgid "Sign up"
 msgstr "Registrieren"
 
-#: grow/templates/grow/bs_base.html:244
-msgid "My Infos"
-msgstr "Meine Infos"
-
-#: grow/templates/grow/bs_base.html:250
+#: grow/templates/grow/bs_base.html:260
 msgid "Profile"
 msgstr "Profil"
 
-#: grow/templates/grow/bs_base.html:256
+#: grow/templates/grow/bs_base.html:266
 msgid "My Friends"
 msgstr "Meine Freunde"
 
-#: grow/templates/grow/bs_base.html:262
+#: grow/templates/grow/bs_base.html:272
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: grow/templates/grow/bs_base.html:273
+#: grow/templates/grow/bs_base.html:283
 msgid "Log out"
 msgstr "Abmelden"
 
@@ -285,7 +286,9 @@ msgstr "Growlog löschen"
 msgid ""
 "This is the grow log for your cultivation activities. Here you can track and "
 "manage your grows."
-msgstr "Dies ist das Growlog für deine Anbautätigkeiten. Hier kannst du deine Grows verfolgen und verwalten."
+msgstr ""
+"Dies ist das Growlog für deine Anbautätigkeiten. Hier kannst du deine Grows "
+"verfolgen und verwalten."
 
 #: grow/templates/grow/growlog/growlog.html:19
 #: grow/templates/grow/location/index.html:107
@@ -345,6 +348,7 @@ msgstr "Meine aktiven Growlogs"
 #: grow/templates/grow/index/index.html:28
 msgid "Create a new Growlog"
 msgstr "Erstelle einen neuen Growlog"
+
 #: grow/templates/grow/index/index.html:33
 #: grow/templates/grow/index/index.html:62
 msgid "Title"
@@ -365,6 +369,7 @@ msgstr "Pflanzenalter"
 #: grow/templates/grow/index/index.html:94
 #: grow/templates/grow/strain/breeder_detail.html:195
 #: grow/templates/grow/strain/hx_strain_filter.html:10
+#: grow/templates/grow/user/info.html:111
 msgid "Flowering time"
 msgstr "Blütezeit"
 
@@ -408,6 +413,8 @@ msgstr "Züchter"
 #: grow/templates/grow/index/index.html:92
 #: grow/templates/grow/strain/hx_breeder_filter.html:6
 #: grow/templates/grow/strain/index.html:88
+#: grow/templates/grow/user/info.html:108
+#: grow/templates/grow/user/info.html:136
 msgid "Name"
 msgstr "Name"
 
@@ -474,7 +481,8 @@ msgstr "Zurück zu den Orten"
 #: grow/templates/grow/location/delete.html:17
 #, python-format
 msgid "Are you sure you want to delete the location <i>%(location.name)s</i>?"
-msgstr "Bist du sicher, dass du den Ort <i>%(location.name)s</i> löschen möchtest?"
+msgstr ""
+"Bist du sicher, dass du den Ort <i>%(location.name)s</i> löschen möchtest?"
 
 #: grow/templates/grow/location/form.html:41
 msgid "Location Type"
@@ -529,6 +537,7 @@ msgid "Description text type"
 msgstr "Beschreibungstexttyp"
 
 #: grow/templates/grow/location/hx_delete.html:22
+#, python-format
 msgid "Do you really want to delete location <i>%(name)s</i>?"
 msgstr "Willst du den Ort <i>%(name)s</i> wirklich löschen"
 
@@ -754,6 +763,7 @@ msgstr "Züchterinformationen"
 #: grow/templates/grow/strain/hx_strain_filter.html:7
 #: grow/templates/grow/strain/strain_translation.html:16
 #: grow/templates/grow/strain/strain_translation.html:25
+#: grow/templates/grow/user/info.html:73
 msgid "Strain"
 msgstr "Sorte"
 
@@ -1624,10 +1634,192 @@ msgstr "Sorte aktualisieren"
 msgid "Update Strain"
 msgstr "Sorte aktualisieren"
 
+#: grow/templates/grow/user/info.html:4 grow/templates/grow/user/info.html:10
+msgid "User Information"
+msgstr "Benutzerinformationen"
+
+#: grow/templates/grow/user/info.html:13
+msgid "Username"
+msgstr "Nutzername"
+
+#: grow/templates/grow/user/info.html:17
+msgid "Email"
+msgstr "E-Mail"
+
+#: grow/templates/grow/user/info.html:22
+msgid "First name"
+msgstr "Vorname"
+
+#: grow/templates/grow/user/info.html:28
+msgid "Last name"
+msgstr "Nachname"
+
+#: grow/templates/grow/user/info.html:34
+msgid "My seeds in stock"
+msgstr "Meine Samen auf Lager"
+
+#: grow/templates/grow/user/info.html:36
+#, python-format
+msgid "You currently have one seed in stock."
+msgid_plural "You currently have %(n)s seeds in stock."
+msgstr[0] " Du hast zur Zeit einen Samen auf Lager."
+msgstr[1] " Du hast zur Zeit %(n)s Samen auf Lager."
+
+#: grow/templates/grow/user/info.html:39
+msgid "Of them, one is feminized."
+msgid_plural "Of them, %(n)s are feminized."
+msgstr[0] "Einer von ihnen ist feminisiert."
+msgstr[1] "%(n)s von ihnen sind feminisiert."
+
+#: grow/templates/grow/user/info.html:40
+#, python-format
+msgid "Of them, one is regular."
+msgid_plural "Of them, %(n)s are regular."
+msgstr[0] "Einer von ihnen ist regulär."
+msgstr[1] "%(n)s von ihnen sind regulär."
+
+#: grow/templates/grow/user/info.html:42
+msgid "All of them are regular."
+msgstr "Alle sind regulär."
+
+#: grow/templates/grow/user/info.html:44
+msgid "All of them are feminized."
+msgstr "Alle sind feminisiert."
+
+#: grow/templates/grow/user/info.html:48
+msgid "All of your seeds are autoflowering."
+msgstr "Alle deine Samen sind selbstblühend."
+
+#: grow/templates/grow/user/info.html:50
+msgid "One is an autoflowering seed."
+msgid_plural "%(n)s are autoflowering seeds."
+msgstr[0] "Einer von ihnen ist selbstblühend."
+msgstr[1] "%(n)s von ihnen sind selbstblühend."
+
+#: grow/templates/grow/user/info.html:53
+#, fuzzy
+#| msgid "You have no seeds in stock."
+msgid "You have no autoflowering seeds in stock."
+msgstr "Du hast keine Samen auf Lager."
+
+#: grow/templates/grow/user/info.html:57
+msgid "All of your seeds are photoperiod."
+msgstr "Alle deine Samen sind photoperiodisch."
+
+#: grow/templates/grow/user/info.html:59
+#, fuzzy, python-format
+#| msgid "autoflowering"
+msgid "One is a photoperiod seed."
+msgid_plural "%(n)s are photoperiod seeds."
+msgstr[0] "Einer von ihnen ist photoperiodisch."
+msgstr[1] "%(n)s von ihnen sind photoperiodisch."
+
+#: grow/templates/grow/user/info.html:62
+msgid "You have no photoperiod seeds in stock."
+msgstr "Du hast keine photoperiodischen Samen auf Lager."
+
+#: grow/templates/grow/user/info.html:67
+msgid "You can add more seeds to your stock in the strain detail page."
+msgstr "Du kannst weitere Samen auf der Detailseite der Sorte zu deinem Lager hinzufügen."
+
+#: grow/templates/grow/user/info.html:74
+msgid "Type"
+msgstr "Typ"
+
+#: grow/templates/grow/user/info.html:86
+msgid "feminized"
+msgstr "Feminisiert"
+
+#: grow/templates/grow/user/info.html:86
+msgid "regular"
+msgstr "Regulär"
+
+#: grow/templates/grow/user/info.html:86
+msgid "autoflowering"
+msgstr "Autoflowering"
+
+#: grow/templates/grow/user/info.html:92
+msgid "You have no seeds in stock."
+msgstr "Du hast keine Samen auf Lager."
+
+#: grow/templates/grow/user/info.html:98
+msgid "My grow logs"
+msgstr "Meine Growlogs"
+
+#: grow/templates/grow/user/info.html:100
+#, python-format
+msgid "You currently have one grow log."
+msgid_plural "You currently have %(n)s grow logs."
+msgstr[0] "Du hast zur Zeit einen Growlog."
+msgstr[1] "Du hast zur Zeit %(n)s Growlogs."
+
+#: grow/templates/grow/user/info.html:101
+#, python-format
+msgid "One of them is finished."
+msgid_plural "%(n)s of them are finished."
+msgstr[0] "Einer von ihnen ist abgeschlossen."
+msgstr[1] "%(n)s von ihnen sind abgeschlossen."
+
+#: grow/templates/grow/user/info.html:102
+#, python-format
+msgid "One of them is still active."
+msgid_plural "%(n)s of them are still active."
+msgstr[0] "Einer von ihnen ist noch aktiv."
+msgstr[1] "%(n)s von ihnen sind noch aktiv."
+
+#: grow/templates/grow/user/info.html:104
+msgid "Active grow logs"
+msgstr "Aktive Growlogs"
+
+#: grow/templates/grow/user/info.html:109
+#: grow/templates/grow/user/info.html:137
+msgid "Started at"
+msgstr "Gestartet am"
+
+#: grow/templates/grow/user/info.html:110
+msgid "Age"
+msgstr "Alter"
+
+#: grow/templates/grow/user/info.html:121
+#, python-format
+msgid "One day old."
+msgid_plural "%(n)s days old."
+msgstr[0] "Einen Tag alt."
+msgstr[1] "%(n)s Tage alt."
+
+#: grow/templates/grow/user/info.html:122
+#: grow/templates/grow/user/info.html:150
+#, python-format
+msgid "One day."
+msgid_plural "%(n)s days."
+msgstr[0] "Ein Tag."
+msgstr[1] "%(n)s Tage."
+
+#: grow/templates/grow/user/info.html:126
+msgid "You have no active grow logs."
+msgstr "Du hast keine aktiven Growlogs."
+
+#: grow/templates/grow/user/info.html:132
+msgid "Finished grow logs"
+msgstr "Abgeschlossene Growlogs"
+
+#: grow/templates/grow/user/info.html:138
+msgid "Finished at"
+msgstr "Abgeschlossen am"
+
+#: grow/templates/grow/user/info.html:139
+msgid "Duration"
+msgstr "Dauer"
+
+#: grow/templates/grow/user/info.html:154
+msgid "You have no finished grow logs."
+msgstr "Du hast keine abgeschlossenen Growlogs."
+
 #: grow/views/location.py:223 grow/views/location.py:235
 #: grow/views/location.py:248 grow/views/location.py:259
 msgid "Location cannot be deleted because it has associated growlogs."
-msgstr "Der Standort kann nicht gelöscht werden, da er mit Growlogs verknüpft ist."
+msgstr ""
+"Der Standort kann nicht gelöscht werden, da er mit Growlogs verknüpft ist."
 
 #, python-format
 #~ msgid ""
@@ -1667,9 +1859,6 @@ msgstr "Der Standort kann nicht gelöscht werden, da er mit Growlogs verknüpft 
 
 #~ msgid "Genetics:"
 #~ msgstr "Genetik"
-
-#~ msgid "Type"
-#~ msgstr "Typ"
 
 #~ msgid "Add feminized seeds of strain"
 #~ msgstr "Füge feminisierte Samen der Sorte hinzu"

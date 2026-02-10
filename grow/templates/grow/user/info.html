@@ -1,0 +1,161 @@
+{% extends base_template %}
+{% load i18n %}
+
+{% block title %}{{ grow_site_title }}: <span class="{% if use_bootstrap %}fs-2{% endif %}">{% translate "User Information" %}</span>{% endblock title %}
+{% block head_title %}{{ grow_head_title }}{% endblock %}
+
+{% block content %}
+<main>
+<h1>{% translate "My Grow" %}</h1>
+<h2>{% translate "User Information" %}</h2>
+<table class="{% if use_bootstrap %}table{% endif %}">
+    <tr>
+        <th class="{% if use_bootstrap %}table-success fit-content{% endif %}">{% translate "Username" %}</th>
+        <td>{{ request.user.username }}</td>
+    </tr>
+    <tr>
+        <th class="{% if use_bootstrap %}table-success fit-content{% endif %}">{% translate "Email" %}</th>
+        <td>{{ request.user.email }}</td>
+    </tr>
+    {% if request.user.first_name %}
+    <tr>
+        <th class="{% if use_bootstrap %}table-success fit-content{% endif %}">{% translate "First name" %}</th>
+        <td>{{ request.user.first_name }}</td>
+    </tr>
+    {% endif %}
+    {% if request.user.last_name %}
+    <tr>
+        <th class="{% if use_bootstrap %}table-success fit-content{% endif %}">{% translate "Last name" %}</th>
+        <td>{{ request.user.last_name }}</td>
+    </tr>
+    {% endif %}
+</table>
+
+<h2>{% translate "My seeds in stock" %}</h2>
+<p>
+{% blocktranslate count n=n_seeds_in_stock %}You currently have one seed in stock.{% plural %}You currently have {{ n }} seeds in stock.{% endblocktranslate %}
+{% if n_seeds_in_stock > 0 %}
+    {% if n_feminized_seeds_in_stock > 0 and n_regular_seeds_in_stock > 0 %}
+{% blocktranslate count n=n_feminized_seeds_in_stock %}Of them, one is feminized.{% plural %}Of them, {{ n }} are feminized.{% endblocktranslate %}
+{% blocktranslate count n=n_regular_seeds_in_stock %}Of them, one is regular.{% plural %}Of them, {{ n }} are regular.{% endblocktranslate %}
+    {% elif n_feminized_seeds_in_stock == 0 %}
+{% blocktranslate %}All of them are regular.{% endblocktranslate %}
+    {% elif n_regular_seeds_in_stock == 0 %}
+{% blocktranslate %}All of them are feminized.{% endblocktranslate %}
+    {% endif %}
+    {% if n_autoflowering_seeds_in_stock > 0 %}
+        {% if n_photoperiod_seeds_in_stock == 0 %}
+    {% blocktranslate %}All of your seeds are autoflowering.{% endblocktranslate %}
+        {% else %}
+    {% blocktranslate count n=n_autoflowering_seeds_in_stock %}One is an autoflowering seed.{% plural %}{{ n }} are autoflowering seeds.{% endblocktranslate %}
+        {% endif %}
+    {% else %}
+    {% blocktranslate %}You have no autoflowering seeds in stock.{% endblocktranslate %}
+    {% endif %}
+    {% if n_photoperiod_seeds_in_stock > 0 %}
+        {% if n_autoflowering_seeds_in_stock == 0 %}
+    {% blocktranslate %}All of your seeds are photoperiod.{% endblocktranslate %}
+        {% else %}
+    {% blocktranslate count n=n_photoperiod_seeds_in_stock %}One is a photoperiod seed.{% plural %}{{ n }} are photoperiod seeds.{% endblocktranslate %}
+        {% endif %}
+    {% else %}
+    {% blocktranslate %}You have no photoperiod seeds in stock.{% endblocktranslate %}
+    {% endif %}
+{% endif %}
+</p>
+<p>
+ {% blocktranslate %}You can add more seeds to your stock in the strain detail page.{% endblocktranslate %}
+</p>
+
+<table class="{% if use_bootstrap %}table{% endif %}">
+    <thead>
+        <tr class="{% if use_bootstrap %}table-success{% endif %}">
+            <th>{% translate "Strain" %}</th>
+            <th>{% translate "Type" %}</th>
+            <th>{% translate "Quantity" %}</th>
+        </tr>
+    </thead>
+    <tbody class="{% if use_bootstrap %}table-group-divider{% endif %}">
+    {% for seed in seeds_in_stock %}
+        <tr>
+            <td>
+                <a href="{% url 'grow:strain-detail' breeder_slug=seed.strain.breeder.slug slug=seed.strain.slug %}">{{ seed.strain.name }}</a>
+                (<a href="{% url 'grow:breeder-detail' slug=seed.strain.breeder.slug %}">{{ seed.strain.breeder.name }}</a>)</td>
+            </td>
+        <td>
+            {% if seed.strain.is_feminized %}{% translate "feminized" %}{% else %}{% translate "regular" %}{% endif %}{% if seed.strain.is_autoflowering %}, {% translate "autoflowering" %}{% endif %}
+        </td>
+        <td>{{ seed.quantity }}</td>
+        </tr>
+    {% empty %}
+        <tr>
+            <td colspan="3" class="table-warning">{% translate "You have no seeds in stock." %}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<h2>{% translate "My grow logs" %}</h2>
+<p>
+{% blocktranslate count n=n_growlogs %}You currently have one grow log.{% plural %}You currently have {{ n }} grow logs.{% endblocktranslate %}
+{% blocktranslate count n=n_finished_growlogs %}One of them is finished.{% plural %}{{ n }} of them are finished.{% endblocktranslate %}
+{% blocktranslate count n=n_active_growlogs %}One of them is still active.{% plural %}{{ n }} of them are still active.{% endblocktranslate %}
+</p>
+<h3>{% translate "Active grow logs" %}</h3>
+<table class="{% if use_bootstrap %}table{% endif %}">
+    <thead>
+        <tr class="{% if use_bootstrap %}table-success{% endif %}">
+            <th>{% translate "Name" %}</th>
+            <th>{% translate "Started at" %}</th>
+            <th>{% translate "Age" %}</th>
+            <th>{% translate "Flowering time" %}</th>
+        </tr>
+    </thead>
+    <tbody class="{% if use_bootstrap %}table-group-divider{% endif %}">
+    {% for grow_log in active_grow_logs %}
+        <tr>
+            <td>
+                <a href="#">{{ grow_log.name }}</a>
+            </td>
+        <td>{{ grow_log.started_at|date:"SHORT_DATE_FORMAT" }}</td>
+        <td>{% blocktranslate count n=grow_log.age %}One day old.{% plural %}{{ n }} days old.{% endblocktranslate %}</td>
+        <td>{% blocktranslate count n=grow_log.flowering_time %}One day.{% plural %}{{ n }} days.{% endblocktranslate %}</td>
+        </tr>
+    {% empty %}
+        <tr>
+            <td colspan="4" class="table-warning">{% translate "You have no active grow logs." %}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<h3>{% translate "Finished grow logs" %}</h3>
+<table class="{% if use_bootstrap %}table{% endif %}">
+    <thead>
+        <tr class="{% if use_bootstrap %}table-success{% endif %}">
+            <th>{% translate "Name" %}</th>
+            <th>{% translate "Started at" %}</th>
+            <th>{% translate "Finished at" %}</th>
+            <th>{% translate "Duration" %}</th>
+        </tr>
+    </thead>
+    <tbody class="{% if use_bootstrap %}table-group-divider{% endif %}">
+    {% for grow_log in finished_grow_logs %}
+        <tr>
+            <td>
+                <a href="#">{{ growlog.name }}</a>
+            </td>
+        <td>{{ grow_log.started_at|date:"SHORT_DATE_FORMAT" }}</td>
+        <td>{{ grow_log.finished_at|date:"SHORT_DATE_FORMAT" }}</td>
+        <td>{% blocktranslate count n=grow_log.duration %}One day.{% plural %}{{ n }} days.{% endblocktranslate %}</td>
+        </tr>
+    {% empty %}
+        <tr>
+            <td colspan="4" class="table-warning">{% translate "You have no finished grow logs." %}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</main>
+
+{% endblock content%}

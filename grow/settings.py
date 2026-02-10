@@ -78,6 +78,9 @@ GROW_BUILTIN_TEMPLATES = {
     'grow/growlog/entry_update': 'grow/growlog/entry_update.html',
     'grow/growlog/hx-entry-delete': 'grow/growlog/hx_entry_delete.html',
 
+    # user views
+    'grow/user/info': 'grow/user/info.html',
+
     # utils
     'grow/utils/hx_select_date_days_sanitize': 'grow/utils/hx_select_date_days_sanitize.html'
 }

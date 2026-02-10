@@ -11895,6 +11895,14 @@ footer {
   --bs-breadcrumb-divider: '\279C';
 }
 
+td.fit-content,
+td.fit-content *,
+th.fit-content,
+th.fit-content * {
+  white-space: nowrap;
+  width: 1%;
+}
+
 /* Light theme adjustments */
 /*
 [data-bs-theme="light"] {

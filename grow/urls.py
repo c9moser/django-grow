@@ -42,6 +42,7 @@ from .views.location import (
      HxLocationDeleteView,
 )
 
+from .views.user import UserInfoView
 from .views.utils import HxSelectDateDaysSanitizeView
 
 app_name = "grow"
@@ -134,7 +135,12 @@ location_patterns = [
      path("__hx__/location/delete/<int:pk>/", HxLocationDeleteView.as_view(), name="hx-location-delete"),
 ]
 
+user_patterns = [
+     path("grow/my-info/", UserInfoView.as_view(), name="user-info"),
+]
+
 urlpatterns = [
      *strain_patterns,
      *location_patterns,
+     *user_patterns,
 ]
