@@ -114,21 +114,9 @@
         </div>
         {% endif %}
     <p>
-{% blocktranslate with name=breeder.name count n_strains=breeder.strains.count %}
-There is one strain in the database for the breeder <i>{{ name }}</i>.
-{% plural %}
-There are {{ n_strains }} strains in the database for breeder <i>{{ name }}</i>.
-{% endblocktranslate%}
-{% blocktranslate with n_strains=breeder.strains_with_growlogs_count count n=breeder.strains_with_growlogs_count %}
-One strain appears in growlogs.
-{% plural %}
-{{ n_strains }} strains appear in growlogs.
-{% endblocktranslate %}
-{% blocktranslate with name=breeder.name count n=breeder.growlog_count %}
-A total of one growlog has been created for the strains of <i>{{ name }}</i>.
-{% plural %}
-A total of {{ n }} growlogs have been created for the strains of <i>{{ name }}</i>.
-{% endblocktranslate %}
+{% blocktranslate with name=breeder.name count n_strains=breeder.strains.count %}There is one strain in the database for the breeder <i>{{ name }}</i>.{% plural %}There are {{ n_strains }} strains in the database for breeder <i>{{ name }}</i>.{% endblocktranslate%}
+{% blocktranslate with n_strains=breeder.strains_with_growlogs_count count n=breeder.strains_with_growlogs_count %}One strain appears in growlogs.{% plural %}{{ n_strains }} strains appear in growlogs.{% endblocktranslate %}
+{% blocktranslate with name=breeder.name count n=breeder.growlog_count %}A total of one growlog has been created for the strains of <i>{{ name }}</i>.{% plural %}A total of {{ n }} growlogs have been created for the strains of <i>{{ name }}</i>.{% endblocktranslate %}
     </p>
     <p>
 
@@ -247,11 +235,7 @@ A total of {{ n }} growlogs have been created for the strains of <i>{{ name }}</
                 {% endif %}
             </td>
             <td>
-                {% blocktranslate with n_growlogs=strain.growlog_count count n=strain.growlog_count %}
-                {{ n_growlogs }} Growlog
-                {% plural %}
-                {{ n_growlogs }} Growlogs
-                {% endblocktranslate %}
+                {% blocktranslate with n_growlogs=strain.growlog_count count n=strain.growlog_count %}{{ n_growlogs }} Growlog{% plural %}{{ n_growlogs }} Growlogs{% endblocktranslate %}
             </td>
             <td>
             {% if use_bootstrap %}
@@ -277,7 +261,7 @@ A total of {{ n }} growlogs have been created for the strains of <i>{{ name }}</
                     <a href="#"
                         class="link-danger
                             link-opacity-50
-                            link underline-opacity-0"
+                            link-underline-opacity-0"
                         hx-target="#modals-here"
                         hx-trigger="click"
                         hx-get="{% url 'grow:hx-strain-delete' pk=strain.pk %}"
@@ -294,7 +278,7 @@ A total of {{ n }} growlogs have been created for the strains of <i>{{ name }}</
                 <a href="#{{ breeder.slug}}-{{ strain.slug }}"
                         class="link-body-emphasis
                             link-opacity-50
-                            link underline-opacity-0"
+                            link-underline-opacity-0"
                 ><i class="bi bi-x-square"></i></a>
                 {% endif %}
                 </div>

@@ -8,10 +8,7 @@
     {% csrf_token %}
 {% translate "Delete Breeder" as delete_breeder_label %}
     <p>
-        {% blocktranslate with slug=breeder.slug name=breeder.name %}
-        If you really want to delete breeder {{ name }} type <i>{{ slug }}</i>
-        in the field below and hit the {{ delete_breeder_label }} button.
-        {% endblocktranslate %}
+        {% blocktranslate with slug=breeder.slug name=breeder.name %}If you really want to delete breeder {{ name }} type <i>{{ slug }}</i> in the field below and hit the {{ delete_breeder_label }} button.{% endblocktranslate %}
     </p>
 
     {{ form.as_p }}

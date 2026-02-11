@@ -61,11 +61,7 @@
                 {% endif %}
             </td>
             <td>
-                {% blocktranslate with n_growlogs=strain.growlog_count count n=strain.growlog_count %}
-                {{ n_growlogs }} Growlog
-                {% plural %}
-                {{ n_growlogs }} Growlogs
-                {% endblocktranslate %}
+                {% blocktranslate with n_growlogs=strain.growlog_count count n=strain.growlog_count %}{{ n_growlogs }} Growlog{% plural %}{{ n_growlogs }} Growlogs{% endblocktranslate %}
             </td>
             <td>
             {% if use_bootstrap %}
@@ -117,12 +113,12 @@
             {% else %}
                 {% if strain.id in strains_allowed_to_edit %}
                 <a href="{% url 'grow:strain-update' pk=strain.pk %}">
-                    Edit
+                    {% translate "Edit" %}
                 </a>
                 {% endif %}
                 {% if strain.id in strains_allowed_to_delete %}
                 <a href="{% url 'grow:strain-delete' pk=strain.pk %}">
-                    Delete
+                    {% translate "Delete" %}
                 </a>
                 {% endif %}
             {% endif %}

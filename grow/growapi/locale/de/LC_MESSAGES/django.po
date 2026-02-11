@@ -474,10 +474,8 @@ msgid "created at"
 msgstr "Erstellt am"
 
 #: grow/growapi/models/strain.py:586 grow/growapi/models/strain.py:1380
-#, fuzzy
-#| msgid "updated at"
 msgid "updated by"
-msgstr "Aktualisiert am"
+msgstr "Aktualisiert von"
 
 #: grow/growapi/models/strain.py:603
 msgid "breeder"
@@ -485,7 +483,7 @@ msgstr "Züchter"
 
 #: grow/growapi/models/strain.py:619 grow/growapi/models/strain.py:1277
 msgid "strain name"
-msgstr "Sorten name"
+msgstr "Sortenname"
 
 #: grow/growapi/models/strain.py:759
 msgid "logo url"
@@ -505,7 +503,7 @@ msgstr "ist feminisiert"
 
 #: grow/growapi/models/strain.py:854
 msgid "is regular"
-msgstr "ist fegulär"
+msgstr "ist regulär"
 
 #: grow/growapi/models/strain.py:861
 msgid "flowering time (days)"
@@ -521,11 +519,11 @@ msgstr "Erstellt von"
 
 #: grow/growapi/models/strain.py:889
 msgid "The name of the creator"
-msgstr "Der name des Erstellers"
+msgstr "Der Name des Erstellers"
 
 #: grow/growapi/models/strain.py:905
 msgid "is discontinued"
-msgstr ""
+msgstr "ist eingestellt"
 
 #: grow/growapi/models/strain.py:1269
 msgid "Language code"
@@ -535,7 +533,7 @@ msgstr "Sprachcode"
 #, fuzzy
 #| msgid "language code"
 msgid "language"
-msgstr "Sprachcode"
+msgstr "Sprache"
 
 #: grow/growapi/models/strain.py:1422 grow/growapi/models/strain.py:1618
 msgid "user"
@@ -547,7 +545,7 @@ msgstr "Kommentar"
 
 #: grow/growapi/models/strain.py:1511
 msgid "user description"
-msgstr "Nutzer Beschreibung"
+msgstr "Nutzerbeschreibung"
 
 #: grow/growapi/models/strain.py:1519
 msgid "User"
@@ -562,10 +560,8 @@ msgid "uploader"
 msgstr "hochgeladen von"
 
 #: grow/growapi/models/strain.py:1568
-#, fuzzy
-#| msgid "location"
 msgid "caption"
-msgstr "Ort"
+msgstr "Bildunterschrift"
 
 #: grow/growapi/models/strain.py:1624
 msgid "regular seeds"
@@ -602,20 +598,3 @@ msgstr "grow-de-fertilizers"
 #: grow/growapi/translatable.py:8
 msgid "grow-fertilizers-biobizz"
 msgstr "grow-de-fertilizers-biobizz"
-
-#~ msgid "light cycle hours"
-#~ msgstr "Lichtzyklus in Stunden"
-
-#~ msgid "Number of hours the light is on during a 24-hour period."
-#~ msgstr ""
-#~ "Anzahl der Stunden in denen das Licht in einer 24 Stunden Periode "
-#~ "eingeschaltet ist."
-
-#~ msgid "strain type"
-#~ msgstr "Sortentypus"
-
-#~ msgid "bought at"
-#~ msgstr "gekauft am"
-
-#~ msgid "logo icon"
-#~ msgstr "Logo Icon"

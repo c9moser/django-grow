@@ -12,13 +12,7 @@
     {% if strain.is_regular %}
         <tr>
             <td>{% translate "Regular seeds" %}</td>
-            <td>
-                {% blocktranslate count n=regular_seeds_in_stock %}
-                {{ n }} seed
-                {% plural %}
-                {{ n }} seeds
-                {% endblocktranslate %}
-            </td>
+            <td>{% blocktranslate count n=regular_seeds_in_stock %}{{ n }} seed{% plural %}{{ n }} seeds{% endblocktranslate %}</td>
             <td>
                 {% if regular_seeds_purchased_on %}
                     {{ regular_seeds_purchased_on|date }}
@@ -68,13 +62,7 @@
     {% if strain.is_feminized %}
         <tr>
             <td>{% translate "Feminized seeds" %}</td>
-            <td>
-                {% blocktranslate count n=feminized_seeds_in_stock %}
-                {{ n }} seed
-                {% plural %}
-                {{ n }} seeds
-                {% endblocktranslate %}
-            </td>
+            <td>{% blocktranslate count n=feminized_seeds_in_stock %}{{ n }} seed{% plural %}{{ n }} seeds{% endblocktranslate %}</td>
             <td>
                 {% if feminized_seeds_purchased_on %}
                     {{ feminized_seeds_purchased_on|date }}
@@ -125,12 +113,7 @@
         <tr>
             <th>{% translate "Total seeds" %}</th>
             <th colspan=3 class="{% if use_bootstrap %}text-end{% endif %}">
-                {% blocktranslate count n=total_seeds_in_stock%}
-                {{ n }} seed
-                {% plural %}
-                {{ n }} seeds
-                {% endblocktranslate %}
-            </th>
+                {% blocktranslate count n=total_seeds_in_stock%}{{ n }} seed{% plural %}{{ n }} seeds{% endblocktranslate %}</th>
         </tr>
     </tfoot>
 </table>

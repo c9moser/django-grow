@@ -14,9 +14,7 @@
 <form method="post">
     {% csrf_token %}
 <p>
-{% blocktranslate with strain=strain.name breeder=strain.breeder.name %}
-Add feminized {{ seed_type }} of the strain {{ strain }} from {{breeder }}.
-{% endblocktranslate %}</p>
+{% blocktranslate with strain=strain.name breeder=strain.breeder.name %}Add feminized {{ seed_type }} of the strain {{ strain }} from {{breeder }}.{% endblocktranslate %}</p>
 </p>
 
 {{ form.as_p}}

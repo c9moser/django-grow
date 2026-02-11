@@ -102,37 +102,25 @@
 
     <div class="alert alert-info p-2 mb-3" role="alert">
     {% if strain.created_by %}
-        {% blocktranslate with username=strain.created_by.username date=strain.added_at|date:"SHORT_DATE_FORMAT" %}
-        Strain added by {{ username }} on {{ date }}.
-        {% endblocktranslate %}
+        {% blocktranslate with username=strain.created_by.username date=strain.added_at|date:"SHORT_DATE_FORMAT" %}Strain added by {{ username }} on {{ date }}.{% endblocktranslate %}
     {% elif strain.creator_name %}
-        {% blocktranslate with username=strain.creator_name date=strain.added_at|date:"SHORT_DATE_FORMAT" %}
-        Strain added by {{ username }} on {{ date }}.
-        {% endblocktranslate %}
+        {% blocktranslate with username=strain.creator_name date=strain.added_at|date:"SHORT_DATE_FORMAT" %}Strain added by {{ username }} on {{ date }}.{% endblocktranslate %}
     {% else %}
-        {% blocktranslate with date=strain.created_at|date:"SHORT_DATE_FORMAT" %}
-        Strain added on {{ date }}.
-        {% endblocktranslate %}
+        {% blocktranslate with date=strain.created_at|date:"SHORT_DATE_FORMAT" %}Strain added on {{ date }}.{% endblocktranslate %}
     {% endif %}
     </div>
     {% if translation %}
     {% if translation.user %}
     <div class="alert alert-info p-2 mb-3" role="alert">
-        {% blocktranslate with username=translation.user.username date=translation.created_at|date:"SHORT_DATE_FORMAT" %}
-        This is a translation added by {{ username }} on {{ date }}.
-        {% endblocktranslate %}
+        {% blocktranslate with username=translation.user.username date=translation.created_at|date:"SHORT_DATE_FORMAT" %}This is a translation added by {{ username }} on {{ date }}.{% endblocktranslate %}
     </div>
     {% elif translation.translator_name %}
     <div class="alert alert-info p-2 mb-3" role="alert">
-        {% blocktranslate with username=translation.translator_name date=translation.created_at|date:"SHORT_DATE_FORMAT" %}
-        This is a translation added by {{ username }} on {{ date }}.
-        {% endblocktranslate %}
+        {% blocktranslate with username=translation.translator_name date=translation.created_at|date:"SHORT_DATE_FORMAT" %}This is a translation added by {{ username }} on {{ date }}.{% endblocktranslate %}
     </div>
     {% else %}
     <div class="alert alert-info p-2 mb-3" role="alert">
-        {% blocktranslate with date=translation.created_at|date:"SHORT_DATE_FORMAT" %}
-        This is a translation added on {{ date }}.
-        {% endblocktranslate %}
+        {% blocktranslate with date=translation.created_at|date:"SHORT_DATE_FORMAT" %}This is a translation added on {{ date }}.{% endblocktranslate %}
     </div>
     {% endif %}
     {% endif %}
@@ -143,11 +131,7 @@
                 {% if strain.flowering_time_days == 0 %}
                 {% translate "Unknown" %}
                 {% else %}
-                {% blocktranslate with ftd=strain.flowering_time_days count n=strain.flowering_time_days %}
-                {{ ftd }} day
-                {% plural %}
-                {{ ftd }} days
-                {% endblocktranslate %}
+                {% blocktranslate with ftd=strain.flowering_time_days count n=strain.flowering_time_days %}{{ ftd }} day{% plural %}{{ ftd }} days{% endblocktranslate %}
                 {% blocktranslate with ftw=strain.flowering_time_weeks count n=strain.flowering_time_weeks %}({{ ftw }} week){% plural %}({{ ftw }} weeks){% endblocktranslate %}
                 {% endif %}
             </li>
@@ -271,10 +255,7 @@
 </div>
 {% else %}
 <p>
-{% blocktranslate %}
-There are currently no pictures for this strain.
-You could upload pictures of your grow to show others how this strain looks like during growth and flowering.
-{% endblocktranslate %}
+{% blocktranslate %}There are currently no pictures for this strain. You could upload pictures of your grow to show others how this strain looks like during growth and flowering.{% endblocktranslate %}
 </p>
 {% endif %}
 
@@ -296,11 +277,7 @@ You could upload pictures of your grow to show others how this strain looks like
         <tr>
             <td>{% translate "Regular seeds" %}</td>
             <td>
-                {% blocktranslate count n=regular_seeds_in_stock %}
-                {{ n }} seed
-                {% plural %}
-                {{ n }} seeds
-                {% endblocktranslate %}
+                {% blocktranslate count n=regular_seeds_in_stock %}{{ n }} seed{% plural %}{{ n }} seeds{% endblocktranslate %}
             </td>
             <td>
                 {% if regular_seeds_purchased_on %}
@@ -363,11 +340,7 @@ You could upload pictures of your grow to show others how this strain looks like
         <tr>
             <td>{% translate "Feminized seeds" %}</td>
             <td>
-                {% blocktranslate count n=feminized_seeds_in_stock %}
-                {{ n }} seed
-                {% plural %}
-                {{ n }} seeds
-                {% endblocktranslate %}
+                {% blocktranslate count n=feminized_seeds_in_stock %}{{ n }} seed{% plural %}{{ n }} seeds{% endblocktranslate %}
             </td>
             <td>
                 {% if feminized_seeds_purchased_on %}
@@ -429,11 +402,7 @@ You could upload pictures of your grow to show others how this strain looks like
         <tr>
             <th>{% translate "Total seeds" %}</th>
             <th colspan=3 class="{% if use_bootstrap %}text-end{% endif %}">
-                {% blocktranslate count n=total_seeds_in_stock%}
-                {{ n }} seed
-                {% plural %}
-                {{ n }} seeds
-                {% endblocktranslate %}
+                {% blocktranslate count n=total_seeds_in_stock%}{{ n }} seed{% plural %}{{ n }} seeds{% endblocktranslate %}
             </th>
         </tr>
     </tfoot>
@@ -458,11 +427,7 @@ You could upload pictures of your grow to show others how this strain looks like
 </table>
 {% else %}
 <p class="">
-{% blocktranslate %}
-There are currently no growlogs for this strain, at least none you are allowed to view.
-You could grow this strain yourself and add a growlog for the members here, so they
-can see how this strain grows and flowers. Others might want to learn from what you are doing.
-{% endblocktranslate %}
+{% blocktranslate %}There are currently no growlogs for this strain, at least none you are allowed to view. You could grow this strain yourself and add a growlog for the members here, so they can see how this strain grows and flowers. Others might want to learn from what you are doing.{% endblocktranslate %}
 </p>
 {% endif %}
 <h2 id="comments">{% translate "Comments" %}</h2>

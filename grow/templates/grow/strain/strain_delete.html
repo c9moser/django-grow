@@ -9,10 +9,7 @@
     {% csrf_token %}
     {% translate "Delete strain" as delete_strain_label %}
     <p>
-    {% blocktranslate with strain_name=strain.name breeder_name=strain.breeder.name slug=strain.slug %}
-    If you really want to delete the strain {{ strain_name }} from breeder {{ breeder_name }}
-    type <i>{{ slug }}</i> in the field below and hit the <i>{{ delete_strain_label }}</i> button below.
-    {% endblocktranslate %}
+    {% blocktranslate with strain_name=strain.name breeder_name=strain.breeder.name slug=strain.slug %}If you really want to delete the strain {{ strain_name }} from breeder {{ breeder_name }} type <i>{{ slug }}</i> in the field below and hit the <i>{{ delete_strain_label }}</i> button below.{% endblocktranslate %}
     </p>
     {{ form.as_p }}
     <div>
