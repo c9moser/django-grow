@@ -11,7 +11,7 @@ class UserInfoView(LoginRequiredMixin, BaseView):
 
     def get(self, request: HttpRequest) -> HttpResponse:
         seeds_in_stock: list[StrainsInStock] = StrainsInStock.objects.filter(
-            user=request.user).order_by(
+            user=request.user, quantity__gt=0).order_by(
             'strain__name', 'strain__breeder__name')
 
         n_seeds_in_stock = 0
