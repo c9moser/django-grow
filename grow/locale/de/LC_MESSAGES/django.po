@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-10 23:13+0100\n"
+"POT-Creation-Date: 2026-02-11 03:48+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: DE\n"
@@ -113,7 +113,7 @@ msgstr "Wochen"
 #: grow/templates/grow/strain/hx_strain_in_stock_update.html:6
 #: grow/templates/grow/strain/hx_strain_remove_from_stock.html:27
 #: grow/templates/grow/strain/strain_detail.html:289
-#: grow/templates/grow/user/info.html:77
+#: grow/templates/grow/user/info.html:86
 msgid "Quantity"
 msgstr "Anzahl"
 
@@ -369,7 +369,7 @@ msgstr "Pflanzenalter"
 #: grow/templates/grow/index/index.html:94
 #: grow/templates/grow/strain/breeder_detail.html:195
 #: grow/templates/grow/strain/hx_strain_filter.html:10
-#: grow/templates/grow/user/info.html:76 grow/templates/grow/user/info.html:115
+#: grow/templates/grow/user/info.html:85 grow/templates/grow/user/info.html:138
 msgid "Flowering time"
 msgstr "Blütezeit"
 
@@ -413,8 +413,8 @@ msgstr "Züchter"
 #: grow/templates/grow/index/index.html:92
 #: grow/templates/grow/strain/hx_breeder_filter.html:6
 #: grow/templates/grow/strain/index.html:88
-#: grow/templates/grow/user/info.html:112
-#: grow/templates/grow/user/info.html:140
+#: grow/templates/grow/user/info.html:135
+#: grow/templates/grow/user/info.html:176
 msgid "Name"
 msgstr "Name"
 
@@ -763,7 +763,7 @@ msgstr "Züchterinformationen"
 #: grow/templates/grow/strain/hx_strain_filter.html:7
 #: grow/templates/grow/strain/strain_translation.html:16
 #: grow/templates/grow/strain/strain_translation.html:25
-#: grow/templates/grow/user/info.html:73
+#: grow/templates/grow/user/info.html:82
 msgid "Strain"
 msgstr "Sorte"
 
@@ -771,7 +771,7 @@ msgstr "Sorte"
 #: grow/templates/grow/strain/hx_strain_filter.html:8
 #: grow/templates/grow/strain/strain_form.html:57
 #: grow/templates/grow/strain/strain_search_results.html:24
-#: grow/templates/grow/user/info.html:75
+#: grow/templates/grow/user/info.html:84
 msgid "Genotype"
 msgstr "Genotyp"
 
@@ -1700,18 +1700,14 @@ msgstr[0] "Einer von ihnen ist selbstblühend."
 msgstr[1] "%(n)s von ihnen sind selbstblühend."
 
 #: grow/templates/grow/user/info.html:53
-#, fuzzy
-#| msgid "You have no seeds in stock."
 msgid "You have no autoflowering seeds in stock."
-msgstr "Du hast keine Samen auf Lager."
+msgstr "Du hast keine selbstblühenden Samen auf Lager."
 
 #: grow/templates/grow/user/info.html:57
 msgid "All of your seeds are photoperiod."
 msgstr "Alle deine Samen sind photoperiodisch."
 
 #: grow/templates/grow/user/info.html:59
-#, fuzzy, python-format
-#| msgid "autoflowering"
 msgid "One is a photoperiod seed."
 msgid_plural "%(n)s are photoperiod seeds."
 msgstr[0] "Einer von ihnen ist photoperiodisch."
@@ -1728,102 +1724,106 @@ msgstr ""
 "hinzufügen."
 
 #: grow/templates/grow/user/info.html:74
+msgid "Show seeds in stock"
+msgstr "Zeige Samen auf Lager"
+
+#: grow/templates/grow/user/info.html:83
 msgid "Type"
 msgstr "Typ"
 
-#: grow/templates/grow/user/info.html:88
+#: grow/templates/grow/user/info.html:97
 msgid "feminized"
 msgstr "Feminisiert"
 
-#: grow/templates/grow/user/info.html:88
+#: grow/templates/grow/user/info.html:97
 msgid "regular"
 msgstr "Regulär"
 
-#: grow/templates/grow/user/info.html:88
+#: grow/templates/grow/user/info.html:97
 msgid "autoflowering"
 msgstr "Autoflowering"
 
-#: grow/templates/grow/user/info.html:91
+#: grow/templates/grow/user/info.html:100
 #, python-format
 msgid "One day"
 msgid_plural "%(n)s days"
 msgstr[0] "Einen Tag"
 msgstr[1] "%(n)s Tage"
 
-#: grow/templates/grow/user/info.html:96
+#: grow/templates/grow/user/info.html:105
 msgid "You have no seeds in stock."
 msgstr "Du hast keine Samen auf Lager."
 
-#: grow/templates/grow/user/info.html:102
+#: grow/templates/grow/user/info.html:116
 msgid "My grow logs"
 msgstr "Meine Growlogs"
 
-#: grow/templates/grow/user/info.html:104
+#: grow/templates/grow/user/info.html:118
 #, python-format
 msgid "You currently have one grow log."
 msgid_plural "You currently have %(n)s grow logs."
 msgstr[0] "Du hast zur Zeit einen Growlog."
 msgstr[1] "Du hast zur Zeit %(n)s Growlogs."
 
-#: grow/templates/grow/user/info.html:105
+#: grow/templates/grow/user/info.html:119
 #, python-format
 msgid "One of them is finished."
 msgid_plural "%(n)s of them are finished."
 msgstr[0] "Einer von ihnen ist abgeschlossen."
 msgstr[1] "%(n)s von ihnen sind abgeschlossen."
 
-#: grow/templates/grow/user/info.html:106
+#: grow/templates/grow/user/info.html:120
 #, python-format
 msgid "One of them is still active."
 msgid_plural "%(n)s of them are still active."
 msgstr[0] "Einer von ihnen ist noch aktiv."
 msgstr[1] "%(n)s von ihnen sind noch aktiv."
 
-#: grow/templates/grow/user/info.html:108
-msgid "Active grow logs"
-msgstr "Aktive Growlogs"
+#: grow/templates/grow/user/info.html:127
+msgid "Show active grow logs"
+msgstr "Zeige aktive Growlogs"
 
-#: grow/templates/grow/user/info.html:113
-#: grow/templates/grow/user/info.html:141
+#: grow/templates/grow/user/info.html:136
+#: grow/templates/grow/user/info.html:177
 msgid "Started at"
 msgstr "Gestartet am"
 
-#: grow/templates/grow/user/info.html:114
+#: grow/templates/grow/user/info.html:137
 msgid "Age"
 msgstr "Alter"
 
-#: grow/templates/grow/user/info.html:125
+#: grow/templates/grow/user/info.html:148
 #, python-format
 msgid "One day old."
 msgid_plural "%(n)s days old."
 msgstr[0] "Einen Tag alt."
 msgstr[1] "%(n)s Tage alt."
 
-#: grow/templates/grow/user/info.html:126
-#: grow/templates/grow/user/info.html:154
+#: grow/templates/grow/user/info.html:149
+#: grow/templates/grow/user/info.html:190
 #, python-format
 msgid "One day."
 msgid_plural "%(n)s days."
 msgstr[0] "Einen Tag."
 msgstr[1] "%(n)s Tage."
 
-#: grow/templates/grow/user/info.html:130
+#: grow/templates/grow/user/info.html:153
 msgid "You have no active grow logs."
 msgstr "Du hast keine aktiven Growlogs."
 
-#: grow/templates/grow/user/info.html:136
-msgid "Finished grow logs"
-msgstr "Abgeschlossene Growlogs"
+#: grow/templates/grow/user/info.html:168
+msgid "Show finished grow logs"
+msgstr "Zeige abgeschlossene Growlogs"
 
-#: grow/templates/grow/user/info.html:142
+#: grow/templates/grow/user/info.html:178
 msgid "Finished at"
 msgstr "Abgeschlossen am"
 
-#: grow/templates/grow/user/info.html:143
+#: grow/templates/grow/user/info.html:179
 msgid "Duration"
 msgstr "Dauer"
 
-#: grow/templates/grow/user/info.html:158
+#: grow/templates/grow/user/info.html:194
 msgid "You have no finished grow logs."
 msgstr "Du hast keine abgeschlossenen Growlogs."
 
