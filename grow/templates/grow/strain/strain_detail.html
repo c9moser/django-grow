@@ -290,7 +290,27 @@
                 {% if use_bootstrap %}
                 <div class="text-end">
                     <a href="#"
-                        hx-get="{% url 'grow:hx-strain-add-to-stock' strain=strain.pk feminized=0 %}"
+                        {% if strain.regular_seeds_in_stock %}
+                        hx-get="{% url 'grow:hx-strain-stock-notes' strain.regular_seeds_in_stock.pk %}"
+                        {% else %}
+                        hx-get="{% url 'grow:hx-strain-stock-notes' 0 %}"
+                        {% endif %}
+                        hx-swap="innerHTML"
+                        hx-target="#modals-here"
+                        hx-trigger="click"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modals-here"
+                        class="link-body-emphasis
+                            link-opacity-50
+                            link-opacity-100-hover
+                            link-underline-opacity-0"
+                    ><i class="bi bi-journal-text"
+                        data-bs-toggle="tooltip"
+                        data-bs-title="{% translate 'Show notes.' %}"
+                        data-bs-placement="left"></i>
+                    </a>
+                    <a href="#"
+                        hx-get="{% url 'grow:hx-strain-add-to-stock' strain.pk feminized=0 %}"
                         hx-swap="innerHTML"
                         hx-target="#modals-here"
                         hx-trigger="click"
@@ -303,7 +323,7 @@
                     ><i class="bi bi-plus-circle"
                             data-bs-toggle="tooltip"
                             data-bs-placement="left"
-                            data-bs-title="Add regular seeds to stock."></i>
+                            data-bs-title="{% translate 'Add regular seeds to stock.' %}"></i>
                     </a>
                 {% else %}
                     <a href="{% url 'grow:strain-add-to-stock' strain=strain.pk feminized=0 %}">
@@ -311,8 +331,9 @@
                     </a>
                 {% endif %}
                 {% if use_bootstrap %}
+                    <div class="text-end">
                     <a href="#"
-                        hx-get="{% url 'grow:hx-strain-remove-from-stock' strain=strain.pk feminized=0 %}"
+                        hx-get="{% url 'grow:hx-strain-remove-from-stock' strain.regular_seeds_in_stock.pk feminized=0 %}"
                         hx-swap="innerHTML"
                         hx-target="#modals-here"
                         hx-trigger="click"
@@ -324,7 +345,7 @@
                             link-underline-opacity-0"
                     ><i class="bi bi-dash-circle"
                         data-bs-toggle="tooltip"
-                        data-bs-title="Remove regular seeds from stock."
+                        data-bs-title="{% translate 'Remove regular seeds from stock.' %}"
                         data-bs-placement="left"></i>
                     </a>
                 </div>
@@ -336,7 +357,7 @@
             </td>
         </tr>
     {% endif %}
-        {% if strain.is_feminized %}
+    {% if strain.is_feminized %}
         <tr>
             <td>{% translate "Feminized seeds" %}</td>
             <td>
@@ -352,6 +373,27 @@
             <td>
                 {% if use_bootstrap %}
                 <div class="text-end">
+
+                    <a href="#"
+                        {% if strain.feminized_seeds_in_stock %}
+                        hx-get="{% url 'grow:hx-strain-stock-notes' strain.feminized_seeds_in_stock.pk %}"
+                        {% else %}
+                        hx-get="{% url 'grow:hx-strain-stock-notes' 0 %}"
+                        {% endif %}
+                        hx-swap="innerHTML"
+                        hx-target="#modals-here"
+                        hx-trigger="click"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modals-here"
+                        class="link-body-emphasis
+                            link-opacity-50
+                            link-opacity-100-hover
+                            link-underline-opacity-0"
+                    ><i class="bi bi-journal-text"
+                        data-bs-toggle="tooltip"
+                        data-bs-title="{% translate 'Show notes.' %}"
+                        data-bs-placement="left"></i>
+                    </a>
                     <a href="#"
                         hx-get="{% url 'grow:hx-strain-add-to-stock' strain=strain.pk feminized=1 %}"
                         hx-swap="innerHTML"
@@ -364,7 +406,7 @@
                         link-underline-opacity-0"
                     ><i class="bi bi-plus-circle"
                         data-bs-toggle="tooltip"
-                        data-bs-title="Add feminized seeds to stock."
+                        data-bs-title="{% translate 'Add feminized seeds to stock.' %}"
                         data-bs-placement="left"></i>
                     </a>
                 {% else %}
@@ -385,7 +427,7 @@
                         link-underline-opacity-0"
                     ><i class="bi bi-dash-circle"
                             data-bs-toggle="tooltip"
-                            data-bs-title="Remove feminized seeds from stock."
+                            data-bs-title="{% translate 'Remove feminized seeds from stock.' %}"
                             data-bs-placement="left"></i>
                     </a>
                 </div>

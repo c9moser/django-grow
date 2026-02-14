@@ -34,6 +34,7 @@ from ..forms import (
     StrainForm,
     StrainImageUploadForm,
     StrainAddToStockForm,
+    StrainAddToStock2Form,
     StrainRemoveFromStockForm,
     StrainSearchForm,
     StrainFilterForm,
@@ -847,6 +848,8 @@ class HxStrainAddToStockView(LoginRequiredMixin, FormView):
                 'purchased_on_month': sis.purchased_on.month if sis.purchased_on else today.month,
                 'purchased_on_day': sis.purchased_on.day if sis.purchased_on else today.day,
                 'quantity': 1,
+                'notes_type': sis.notes_type,
+                'notes': sis.notes,
             })
         except StrainsInStock.DoesNotExist:
             form = form_class(initial={'quantity': 1})
@@ -875,6 +878,8 @@ class HxStrainAddToStockView(LoginRequiredMixin, FormView):
             return day
 
         purchased_on = date(year, month, sanitize_day()) if year and month and day else None
+
+        print("Notes:", form.cleaned_data['notes'])
 
         if self.feminized:
             self.strain.add_feminized_seeds_to_stock(
@@ -928,8 +933,10 @@ class HxStrainAddToStockView(LoginRequiredMixin, FormView):
         form = self.get_form_class()(request.POST)
 
         if form.is_valid():
+            print("Form is valid!")
             return self.form_valid(form)
         else:
+            print("Form is invalid!")
             return self.form_invalid(form)
 
 
@@ -1421,6 +1428,43 @@ class HxStrainSearchView(BaseView):
 
     def get(self, request: HttpRequest) -> HttpResponse:
         form = StrainSearchForm()
+
+        return render(request, self.template_name, context={
+            'form': form,
+        })
+
+
+class HxStrainStockNotesView(LoginRequiredMixin, BaseView):
+    template_name = settings.GROW_TEMPLATES['grow/strain/hx-strain_in_stock_notes']
+
+    def get(self, request: HttpRequest, pk: int) -> HttpResponse:
+        try:
+            sis = StrainsInStock.objects.get(pk=pk)
+        except StrainsInStock.DoesNotExist:
+            sis = None
+
+        except StrainsInStock.DoesNotExist:
+            raise Http404("Stock notes not found!")
+
+        return render(request, self.template_name, context={
+            'seeds_in_stock': sis,
+        })
+
+
+class StrainAddToStock2View(LoginRequiredMixin, BaseView):
+    template_name = settings.GROW_TEMPLATES['grow/strain/add_to_stock2']
+
+    def get(self, request: HttpRequest) -> HttpResponse:
+        return render(request, self.template_name, context={
+            'form': StrainAddToStock2Form(),
+        })
+
+
+class HxStrainAddToStock2View(LoginRequiredMixin, BaseView):
+    template_name = settings.GROW_TEMPLATES['grow/strain/hx-add_to_stock2']
+
+    def post(self, request: HttpRequest) -> HttpResponse:
+        form = StrainAddToStock2Form(request.POST)
 
         return render(request, self.template_name, context={
             'form': form,

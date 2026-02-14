@@ -1,0 +1,40 @@
+{% load i18n widget_tweaks %}
+
+{% url 'grow:hx-strain-add-to-stock2' as hx_strain_add_to_stock2_url %}
+{% if use_bootstrap %}
+    <div class="input-group mb-3">
+        <span class="input-group-text">{% translate "Breeder" %}</span>
+        <label class="visually-hidden" for="{{ form.breeder_filter.id_for_label }}">{{ form.breeder_filter.label }}</label>
+        {% render_field form.breeder_filter class="form-control" placeholder=form.breeder_filter.label hx-post=hx_strain_add_to_stock2_url hx-trigger="keyup changed delay:250ms" hx-swap="innerHTML" hx-target="#add-to-stock-fields" %}
+        <label for="{{ form.breeder.id_for_label }}" class="visually-hidden">{{ form.breeder.label }}</label>
+        {% render_field form.breeder class="form-control" hx-post=hx_strain_add_to_stock2_url hx-trigger="change" hx-swap="innerHTML" hx-target="#add-to-stock-fields" %}
+    </div>
+    <div class="input-group mb-3">
+        <span class="input-group-text">{% translate "Strain" %}</span>
+        <label class="visually-hidden" for="{{ form.strain_filter.id_for_label }}">{{ form.strain_filter.label }}</label>
+        {% render_field form.strain_filter class="form-control" placeholder=form.strain_filter.label hx-post=hx_strain_add_to_stock2_url hx-trigger="keyup changed delay:250ms" hx-swap="innerHTML" hx-target="#add-to-stock-fields" %}
+        <label class="visually-hidden" for="{{ form.strain.id_for_label }}">{{ form.strain.label }}</label>
+        {% render_field form.strain class="form-control" %}
+    </div>
+    <div class="input-group mb-3">
+        <span class="input-group-text">{% translate "Quantity" %}</span>
+        <label class="visually-hidden" for="form.quantity.id_for_label">{{ form.quantity.label }}</label>
+        {% render_field form.quantity class="form-control" %}
+    </div>
+    {% else %}
+    <p>
+        {{ form.breeder_filter.label_tag }} {{ form.breeder_filter }}
+    </p>
+    <p>
+        {{ form.breeder.label_tag }} {{ form.breeder }}
+    </p>
+    <p>
+        {{ form.strain_filter.label_tag }} {{ form.strain_filter }}
+    </p>
+    <p>
+        {{ form.strain.label_tag }} {{ form.strain }}
+    </p>
+    <p>
+        {{ form.quantity.label_tag }} {{ form.quantity }}
+    </p>
+{% endif %}

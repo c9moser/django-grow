@@ -10,6 +10,7 @@ from .views.strain import (
     BreederUpdateView,
     BreederTranslationView,
     StrainAddToStockView,
+    StrainAddToStock2View,
     StrainCommentCreateView,
     StrainCommentUpdateView,
     StrainCreateView,
@@ -27,8 +28,10 @@ from .views.strain import (
     HxStrainDeleteView,
     HxStrainFilterView,
     HxStrainAddToStockView,
+    HxStrainAddToStock2View,
     HxStrainRemoveFromStockView,
     HxStrainSearchView,
+    HxStrainStockNotesView,
     HxStrainTranslationView,
 )
 
@@ -42,7 +45,11 @@ from .views.location import (
      HxLocationDeleteView,
 )
 
-from .views.user import UserInfoView
+from .views.user import (
+     UserInfoView,
+     HxUserInfoAddSeedsToStockView,
+     HxUserInfoRemoveSeedsFromStockView,
+)
 from .views.utils import HxSelectDateDaysSanitizeView
 
 app_name = "grow"
@@ -81,6 +88,7 @@ strain_patterns = [
     path("strain/add_to_stock/<int:strain>/<int:feminized>/",
          StrainAddToStockView.as_view(),
          name="strain-add-to-stock"),
+    path("strain/add_to_stock/", StrainAddToStock2View.as_view(), name="strain-add-to-stock2"),
     path("strain/remove_from_stock/<int:strain>/<int:feminized>/",
          StrainRemoveFromStockView.as_view(),
          name="strain-remove-from-stock"),
@@ -106,9 +114,13 @@ strain_patterns = [
     path("__hx__/strain/add_to_stock/<int:strain>/<int:feminized>/",
          HxStrainAddToStockView.as_view(),
          name="hx-strain-add-to-stock"),
+    path("__hx__/strain/add_to_stock2/",
+         HxStrainAddToStock2View.as_view(),
+         name="hx-strain-add-to-stock2"),
     path("__hx__/strain/remove_from_stock/<int:strain>/<int:feminized>/",
          HxStrainRemoveFromStockView.as_view(),
          name="hx-strain-remove-from-stock"),
+    path("__hx__/strain/stock_notes/<int:pk>/", HxStrainStockNotesView.as_view(), name="hx-strain-stock-notes"),
     path("__hx__/strain/delete/<int:pk>/", HxStrainDeleteView.as_view(), name="hx-strain-delete"),
     path("__hx__/strain/translation/<int:pk>/",
          HxStrainTranslationView.as_view(),
@@ -117,6 +129,9 @@ strain_patterns = [
          HxBreederFilterView.as_view(),
          name="hx-breeder-filter"),
     path("__hx__/select_date_days_sanitize/<int:year>/<int:month>/",
+         HxSelectDateDaysSanitizeView.as_view(),
+         name="hx-select-date-days-sanitize"),
+    path("__hx__/select_date_days_sanitize/<int:year>/<int:month>/<int:day>/",
          HxSelectDateDaysSanitizeView.as_view(),
          name="hx-select-date-days-sanitize"),
     path("__hx__/strain/search/", HxStrainSearchView.as_view(), name="hx-strain-search"),
@@ -137,6 +152,12 @@ location_patterns = [
 
 user_patterns = [
      path("grow/my-info/", UserInfoView.as_view(), name="user-info"),
+     path("__hx__/grow/user/add_seeds_to_stock/<int:strain>/<int:feminized>/",
+          HxUserInfoAddSeedsToStockView.as_view(),
+          name="hx-user-add-seeds-to-stock"),
+     path("__hx__/grow/user/remove_seeds_from_stock/<int:strain>/<int:feminized>/",
+          HxUserInfoRemoveSeedsFromStockView.as_view(),
+          name="hx-user-remove-seeds-from-stock"),
 ]
 
 urlpatterns = [

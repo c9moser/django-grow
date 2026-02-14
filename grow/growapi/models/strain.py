@@ -982,6 +982,32 @@ class Strain(models.Model):
             return self.logo_url
         return ""
 
+    @property
+    def regular_seeds_in_stock(self):
+        """
+        Get the regular seeds in stock model instance for the strain.
+
+        :return: The regular seeds in stock.
+        :rtype: StrainsInStock or None
+        """
+        try:
+            return self.seeds_in_stock.get(is_regular=True)
+        except StrainsInStock.DoesNotExist:
+            return None
+
+    @property
+    def feminized_seeds_in_stock(self):
+        """
+        Get the feminized seeds in stock model instance for the strain.
+
+        :return: The feminized seeds in stock.
+        :rtype: StrainsInStock or None
+        """
+        try:
+            return self.seeds_in_stock.get(is_feminized=True)
+        except StrainsInStock.DoesNotExist:
+            return None
+
     def get_regular_seeds_in_stock(self, user) -> int:
         """
         Get the number of regular seeds in stock for the given user.
@@ -1045,6 +1071,7 @@ class Strain(models.Model):
         :rtype: int
         """
 
+        print("Notes:", notes)
         if self.is_feminized:
             try:
                 sis = self.seeds_in_stock.get(is_feminized=True, user=user)
@@ -1096,6 +1123,8 @@ class Strain(models.Model):
                     sis.quantity = 0
                 if sis.quantity == 0:
                     sis.purchased_on = None
+                    sis.notes = ""
+                    sis.notes_type = TextType.MARKDOWN
                 sis.save()
                 return sis.quantity
             except StrainsInStock.DoesNotExist:
@@ -1150,9 +1179,7 @@ class Strain(models.Model):
             return sis.quantity
         return 0
 
-    def remove_regualar_seeds_from_stock(self,
-                                         user,
-                                         quantity: int) -> int:
+    def remove_regular_seeds_from_stock(self, user, quantity: int) -> int:
         """
         Removes regular seeds from the stock for the given user.
 
@@ -1175,8 +1202,11 @@ class Strain(models.Model):
                     sis.quantity -= quantity
                 else:
                     sis.quantity = 0
+
                 if sis.quantity == 0:
                     sis.purchased_on = None
+                    sis.notes = ""
+                    sis.notes_type = TextType.MARKDOWN
                 sis.save()
                 return sis.quantity
             except StrainsInStock.DoesNotExist:

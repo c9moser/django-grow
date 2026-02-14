@@ -30,6 +30,7 @@
             </div>
         </div>
         <div class="modal-footer text-end">
+            {% block dialog_apply_button %}
             <button type="submit" class="btn btn-danger"
                 hx-trigger="click"
                 hx-target="#seeds-in-stock-div"
@@ -41,6 +42,7 @@
                 {% endif %}
                 data-bs-dismiss="modal"
             >{% translate "Remove from stock" %}</button>
+            {% endblock dialog_apply_button %}
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                 {% translate "Cancel" %}
             </button>

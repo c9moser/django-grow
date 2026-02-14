@@ -3,6 +3,7 @@ from django.utils.translation import gettext_lazy as _
 from django.utils.timezone import now
 
 from ..growapi.models import (
+    Breeder,
     Strain,
     StrainImage,
     BreederTranslation,
@@ -54,7 +55,7 @@ class StrainForm(forms.ModelForm):
 
 class StrainAddToStockForm(forms.Form):
     quantity = forms.IntegerField(
-        min_value=1,
+        min_value=0,
         max_value=1000000000,
         required=True,
         label=_("Quantity")
@@ -88,6 +89,92 @@ class StrainAddToStockForm(forms.Form):
         widget=forms.Textarea(),
         label=_("Notes"),
     )
+
+
+class StrainAddToStock2Form(forms.Form):
+    breeder_filter = forms.CharField(
+        max_length=255,
+        required=False,
+        label=_("Filter breeders...")
+    )
+    breeder = forms.ChoiceField(
+        required=True,
+        label=_("Breeder")
+    )
+
+    strain_filter = forms.CharField(
+        max_length=255,
+        required=False,
+        label=_("Filter strains...")
+    )
+    strain = forms.ChoiceField(
+        required=True,
+        label=_("Strain")
+    )
+
+    quantity = forms.IntegerField(
+        min_value=1,
+        max_value=1000000000,
+        required=True,
+        initial=1,
+        label=_("Quantity")
+    )
+    purchased_on_year = forms.ChoiceField(
+        label=_("Purchased on Year"),
+        required=False,
+        choices=get_year_choices(10),
+        initial=now().year
+    )
+
+    purchased_on_month = forms.ChoiceField(
+        label=_("Puchased on Month"),
+        required=False,
+        choices=[(i, str(i)) for i in range(1, 13)],
+        initial=now().month
+    )
+    purchased_on_day = forms.ChoiceField(
+        label=_("Purchased on Day"),
+        required=False,
+        choices=[(i, str(i)) for i in range(1, 32)],
+        initial=now().day
+    )
+
+    notes_type = forms.ChoiceField(
+        choices=TEXT_CHOICES,
+        initial=TextType.MARKDOWN.value,
+        required=False)
+    notes = forms.CharField(
+        required=False,
+        widget=forms.Textarea(),
+        label=_("Notes"),
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if self.data.get('breeder_filter'):
+            self.fields['breeder'].choices = [
+                (breeder.id, breeder.name) for breeder in
+                Breeder.objects.filter(name__icontains=self.data['breeder_filter'])
+            ]
+        else:
+            self.fields['breeder'].choices = [
+                (breeder.id, breeder.name) for breeder in Breeder.objects.all()
+            ]
+
+        if self.data.get('breeder'):
+            if self.data.get('strain_filter'):
+                self.fields['strain'].choices = [
+                    (strain.id, strain.name) for strain in
+                    Strain.objects.filter(
+                        breeder_id=self.data['breeder'],
+                        name__icontains=self.data.get('strain_filter'))
+                ]
+            else:
+                self.fields['strain'].choices = [
+                    (strain.id, strain.name) for strain in
+                    Strain.objects.filter(breeder_id=self.data['breeder'])
+                ]
 
 
 class StrainRemoveFromStockForm(forms.Form):

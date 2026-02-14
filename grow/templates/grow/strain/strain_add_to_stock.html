@@ -20,10 +20,29 @@
 {{ form.as_p}}
 
 <div>
+    <a id="sanitize-date-fields-btn" href="#" hx-swap="innerHTML" hx-target="#id_purchased_on_day"></a>
     <button type="submit">{% translate "Add seeds" %}</button>
     <button type="button"
         onclick="location.href='{% url 'grow:strain-detail' breeder_slug=strain.breeder.slug slug=strain.slug %}'"
     >{% translate "Cancel" %}</button>
 </div>
-</from>
+</form>
 {% endblock %}
+
+{% block body_scripts %}
+<script>
+    function sanitize_date_fields() {
+        var year = document.getElementById("id_purchased_on_year").value;
+        var month = document.getElementById("id_purchased_on_month").value;
+        var day = document.getElementById("id_purchased_on_day").value;
+        var button = document.getElementById("sanitize-date-fields-btn");
+        url = "{% url 'grow:home' %}" + "__hx__/select_date_days_sanitize/" + year + "/" + month + "/" + day + "/";
+        button.setAttribute("hx-get", url);
+        htmx.process(button);
+        button.click();
+    }
+
+    document.getElementById("id_purchased_on_year").addEventListener("change", sanitize_date_fields);
+    document.getElementById("id_purchased_on_month").addEventListener("change", sanitize_date_fields);
+</script>
+{% endblock body_scripts %}

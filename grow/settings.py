@@ -34,6 +34,7 @@ GROW_BUILTIN_TEMPLATES = {
     # strain templates
     'grow/strain': 'grow/strain/index.html',
     'grow/strain/add_to_stock': 'grow/strain/strain_add_to_stock.html',
+    'grow/strain/add_to_stock2': 'grow/strain/strain_add_to_stock2.html',
     'grow/strain/create': 'grow/strain/strain_create.html',
     'grow/strain/comment_create': 'grow/strain/strain_comment_create.html',
     'grow/strain/comment_update': 'grow/strain/strain_comment_update.html',
@@ -42,11 +43,13 @@ GROW_BUILTIN_TEMPLATES = {
     'grow/strain/gallery': 'grow/strain/strain_gallery.html',
     'grow/strain/gallery_slides': 'grow/strain/strain_gallery_slides.html',
     'grow/strain/hx-add_to_stock': 'grow/strain/hx_strain_add_to_stock.html',
+    'grow/strain/hx-add_to_stock2': 'grow/strain/hx_strain_add_to_stock2.html',
     'grow/strain/hx-delete': 'grow/strain/hx_strain_delete.html',
     'grow/strain/hx-strain-filter': 'grow/strain/hx_strain_filter.html',
     'grow/strain/hx-remove_from_stock': 'grow/strain/hx_strain_remove_from_stock.html',
     'grow/strain/hx-remove_from_stock_invalid': 'grow/strain/hx_strain_remove_from_stock_invalid.html',
     'grow/strain/hx-strain_in_stock_update': 'grow/strain/hx_strain_in_stock_update.html',
+    'grow/strain/hx-strain_in_stock_notes': 'grow/strain/hx_strain_in_stock_notes.html',
     'grow/strain/hx-translation': 'grow/strain/hx_strain_translation.html',
     'grow/strain/hx-search': 'grow/strain/hx_strain_search.html',
     'grow/strain/image_upload': 'grow/strain/strain_image_upload.html',
@@ -79,7 +82,10 @@ GROW_BUILTIN_TEMPLATES = {
     'grow/growlog/hx-entry-delete': 'grow/growlog/hx_entry_delete.html',
 
     # user views
+    'grow/user/hx-add_seeds_to_stock': 'grow/user/hx_add_seeds_to_stock.html',
+    'grow/user/hx-remove_seeds_from_stock': 'grow/user/hx_remove_seeds_from_stock.html',
     'grow/user/info': 'grow/user/info.html',
+    'grow/user/hx-info_seeds_in_stock': 'grow/user/hx_info_seeds_in_stock.html',
 
     # utils
     'grow/utils/hx_select_date_days_sanitize': 'grow/utils/hx_select_date_days_sanitize.html'

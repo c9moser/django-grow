@@ -53,9 +53,21 @@
         <label for="{{ form.purchased_on_day.id_for_label }}" class="input-group-text">{% translate "Day" %}</label>
         {% render_field form.purchased_on_day class="form-control" %}
     </div>
+
+    <div class="input-group mb-3">
+        <span class="input-group-text">{% translate "Notes type" %}</span>
+        {% render_field form.notes_type class="form-control" placeholder=form.notes_type.label %}
+        <label for="{{ form.notes_type.id_for_label }}" class="visually-hidden">{{ form.notes_type.label }}</label>
+    </div>
+
+    <div class="form-floating mb-3">
+        {% render_field form.notes class="form-control" placeholder=form.notes.label style="height: 150px;" %}
+        <label for="{{ form.notes.id_for_label }}" class="form-label">{{ form.notes.label }}</label>
+    </div>
 </div>
 <div class="modal-footer text-end">
     <div>
+        {% block dialog_apply_button %}
         <button type="submit" class="btn btn-success"
             hx-trigger="click"
             hx-target="#seeds-in-stock-div"
@@ -67,13 +79,14 @@
             {% endif %}
             data-bs-dismiss="modal"
         >{% translate "Add seeds" %}</button>
+        {% endblock dialog_apply_button %}
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% translate "Cancel" %}</button>
     </div>
 </div>
-<button id="sanitize-date-fields-btn" type="button" class="visually-hidden"
+<a id="sanitize-date-fields-btn" type="button" class="visually-hidden"
     hx-trigger="click"
     hx-swap="innerHTML"
-    hx-target="#{{ form.purchased_on_day.id_for_label }}"></button>
+    hx-target="#{{ form.purchased_on_day.id_for_label }}"></a>
 </form>
 <script>
     htmx.process(document.getElementById('modal-dialog'));
@@ -81,8 +94,9 @@
     function sanitize_date_fields() {
         var year = document.getElementById("id_purchased_on_year").value;
         var month = document.getElementById("id_purchased_on_month").value;
+        var day = document.getElementById("id_purchased_on_day").value;
         var button = document.getElementById("sanitize-date-fields-btn");
-        url = "{% url 'grow:home' %}" + "__hx__/select_date_days_sanitize/" + year + "/" + month + "/";
+        url = "{% url 'grow:home' %}" + "__hx__/select_date_days_sanitize/" + year + "/" + month + "/" + day + "/";
         button.setAttribute("hx-get", url);
         htmx.process(button);
         button.click();
@@ -91,5 +105,4 @@
     document.getElementById("id_purchased_on_year").addEventListener("change", sanitize_date_fields);
     document.getElementById("id_purchased_on_month").addEventListener("change", sanitize_date_fields);
     htmx.process(document.getElementById('modal-dialog'));
-
 </script>

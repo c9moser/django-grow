@@ -1,0 +1,22 @@
+{% load i18n %}
+<div class="modal-dialog modal-dialog-lg" id="modal-dialog" style="min-width: 600px; width: 80%;">
+    <div class="modal-content">
+        <div class="modal-header bg-success text-white">
+            <h5 class="modal-title">
+                {% blocktranslate with strain_name=seeds_in_stock.strain.name breeder_name=seeds_in_stock.strain.breeder.name %}Notes for Seeds of <i>{{ strain_name }}</i> from <i>{{ breeder_name }}</i>.{% endblocktranslate %}
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{% translate "Close" %}"></button>
+        </div>
+        <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+
+            {% if seeds_in_stock and seeds_in_stock.notes %}
+            {{ seeds_in_stock.notes_html }}
+            {% else %}
+            <p>{% translate "No notes available." %}</p>
+            {% endif %}
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% translate "Close" %}</button>
+        </div>
+    </div>
+</div>
