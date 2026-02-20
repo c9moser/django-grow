@@ -331,7 +331,6 @@
                     </a>
                 {% endif %}
                 {% if use_bootstrap %}
-                    <div class="text-end">
                     <a href="#"
                         hx-get="{% url 'grow:hx-strain-remove-from-stock' strain=strain.pk feminized=0 %}"
                         hx-swap="innerHTML"
@@ -348,7 +347,6 @@
                         data-bs-title="{% translate 'Remove regular seeds from stock.' %}"
                         data-bs-placement="left"></i>
                     </a>
-                </div>
                 {% else %}
                 <a href="{% url 'grow:strain-remove-from-stock' strain=strain.pk feminized=0 %}">
                     {% translate "remove seeds" %}
@@ -410,7 +408,7 @@
                         data-bs-placement="left"></i>
                     </a>
                 {% else %}
-                    <a href="{% url 'grow:strain-add-to-stock' strain=strain.pk feminized=0 %}">
+                    <a href="{% url 'grow:strain-add-to-stock' strain=strain.pk feminized=1 %}">
                         {% translate "add seeds" %}
                     </a>
                 {% endif %}
