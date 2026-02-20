@@ -44,6 +44,7 @@ GROW_BUILTIN_TEMPLATES = {
     'grow/strain/gallery_slides': 'grow/strain/strain_gallery_slides.html',
     'grow/strain/hx-add_to_stock': 'grow/strain/hx_strain_add_to_stock.html',
     'grow/strain/hx-add_to_stock2': 'grow/strain/hx_strain_add_to_stock2.html',
+    'grow/strain/hx-add_to_stock_dialog': 'grow/strain/hx_add_to_stock_dialog.html',
     'grow/strain/hx-delete': 'grow/strain/hx_strain_delete.html',
     'grow/strain/hx-strain-filter': 'grow/strain/hx_strain_filter.html',
     'grow/strain/hx-remove_from_stock': 'grow/strain/hx_strain_remove_from_stock.html',
@@ -59,6 +60,9 @@ GROW_BUILTIN_TEMPLATES = {
     'grow/strain/strain_search_results': 'grow/strain/strain_search_results.html',
     'grow/strain/translation': 'grow/strain/strain_translation.html',
     'grow/strain/update': 'grow/strain/strain_update.html',
+    'grow/strain/seeds_in_stock': 'grow/strain/seeds_in_stock.html',
+    'grow/strain/hx-seeds_in_stock_dialog': 'grow/strain/hx_seeds_in_stock_dialog.html',
+    'grow/strain/hx-seeds_in_stock_info': 'grow/strain/hx_seeds_in_stock_info.html',
 
     # location views
     'grow/location/create': 'grow/location/create.html',
@@ -70,9 +74,10 @@ GROW_BUILTIN_TEMPLATES = {
     'grow/growlog/create': 'grow/growlog/growlog_create.html',
     'grow/growlog/delete': 'grow/growlog/growlog_delete.html',
     'grow/growlog/detail': 'grow/growlog/growlog_detail.html',
-    'grow/growlog/entry_image_upload': 'grow/growlog/entry_image_upload.html',
     'grow/growlog/update': 'grow/growlog/growlog_update.html',
-    'grow/growlog/entry_image_delete': 'grow/growlog/entry_image_delete.html',
+    'grow/growlog/form': 'grow/growlog/growlog_form.html',
+    'grow/growlog/entry/image_delete': 'grow/growlog/entry_image_delete.html',
+    'grow/growlog/entry/image_upload': 'grow/growlog/entry_image_upload.html',
     'grow/growlog/hx-entry-image-delete': 'grow/growlog/hx_entry_image_delete.html',
     'grow/growlog/hx-entry-image-upload': 'grow/growlog/hx_entry_image_upload.html',
     'grow/growlog/hx-delete': 'grow/growlog/hx_delete.html',
@@ -102,3 +107,15 @@ else:
 
 
 SITE_TITLE = getattr(settings, "SITE_TITLE", "Grow")
+
+def GROW_USER_SETTINGS(request):
+    if not request.user.is_authenticated:
+        return None
+
+    from .growapi.models import GrowUserSettings
+    try:
+        return request.user.grow_settings
+    except:
+        return GrowUserSettings.objects.create(user=request.user,
+                                               paginate=GROW_PAGINATE,
+                                               growlog_paginate=GROW_GROWLOG_PAGINATE)

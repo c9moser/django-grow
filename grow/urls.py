@@ -11,6 +11,7 @@ from .views.strain import (
     BreederTranslationView,
     StrainAddToStockView,
     StrainAddToStock2View,
+
     StrainCommentCreateView,
     StrainCommentUpdateView,
     StrainCreateView,
@@ -33,6 +34,9 @@ from .views.strain import (
     HxStrainSearchView,
     HxStrainStockNotesView,
     HxStrainTranslationView,
+    HxSeedsInStockInfoView,
+    HxSeedInStockDialogView,
+    HxSeedInStockDialogUpdateView,
 )
 
 from .views.location import (
@@ -50,6 +54,14 @@ from .views.user import (
      HxUserInfoAddSeedsToStockView,
      HxUserInfoRemoveSeedsFromStockView,
 )
+
+from .views.growlog import (
+     GrowlogCreateView,
+     #GrowlogUpdateView,
+     #GrowlogDeleteView,
+     GrowlogDetailView,
+)
+
 from .views.utils import HxSelectDateDaysSanitizeView
 
 app_name = "grow"
@@ -117,6 +129,9 @@ strain_patterns = [
     path("__hx__/strain/add_to_stock2/",
          HxStrainAddToStock2View.as_view(),
          name="hx-strain-add-to-stock2"),
+    path("__hx__/strain/filter/<int:breeder_pk>/",
+         HxStrainFilterView.as_view(),
+         name="hx-strain-filter"),
     path("__hx__/strain/remove_from_stock/<int:strain>/<int:feminized>/",
          HxStrainRemoveFromStockView.as_view(),
          name="hx-strain-remove-from-stock"),
@@ -135,6 +150,15 @@ strain_patterns = [
          HxSelectDateDaysSanitizeView.as_view(),
          name="hx-select-date-days-sanitize"),
     path("__hx__/strain/search/", HxStrainSearchView.as_view(), name="hx-strain-search"),
+    path("__hx__/strain/seeds_in_stock_info/",
+         HxSeedsInStockInfoView.as_view(),
+         name="hx-seeds-in-stock-info"),
+    path("__hx__/strain/seeds_in_stock_dialog/",
+         HxSeedInStockDialogView.as_view(),
+         name="hx-seed-in-stock-dialog"),
+    path("__hx__/strain/seeds_in_stock_dialog/update/",
+         HxSeedInStockDialogUpdateView.as_view(),
+         name="hx-seed-in-stock-dialog-update"),
 ]
 
 
@@ -160,8 +184,16 @@ user_patterns = [
           name="hx-user-remove-seeds-from-stock"),
 ]
 
+growlog_patterns = [
+     path("growlog/create/", GrowlogCreateView.as_view(), name="growlog-create"),
+     #path("growlog/update/<int:pk>/", GrowlogUpdateView.as_view(), name="growlog-update"),
+     #path("growlog/delete/<int:pk>/", GrowlogDeleteView.as_view(), name="growlog-delete"),
+     path("growlog/detail/<int:pk>/", GrowlogDetailView.as_view(), name="growlog-detail"),
+]
+
 urlpatterns = [
      *strain_patterns,
      *location_patterns,
+     *growlog_patterns,
      *user_patterns,
 ]

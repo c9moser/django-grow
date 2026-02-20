@@ -108,8 +108,8 @@ class StrainAddToStock2Form(forms.Form):
         label=_("Filter strains...")
     )
     strain = forms.ChoiceField(
-        required=True,
-        label=_("Strain")
+        label=_("Strain"),
+        required=False,
     )
 
     quantity = forms.IntegerField(
@@ -119,6 +119,17 @@ class StrainAddToStock2Form(forms.Form):
         initial=1,
         label=_("Quantity")
     )
+
+    strain_type = forms.ChoiceField(
+        choices=[
+            ('feminized', _("Feminized")),
+            ('regular', _("Regular")),
+        ],
+        widget=forms.RadioSelect,
+        required=True,
+        initial="feminized"
+    )
+
     purchased_on_year = forms.ChoiceField(
         label=_("Purchased on Year"),
         required=False,
@@ -152,28 +163,47 @@ class StrainAddToStock2Form(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        Breeder.objects.all().order_by('name')
         if self.data.get('breeder_filter'):
-            self.fields['breeder'].choices = [
-                (breeder.id, breeder.name) for breeder in
-                Breeder.objects.filter(name__icontains=self.data['breeder_filter'])
-            ]
+            breeders = Breeder.objects.filter(
+                name__icontains=self.data['breeder_filter']).order_by('name')
+
         else:
-            self.fields['breeder'].choices = [
-                (breeder.id, breeder.name) for breeder in Breeder.objects.all()
-            ]
+            breeders = Breeder.objects.all().order_by('name')
+
+        self.fields['breeder'].choices = [
+                (breeder.id, breeder.name) for breeder in breeders
+        ]
+        if breeders.count() > 0:
+            try:
+                selected_breeder_id = int(self.data.get('breeder'))
+                found = False
+                for breeder in breeders:
+                    if breeder.id == selected_breeder_id:
+                        found = True
+                        break
+                if not found:
+                    selected_breeder_id = None
+            except (TypeError, ValueError):
+                selected_breeder_id = None
+
+            if not selected_breeder_id:
+                selected_breeder_id = breeders[0].id
+
+            self.fields['breeder'].initial = selected_breeder_id
 
         if self.data.get('breeder'):
             if self.data.get('strain_filter'):
                 self.fields['strain'].choices = [
                     (strain.id, strain.name) for strain in
                     Strain.objects.filter(
-                        breeder_id=self.data['breeder'],
+                        breeder_id=selected_breeder_id,
                         name__icontains=self.data.get('strain_filter'))
                 ]
             else:
                 self.fields['strain'].choices = [
                     (strain.id, strain.name) for strain in
-                    Strain.objects.filter(breeder_id=self.data['breeder'])
+                    Strain.objects.filter(breeder_id=selected_breeder_id)
                 ]
 
 

@@ -67,7 +67,9 @@
             <p>
                 {{ form.quantity.label_tag }} {{ form.quantity }}
             </p>
-            <p>
+            <p><div class="card-header">
+            <nav aria-label="{% translate 'Seeds in stock pagination' %}">
+
                 {{ form.purchased_on_year.label_tag }} {{ form.purchased_on_year }}
                 {{ form.purchased_on_month.label_tag }} {{ form.purchased_on_month }}
                 {{ form.purchased_on_day.label_tag }} {{ form.purchased_on_day }}
@@ -93,7 +95,6 @@
         {% endif %}
     </form>
 </main>
-{% endblock %}
 <script>
     htmx.process(document.getElementById('modal-dialog'));
 
@@ -112,3 +113,5 @@
     document.getElementById("id_purchased_on_month").addEventListener("change", sanitize_date_fields);
     htmx.process(document.getElementById('modal-dialog'));
 </script>
+
+{% endblock %}

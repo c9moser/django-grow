@@ -11903,6 +11903,11 @@ th.fit-content * {
   width: 1%;
 }
 
+.modal-xl {
+  max-width: 90%;
+  min-width: 70%;
+}
+
 /* Light theme adjustments */
 /*
 [data-bs-theme="light"] {

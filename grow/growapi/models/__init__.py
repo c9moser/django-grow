@@ -22,5 +22,10 @@ from .sensors import (  # noqa
 from .growlog import (  # noqa
     Growlog,
     GrowlogEntry,
-    GrowlogEntryImage
+    GrowlogEntryImage,
+    GrowlogStrain,
+)
+
+from .user import (  # noqa
+    GrowUserSettings,
 )

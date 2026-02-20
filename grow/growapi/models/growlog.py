@@ -3,6 +3,7 @@ Growlog models
 """
 
 from django.db import models
+# from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 from django.conf import settings
@@ -24,15 +25,6 @@ GROWLOG_PERMISSION_TYPE = _("This determines who can view the grow log.")
 
 
 class Growlog(models.Model):
-    #: The key(slug) for the growlog
-    #: The growlog is looked up by ${BASE_URL}/userid/slug
-    slug = models.SlugField(
-        _("key"),
-        max_length=255,
-        editable=False,
-        unique=True,
-    )
-
     #: The name of the growlog
     name = models.CharField(
         _("name"),
@@ -45,6 +37,22 @@ class Growlog(models.Model):
         default=""
     )
 
+    @property
+    def description_html(self) -> str:
+        """
+        Returns the HTML representation of the description.
+        """
+        if self.description:
+            if self.description_type == TextType.MARKDOWN:
+                from grow.growapi.parser.markdown import render_description_markdown
+                return render_description_markdown(self.description)
+            elif self.description_type == TextType.BBCODE:
+                from grow.growapi.parser.bbcode import render_description_bbcode
+                return render_description_bbcode(self.description)
+            else:
+                return self.description
+        return ""
+
     #: The TextType of the growlog (default: Markdown).
     description_type_data = models.CharField(
         _("description type"),
@@ -56,12 +64,29 @@ class Growlog(models.Model):
     #: Personal Notes
     #:
     #: Personal notes are only displayed to the Grower himself/herself.
-    notes = models.TextField(_("notes"),
+    notes = models.TextField(_("personal notes"),
                              blank=True,
                              null=True)
+
+    @property
+    def notes_html(self) -> str:
+        """
+        Returns the HTML representation of the personal notes.
+        """
+        if self.notes:
+            if self.notes_type == TextType.MARKDOWN:
+                from grow.growapi.parser.markdown import render_description_markdown
+                return render_description_markdown(self.notes)
+            elif self.notes_type == TextType.BBCODE:
+                from grow.growapi.parser.bbcode import render_description_bbcode
+                return render_description_bbcode(self.notes)
+            else:
+                return self.notes
+        return ""
+
     #: The TextType of the personal notes (default: Markdown)
     notes_type_data = models.CharField(
-        _("notes type"),
+        _("personal notes type"),
         max_length=50,
         default="markdown",
         choices=TEXT_CHOICES,

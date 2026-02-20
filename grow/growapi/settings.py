@@ -30,6 +30,8 @@ GROW_DEFAULT_TEXT_TYPE = getattr(settings,
 if isinstance(GROW_DEFAULT_TEXT_TYPE, str):
     GROW_DEFAULT_TEXT_TYPE = TextType.from_string(GROW_DEFAULT_TEXT_TYPE)
 
+GROW_PAGINATE = getattr(settings, 'GROW_PAGINATE', 25)
+GROW_GROWLOG_PAGINATE = getattr(settings, 'GROW_GROWLOG_PAGINATE', 20)
 
 GROW_EXPORTS_VERSIONS = getattr(settings, "GROW_EXPRTS_VERSIONS", 3)
 GROW_EXPORTS_DIR = getattr(settings, 'GROW_EXPORTS_DIR',

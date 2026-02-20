@@ -310,7 +310,7 @@
                         data-bs-placement="left"></i>
                     </a>
                     <a href="#"
-                        hx-get="{% url 'grow:hx-strain-add-to-stock' strain.pk feminized=0 %}"
+                        hx-get="{% url 'grow:hx-strain-add-to-stock' strain=strain.pk feminized=0 %}"
                         hx-swap="innerHTML"
                         hx-target="#modals-here"
                         hx-trigger="click"
@@ -333,7 +333,7 @@
                 {% if use_bootstrap %}
                     <div class="text-end">
                     <a href="#"
-                        hx-get="{% url 'grow:hx-strain-remove-from-stock' strain.regular_seeds_in_stock.pk feminized=0 %}"
+                        hx-get="{% url 'grow:hx-strain-remove-from-stock' pk=strain.regular_seeds_in_stock.pk feminized=0 %}"
                         hx-swap="innerHTML"
                         hx-target="#modals-here"
                         hx-trigger="click"
