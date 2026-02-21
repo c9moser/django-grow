@@ -1,3 +1,5 @@
+from datetime import date
+
 from django import forms
 from django.utils.translation import gettext_lazy as _
 from django.utils.timezone import now
@@ -54,6 +56,15 @@ class StrainForm(forms.ModelForm):
 
 
 class StrainAddToStockForm(forms.Form):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        today = date.today()
+        self.fields['purchased_on_year'].initial = today.year
+        self.fields['purchased_on_month'].initial = today.month
+        self.fields['purchased_on_day'].initial = today.day
+
     quantity = forms.IntegerField(
         min_value=0,
         max_value=1000000000,
@@ -205,6 +216,20 @@ class StrainAddToStock2Form(forms.Form):
                     (strain.id, strain.name) for strain in
                     Strain.objects.filter(breeder_id=selected_breeder_id)
                 ]
+
+        if self.data.get('strain'):
+            self.fields['strain'].initial = self.data.get('strain')
+            strain = Strain.objects.filter(id=self.data.get('strain')).first()
+            if strain:
+                if strain.is_feminized:
+                    self.fields['strain_type'].initial = 'feminized'
+                elif strain.is_regular:
+                    self.fields['strain_type'].initial = 'regular'
+
+        today = date.today()
+        self.fields['purchased_on_year'].initial = today.year
+        self.fields['purchased_on_month'].initial = today.month
+        self.fields['purchased_on_day'].initial = today.day
 
 
 class StrainRemoveFromStockForm(forms.Form):

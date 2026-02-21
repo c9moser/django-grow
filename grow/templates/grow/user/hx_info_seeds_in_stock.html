@@ -58,7 +58,7 @@
                     </li>
                     <li>
                         <a href="#"
-                            hx-get="{% url 'grow:hx-user-info-seeds-in-stock' page=seeds_in_stock_current_page|add:-1 %}"
+                            hx-get="{% url 'grow:hx-user-info-seeds-in-stock' %}?page={{ seeds_in_stock_current_page|add:-1 }}"
                             hx-target="#seeds-in-stock-info"
                             hx-swap="innerHTML"
                             class="btn btn-outline-primary page-link"
@@ -67,7 +67,7 @@
                     {% endif %}
                     <li class="page-item {% if seeds_in_stock_current_page == 1 %}active disabled{% endif %}" aria-current="page">
                         <a href="#"
-                            hx-get="{% url 'grow:hx-user-info-seeds-in-stock' page=seeds_in_stock_current_page %}"
+                            hx-get="{% url 'grow:hx-user-info-seeds-in-stock' %}?page={{ seeds_in_stock_current_page }}"
                             hx-target="#seeds-in-stock-info"
                             hx-swap="innerHTML"
                             class="btn btn-outline-primary page-link"
@@ -76,7 +76,7 @@
                     {% if seeds_in_stock_current_page < seeds_in_stock_n_pages %}{# not last page #}
                     <li>
                         <a href="#"
-                            hx-get="{% url 'grow:hx-user-info-seeds-in-stock' page=seeds_in_stock_current_page|add:1 %}"
+                            hx-get="{% url 'grow:hx-user-info-seeds-in-stock' %}?page={{ seeds_in_stock_current_page|add:1 }}"
                             hx-target="#seeds-in-stock-info"
                             hx-swap="innerHTML"
                             class="btn btn-outline-primary page-link"
@@ -84,7 +84,7 @@
                     </li>
                     <li>
                         <a href="#"
-                            hx-get="{% url 'grow:hx-user-info-seeds-in-stock' page=seeds_in_stock_n_pages %}"
+                            hx-get="{% url 'grow:hx-user-info-seeds-in-stock'%}?page={{ seeds_in_stock_n_pages }}"
                             hx-target="#seeds-in-stock-info"
                             hx-swap="innerHTML"
                             class="btn btn-outline-primary page-link"

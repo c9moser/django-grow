@@ -38,26 +38,25 @@ class UserInfoView(LoginRequiredMixin, BaseView):
             else:
                 n_photoperiod_seeds_in_stock += seeds.quantity
 
+        paginate = user_settings.paginate
+        paginate = 10
         n = seeds_in_stock.count()
         if n == 0:
             seeds_in_stock_n_pages = 1
         else:
-            seeds_in_stock_n_pages = (n - 1) // user_settings.paginate + 1
+            seeds_in_stock_n_pages = (n - 1) // paginate + 1
 
         seeds_in_stock_current_page = 1
         if 'sispage' in self.request.GET:
             try:
                 seeds_in_stock_current_page = int(self.request.GET['sispage'])
-                if seeds_in_stock_current_page < 1:
-                    seeds_in_stock_current_page = 1
-                elif seeds_in_stock_current_page > seeds_in_stock_n_pages:
-                    seeds_in_stock_current_page = seeds_in_stock_n_pages
             except ValueError:
                 pass
+        if seeds_in_stock_current_page < 1:
+            seeds_in_stock_current_page = 1
+        elif seeds_in_stock_current_page > seeds_in_stock_n_pages:
+            seeds_in_stock_current_page = seeds_in_stock_n_pages
 
-        seeds_in_stock = seeds_in_stock[
-            (seeds_in_stock_current_page - 1) * user_settings.paginate:
-                (seeds_in_stock_current_page * user_settings.paginate)]
         n_growlogs = Growlog.objects.filter(grower=self.request.user).count()
         active_growlogs = Growlog.objects.filter(
             grower=self.request.user,
@@ -70,10 +69,15 @@ class UserInfoView(LoginRequiredMixin, BaseView):
 
         ret = {
             'seeds_in_stock_template': self.seeds_in_stock_template_name,
-            'seeds_in_stock': seeds_in_stock,
+            'seeds_in_stock': seeds_in_stock[
+                (seeds_in_stock_current_page - 1) * paginate:
+                    (seeds_in_stock_current_page * paginate)],
             'seeds_in_stock_render_text': True,
             'seeds_in_stock_render_user_text': False,
             'seeds_in_stock_render_table': True,
+            'seeds_in_stock_current_page': seeds_in_stock_current_page,
+            'seeds_in_stock_n_pages': seeds_in_stock_n_pages,
+            'seeds_in_stock_paginate': paginate,
             'n_seeds_in_stock': n_seeds_in_stock,
             'n_feminized_seeds_in_stock': n_feminized_seeds_in_stock,
             'n_regular_seeds_in_stock': n_regular_seeds_in_stock,

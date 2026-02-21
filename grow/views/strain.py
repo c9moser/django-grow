@@ -1532,7 +1532,7 @@ class HxStrainAddToStock2View(StrainAddToStock2View):
             raise Http404("Strain not found!")
 
         if strain:
-            if form.cleaned_data['is_feminized']:
+            if form.cleaned_data['strain_type'] == 'feminized':
                 strain.add_feminized_seeds_to_stock(
                     self.request.user,
                     form.cleaned_data['quantity'],
@@ -1565,9 +1565,17 @@ class HxStrainAddToStock2View(StrainAddToStock2View):
                     notes=form.cleaned_data['notes'],
                 )
 
+        if form.cleaned_data['strain_type'] == 'feminized' and strain.is_feminized:
+            is_feminized_selected = True
+        elif form.cleaned_data['strain_type'] == 'regular' and strain.is_regular:
+            is_feminized_selected = False
+
         return render(self.request, self.success_template_name, context=self.get_context_data(
             form=form,
             strain=strain,
+            is_feminized=strain.is_feminized,
+            is_regular=strain.is_regular,
+            is_feminized_selected=is_feminized_selected,
         ))
 
 
@@ -1592,13 +1600,11 @@ class StrainUpdateStockView(LoginRequiredMixin, CreateView):
 
 class HxSeedsInStockInfoView(LoginRequiredMixin, BaseView):
     template_name = settings.GROW_TEMPLATES['grow/strain/hx-seeds_in_stock_info']
-    render_text = False
-    render_user_text = False
-    render_table = True
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context.update(kwargs)
+        render_table = self.request.GET.get('render_table', '1') == '1'
+        render_text = self.request.GET.get('render_text', '0') == '1'
+        render_user_text = self.request.GET.get('render_user_text', '0') == '1'
 
         sis = self.request.user.seeds_in_stock.all()
         n_sis = sis.count()
@@ -1621,7 +1627,7 @@ class HxSeedsInStockInfoView(LoginRequiredMixin, BaseView):
             except ValueError:
                 pass
         if 'paginate' in self.request.GET:
-            paginate = self.request.GET.get('paginate', paginate)
+            paginate = int(self.request.GET.get('paginate', paginate))
         if n_sis < 1:
             n_pages = 1
         else:
@@ -1630,21 +1636,23 @@ class HxSeedsInStockInfoView(LoginRequiredMixin, BaseView):
         page = max(1, min(page, n_pages))
         page -= 1
 
-        context.update({
+        context = {
             'n_strains_in_stock': StrainsInStock.objects.filter(user=self.request.user).count(),
             'n_seeds_in_stock': n_seeds_in_stock,
             'n_feminized_seeds_in_stock': n_feminized_seeds_in_stock,
             'n_regular_seeds_in_stock': n_regular_seeds_in_stock,
-            'seeds_in_stock_render_table': self.render_table,
-            'seeds_in_stock_render_text': self.render_text,
-            'seeds_in_stock_render_user_text': self.render_user_text,
+            'seeds_in_stock_render_table': render_table,
+            'seeds_in_stock_render_text': render_text,
+            'seeds_in_stock_render_user_text': render_user_text,
             'seeds_in_stock_current_page': page + 1,
             'seeds_in_stock_n_pages': n_pages,
+            'seeds_in_stock_paginate': paginate,
             'seeds_in_stock': sis.order_by(
                 'strain__name',
                 'strain__breeder__name'
             )[(page * paginate):((page + 1) * paginate)],
-        })
+        }
+        context.update(kwargs)
         return context
 
     def get(self, request: HttpRequest) -> HttpResponse:
