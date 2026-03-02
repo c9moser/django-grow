@@ -35,8 +35,8 @@ from .views.strain import (
     HxStrainStockNotesView,
     HxStrainTranslationView,
     HxSeedsInStockInfoView,
-    HxSeedInStockDialogView,
-    HxSeedInStockDialogUpdateView,
+    HxSeedsInStockDialogView,
+    HxSeedsInStockDialogUpdateView,
 )
 
 from .views.location import (
@@ -154,10 +154,10 @@ strain_patterns = [
          HxSeedsInStockInfoView.as_view(),
          name="hx-seeds-in-stock-info"),
     path("__hx__/strain/seeds_in_stock_dialog/",
-         HxSeedInStockDialogView.as_view(),
+         HxSeedsInStockDialogView.as_view(),
          name="hx-seed-in-stock-dialog"),
     path("__hx__/strain/seeds_in_stock_dialog/update/",
-         HxSeedInStockDialogUpdateView.as_view(),
+         HxSeedsInStockDialogUpdateView.as_view(),
          name="hx-seed-in-stock-dialog-update"),
 ]
 

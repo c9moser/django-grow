@@ -19,7 +19,7 @@ class IndexView(BaseView):
                 grower=self.request.user,
                 finished_at__isnull=True)
             new_growlogs = []
-            for growlog in Growlog.objects.exclude(grower=request.user).order_by("started_at"):
+            for growlog in Growlog.objects.all().order_by("-started_at"):
                 if growlog.is_user_allowed_to_view(request.user):
                     new_growlogs.append(growlog)
                 if len(new_growlogs) >= 10:

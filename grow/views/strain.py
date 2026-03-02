@@ -1480,7 +1480,9 @@ class HxStrainAddToStock2View(StrainAddToStock2View):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        sis = self.request.user.seeds_in_stock.all()
+        sis = self.request.user.seeds_in_stock.all().order_by('strain__name',
+                                                              'strain__breeder__name',
+                                                              'is_feminized')
         n_seeds_in_stock = 0
         n_feminized_seeds_in_stock = 0
         n_regular_seeds_in_stock = 0
@@ -1494,28 +1496,26 @@ class HxStrainAddToStock2View(StrainAddToStock2View):
 
         page = 0
         paginate = settings.GROW_USER_SETTINGS(self.request).paginate
-        if 'page' in self.request.GET:
-            try:
-                page = int(self.request.GET.get('page', 0))
-            except ValueError:
-                page = 0
-
-        sis_n_pages = (sis.count() - 1) // paginate + 1
-
-        if self.request.GET.get('paginate', paginate):
-            context['sis_info_strains_in_stock'] = sis.order_by('-purchased_on')[(page * paginate):((page + 1) * paginate)]  # noqa: E501
-            context['sis_info_has_next_page'] = sis.count() > (page+1)*paginate
-            context['sis_info_has_previous_page'] = page > 0
-            context['sis_info_current_page'] = page + 1
-            context['sis_info_pagination'] = paginate
-            context['sis_info_n_pages'] = sis_n_pages
+        page = self.request.GET.get('seeds_in_stock_page', self.request.GET.get('page', 1))
+        paginate = self.request.GET.get(
+            'seeds_in_stock_paginate',
+            self.request.GET.get('paginate', settings.GROW_USER_SETTINGS(self.request).paginate)
+        )
+        n_pages = (sis.count() - 1) // paginate + 1
+        if page < 1:
+            page = 1
+        elif page > n_pages:
+            page = n_pages
 
         context.update({
             'form': kwargs.get('form', StrainAddToStock2Form()),
-            'n_strains_in_stock': StrainsInStock.objects.filter(user=self.request.user).count(),
             'n_seeds_in_stock': n_seeds_in_stock,
             'n_feminized_seeds_in_stock': n_feminized_seeds_in_stock,
             'n_regular_seeds_in_stock': n_regular_seeds_in_stock,
+            'seeds_in_stock_current_page': page,
+            'seeds_in_stock_paginate': paginate,
+            'seeds_in_stock_n_pages': n_pages,
+            'seeds_in_stock': sis[(page - 1) * paginate: page * paginate],
         })
         context.update(kwargs)
 
@@ -1532,6 +1532,9 @@ class HxStrainAddToStock2View(StrainAddToStock2View):
             raise Http404("Strain not found!")
 
         if strain:
+            print("Adding seeds to stock for strain:", strain.name)
+            print("Strain type:", form.cleaned_data['strain_type'])
+
             if form.cleaned_data['strain_type'] == 'feminized':
                 strain.add_feminized_seeds_to_stock(
                     self.request.user,
@@ -1606,7 +1609,7 @@ class HxSeedsInStockInfoView(LoginRequiredMixin, BaseView):
         render_text = self.request.GET.get('render_text', '0') == '1'
         render_user_text = self.request.GET.get('render_user_text', '0') == '1'
 
-        sis = self.request.user.seeds_in_stock.all()
+        sis = self.request.user.seeds_in_stock.filter(quantity__gt=0)
         n_sis = sis.count()
         n_seeds_in_stock = 0
         n_feminized_seeds_in_stock = 0
@@ -1659,7 +1662,7 @@ class HxSeedsInStockInfoView(LoginRequiredMixin, BaseView):
         return render(request, self.template_name, self.get_context_data())
 
 
-class HxSeedInStockDialogView(HxSeedsInStockInfoView, StrainAddToStock2View):
+class HxSeedsInStockDialogView(HxSeedsInStockInfoView, StrainAddToStock2View):
     form_class = StrainAddToStock2Form
     template_name = settings.GROW_TEMPLATES['grow/strain/hx-seeds_in_stock_dialog']
     info_template_name = settings.GROW_TEMPLATES['grow/strain/hx-seeds_in_stock_info']
@@ -1671,20 +1674,33 @@ class HxSeedInStockDialogView(HxSeedsInStockInfoView, StrainAddToStock2View):
         )
         return context
 
-    def from_valid(self, form):
-        super().form_valid(form)
+    def form_valid(self, form):
+        print("Form is valid!!!!!!!!!")
+        try:
+            super().form_valid(form)
+        except Exception as e:
+            print("Error in form_valid:")
+            print(e)
+
         return render(self.request, self.info_template_name, context=self.get_context_data(
             form=form,
         ))
 
     def form_invalid(self, form):
-        super().form_invalid(form)
         return render(self.request, self.info_template_name, context=self.get_context_data(
             form=form,
         ))
 
+    def post(self, request: HttpRequest) -> HttpResponse:
+        form = self.get_form_class()(request.POST)
 
-class HxSeedInStockDialogUpdateView(HxStrainAddToStock2View):
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+
+class HxSeedsInStockDialogUpdateView(HxStrainAddToStock2View):
     template_name = settings.GROW_TEMPLATES['grow/strain/hx-seeds_in_stock_dialog']
     form_class = StrainAddToStock2Form
 

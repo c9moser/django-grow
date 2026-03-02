@@ -76,16 +76,16 @@
     </a>
     {% endif %}
 {% else %}
-    {% if allowed_to_edit %}<a href="{% url 'grow:strain-update' pk=strain.pk %}">{% translate "Edit strain" %}</a>{% endif %}
-    {% if allowed_to_translate %}<a href="{% url 'grow:strain-translate' pk=strain.pk %}">{% translate "Translate strain" %}</a>{% endif %}
-    {% if allowed_to_delete %}<a href="{% url 'grow:strain-delete' pk=strain.pk %}">{% translate "Delete strain" %}</a>{% endif %}
+    {% if allowed_to_edit %}<a href="{% url 'grow:strain-update' pk=strain.pk %}">[{% translate "Edit strain" %}]</a>{% endif %}
+    {% if allowed_to_translate %}<a href="{% url 'grow:strain-translate' pk=strain.pk %}">[{% translate "Translate strain" %}]</a>{% endif %}
+    {% if allowed_to_delete %}<a href="{% url 'grow:strain-delete' pk=strain.pk %}">[{% translate "Delete strain" %}]</a>{% endif %}
 {% endif %}
 </div>
 
 <h1>{{ strain.breeder.name }} - {{ strain.name }}</h1>
 
 <div class="row mb-3">
-    <div class="col-md-5 mb-3">
+    <div class="{% if use_bootstrap %}col-md-5 mb-3{% endif %}" {% if not use_bootstrap %}style="width:40%;float:left;"{% endif %}>
 {% if strain.has_logo %}
     <img class="{% if use_bootstrap %}img-fluid rounded{% endif %}"
         src="{{ strain.logo }}"
@@ -98,7 +98,7 @@
     >
 {% endif %}
     </div>
-    <div class="col-md-7 mb-3">
+    <div class="{% if use_bootstrap %}col-md-7 mb-3{% endif %}" {% if not use_bootstrap %}style="width:60%;"{% endif %}>
 
     <div class="alert alert-info p-2 mb-3" role="alert">
     {% if strain.created_by %}
@@ -211,7 +211,7 @@
 <h2 id="pictures">{% translate "Pictures" %}</h2>
 <p>
     <a href="{% url 'grow:strain-image-upload' strain_pk=strain.pk %}"
-        class="{% if use_bootstrap %}btn btn-outline-success{% else %}mb-3{% endif %}"
+        class="{% if use_bootstrap %}btn btn-outline-success mb-3{% endif %}"
     >{% if use_bootstrap%}
         <i class="bi bi-upload me-2 link-image"></i>{% translate "Upload picture" %}
     {% else %}
@@ -219,7 +219,7 @@
     {% endif %}
     </a>
     <a href="{% url 'grow:strain-gallery' strain_pk=strain.pk %}"
-        class="{% if use_bootstrap %}btn btn-outline-primary{% else %}mb-3{% endif %}"
+        class="{% if use_bootstrap %}btn btn-outline-primary mb-3{% endif %}"
     >{% if use_bootstrap %}
         <i class="bi bi-images me-2 link-image"></i>{% translate "View gallery" %}
     {% else %}
@@ -452,24 +452,10 @@
 {% endif %}{# request.user.is_authenticated #}
 
 <h2 id="growlogs">Growlogs</h2>
-{% if growlogs %}
-<table class="{% if use_bootstrap%}table{% endif %}">
-    <thead>
-        <tr>
-            <th>
-                <div class="{% if use_bootstrap%}text-truncate{% endif %}">
-                </div>
-            </th>
-        </tr>
-    </thead>
-    <tbody class="{% if use_bootstrap %}table-group-divider{% endif %}">
-    </tbody>
-</table>
-{% else %}
-<p class="">
-{% blocktranslate %}There are currently no growlogs for this strain, at least none you are allowed to view. You could grow this strain yourself and add a growlog for the members here, so they can see how this strain grows and flowers. Others might want to learn from what you are doing.{% endblocktranslate %}
-</p>
-{% endif %}
+<div id="growlogs-info">
+    {% include 'grow/strain/hx_strain_growlogs.html' %}
+</div>
+
 <h2 id="comments">{% translate "Comments" %}</h2>
 {% if use_bootstrap %}
     <a href="{% url 'grow:strain-comment-add' strain_pk=strain.pk %}" class="btn btn-outline-success mb-3">

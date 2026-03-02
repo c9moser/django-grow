@@ -28,7 +28,7 @@ class Growlog(models.Model):
     #: The name of the growlog
     name = models.CharField(
         _("name"),
-        max_length=255
+        max_length=255,
     )
 
     #: The desctiption of the growlog
@@ -289,13 +289,13 @@ class Growlog(models.Model):
         return delta.days
 
     @property
-    def age_weeks(self) -> int | None:
+    def age_weeks(self) -> int:
         """
         Calculate the age of the grow log in weeks since germination.
         Returns 0 if germination date is not set.
         """
         if not self.is_germinated:
-            return None
+            return 0
 
         if self.age_days % 7 > 3:
             return (self.age_days // 7) + 1
@@ -415,6 +415,28 @@ class Growlog(models.Model):
         return self.growlog_strains.count()
 
     @property
+    def duration_days(self) -> int:
+        """
+        Calculate the total duration of the grow log in days.
+        Returns 0 if the grow log is not finished.
+        """
+        if self.finished_at is not None:
+            delta = self.finished_at.date() - self.started_at.date()
+        else:
+            delta = timezone.now().date() - self.started_at.date()
+        return delta.days
+
+    @property
+    def duration_weeks(self) -> int:
+        """
+        Calculate the total duration of the grow log in weeks.
+        Returns 0 if the grow log is not finished.
+        """
+        if self.duration_days % 7 > 3:
+            return (self.duration_days // 7) + 1
+        return self.duration_days // 7
+
+    @property
     def total_plants(self) -> int:
         """
         Get the total number of plants in this grow log.
@@ -506,6 +528,8 @@ class Growlog(models.Model):
 
     class Meta:
         db_table = "grow_growlog"
+        unique_together = [('grower', 'name')]
+        ordering = ['-started_at']
 
 
 class GrowlogStrain(models.Model):
@@ -539,7 +563,7 @@ class GrowlogStrain(models.Model):
     class Meta:
         db_table = "grow_growlog_strains"
         unique_together = [
-            ('growlog', 'strain')
+            ('growlog', 'strain'),
         ]
 
 

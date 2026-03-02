@@ -13,6 +13,7 @@ class GrowlogForm(forms.ModelForm):
         model = Growlog
         fields = [
             'name',
+            'permission_data',
             'description_type_data',
             'description',
             'notes_type_data',

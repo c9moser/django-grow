@@ -25,11 +25,11 @@
 
 {% if request.user.is_authenticated %}
 <h2>{% translate "My active Growlogs" %}</h2>
-    <a class="btn btn-primary mb-3"><i class="bi bi-journal-plus me-2"></i>{% translate "Create a new Growlog" %}</a>
+    <a class="btn btn-outline-primary btn-sm mb-3"><i class="bi bi-journal-plus me-2"></i>{% translate "Create a new Growlog" %}</a>
     {% if user_growlogs %}
         <table {% if use_bootstrap %}class="table"{% endif %}>
             <thead>
-                <tr>
+                <tr class="{% if use_bootstrap %}table-success{% endif %}">
                     <th>{% translate "Title" %}</th>
                     <th>{% translate "Locations" %}</th>
                     <th>{% translate "Plant age" %}</th>
@@ -39,10 +39,10 @@
             <tbody {% if use_bootstrap %}class="table-group-divider"{% endif %}>
         {% for growlog in user_growlogs %}
                 <tr>
-                    <td><a href="#">{{ growlog.title }}</a></td>
+                    <td><a href="{% url 'grow:growlog-detail' pk=growlog.pk %}">{{ growlog.name }}</a></td>
                     <td>{{ growlog.locations_string }}</td>
-                    <td>{% blocktranslate with weeks=growlog.age_weeks count w=growlog.age_weeks %}{{ weeks }} week{% plural %}{{ weeks }} weeks{% endblocktranslate %}</td>
-                    <td>{% blocktranslate with weeks=growlog.flowering_weeks count w=growlogs.flowering_weeks %}{{ weeks }} week{% plural %}{{ weeks }} weeks{% endblocktranslate%}</td>
+                    <td>{% blocktranslate count n=growlog.age_weeks %}{{ n }} week{% plural %}{{ n }} weeks{% endblocktranslate %}</td>
+                    <td>{% blocktranslate count n=growlog.flowering_weeks %}{{ n }} week{% plural %}{{ n }} weeks{% endblocktranslate%}</td>
                 </tr>
         {% endfor %}
             </tbody>
@@ -58,7 +58,7 @@
 {% if new_growlogs %}
     <table {% if use_bootstrap %}class="table"{% endif %}>
         <thead>
-            <tr>
+            <tr class="{% if use_bootstrap %}table-success{% endif %}">
                 <th>{% translate "Title" %}</th>
                 <th>{% translate "User" %}</th>
                 <th>{% translate "Locations" %}</th>
@@ -69,11 +69,11 @@
         <tbody {% if use_bootstrap %}class="table-group-divider"{% endif %}>
     {% for growlog in new_growlogs %}
             <tr>
-                <td><a href="#">{{ growlog.title }}</a></td>
-                <td><a her="#">{{ growlog.grower.username }}</a></td>{# TODO: show public user profile #}
+                <td><a href="{% url 'grow:growlog-detail' pk=growlog.pk %}">{{ growlog.name }}</a></td>
+                <td><a href="#">{{ growlog.grower.username }}</a></td>{# TODO: show public user profile #}
                 <td>{{ growlog.locations_string }}</td>
-                <td>{% blocktranslate with weeks=growlog.age_weeks count w=growlog.age_weeks %}{{ weeks }} week{% plural %}{{ weeks }} weeks{% endblocktranslate %}</td>
-                <td>{% blocktranslate with weeks=growlog.flowering_weeks count w=growlog.flowering_weeks %}{{ weeks }} week{% plural %}{{ weeks }} weeks{% endblocktranslate%}</td>
+                <td>{% blocktranslate count n=growlog.age_weeks %}{{ n }} week{% plural %}{{ n }} weeks{% endblocktranslate %}</td>
+                <td>{% blocktranslate count n=growlog.flowering_weeks %}{{ n }} week{% plural %}{{ n }} weeks{% endblocktranslate%}</td>
             </tr>
     {% endfor %}
         </tbody>
@@ -88,10 +88,12 @@
 <h2>{% translate "New Strains" %}</h2>
 <table {% if use_bootstrap %}class="table"{% endif %}>
     <thead>
-        <th>{% translate "Breeder" %}</th>
-        <th>{% translate "Name" %}</th>
-        <th>{% translate "Genetics" %}</th>
-        <th>{% translate "Flowering time" %}</th>
+        <tr class="{% if use_bootstrap %}table-success{% endif %}">
+            <th>{% translate "Breeder" %}</th>
+            <th>{% translate "Name" %}</th>
+            <th>{% translate "Genetics" %}</th>
+            <th>{% translate "Flowering time" %}</th>
+        </tr>
     </thead>
     <tbody {% if use_bootstrap %}class="table-group-divider"{% endif %}>
         {% for strain in new_strains %}

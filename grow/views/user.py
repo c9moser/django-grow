@@ -15,6 +15,8 @@ from .strain import (
 class UserInfoView(LoginRequiredMixin, BaseView):
     template_name = GROW_TEMPLATES['grow/user/info']
     seeds_in_stock_template_name = GROW_TEMPLATES['grow/strain/hx-seeds_in_stock_info']
+    active_growlogs_template_name = GROW_TEMPLATES['grow/growlog/hx-active_info']
+    finished_growlogs_template_name = GROW_TEMPLATES['grow/growlog/hx-finished_info']
 
     def get_context_data(self, **kwargs):
         user_settings = GROW_USER_SETTINGS(self.request)
@@ -47,9 +49,9 @@ class UserInfoView(LoginRequiredMixin, BaseView):
             seeds_in_stock_n_pages = (n - 1) // paginate + 1
 
         seeds_in_stock_current_page = 1
-        if 'sispage' in self.request.GET:
+        if 'seeds_in_stock_page' in self.request.GET:
             try:
-                seeds_in_stock_current_page = int(self.request.GET['sispage'])
+                seeds_in_stock_current_page = int(self.request.GET['seeds_in_stock_page'])
             except ValueError:
                 pass
         if seeds_in_stock_current_page < 1:
@@ -61,11 +63,33 @@ class UserInfoView(LoginRequiredMixin, BaseView):
         active_growlogs = Growlog.objects.filter(
             grower=self.request.user,
             finished_at__isnull=True).order_by('-started_at')
+        active_growlogs_n_pages = (active_growlogs.count() - 1) // paginate + 1
+        active_growlogs_current_page = 1
+        if 'active_growlogs_page' in self.request.GET:
+            try:
+                active_growlogs_current_page = int(self.request.GET['active_growlogs_page'])
+            except ValueError:
+                pass
+        if active_growlogs_current_page < 1:
+            active_growlogs_current_page = 1
+        elif active_growlogs_current_page > active_growlogs_n_pages:
+            active_growlogs_current_page = active_growlogs_n_pages
         n_active_growlogs = active_growlogs.count()
         finished_growlogs = Growlog.objects.filter(
             grower=self.request.user,
             finished_at__isnull=False).order_by('-started_at')
         n_finished_growlogs = finished_growlogs.count()
+        finished_growlogs_n_pages = (n_finished_growlogs - 1) // paginate + 1
+        finished_growlogs_current_page = 1
+        if 'finished_growlogs_page' in self.request.GET:
+            try:
+                finished_growlogs_current_page = int(self.request.GET['finished_growlogs_page'])
+            except ValueError:
+                pass
+        if finished_growlogs_current_page < 1:
+            finished_growlogs_current_page = 1
+        elif finished_growlogs_current_page > finished_growlogs_n_pages:
+            finished_growlogs_current_page = finished_growlogs_n_pages
 
         ret = {
             'seeds_in_stock_template': self.seeds_in_stock_template_name,
@@ -87,7 +111,15 @@ class UserInfoView(LoginRequiredMixin, BaseView):
             'n_active_growlogs': n_active_growlogs,
             'n_finished_growlogs': n_finished_growlogs,
             'active_growlogs': active_growlogs,
+            'active_growlogs_template': self.active_growlogs_template_name,
+            'active_growlogs_n_pages': active_growlogs_n_pages,
+            'active_growlogs_current_page': active_growlogs_current_page,
+            'active_growlogs_paginate': paginate,
             'finished_growlogs': finished_growlogs,
+            'finished_growlogs_template': self.finished_growlogs_template_name,
+            'finished_growlogs_n_pages': finished_growlogs_n_pages,
+            'finished_growlogs_current_page': finished_growlogs_current_page,
+            'finished_growlogs_paginate': paginate,
         }
         ret.update(kwargs)
         return ret
@@ -102,37 +134,54 @@ class HxUserSeedsInStockView(HxSeedsInStockInfoView):
     render_table = True
 
 
-class HxUserInfoAddSeedsToStockView(HxStrainAddToStockView):
+class HxUserInfoAddSeedsToStockView(HxStrainAddToStockView, HxUserSeedsInStockView):
     parent_template = GROW_TEMPLATES['grow/strain/hx-add_to_stock']
     template_name = GROW_TEMPLATES['grow/user/hx-add_seeds_to_stock']
+    info_template_name = GROW_TEMPLATES['grow/user/hx-info_seeds_in_stock']
 
     def get_context_data(self, **kwargs):
-        context = super(HxUserInfoAddSeedsToStockView, self).get_context_data(**kwargs)
+        context = HxStrainAddToStockView.get_context_data(
+            self,
+            **HxUserInfoAddSeedsToStockView.get_context_data(self, **kwargs))
+
         context['parent_template'] = self.parent_template
+        if 'form' in kwargs:
+            context['form'] = kwargs['form']
+
         return context
 
     def form_valid(self, form):
         super().form_valid(form)
-        return self.render_info_in_stock(self.request)
+        return render(self, self.request, self.info_template_name, **self.get_context_data())
 
     def form_invalid(self, form):
         super().form_invalid(form)
-        return self.render_info_in_stock(self.request)
+        return render(self, self.request, self.info_template_name, **self.get_context_data())
+
+    def get(self, request: HttpRequest) -> HttpResponse:
+        return render(request, self.template_name, self.get_context_data())
 
 
-class HxUserInfoRemoveSeedsFromStockView(HxStrainRemoveFromStockView):
+class HxUserInfoRemoveSeedsFromStockView(HxStrainRemoveFromStockView, HxUserSeedsInStockView):
     parent_template = GROW_TEMPLATES['grow/strain/hx-remove_from_stock']
     template_name = GROW_TEMPLATES['grow/user/hx-remove_seeds_from_stock']
+    info_template_name = GROW_TEMPLATES['grow/user/hx-info_seeds_in_stock']
 
     def get_context_data(self, **kwargs):
-        context = super(HxUserInfoRemoveSeedsFromStockView, self).get_context_data(**kwargs)
+        context = HxStrainRemoveFromStockView.get_context_data(
+            self,
+            **HxUserSeedsInStockView.get_context_data(self, **kwargs)
+        )
         context['parent_template'] = self.parent_template
+        if 'form' not in context:
+            context['form'] = kwargs.get('form', self.form_class())
+
         return context
 
     def form_valid(self, form):
         super().form_valid(form)
-        return self.render_info_in_stock(self.request)
+        return render(self.request, self.info_template_name, self.get_context_data())
 
     def form_invalid(self, form):
         super().form_invalid(form)
-        return self.render_info_in_stock(self.request)
+        return render(self.request, self.info_template_name, self.get_context_data())
