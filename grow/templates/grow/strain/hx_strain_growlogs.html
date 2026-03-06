@@ -60,7 +60,7 @@
         </div>
     </div>
     <div class="card-body p-0">
-        <table class="{% if use_bootstrap %}table table-hover{% endif %}">
+        <table class="{% if use_bootstrap %}table table-hover mb-0{% endif %}">
             <thead>
                 <tr class="{% if use_bootstrap %}table-success{% endif %}">
                     <th scope="col">{% translate "Name" %}</th>
@@ -72,8 +72,8 @@
             </thead>
             <tbody>
                 {% for growlog in growlogs %}
-                <tr hx-get="{% url 'grow:hx-growlog-detail' growlog.pk %}" hx-target="#main-content" hx-swap="innerHTML">
-                    <td>{{ growlog.name }}</td>
+                <tr>
+                    <td><a href="{% url 'grow:growlog-detail' growlog.pk %}">{{ growlog.name }}</a></td>
                     <td>{{ growlog.started_at|date }}</td>
                     <td>{% if growlog.duration_days > 30 %}
                             {% blocktranslate count n=growlog.duration_weeks %}{{ n }} week{% plural %}{{ n }} weeks{% endblocktranslate %}

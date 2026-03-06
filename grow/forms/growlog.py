@@ -27,10 +27,33 @@ class GrowlogStrainForm(forms.ModelForm):
         fields = ['strain', 'quantity', 'is_grown_from_seed']
 
 
-GrowlogStrainFormSet = forms.inlineformset_factory(
-    Growlog,
-    GrowlogStrain,
-    form=GrowlogStrainForm,
-    extra=0,
-    can_delete=True
-)
+class GrowlogSeedsFromStockForm(forms.Form):
+
+    strain_filter = forms.CharField(
+        label=_("Strain filter"),
+        required=False,
+    )
+
+    seeds_in_stock = forms.ModelChoiceField(
+        queryset=None,
+        label=_("Seeds in stock"),
+        required=True
+    )
+
+    quantity = forms.IntegerField(
+        label=_("Quantity"),
+        required=True,
+        min_value=1,
+        initial=1
+    )
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user')
+        super().__init__(*args, **kwargs)
+        self.fields['seeds_in_stock'].queryset = user.seeds_in_stock.filter(
+            quantity__gt=0
+        ).order_by(
+            'strain__name',
+            'strain__breeder__name'
+        )
+        self.fields['seeds_in_stock'].initial = self.fields['seeds_in_stock'].queryset.first()

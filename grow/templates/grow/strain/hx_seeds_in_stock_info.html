@@ -142,7 +142,7 @@
         </nav>
     </div></div>
     <div class="card-body p-0">
-        <table class="{% if use_bootstrap %}table table-hover{% endif %}">
+        <table class="{% if use_bootstrap %}table table-hover mb-0{% endif %}">
             <thead>
                 <tr class="{% if use_bootstrap %}table-success{% endif %}">
                     <th>{% translate "Strain" %}</th>
@@ -151,6 +151,7 @@
                     <th>{% translate "Genotype" %}</th>
                     <th>{% translate "Flowering time" %}</th>
                     <th>{% translate "Quantity" %}</th>
+                    {% if seeds_in_stock_user == request.user %}
                     <th class="text-end">
                         <button href="{% url 'grow:hx-seed-in-stock-dialog' %}"
                             hx-get="{% url 'grow:hx-seed-in-stock-dialog' %}"
@@ -160,8 +161,10 @@
                             data-bs-target="#modals-here"
                             class="btn btn-link link-body-emphasis link-opacity-50 link-opacity-100-hover link-underline-opacity-0"
                            class="btn btn-link link-body-emphasis link-opacity-50 link-opacity-100-hover link-underline-opacity-0">
-                           <i class="bi bi-plus-square"></i></button>
-                        </th>
+                           <i class="bi bi-plus-square"></i>
+                        </button>
+                    </th>
+                    {% endif %}
                 </tr>
             </thead>
             <tbody class="{% if use_bootstrap %}table-group-divider{% endif %}" id="seeds-in-stock-table-body">
@@ -179,6 +182,7 @@
                     <td>{{ seed.strain.genotype.name }}</td>
                     <td>{% blocktranslate count n=seed.strain.flowering_time_days %}One day{% plural %}{{ n }} days{% endblocktranslate %}</td>
                     <td>{{ seed.quantity }}</td>
+                    {% if seeds_in_stock_user == request.user %}
                     <td class="text-end">
                         <a href="#"
                             hx-get="{% url 'grow:hx-strain-stock-notes' pk=seed.pk %}"
@@ -217,16 +221,17 @@
                             data-bs-placement="left"></i>
                         </a>
                     </td>
+                    {% endif %}
                 </tr>
             {% empty %}
                 <tr>
-                    <td colspan="6" class="table-warning">{% translate "You have no seeds in stock." %}</td>
+                    <td colspan="{% if seeds_in_stock_user == request.user %}6{% else %}5{% endif %}" class="table-warning">{% translate "You have no seeds in stock." %}</td>
                 </tr>
             {% endfor %}
             </tbody>
-            <tfoot>
+            <tfoot class="{% if use_bootstrap %}table-group-divider{% endif %}">
                 <tr class="{% if use_bootstrap %}table-secondary{% endif %}">
-                    <th colspan="5">{% translate "Total" %}</th>
+                    <th colspan="{% if seeds_in_stock_user == request.user %}5{% else %}4{% endif %}">{% translate "Total" %}</th>
                     <th colspan="2" class="text-end">{{ n_seeds_in_stock }}</th>
                 </tr>
             </tfoot>

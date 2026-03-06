@@ -55,11 +55,12 @@ from .views.user import (
      HxUserInfoRemoveSeedsFromStockView,
 )
 
-from .views.growlog import (
+from .views.growlog import (  # noqa: F401
      GrowlogCreateView,
-     #GrowlogUpdateView,
-     #GrowlogDeleteView,
+     GrowlogUpdateView,
+     GrowlogDeleteView,
      GrowlogDetailView,
+     HxGrowlogAddSeedsView,
 )
 
 from .views.utils import HxSelectDateDaysSanitizeView
@@ -189,6 +190,12 @@ growlog_patterns = [
      #path("growlog/update/<int:pk>/", GrowlogUpdateView.as_view(), name="growlog-update"),
      #path("growlog/delete/<int:pk>/", GrowlogDeleteView.as_view(), name="growlog-delete"),
      path("growlog/detail/<int:pk>/", GrowlogDetailView.as_view(), name="growlog-detail"),
+     path("__hx__/growlog/<int:growlog_pk>/add_seeds/",
+          HxGrowlogAddSeedsView.as_view(),
+          name="hx-growlog-add-seeds"),
+     #path("__hx__/growlog/<int:growlog_pk>/add_strain/",
+     #     HxGrowlogAddStrainView.as_view(),
+     #     name="hx-growlog-add-strain"),
 ]
 
 urlpatterns = [

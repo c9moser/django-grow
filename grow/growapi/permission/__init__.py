@@ -14,11 +14,26 @@ def growlog_user_is_allowed_to_view(user, growlog, permission_mapping=None) -> b
 
     if permission_mapping is None:
         permission_mapping = (
-            (growlog_is_public, {}),
-            (growlog_user_is_member, {}),
-            (growlog_user_is_friend, {}),
-            (growlog_user_is_editor, {}),
-            (growlog_user_is_owner, {}),
+            (growlog_user_is_owner, {
+                'on_success': PermissionCode.ALLOW,
+                'on_failure': PermissionCode.CONTINUE
+            }),
+            (growlog_is_public, {
+                'on_success': PermissionCode.ALLOW,
+                'on_failure': PermissionCode.CONTINUE
+            }),
+            (growlog_user_is_member, {
+                'on_success': PermissionCode.ALLOW,
+                'on_failure': PermissionCode.CONTINUE
+            }),
+            (growlog_user_is_friend, {
+                'on_success': PermissionCode.ALLOW,
+                'on_failure': PermissionCode.CONTINUE
+            }),
+            (growlog_user_is_editor, {
+                'on_success': PermissionCode.ALLOW,
+                'on_failure': PermissionCode.RESTRICT
+            }),
         )
     for perm_func, kwargs in permission_mapping:
         try:
@@ -42,8 +57,14 @@ def growlog_user_is_allowed_to_edit(user, growlog, permission_mapping=None) -> b
 
     if permission_mapping is None:
         permission_mapping = [
-            (growlog_user_is_owner, {}),
-            (growlog_user_is_editor, {}),
+            (growlog_user_is_owner, {
+                'on_success': PermissionCode.ALLOW,
+                'on_failure': PermissionCode.CONTINUE
+            }),
+            (growlog_user_is_editor, {
+                'on_success': PermissionCode.ALLOW,
+                'on_failure': PermissionCode.RAISE_EXCEPTION
+            }),
         ]
     for perm_func, kwargs in permission_mapping:
         try:

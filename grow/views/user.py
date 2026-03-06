@@ -6,7 +6,8 @@ from ..growapi.models import StrainsInStock, Growlog
 from ._base import BaseView
 
 from .strain import (
-    HxStrainAddToStockView,
+    HxSeedsInStockDialogView,
+    HxStrainAddToStock2View,  # noqa: F401
     HxStrainRemoveFromStockView,
     HxSeedsInStockInfoView,
 )
@@ -102,6 +103,7 @@ class UserInfoView(LoginRequiredMixin, BaseView):
             'seeds_in_stock_current_page': seeds_in_stock_current_page,
             'seeds_in_stock_n_pages': seeds_in_stock_n_pages,
             'seeds_in_stock_paginate': paginate,
+            'seeds_in_stock_user': self.request.user,
             'n_seeds_in_stock': n_seeds_in_stock,
             'n_feminized_seeds_in_stock': n_feminized_seeds_in_stock,
             'n_regular_seeds_in_stock': n_regular_seeds_in_stock,
@@ -134,17 +136,18 @@ class HxUserSeedsInStockView(HxSeedsInStockInfoView):
     render_table = True
 
 
-class HxUserInfoAddSeedsToStockView(HxStrainAddToStockView, HxUserSeedsInStockView):
+class HxUserInfoAddSeedsToStockView(HxSeedsInStockDialogView, HxUserSeedsInStockView):
     parent_template = GROW_TEMPLATES['grow/strain/hx-add_to_stock']
     template_name = GROW_TEMPLATES['grow/user/hx-add_seeds_to_stock']
-    info_template_name = GROW_TEMPLATES['grow/user/hx-info_seeds_in_stock']
+    info_template_name = GROW_TEMPLATES['grow/strain/hx-seeds_in_stock_info']
 
     def get_context_data(self, **kwargs):
-        context = HxStrainAddToStockView.get_context_data(
+        context = HxSeedsInStockDialogView.get_context_data(
             self,
             **HxUserInfoAddSeedsToStockView.get_context_data(self, **kwargs))
 
         context['parent_template'] = self.parent_template
+
         if 'form' in kwargs:
             context['form'] = kwargs['form']
 
@@ -165,7 +168,7 @@ class HxUserInfoAddSeedsToStockView(HxStrainAddToStockView, HxUserSeedsInStockVi
 class HxUserInfoRemoveSeedsFromStockView(HxStrainRemoveFromStockView, HxUserSeedsInStockView):
     parent_template = GROW_TEMPLATES['grow/strain/hx-remove_from_stock']
     template_name = GROW_TEMPLATES['grow/user/hx-remove_seeds_from_stock']
-    info_template_name = GROW_TEMPLATES['grow/user/hx-info_seeds_in_stock']
+    info_template_name = GROW_TEMPLATES['grow/strain/hx-seeds_in_stock_info']
 
     def get_context_data(self, **kwargs):
         context = HxStrainRemoveFromStockView.get_context_data(

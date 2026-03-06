@@ -1737,6 +1737,9 @@ class StrainsInStock(models.Model):
             text_type = TextType.from_string(text_type)
         self.notes_type_data = text_type.value
 
+    def __str__(self):
+        return f"{self.strain.name} ({self.strain.breeder.name}) [{'F' if self.is_feminized else 'R'}{'A' if self.strain.is_automatic else 'P'}] - {self.quantity}"  # noqa: E501
+
     class Meta:
         db_table = "grow_strains_in_stock"
 

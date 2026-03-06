@@ -102,7 +102,7 @@
             <div>
             <div class="modal-footer">
                     {% if use_bootstrap%}
-                    <button class="btn btn-success" type="submit" hx-post="{% url 'grow:hx-seed-in-stock-dialog' %}" hx-target="#seeds-in-stock-info" hx-swap="innerHTML">{% translate "Add seeds" %}</button>
+                    <button class="btn btn-success" type="submit" data-bs-dismiss="modal" hx-post="{% url 'grow:hx-seed-in-stock-dialog' %}" hx-target="#seeds-in-stock-info" hx-swap="innerHTML">{% translate "Add seeds" %}</button>
                     <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">{% translate "Cancel" %}</button>
                     {% else %}
                     <div class="form-buttons">

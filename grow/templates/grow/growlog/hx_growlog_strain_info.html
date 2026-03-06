@@ -1,0 +1,79 @@
+{% load i18n %}
+
+<table class="table">
+    <thead>
+        <tr class="{% if use_bootstrap %}table-success{% endif %}">
+            <th scope="col">{% translate "Strain" %}</th>
+            <th scope="col">{% translate "Breeder" %}</th>
+            <th scope="col">{% translate "Flowering Time" %}</th>
+            <th scope="col">{% translate "From seed" %}</th>
+            <th scope="col">{% translate "Plants" %}</th>
+            {% if can_edit %}
+            <th scope="col" class="text-end">
+                <button type="button"
+                    class="btn btn-link link-body-emphasis link-opacity-50 link-opacity-100-hover link-underline-opacity-0 p-0 m-0"
+                    data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Add Strain to Grow Log' %}"
+                    href="#{#{% url 'grow:growlog-add-strain-select' growlog_pk=growlog.pk %}#}"
+                ><i class="bi bi-plus-square"></i></button>
+                <button type="button"
+                    class="btn btn-link link-body-emphasis link-opacity-50 link-opacity-100-hover link-underline-opacity-0 p-0 m-0"
+                    hx-get="{% url 'grow:hx-growlog-add-seeds' growlog_pk=growlog.pk %}"
+                    hx-target="#modals-here"
+                    hx-swap="innerHTML"
+                    data-bs-target="#modals-here"
+                    data-bs-toggle="modal"
+                    hx-trigger="click"
+                >
+                    <span data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Add Seeds from stock to Growlog' %}">
+                        <i class="bi bi-plus-circle"></i>
+                    </span>
+                </button>
+            </th>
+            {% endif %}
+        </tr>
+    </thead>
+
+    <tbody class="table-group-divider">
+        {% for growlog_strain in growlog_strains %}
+        <tr>
+            <td><a href="{% url 'grow:strain-detail' breeder_slug=growlog_strain.strain.breeder.slug slug=growlog_strain.strain.slug %}">{{ growlog_strain.strain.name }}</a></td>
+            <td><a href="{% url 'grow:breeder-detail' slug=growlog_strain.strain.breeder.slug %}">{{ growlog_strain.strain.breeder.name }}</a></td>
+            <td>{% blocktranslate count n=growlog_strain.strain.flowering_time_days %}{{ n }} day{% plural %}{{ n }} days{% endblocktranslate %}
+                ({% blocktranslate count n=growlog_strain.strain.flowering_time_weeks %}{{ n }} week{% plural %}{{ n }} weeks{% endblocktranslate %})</td>
+            </td>
+            <td>{% if growlog_strain.is_grown_from_seed %}{% translate "Yes" %}{% else %}{% translate "No" %}{% endif %}</td>
+            <td>{{ growlog_strain.plant_count }}</td>
+            {% if can_edit %}
+            <td class="text-end">
+                <button type="button" href="#{#{% url 'grow:growlog-add-plant' pk=growlog_strain.pk %}#}"
+                    class="btn btn-link link-body-emphasis link-opacity-50 link-opacity-100-hover link-underline-opacity-0 m-0 p-0"
+                >
+                    <span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="{% translate 'Add plants to grow log' %}">
+                        <i class="bi bi-plus-circle"></i>
+                    </span>
+                </button>
+                <button type="button" href="#{#{% url 'grow:growlog-remove-plant' pk=growlog_strain.pk %}#}"
+                    class="btn btn-link link-body-emphasis link-opacity-50 link-opacity-100-hover link-underline-opacity-0 m-0 p-0"
+                >
+                    <span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="{% translate 'Remove plants from grow log' %}">
+                        <i class="bi bi-dash-circle"></i>
+                    </span>
+                </button>
+                <button type="button" href="#{#{% url 'grow:growlog-remove-strain' pk=growlog_strain.pk %}#}"
+                    class="btn btn-link link-body-emphasis link-opacity-50 link-opacity-100-hover link-underline-opacity-0 m-0 p-0"
+
+                >
+                    <span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="{% translate 'Remove Strain from Grow Log' %}">
+                        <i class="bi bi-x-circle"></i>
+                    </span>
+                </button>
+            </td>
+            {% endif %}
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="{% if can_edit %}6{% else %}5{% endif %}">{% translate "No strains available." %}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

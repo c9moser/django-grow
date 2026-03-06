@@ -1522,8 +1522,9 @@ class HxStrainAddToStock2View(StrainAddToStock2View):
         return context
 
     def form_valid(self, form):
-        print("Form is valid!")
+        print("Form is valid!xxx")
         try:
+            print(form.cleaned_data['strain'])
             strain = Strain.objects.get(pk=int(form.cleaned_data['strain'])
                                         if form.cleaned_data['strain'] else 0)
         except Strain.DoesNotExist:
@@ -1532,17 +1533,15 @@ class HxStrainAddToStock2View(StrainAddToStock2View):
             raise Http404("Strain not found!")
 
         if strain:
-            print("Adding seeds to stock for strain:", strain.name)
-            print("Strain type:", form.cleaned_data['strain_type'])
-
+            print("adding seeds to stock")
             if form.cleaned_data['strain_type'] == 'feminized':
                 strain.add_feminized_seeds_to_stock(
                     self.request.user,
                     form.cleaned_data['quantity'],
                     purchased_on=date(
-                        form.cleaned_data['purchased_on_year'],
-                        form.cleaned_data['purchased_on_month'],
-                        form.cleaned_data['purchased_on_day']
+                        int(form.cleaned_data['purchased_on_year']),
+                        int(form.cleaned_data['purchased_on_month']),
+                        int(form.cleaned_data['purchased_on_day'])
                     ) if (
                         form.cleaned_data['purchased_on_year']
                         and form.cleaned_data['purchased_on_month']
@@ -1654,6 +1653,7 @@ class HxSeedsInStockInfoView(LoginRequiredMixin, BaseView):
                 'strain__name',
                 'strain__breeder__name'
             )[(page * paginate):((page + 1) * paginate)],
+            'seeds_in_stock_user': kwargs.get('seeds_in_stock_user', self.request.user),
         }
         context.update(kwargs)
         return context
@@ -1662,7 +1662,7 @@ class HxSeedsInStockInfoView(LoginRequiredMixin, BaseView):
         return render(request, self.template_name, self.get_context_data())
 
 
-class HxSeedsInStockDialogView(HxSeedsInStockInfoView, StrainAddToStock2View):
+class HxSeedsInStockDialogView(HxSeedsInStockInfoView, HxStrainAddToStock2View):
     form_class = StrainAddToStock2Form
     template_name = settings.GROW_TEMPLATES['grow/strain/hx-seeds_in_stock_dialog']
     info_template_name = settings.GROW_TEMPLATES['grow/strain/hx-seeds_in_stock_info']
@@ -1675,12 +1675,7 @@ class HxSeedsInStockDialogView(HxSeedsInStockInfoView, StrainAddToStock2View):
         return context
 
     def form_valid(self, form):
-        print("Form is valid!!!!!!!!!")
-        try:
-            super().form_valid(form)
-        except Exception as e:
-            print("Error in form_valid:")
-            print(e)
+        HxStrainAddToStock2View.form_valid(self, form)
 
         return render(self.request, self.info_template_name, context=self.get_context_data(
             form=form,

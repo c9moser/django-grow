@@ -560,6 +560,13 @@ class GrowlogStrain(models.Model):
         default=1
     )
 
+    @property
+    def plant_count(self) -> int:
+        """
+        Get the number of plants for this strain in the grow log.
+        """
+        return self.quantity
+
     class Meta:
         db_table = "grow_growlog_strains"
         unique_together = [

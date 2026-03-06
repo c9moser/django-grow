@@ -19,61 +19,27 @@
     {% blocktranslate with grower_name=growlog.grower.username %}This is the grow log for {{ grower_name }}'s cultivation activities. Here you can track and manage their grows.{% endblocktranslate %}
     {% endif %}
 </p>
-<h2>{% translate "Strains" %}</h2>
-<table class="table">
-    <thead>
-        <tr>
-            <th scope="col">{% translate "Strain" %}</th>
-            <th scope="col">{% translate "Breeder" %}</th>
-            <th scope="col">{% translate "Flowering Time" %}</th>
-            <th scope="col">{% translate "From seed" %}</th>
-            <th scope="col" class="text-end">
-                <button type="button"
-                    class="btn btn-link link-body-emphasis link-opacity-50 link-opacity-100-hover link-underline-opacity-0 p-0 m-0"
-                    bs-toggle="tooltip" bs-placement="top" bs-title="{% translate 'Add Strain to Grow Log' %}"
-                    href="#{#{% url 'grow:growlog-add-strain-select' growlog_pk=growlog.pk %}#}"
-                ><i class="bi bi-plus-square"></i></button>
-                <button type="button"
-                    class="btn btn-link link-body-emphasis link-opacity-50 link-opacity-100-hover link-underline-opacity-0 p-0 m-0"
-                    bs-toggle="tooltip" bs-placement="top" bs-title="{% translate 'Remove Strain from Grow Log' %}"
-                    href="#{#{% url 'grow:growlog-add-strain-from-stock' growlog_pk=growlog.pk %}#}"
-                ><i class="bi bi-plus-circle"></i></button>
-            </th>
-        </tr>
-    </thead>
+<p>
+    {% if can_edit %}
+    <a href="#personal-notes" class="link-success"><i class="bi bi-arrow-down"></i> {% translate "Go to Personal Notes" %}</a><br>
+    {% endif %}
+    <a href="#description" class="link-success"><i class="bi bi-arrow-down"></i> {% translate "Go to Description" %}</a><br>
+    <a href="#entries" class="link-success"><i class="bi bi-arrow-down"></i> {% translate "Go to Entries" %}</a>
+</p>
 
-    <tbody>
-        {% for growlog_strain in growlog_strains %}
-        <tr>
-            <td>{{ growlog_strain.strain.name }}</td>
-            <td>{{ growlog_strain.strain.breeder.name }}</td>
-            <td>{% blocktranslate count n=growlog_strain.strain.flowering_time_days %}{{ n }} day{% plural %}{{ n }} days{% endblocktranslate %}
-                ({% blocktranslate count n=growlog_strain.strain.flowering_time_weeks %}{{ n }} week{% plural %}{{ n }} weeks{% endblocktranslate %})</td>
-            </td>
-            <td>{% if growlog_strain.strain.from_seed %}{% translate "Yes" %}{% else %}{% translate "No" %}{% endif %}</td>
-            <td class="text-end">
-                <button type="btn btn-link p-0" href="#{#{% url 'grow:growlog-remove-strain' pk=growlog_strain.pk %}#}"
-                    class="link-body-emphasis link-opacity-50 link-opacity-100-hover link-underline-opacity-0"
-                    bs-toggle="tooltip" bs-placement="top" bs-title="{% translate 'Remove Strain from Grow Log' %}"
-                ><i class="bi bi-x-circle"></i></a>
-            </td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="5">{% translate "No strains available." %}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<h2>{% translate "Strains" %}</h2>
+<div id="growlog-strain-info">
+{% include strains_template %}
+</div>
 
 {% if request.user == growlog.grower %}
-<h2>{% translate "Personal Notes" %}</h2>
+<h2 id="personal-notes">{% translate "Personal Notes" %}</h2>
 <div class="alert alert-warning" role="alert">
     {% translate "These notes are only visible to you!" %}
 </div>
 <div>
     <button type="button" class="btn btn-sm btn-outline-primary mb-3"
-        href="#{#{% url 'grow:growlog-notes-update' pk=growlog.id %}#}"
+        href="#{#{% url 'grow:hx-growlog-notes-update' pk=growlog.id %}#}"
         bs-toggle="tooltip" bs-placement="bottom" bs-title="{% translate 'Edit Personal Notes' %}"
     ><i class="bi bi-pencil-square"></i> {% translate "Edit Personal Notes" %}</button>
 </div>
@@ -86,55 +52,28 @@
 
 {% endif %}
 
-<h2>{% translate "Description" %}</h2>
+<h2 id="description">{% translate "Description" %}</h2>
+<button type="button" class="btn btn-sm btn-outline-primary mb-3"
+    href="#{#{% url 'grow:hx-growlog-description-update' pk=growlog.id %}#}"
+><i class="bi bi-pencil-square"></i> {% translate "Edit Description" %}</button>
+
+<div id="growlog-description">
 {% if growlog.description %}
 {{ growlog.description_html }}
 {% else %}
 <p>{% translate "No description available." %}</p>
 {% endif %}
-{% if growlog.entries %}
-{% for entry in growlog.entries.all %}
-<div class="card mb-3">
-    <div class="card-header">
-        <div class="d-flex justify-content-between align-items-center">
-            <h5 class="card-title">{{ entry.date|date:"x X" }}</h5>
-
-            <div class="text-end">
-                <a href="#{#{% url 'grow:growlog-entry-update' pk=entry.id %}#}" class="btn btn-sm btn-outline-primary"
-                    bs-toggle="tooltip" bs-placement="bottom" bs-title="{% translate 'Edit Entry' %}"
-                ><i class="bi bi-pencil-square"></i></a>
-                <a href="#{#{% url 'grow:growlog-entry-delete' pk=entry.id %}#}" class="btn btn-sm btn-outline-danger"
-                    bs-toggle="tooltip" bs-placement="bottom" bs-title="{% translate 'Delete Entry' %}"
-                ><i class="bi bi-trash"></i></a>
-            </div>
-            <div>
-                <div class="text-muted mb-1">{% blocktranslate count age=entry.age%}<b>Age:</b> {{ age }} day{% plural %}<b>Age:</b> {{ age }} days{% endblocktranslate %}</div>
-                {% if entry.flowering_time >= 0 %}
-                <div class="text-muted mb-1">{% blocktranslate count ft=entry.flowering_time%}<b>Flowering Time:</b> {{ ft }} day{% plural %}<b>Flowering Time:</b> {{ ft }} days{% endblocktranslate %}</div>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-    <div class="card-body">
-        {{ entry.content_html }}
-    </div>
-    {% if entry.images %}
-    <div class="card-footer text-muted">
-        <div class="row col-2 col-md-4 g-2">
-            {% for image in entry.images.all %}
-            <div class="col">
-                <a href="{{ image.image.url }}" target="_blank">
-                    <img src="{{ image.image.url }}" class="img-fluid img-thumbnail" alt="{% translate 'Grow Log Entry Image' %}">
-                </a>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-    {% endif %}
 </div>
-{% endfor %}
-{% else %}
-<p>{% translate "No entries yet." %}</p>
-{% endif%}
+
+<h2 id="entries">{% translate "Entries" %}</h2>
+{% if can_edit %}
+<div class="mb-3">
+    <button type="button" class="btn btn-outline-primary btn-sm"
+        href="#{#{% url 'grow:growlog-entry-create' growlog_pk=growlog.id %}#}"
+    ><i class="bi bi-plus-square"></i> {% translate "Add Entry" %}</button>
+</div>
+{% endif %}
+<div id="growlog-entries">
+    {% include entries_template %}
 </div>
 {% endblock content %}
