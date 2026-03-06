@@ -86,8 +86,8 @@ GROW_BUILTIN_TEMPLATES = {
     'grow/growlog/entry_delete': 'grow/growlog/entry_delete.html',
     'grow/growlog/entry_update': 'grow/growlog/entry_update.html',
     'grow/growlog/hx-entry_delete': 'grow/growlog/hx_entry_delete.html',
-    'grow/growlog/hx-active_info' : 'grow/growlog/hx_growlog_active_info.html',
-    'grow/growlog/hx-finished_info' : 'grow/growlog/hx_growlog_finished_info.html',
+    'grow/growlog/hx-active_info' : 'grow/growlog/hx_active_info.html',
+    'grow/growlog/hx-finished_info' : 'grow/growlog/hx_finished_info.html',
     'grow/growlog/hx-strain_info':  'grow/growlog/hx_growlog_strain_info.html',
     'grow/growlog/hx-add_seeds': 'grow/growlog/hx_growlog_add_seeds.html',
 

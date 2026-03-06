@@ -5,9 +5,9 @@ from ..settings import GROW_TEMPLATES, GROW_USER_SETTINGS
 from ..growapi.models import StrainsInStock, Growlog
 from ._base import BaseView
 
-from .strain import (
+from .strain import (   # noqa: F401
     HxSeedsInStockDialogView,
-    HxStrainAddToStock2View,  # noqa: F401
+    HxStrainAddToStock2View,
     HxStrainRemoveFromStockView,
     HxSeedsInStockInfoView,
 )
