@@ -5,6 +5,8 @@ from ..growapi.models import (  # noqa: F401
     GrowlogEntry,
     GrowlogEntryImage,
     GrowlogStrain,
+    Breeder,
+    Strain,
 )
 
 
@@ -81,6 +83,48 @@ class GrowlogStrainDeleteForm(forms.ModelForm):
     class Meta:
         model = GrowlogStrain
         fields = []
+
+
+class GrowlogAddStrainForm(forms.Form):
+
+    breeder_filter = forms.CharField(
+        label=_("Breeder filter"),
+        required=False,
+    )
+
+    breeder = forms.ModelChoiceField(
+        queryset=None,
+        label=_("Breeder"),
+        required=True
+    )
+
+    strain_filter = forms.CharField(
+        max_length=255,
+        required=False,
+        label=_("Strain filter")
+    )
+
+    strain = forms.ModelChoiceField(
+        queryset=None,
+        label=_("Strain"),
+        required=True
+    )
+
+    quantity = forms.IntegerField(
+        label=_("Quantity"),
+        required=True,
+        min_value=1,
+        initial=1
+    )
+
+    is_grown_from_seed = forms.BooleanField(
+        label=_("Grown from seed"),
+        required=False,
+        initial=True
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
 
 class GrowlogQuantityForm(forms.Form):
