@@ -28,7 +28,7 @@
 </p>
 
 <h2>{% translate "Strains" %}</h2>
-<div id="growlog-strain-info">
+<div id="growlog-strains">
 {% include strains_template %}
 </div>
 
@@ -39,31 +39,32 @@
 </div>
 <div>
     <button type="button" class="btn btn-sm btn-outline-primary mb-3"
-        href="#{#{% url 'grow:hx-growlog-notes-update' pk=growlog.id %}#}"
-        bs-toggle="tooltip" bs-placement="bottom" bs-title="{% translate 'Edit Personal Notes' %}"
-    ><i class="bi bi-pencil-square"></i> {% translate "Edit Personal Notes" %}</button>
+        hx-get="{% url 'grow:hx-growlog-edit-notes' pk=growlog.id %}"
+        hx-target="#modals-here"
+        hx-swap="innerHTML"
+        data-bs-target="#modals-here"
+        data-bs-toggle="modal"
+    ><span data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Edit Personal Notes' %}">
+        <i class="bi bi-pencil-square"></i> {% translate "Edit Personal Notes" %}
+    </span></button>
 </div>
-{% if growlog.notes %}
-{{ growlog.notes_html }}
-{% else %}
-<p>{% translate "No personal notes available." %}</p>
-{% endif %}
 
+<div id="growlog-notes">{% include notes_template %}</div>
 
 {% endif %}
 
 <h2 id="description">{% translate "Description" %}</h2>
 <button type="button" class="btn btn-sm btn-outline-primary mb-3"
-    href="#{#{% url 'grow:hx-growlog-description-update' pk=growlog.id %}#}"
-><i class="bi bi-pencil-square"></i> {% translate "Edit Description" %}</button>
+    hx-get="{% url 'grow:hx-growlog-edit-description' pk=growlog.id %}"
+    hx-target="#modals-here"
+    hx-swap="innerHTML"
+    data-bs-target="#modals-here"
+    data-bs-toggle="modal"
+><span data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Edit Description' %}">
+    <i class="bi bi-pencil-square"></i> {% translate "Edit Description" %}
+</span></button>
 
-<div id="growlog-description">
-{% if growlog.description %}
-{{ growlog.description_html }}
-{% else %}
-<p>{% translate "No description available." %}</p>
-{% endif %}
-</div>
+<div id="growlog-description">{% include description_template %}</div>
 
 <h2 id="entries">{% translate "Entries" %}</h2>
 {% if can_edit %}

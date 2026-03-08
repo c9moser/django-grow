@@ -8,7 +8,11 @@ from django.views.generic import CreateView, UpdateView, DeleteView, FormView
 
 from grow.forms.growlog import (
     GrowlogForm,
+    GrowlogDescriptionForm,
+    GrowlogNotesForm,
+    GrowlogQuantityForm,
     GrowlogSeedsFromStockForm,
+    GrowlogStrainDeleteForm,
 )
 # from django.urls import reverse
 
@@ -23,8 +27,8 @@ from ..growapi.permission import (
 
 class GrowlogDetailView(BaseView):
     template_name = GROW_TEMPLATES['grow/growlog/detail']
-    strains_template_name = GROW_TEMPLATES['grow/growlog/hx-strain_info']
-    entries_template_name = GROW_TEMPLATES['grow/growlog/hx-growlog_entries']
+    strains_template_name = GROW_TEMPLATES['grow/growlog/hx-growlog-strains']
+    entries_template_name = GROW_TEMPLATES['grow/growlog/hx-growlog-entries']
 
     def get(self, request: HttpRequest, pk: int) -> HttpResponse:
         growlog = get_object_or_404(Growlog, pk=pk)
@@ -40,6 +44,8 @@ class GrowlogDetailView(BaseView):
             'can_edit': growlog_user_is_allowed_to_edit(request.user, growlog),
             'strains_template': self.strains_template_name,
             'entries_template': self.entries_template_name,
+            'notes_template': GROW_TEMPLATES['grow/growlog/hx-growlog-notes'],
+            'description_template': GROW_TEMPLATES['grow/growlog/hx-growlog-description'],
         }
         return render(request, self.template_name, context)
 
@@ -96,7 +102,7 @@ class GrowlogDeleteView(LoginRequiredMixin, DeleteView):
 
 
 class HxGrowlogStrainsInfoView(BaseView):
-    template_name = GROW_TEMPLATES['grow/growlog/hx-strain_info']
+    template_name = GROW_TEMPLATES['grow/growlog/hx-growlog-strains']
 
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = kwargs
@@ -115,8 +121,8 @@ class HxGrowlogStrainsInfoView(BaseView):
 
 
 class HxGrowlogAddSeedsView(LoginRequiredMixin, HxGrowlogStrainsInfoView, FormView):
-    template_name = GROW_TEMPLATES['grow/growlog/hx-add_seeds']
-    info_template_name = GROW_TEMPLATES['grow/growlog/hx-strain_info']
+    template_name = GROW_TEMPLATES['grow/growlog/hx-growlog-seeds_add']
+    info_template_name = GROW_TEMPLATES['grow/growlog/hx-growlog-strains']
     form_class = GrowlogSeedsFromStockForm
 
     def get_form_kwargs(self):
@@ -189,6 +195,291 @@ class HxGrowlogAddSeedsView(LoginRequiredMixin, HxGrowlogStrainsInfoView, FormVi
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
+
+
+class HxGrowlogAddPlantsView(LoginRequiredMixin, HxGrowlogStrainsInfoView, FormView):
+    template_name = GROW_TEMPLATES['grow/growlog/hx-growlog-plants_add']
+    result_template_name = GROW_TEMPLATES['grow/growlog/hx-growlog-strains']
+    form_class = GrowlogQuantityForm
+
+    def get_context_data(self, **kwargs):
+        return FormView.get_context_data(
+            self,
+            **HxGrowlogStrainsInfoView.get_context_data(self, **kwargs)
+        )
+
+    def get(self, request: HttpRequest, pk: int) -> HttpResponse:
+        self.growlog_strain = get_object_or_404(GrowlogStrain, pk=pk)
+        if not growlog_user_is_allowed_to_edit(request.user, self.growlog_strain.growlog):
+            return HttpResponse(status=403)
+
+        return render(request, self.template_name, {
+            'form': self.form_class(),
+            'growlog': self.growlog_strain.growlog,
+            'growlog_strain': self.growlog_strain,
+            'strain': self.growlog_strain.strain,
+        })
+
+    def post(self, request: HttpRequest, pk: int) -> HttpResponse:
+        self.growlog_strain = get_object_or_404(GrowlogStrain, pk=pk)
+        self.growlog = self.growlog_strain.growlog
+
+        if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
+            return HttpResponse(status=403)
+
+        form = self.form_class(request.POST)
+
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        if (self.growlog_strain.quantity + form.cleaned_data['quantity']) < 0:
+            self.growlog_strain.quantity = 0
+        else:
+            self.growlog_strain.quantity += form.cleaned_data['quantity']
+        self.growlog_strain.save()
+
+        return render(self.request, self.result_template_name, self.get_context_data(
+            strain=self.growlog_strain.strain,
+            growlog_strain=self.growlog_strain,
+            growlog=self.growlog_strain.growlog,
+            is_grown_from_seed=self.growlog_strain.is_grown_from_seed,
+            quantity=form.cleaned_data['quantity'],
+        ))
+
+    def form_invalid(self, form):
+        return render(self.request, self.result_template_name, self.get_context_data(
+            form=form,
+            strain=self.growlog_strain.strain,
+            growlog_strain=self.growlog_strain,
+            growlog=self.growlog_strain.growlog,
+        ))
+
+
+class HxGrowlogRemovePlantsView(LoginRequiredMixin, HxGrowlogStrainsInfoView, FormView):
+    template_name = GROW_TEMPLATES['grow/growlog/hx-growlog-plants_remove']
+    result_template_name = GROW_TEMPLATES['grow/growlog/hx-growlog-strains']
+    form_class = GrowlogQuantityForm
+
+    def get_context_data(self, **kwargs):
+        return FormView.get_context_data(
+            self,
+            **HxGrowlogStrainsInfoView.get_context_data(self, **kwargs)
+        )
+
+    def get(self, request: HttpRequest, pk: int) -> HttpResponse:
+        self.growlog_strain = get_object_or_404(GrowlogStrain, pk=pk)
+        if not growlog_user_is_allowed_to_edit(request.user, self.growlog_strain.growlog):
+            return HttpResponse(status=403)
+
+        return render(request, self.template_name, {
+            'form': self.form_class(),
+            'growlog': self.growlog_strain.growlog,
+            'growlog_strain': self.growlog_strain,
+            'strain': self.growlog_strain.strain,
+        })
+
+    def post(self, request: HttpRequest, pk: int) -> HttpResponse:
+        self.growlog_strain = get_object_or_404(GrowlogStrain, pk=pk)
+        self.growlog = self.growlog_strain.growlog
+
+        if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
+            return HttpResponse(status=403)
+
+        form = self.form_class(request.POST)
+
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        if (self.growlog_strain.quantity - form.cleaned_data['quantity']) < 0:
+            self.growlog_strain.quantity = 0
+        else:
+            self.growlog_strain.quantity -= form.cleaned_data['quantity']
+        self.growlog_strain.save()
+
+        return render(self.request, self.result_template_name, self.get_context_data(
+            strain=self.growlog_strain.strain,
+            growlog_strain=self.growlog_strain,
+            growlog=self.growlog_strain.growlog,
+            is_grown_from_seed=self.growlog_strain.is_grown_from_seed,
+            quantity=form.cleaned_data['quantity'],
+        ))
+
+    def form_invalid(self, form):
+        return render(self.request, self.result_template_name, self.get_context_data(
+            form=form,
+            strain=self.growlog_strain.strain,
+            growlog_strain=self.growlog_strain,
+            growlog=self.growlog_strain.growlog,
+        ))
+
+
+class HxGrowlogAddStrainView(LoginRequiredMixin, HxGrowlogStrainsInfoView, FormView):
+    template_name = GROW_TEMPLATES['grow/growlog/hx-growlog-strain_add']
+    result_template_name = GROW_TEMPLATES['grow/growlog/hx-growlog-strains']
+    form_class = GrowlogQuantityForm
+
+    def get_context_data(self, **kwargs):
+        return FormView.get_context_data(
+            self,
+            **HxGrowlogStrainsInfoView.get_context_data(self, **kwargs)
+        )
+
+    def get(self, request: HttpRequest, pk: int) -> HttpResponse:
+        self.growlog_strain = get_object_or_404(GrowlogStrain, pk=pk)
+
+        if not growlog_user_is_allowed_to_edit(request.user, self.growlog_strain.growlog):
+            return HttpResponse(status=403)
+
+        return render(request, self.template_name, {
+            'form': self.form_class(),
+            'growlog': self.growlog_strain.growlog,
+            'strain': self.growlog_strain.strain,
+            'growlog_strain': self.growlog_strain,
+        })
+
+    def post(self, request: HttpRequest, pk: int) -> HttpResponse:
+        self.growlog_strain = get_object_or_404(GrowlogStrain, pk=pk)
+        if not growlog_user_is_allowed_to_edit(request.user, self.growlog_strain.growlog):
+            return HttpResponse(status=403)
+
+        form = self.form_class(request.POST)
+
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        self.growlog_strain.quantity += form.cleaned_data['quantity']
+        if self.growlog_strain.quantity < 0:
+            self.growlog_strain.quantity = 0
+        self.growlog_strain.save()
+
+        return render(self.request, self.result_template_name, self.get_context_data(
+            strain=self.growlog_strain.strain,
+            growlog_strain=self.growlog_strain,
+            growlog=self.growlog_strain.growlog,
+            is_grown_from_seed=self.growlog_strain.is_grown_from_seed,
+            quantity=form.cleaned_data['quantity'],
+        ))
+
+    def form_invalid(self, form):
+        return render(self.request, self.result_template_name, self.get_context_data(
+            form=form,
+            strain=self.growlog_strain.strain,
+            growlog_strain=self.growlog_strain,
+            growlog=self.growlog_strain.growlog,
+        ))
+
+
+class HxGrowlogDeleteStrainView(LoginRequiredMixin, HxGrowlogStrainsInfoView, FormView):
+    template_name = GROW_TEMPLATES['grow/growlog/hx-growlog-strain_delete']
+    info_template_name = GROW_TEMPLATES['grow/growlog/hx-growlog-strains']
+    form_class = GrowlogStrainDeleteForm
+
+    def get_context_data(self, **kwargs):
+        context = HxGrowlogStrainsInfoView.get_context_data(self, **kwargs)
+        context['growlog_strain'] = self.growlog_strain
+        context['strain'] = self.growlog_strain.strain
+        context['growlog'] = self.growlog_strain.growlog
+        context['form'] = kwargs.get('form', self.form_class(instance=self.growlog_strain))
+        return context
+
+    def get(self, request: HttpRequest, pk: int) -> HttpResponse:
+        self.growlog_strain = get_object_or_404(GrowlogStrain, pk=pk)
+        if not growlog_user_is_allowed_to_edit(request.user, self.growlog_strain.growlog):
+            return HttpResponse(status=403)
+        self.growlog = self.growlog_strain.growlog
+        self.strain = self.growlog_strain.strain
+
+        return render(request, self.template_name, self.get_context_data())
+
+    def post(self, request: HttpRequest, pk: int) -> HttpResponse:
+        self.growlog_strain = get_object_or_404(GrowlogStrain, pk=pk)
+        self.growlog = self.growlog_strain.growlog
+
+        if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
+            return HttpResponse(status=403)
+        self.growlog_strain.delete()
+
+        return render(request, self.info_template_name, self.get_context_data())
+
+
+class HxGrowlogEditNotesView(LoginRequiredMixin, FormView):
+    template_name = GROW_TEMPLATES['grow/growlog/hx-growlog-notes_edit']
+    success_template_name = GROW_TEMPLATES['grow/growlog/hx-growlog-notes']
+
+    form_class = GrowlogNotesForm
+
+    def get_form(self, form_class=None):
+        if form_class is None:
+            form_class = self.get_form_class()
+        return form_class(instance=self.growlog, **self.get_form_kwargs())
+
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['growlog'] = self.growlog
+        return context
+
+    def get(self, request: HttpRequest, pk: int) -> HttpResponse:
+        self.growlog = get_object_or_404(Growlog, pk=pk)
+        if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
+            return HttpResponse(status=403)
+
+        return render(request, self.template_name, context=self.get_context_data())
+
+    def post(self, request: HttpRequest, pk: int) -> HttpResponse:
+        self.growlog = get_object_or_404(Growlog, pk=pk)
+        if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
+            return HttpResponse(status=403)
+
+        form = GrowlogNotesForm(request.POST, instance=self.growlog)
+        if form.is_valid():
+            form.save(commit=True)
+
+        return render(request, self.success_template_name, context=self.get_context_data())
+
+
+class HxGrowlogEditDescriptionView(LoginRequiredMixin, FormView):
+    template_name = GROW_TEMPLATES['grow/growlog/hx-growlog-description_edit']
+    success_template_name = GROW_TEMPLATES['grow/growlog/hx-growlog-description']
+
+    form_class = GrowlogDescriptionForm
+
+    def get_form(self, form_class=None, **kwargs):
+        if form_class is None:
+            form_class = self.get_form_class()
+        return form_class(instance=self.growlog, **self.get_form_kwargs())
+
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['growlog'] = self.growlog
+        return context
+
+    def get(self, request: HttpRequest, pk: int) -> HttpResponse:
+        self.growlog = get_object_or_404(Growlog, pk=pk)
+        if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
+            return HttpResponse(status=403)
+
+        return render(request, self.template_name, context=self.get_context_data())
+
+    def post(self, request: HttpRequest, pk: int) -> HttpResponse:
+        self.growlog = get_object_or_404(Growlog, pk=pk)
+        if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
+            return HttpResponse(status=403)
+
+        form = self.form_class(request.POST, instance=self.growlog)
+
+        if form.is_valid():
+            form.save(commit=True)
+
+        return render(request, self.success_template_name, context=self.get_context_data())
 
 
 class HxGrowlogActiveInfoView(LoginRequiredMixin, BaseView):

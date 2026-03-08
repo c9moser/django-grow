@@ -1,5 +1,5 @@
 {% load i18n %}
-<div class="card mb-3">
+<div class="card mb-3" id="growlog-entries-card">
     <div class="card-header">
         <div class="row">
             <div class="col-6 d-flex align-items-center">
@@ -70,10 +70,10 @@
                         {% endif %}
                     </h5>
                     <div class="text-end">
-                        <a href="#{#{% url 'grow:growlog-entry-update' pk=entry.id %}#}" class="btn btn-sm btn-outline-primary"
+                        <a href="#{#{% url 'grow:hx-growlog-edit_entry' pk=entry.id %}#}" class="btn btn-sm btn-outline-primary"
                             bs-toggle="tooltip" bs-placement="bottom" bs-title="{% translate 'Edit Entry' %}"
                         ><i class="bi bi-pencil-square"></i></a>
-                        <a href="#{#{% url 'grow:growlog-entry-delete' pk=entry.id %}#}" class="btn btn-sm btn-outline-danger"
+                        <a href="#{#{% url 'grow:hx-growlog-delete_entry' pk=entry.id %}#}" class="btn btn-sm btn-outline-danger"
                             bs-toggle="tooltip" bs-placement="bottom" bs-title="{% translate 'Delete Entry' %}"
                         ><i class="bi bi-trash"></i></a>
                     </div>
@@ -88,3 +88,4 @@
         {% endfor %}
     </div>
 </div>
+<script>htmx.process(document.getElementById("growlog-entries-card"));</script>

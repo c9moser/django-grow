@@ -57,3 +57,39 @@ class GrowlogSeedsFromStockForm(forms.Form):
             'strain__breeder__name'
         )
         self.fields['seeds_in_stock'].initial = self.fields['seeds_in_stock'].queryset.first()
+
+
+class GrowlogNotesForm(forms.ModelForm):
+    class Meta:
+        model = Growlog
+        fields = [
+            'notes_type_data',
+            'notes',
+        ]
+
+
+class GrowlogDescriptionForm(forms.ModelForm):
+    class Meta:
+        model = Growlog
+        fields = [
+            'description_type_data',
+            'description',
+        ]
+
+
+class GrowlogStrainDeleteForm(forms.ModelForm):
+    class Meta:
+        model = GrowlogStrain
+        fields = []
+
+
+class GrowlogQuantityForm(forms.Form):
+
+    quantity = forms.IntegerField(
+        label=_("Quantity"),
+        required=True,
+        initial=1
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)

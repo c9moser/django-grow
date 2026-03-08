@@ -13,11 +13,11 @@
                 <button type="button"
                     class="btn btn-link link-body-emphasis link-opacity-50 link-opacity-100-hover link-underline-opacity-0 p-0 m-0"
                     data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Add Strain to Grow Log' %}"
-                    href="#{#{% url 'grow:growlog-add-strain-select' growlog_pk=growlog.pk %}#}"
+                    href="#{#{% url 'grow:growlog-add-strain-select' pk=growlog.pk %}#}"
                 ><i class="bi bi-plus-square"></i></button>
                 <button type="button"
                     class="btn btn-link link-body-emphasis link-opacity-50 link-opacity-100-hover link-underline-opacity-0 p-0 m-0"
-                    hx-get="{% url 'grow:hx-growlog-add-seeds' growlog_pk=growlog.pk %}"
+                    hx-get="{% url 'grow:hx-growlog-add-seeds' pk=growlog.pk %}"
                     hx-target="#modals-here"
                     hx-swap="innerHTML"
                     data-bs-target="#modals-here"
@@ -45,25 +45,25 @@
             <td>{{ growlog_strain.plant_count }}</td>
             {% if can_edit %}
             <td class="text-end">
-                <button type="button" href="#{#{% url 'grow:growlog-add-plant' pk=growlog_strain.pk %}#}"
+                <button type="button" hx-get="{% url 'grow:hx-growlog-plants-add' pk=growlog_strain.pk %}" hx-target="#modals-here" hx-swap="innerHTML" data-bs-target="#modals-here" data-bs-toggle="modal"
                     class="btn btn-link link-body-emphasis link-opacity-50 link-opacity-100-hover link-underline-opacity-0 m-0 p-0"
                 >
                     <span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="{% translate 'Add plants to grow log' %}">
                         <i class="bi bi-plus-circle"></i>
                     </span>
                 </button>
-                <button type="button" href="#{#{% url 'grow:growlog-remove-plant' pk=growlog_strain.pk %}#}"
+                <button type="button" hx-get="{% url 'grow:hx-growlog-plants-remove' pk=growlog_strain.pk %}" hx-target="#modals-here" hx-swap="innerHTML" data-bs-target="#modals-here" data-bs-toggle="modal"
                     class="btn btn-link link-body-emphasis link-opacity-50 link-opacity-100-hover link-underline-opacity-0 m-0 p-0"
                 >
                     <span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="{% translate 'Remove plants from grow log' %}">
                         <i class="bi bi-dash-circle"></i>
                     </span>
                 </button>
-                <button type="button" href="#{#{% url 'grow:growlog-remove-strain' pk=growlog_strain.pk %}#}"
+                <button type="button" hx-get="{% url 'grow:hx-growlog-strain-delete' pk=growlog_strain.pk %}" hx-target="#modals-here" hx-swap="innerHTML" data-bs-target="#modals-here" data-bs-toggle="modal"
                     class="btn btn-link link-body-emphasis link-opacity-50 link-opacity-100-hover link-underline-opacity-0 m-0 p-0"
 
                 >
-                    <span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="{% translate 'Remove Strain from Grow Log' %}">
+                    <span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="{% translate 'Delete Strain from Grow Log' %}">
                         <i class="bi bi-x-circle"></i>
                     </span>
                 </button>

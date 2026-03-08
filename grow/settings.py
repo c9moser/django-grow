@@ -76,11 +76,13 @@ GROW_BUILTIN_TEMPLATES = {
     'grow/growlog/detail': 'grow/growlog/growlog_detail.html',
     'grow/growlog/update': 'grow/growlog/growlog_update.html',
     'grow/growlog/form': 'grow/growlog/growlog_form.html',
-    'grow/growlog/entry/image_delete': 'grow/growlog/entry_image_delete.html',
-    'grow/growlog/entry/image_upload': 'grow/growlog/entry_image_upload.html',
-    'grow/growlog/hx-growlog_entries': 'grow/growlog/hx_growlog_entries.html',
-    'grow/growlog/hx-entry-image_delete': 'grow/growlog/hx_entry_image_delete.html',
-    'grow/growlog/hx-entry-image_upload': 'grow/growlog/hx_entry_image_upload.html',
+
+
+    'grow/growlog/entry/image_delete': 'grow/growlog/entry/image_delete.html',
+    'grow/growlog/entry/image_upload': 'grow/growlog/entry/image_upload.html',
+
+    'grow/growlog/hx-entry-image_delete': 'grow/growlog/hx-entry-image_delete.html',
+    'grow/growlog/hx-entry-image_upload': 'grow/growlog/hx-entry-image_upload.html',
     'grow/growlog/hx-delete': 'grow/growlog/hx_delete.html',
     'grow/growlog/entry_create': 'grow/growlog/entry_create.html',
     'grow/growlog/entry_delete': 'grow/growlog/entry_delete.html',
@@ -88,8 +90,17 @@ GROW_BUILTIN_TEMPLATES = {
     'grow/growlog/hx-entry_delete': 'grow/growlog/hx_entry_delete.html',
     'grow/growlog/hx-active_info' : 'grow/growlog/hx_active_info.html',
     'grow/growlog/hx-finished_info' : 'grow/growlog/hx_finished_info.html',
-    'grow/growlog/hx-strain_info':  'grow/growlog/hx_growlog_strain_info.html',
-    'grow/growlog/hx-add_seeds': 'grow/growlog/hx_growlog_add_seeds.html',
+    'grow/growlog/hx-growlog-entries': 'grow/growlog/hx_growlog_entries.html',
+    'grow/growlog/hx-growlog-seeds_add': 'grow/growlog/hx_growlog_add_seeds.html',
+    'grow/growlog/hx-growlog-description': 'grow/growlog/hx_growlog_description.html',
+    'grow/growlog/hx-growlog-notes_edit': 'grow/growlog/hx_growlog_edit_notes.html',
+    'grow/growlog/hx-growlog-notes': 'grow/growlog/hx_growlog_notes.html',
+    'grow/growlog/hx-growlog-description_edit': 'grow/growlog/hx_growlog_edit_description.html',
+    'grow/growlog/hx-growlog-strains':  'grow/growlog/hx_growlog_strains.html',
+    'grow/growlog/hx-growlog-plants_add':  'grow/growlog/hx_growlog_add_plants.html',
+    'grow/growlog/hx-growlog-plants_remove':  'grow/growlog/hx_growlog_remove_plants.html',
+    'grow/growlog/hx-growlog-strain_add':  'grow/growlog/hx_growlog_add_strain.html',
+    'grow/growlog/hx-growlog-strain_delete':  'grow/growlog/hx_growlog_delete_strain.html',
 
     # user views
     'grow/user/hx-add_seeds_to_stock': 'grow/user/hx_add_seeds_to_stock.html',
