@@ -28,7 +28,7 @@
             </div>
         </div>
         <div class="modal-footer text-end">
-            <button class="btn btn-success" type="submit" hx-post="{% url 'grow:hx-growlog-add-seeds' growlog.pk %}" hx-target="#growlog-strains" hx-swap="innerHTML" data-bs-dismiss="modal">{% translate "Add seeds" %}</button>
+            <button class="btn btn-success" type="submit" hx-post="{% url 'grow:hx-growlog-seeds-add' growlog_pk=growlog.pk %}" hx-target="#growlog-strains" hx-swap="innerHTML" data-bs-dismiss="modal">{% translate "Add seeds" %}</button>
             <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">{% translate "Cancel" %}</button>
         </div>
     </form>
