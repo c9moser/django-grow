@@ -576,3 +576,47 @@ class PermissionCode(IntEnum):
     CONTINUE = 2
     RESTRICT = 3
     RAISE_EXCEPTION = 4
+
+
+class GrowlogStatus(StrEnum):
+    ACTIVE = 'active'
+    GERMINATING = 'germinating'
+    VEGETATIVE = 'vegetative'
+    FLOWERING = 'flowering'
+    HARVESTED = 'harvested'
+    FINISHED = 'finished'
+
+    @staticmethod
+    def from_string(status_str: str) -> 'GrowlogStatus':
+        mapping = {
+            "active": GrowlogStatus.ACTIVE,
+            "germinating": GrowlogStatus.GERMINATING,
+            "vegetative": GrowlogStatus.VEGETATIVE,
+            "flowering": GrowlogStatus.FLOWERING,
+            "harvested": GrowlogStatus.HARVESTED,
+            "finished": GrowlogStatus.FINISHED,
+        }
+        try:
+            return mapping.get(status_str.lower())
+        except KeyError:
+            raise ValueError(f"Unknown growlog status: {status_str}")
+
+    @property
+    def name_raw(status) -> str:
+        mapping = {
+            GrowlogStatus.ACTIVE: _("active"),
+            GrowlogStatus.GERMINATING: _("germinating"),
+            GrowlogStatus.VEGETATIVE: _("vegetative"),
+            GrowlogStatus.FLOWERING: _("flowering"),
+            GrowlogStatus.HARVESTED: _("harvested"),
+            GrowlogStatus.FINISHED: _("finished"),
+        }
+        return mapping[status]
+
+    @property
+    def name_lazy(self) -> str:
+        return gettext_lazy(self.name_raw)
+
+    @property
+    def name(self) -> str:
+        return gettext(self.name_raw)

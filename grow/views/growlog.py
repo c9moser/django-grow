@@ -5,8 +5,9 @@ from django.urls import reverse
 from django.http import HttpRequest, HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView, UpdateView, DeleteView, FormView
-
+from django.db.models import Count
 from grow.forms.growlog import (
+    GrowlogAddStrainForm,
     GrowlogForm,
     GrowlogDescriptionForm,
     GrowlogNotesForm,
@@ -14,10 +15,19 @@ from grow.forms.growlog import (
     GrowlogSeedsFromStockForm,
     GrowlogStrainDeleteForm,
 )
+from grow.growapi.models.strain import Strain
+from ..growapi.models import (
+    Growlog,
+    GrowlogEntry,
+    # GrowlogEntryImage,
+    GrowlogStrain,
+    Breeder,
+    # Strain,
+
+)
 # from django.urls import reverse
 
 from ..settings import GROW_TEMPLATES, GROW_USER_SETTINGS
-from ..growapi.models import Growlog, GrowlogEntry, GrowlogStrain
 from ._base import BaseView
 from ..growapi.permission import (
     growlog_user_is_allowed_to_view,
@@ -322,28 +332,84 @@ class HxGrowlogRemovePlantsView(LoginRequiredMixin, HxGrowlogStrainsInfoView, Fo
 class HxGrowlogAddStrainView(LoginRequiredMixin, HxGrowlogStrainsInfoView, FormView):
     template_name = GROW_TEMPLATES['grow/growlog/hx-growlog-strain_add']
     result_template_name = GROW_TEMPLATES['grow/growlog/hx-growlog-strains']
-    form_class = GrowlogQuantityForm
+    form_class = GrowlogAddStrainForm
+
+    def get_form(self, form_class=None, **form_kwargs):
+        if form_class is None:
+            form_class = self.get_form_class()
+        form = form_class(**form_kwargs)
+
+        breeders = Breeder.objects.annotate(
+            strains_count=Count('strains')
+        ).filter(strains_count__gt=0).order_by('name')
+        breeder = None
+
+        form.fields['breeder'].queryset = breeders
+
+        for _breeder in breeders:
+            if _breeder.strains_count > 0:
+                breeder = _breeder
+                form.fields['breeder'].initial = _breeder.id
+                break
+
+        strains = None
+        strain = None
+        if breeder is not None:
+            strains = breeder.strains.order_by('name')
+            form.fields['strain'].queryset = strains
+
+            strain = strains.first() if strains.count() > 0 else None
+            form.fields['strain'].initial = strain.id if strain else None
+
+        form.fields['is_grown_from_seed'].initial = False
+
+        return form
 
     def get_context_data(self, **kwargs):
-        return FormView.get_context_data(
+        context = FormView.get_context_data(
             self,
             **HxGrowlogStrainsInfoView.get_context_data(self, **kwargs)
         )
+        if not hasattr(self, 'breeders'):
+            self.breeders = Breeder.objects.annotate(
+                strains_count=Count('strains')
+            ).filter(strains_count__gt=0).order_by('name')
 
-    def get(self, request: HttpRequest, pk: int) -> HttpResponse:
-        self.growlog_strain = get_object_or_404(GrowlogStrain, pk=pk)
+        context['breeders'] = self.breeders
 
-        if not growlog_user_is_allowed_to_edit(request.user, self.growlog_strain.growlog):
+        if not hasattr(self, 'breeder'):
+            self.breeder = self.breeders.first() if self.breeders.count() > 0 else None
+        elif not self.breeders.filter(id=self.breeder.id):
+            self.breeder = self.breeders.first() if self.breeders.count() > 0 else None
+
+        context['breeder'] = self.breeder
+
+        if self.breeder:
+            if not hasattr(self, 'strains'):
+                self.strains = self.breeder.strains.order_by('name')
+            context['strains'] = self.strains
+
+            if not hasattr(self, 'strain'):
+                self.strain = self.strains.first() if self.strains.count() > 0 else None
+            elif not self.strains.filter(id=self.strain.id):
+                self.strain = self.strains.first() if self.strains.count() > 0 else None
+
+            context['strain'] = self.strain
+
+        return context
+
+    def get(self, request: HttpRequest, growlog_pk: int) -> HttpResponse:
+        self.growlog = get_object_or_404(Growlog, pk=growlog_pk)
+
+        if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
             return HttpResponse(status=403)
 
-        return render(request, self.template_name, {
-            'form': self.form_class(),
-            'growlog': self.growlog_strain.growlog,
-            'strain': self.growlog_strain.strain,
-            'growlog_strain': self.growlog_strain,
-        })
+        return render(request, self.template_name, self.get_context_data(
+            form=self.get_form(),
+            growlog=self.growlog,
+        ))
 
-    def post(self, request: HttpRequest, pk: int) -> HttpResponse:
+    def post(self, request: HttpRequest, growlog_pk: int) -> HttpResponse:
         self.growlog_strain = get_object_or_404(GrowlogStrain, pk=pk)
         if not growlog_user_is_allowed_to_edit(request.user, self.growlog_strain.growlog):
             return HttpResponse(status=403)
@@ -375,6 +441,75 @@ class HxGrowlogAddStrainView(LoginRequiredMixin, HxGrowlogStrainsInfoView, FormV
             strain=self.growlog_strain.strain,
             growlog_strain=self.growlog_strain,
             growlog=self.growlog_strain.growlog,
+        ))
+
+
+class HxGrowlogAddStrainUpdateView(HxGrowlogAddStrainView):
+    template_name = GROW_TEMPLATES['grow/growlog/hx-growlog-strain_add']
+
+    def post(self, request: HttpRequest, growlog_pk: int) -> HttpResponse:
+        self.growlog = get_object_or_404(Growlog, pk=growlog_pk)
+        if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
+            return HttpResponse(status=403)
+
+        form = self.get_form(data=request.POST)
+        initial = {}
+
+        form.is_valid()
+        breeders = Breeder.objects.annotate(
+            strains_count=Count('strains')
+        ).filter(strains_count__gt=0).order_by('name')
+        form.fields['breeder'].queryset = breeders
+
+        if form.cleaned_data['breeder_filter']:
+            breeders = breeders.filter(name__icontains=form.cleaned_data['breeder_filter'])
+            form.fields['breeder'].queryset = breeders
+            initial['breeder_filter'] = form.cleaned_data['breeder_filter']
+
+        breeder = None
+        if form.cleaned_data['breeder']:
+            breeder = form.cleaned_data['breeder']
+            print("Breeder:", breeder)
+            if not breeders.filter(id=breeder.id):
+                print("Breeder not in filtered breeders")
+                breeder = None
+
+        if not breeder and breeders.count() > 0:
+            breeder = breeders.first()
+
+        strains = []
+        strain = None
+
+        if breeder:
+            initial['breeder'] = breeder.id
+            initial['breeder'] = breeder.id
+
+            strains = breeder.strains.all().order_by('name')
+            form.fields['strain'].queryset = strains
+
+            strain = None
+
+            if 'strain' in form.cleaned_data and form.cleaned_data['strain']:
+                strain = form.cleaned_data['strain']
+                if not breeder.strains.filter(id=strain.id):
+                    strain = None
+
+            if not strain and strains:
+                strain = strains.first()
+
+            if strain:
+                print("Strain:", strain)
+                initial['strain'] = strain.id
+
+        initial['is_grown_from_seed'] = form.cleaned_data['is_grown_from_seed']
+        initial['quantity'] = form.cleaned_data['quantity']
+        result_form = self.get_form(data=initial)
+        result_form.fields['strain'].queryset = strains
+        #result_form.fields['strain'].initial = strain.id if strain else None
+
+        return render(request, self.template_name, self.get_context_data(
+            form=result_form,
+            growlog=self.growlog,
         ))
 
 
@@ -573,4 +708,17 @@ class HxGrowlogFinishedInfoView(BaseView):
         return context
 
     def get(self, request: HttpRequest, **kwargs) -> HttpResponse:
+        return render(request, self.template_name, context=self.get_context_data())
+
+
+class GrowlogEntryCreateView(LoginRequiredMixin, FormView):
+    template_name = GROW_TEMPLATES['grow/growlog/entry_create']
+    form_class = GrowlogForm
+
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['growlog'] = self.growlog
+        return context
+
+    def get(self, request: HttpRequest) -> HttpResponse:
         return render(request, self.template_name, context=self.get_context_data())

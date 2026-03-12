@@ -107,8 +107,14 @@ class Growlog(models.Model):
     )
 
     #: When the seeds germinated
-    germinated_at = models.DateField(
-        _("germinated at"),
+    germinating_at = models.DateField(
+        _("germinating at"),
+        blank=True,
+        null=True
+    )
+
+    vegetative_at = models.DateField(
+        _("vegetative at"),
         blank=True,
         null=True
     )

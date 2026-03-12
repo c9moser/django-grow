@@ -153,8 +153,8 @@
                     <th>{% translate "Quantity" %}</th>
                     {% if seeds_in_stock_user == request.user %}
                     <th class="text-end">
-                        <button href="{% url 'grow:hx-seed-in-stock-dialog' %}"
-                            hx-get="{% url 'grow:hx-seed-in-stock-dialog' %}"
+                        <button
+                            hx-get="{% url 'grow:hx-seeds-in-stock-dialog' %}"
                             hx-target="#modals-here"
                             hx-swap="innerHTML"
                             data-bs-toggle="modal"

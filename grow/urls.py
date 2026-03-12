@@ -60,6 +60,9 @@ from .views.growlog import (  # noqa: F401
      GrowlogUpdateView,
      GrowlogDeleteView,
      GrowlogDetailView,
+     GrowlogEntryCreateView,
+     #GrowlogEntryUpdateView,
+     #GrowlogEntryDeleteView,
      HxGrowlogEditNotesView,
      HxGrowlogEditDescriptionView,
      HxGrowlogActiveInfoView,
@@ -67,9 +70,11 @@ from .views.growlog import (  # noqa: F401
      #HxGrowlogEntriesView,
      HxGrowlogAddSeedsView,
      HxGrowlogAddStrainView,
+     HxGrowlogAddStrainUpdateView,
      HxGrowlogAddPlantsView,
      HxGrowlogRemovePlantsView,
-     HxGrowlogDeleteStrainView
+     HxGrowlogDeleteStrainView,
+     #HxGrowlogEntryDeleteView,
 )
 
 from .views.utils import HxSelectDateDaysSanitizeView
@@ -165,10 +170,10 @@ strain_patterns = [
          name="hx-seeds-in-stock-info"),
     path("__hx__/strain/seeds_in_stock_dialog/",
          HxSeedsInStockDialogView.as_view(),
-         name="hx-seed-in-stock-dialog"),
+         name="hx-seeds-in-stock-dialog"),
     path("__hx__/strain/seeds_in_stock_dialog/update/",
          HxSeedsInStockDialogUpdateView.as_view(),
-         name="hx-seed-in-stock-dialog-update"),
+         name="hx-seeds-in-stock-dialog-update"),
 ]
 
 
@@ -205,6 +210,12 @@ growlog_patterns = [
      path("__hx__/growlog/<int:growlog_pk>/add_seeds/",
           HxGrowlogAddSeedsView.as_view(),
           name="hx-growlog-seeds-add"),
+     path("__hx__/growlog/<int:growlog_pk>/add_strain/",
+          HxGrowlogAddStrainView.as_view(),
+          name="hx-growlog-strain-add"),
+     path("__hx__/growlog/<int:growlog_pk>/add_strain/update/",
+          HxGrowlogAddStrainUpdateView.as_view(),
+          name="hx-growlog-strain-add-update"),
      path("__hx__/growlog/<int:pk>/edit_description/",
           HxGrowlogEditDescriptionView.as_view(),
           name="hx-growlog-edit-description"),
@@ -220,17 +231,24 @@ growlog_patterns = [
      path("__hx__/growlog/strain_delete/<int:pk>/",
           HxGrowlogDeleteStrainView.as_view(),
           name="hx-growlog-strain-delete"),
+     path("__hx__/growlog/<int:pk>/edit_description/",
+          HxGrowlogEditDescriptionView.as_view(),
+          name="hx-growlog-edit-description"),
      path("__hx__/growlog/active_info/",
           HxGrowlogActiveInfoView.as_view(),
           name="hx-growlog-active-info"),
      path("__hx__/growlog/finished_info/",
           HxGrowlogFinishedInfoView.as_view(),
           name="hx-growlog-finished-info"),
-
-
-     #path("__hx__/growlog/<int:growlog_pk>/add_strain/",
-     #     HxGrowlogAddStrainView.as_view(),
-     #     name="hx-growlog-add-strain"),
+     path("growlog/entry/create/",
+          GrowlogEntryCreateView.as_view(),
+          name="growlog-entry-create"),
+     # path("growlog/entry/update/<int:pk>/",
+     #      GrowlogEntryUpdateView.as_view(),
+     #      name="growlog-entry-update"),
+     # path("growlog/entry/delete/<int:pk>/",
+     #      GrowlogEntryDeleteView.as_view(),
+     #      name="growlog-entry-delete"),
 ]
 
 urlpatterns = [

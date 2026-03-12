@@ -3,6 +3,7 @@ from datetime import date
 from django import forms
 from django.utils.translation import gettext_lazy as _
 from django.utils.timezone import now
+from django.db.models import Count
 
 from ..growapi.models import (
     Breeder,
@@ -102,13 +103,85 @@ class StrainAddToStockForm(forms.Form):
     )
 
 
+class StrainModelChoiceField(forms.ModelChoiceField):
+    def label_from_instance(self, obj):
+        return obj.name
+
+
 class StrainAddToStock2Form(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        today = date.today()
+        self.fields['purchased_on_year'].initial = today.year
+        self.fields['purchased_on_month'].initial = today.month
+        self.fields['purchased_on_day'].initial = today.day
+
+        if 'breeder_filter' in self.data and self.data['breeder_filter']:
+            print("Filtering breeders with:", self.data['breeder_filter'])
+            breeders = Breeder.objects.annotate(
+                strains_count=Count('strains')
+            ).filter(
+                strains_count__gt=0,
+                name__icontains=self.data['breeder_filter']
+            ).order_by('name')
+
+        else:
+            breeders = Breeder.objects.annotate(
+                strains_count=Count('strains')
+            ).filter(strains_count__gt=0).order_by('name')
+
+        if 'breeder' in self.data and self.data['breeder']:
+            try:
+                breeder = breeders.get(id=self.data['breeder'])
+            except Breeder.DoesNotExist:
+                if breeders:
+                    breeder = breeders.first()
+                else:
+                    breeder = None
+        else:
+            breeder = breeders.first() if breeders else None
+
+        self.fields['breeder'].queryset = breeders
+        self.fields['breeder'].initial = breeder
+        self.fields['breeder'].value = breeder.id if breeder else None
+
+        print("Initial breeder:", breeder)
+        # self.data['breeder'] = breeder.id if breeder else None
+
+        if breeder:
+            if 'strain_filter' in self.data and self.data['strain_filter']:
+                strains = breeder.strains.filter(
+                    name__icontains=self.data['strain_filter']
+                ).order_by('name')
+            else:
+                strains = breeder.strains.all().order_by('name')
+
+            if 'strain' in self.data and self.data['strain']:
+                try:
+                    strain = strains.get(id=self.data['strain'])
+                except Strain.DoesNotExist:
+                    strain = strains.first() if strains else None
+            else:
+                strain = strains.first() if strains else None
+
+            self.fields['strain'].queryset = strains
+            self.fields['strain'].initial = strain
+            # self.data['strain'] = strain.id if strain else None
+        else:
+            self.fields['strain'].queryset = Strain.objects.none()
+            self.fields['strain'].initial = None
+            # self.data['strain'] = None
+
     breeder_filter = forms.CharField(
         max_length=255,
         required=False,
         label=_("Filter breeders...")
     )
-    breeder = forms.ChoiceField(
+    breeder = forms.ModelChoiceField(
+        queryset=Breeder.objects.annotate(
+            strains_count=Count('strains')
+        ).filter(strains_count__gt=0).order_by('name'),
         required=True,
         label=_("Breeder")
     )
@@ -118,7 +191,8 @@ class StrainAddToStock2Form(forms.Form):
         required=False,
         label=_("Filter strains...")
     )
-    strain = forms.ChoiceField(
+    strain = StrainModelChoiceField(
+        queryset=Strain.objects.none(),
         label=_("Strain"),
         required=False,
     )
@@ -170,66 +244,6 @@ class StrainAddToStock2Form(forms.Form):
         widget=forms.Textarea(),
         label=_("Notes"),
     )
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        Breeder.objects.all().order_by('name')
-        if self.data.get('breeder_filter'):
-            breeders = Breeder.objects.filter(
-                name__icontains=self.data['breeder_filter']).order_by('name')
-
-        else:
-            breeders = Breeder.objects.all().order_by('name')
-
-        self.fields['breeder'].choices = [
-                (breeder.id, breeder.name) for breeder in breeders
-        ]
-        if breeders.count() > 0:
-            try:
-                selected_breeder_id = int(self.data.get('breeder'))
-                found = False
-                for breeder in breeders:
-                    if breeder.id == selected_breeder_id:
-                        found = True
-                        break
-                if not found:
-                    selected_breeder_id = None
-            except (TypeError, ValueError):
-                selected_breeder_id = None
-
-            if not selected_breeder_id:
-                selected_breeder_id = breeders[0].id
-
-            self.fields['breeder'].initial = selected_breeder_id
-
-        if self.data.get('breeder'):
-            if self.data.get('strain_filter'):
-                self.fields['strain'].choices = [
-                    (strain.id, strain.name) for strain in
-                    Strain.objects.filter(
-                        breeder_id=selected_breeder_id,
-                        name__icontains=self.data.get('strain_filter'))
-                ]
-            else:
-                self.fields['strain'].choices = [
-                    (strain.id, strain.name) for strain in
-                    Strain.objects.filter(breeder_id=selected_breeder_id)
-                ]
-
-        if self.data.get('strain'):
-            self.fields['strain'].initial = self.data.get('strain')
-            strain = Strain.objects.filter(id=self.data.get('strain')).first()
-            if strain:
-                if strain.is_feminized:
-                    self.fields['strain_type'].initial = 'feminized'
-                elif strain.is_regular:
-                    self.fields['strain_type'].initial = 'regular'
-
-        today = date.today()
-        self.fields['purchased_on_year'].initial = today.year
-        self.fields['purchased_on_month'].initial = today.month
-        self.fields['purchased_on_day'].initial = today.day
 
 
 class StrainRemoveFromStockForm(forms.Form):

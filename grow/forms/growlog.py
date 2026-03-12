@@ -7,7 +7,9 @@ from ..growapi.models import (  # noqa: F401
     GrowlogStrain,
     Breeder,
     Strain,
+    Location,
 )
+from django.db.models import Count
 
 
 class GrowlogForm(forms.ModelForm):
@@ -85,6 +87,11 @@ class GrowlogStrainDeleteForm(forms.ModelForm):
         fields = []
 
 
+class StrainModelChoiceField(forms.ModelChoiceField):
+    def label_from_instance(self, obj):
+        return obj.name
+
+
 class GrowlogAddStrainForm(forms.Form):
 
     breeder_filter = forms.CharField(
@@ -93,21 +100,17 @@ class GrowlogAddStrainForm(forms.Form):
     )
 
     breeder = forms.ModelChoiceField(
-        queryset=None,
+        queryset=Breeder.objects.annotate(
+            strains_count=Count('strains')
+        ).filter(strains_count__gt=0).order_by('name'),
         label=_("Breeder"),
-        required=True
+        required=False
     )
 
-    strain_filter = forms.CharField(
-        max_length=255,
-        required=False,
-        label=_("Strain filter")
-    )
-
-    strain = forms.ModelChoiceField(
-        queryset=None,
+    strain = StrainModelChoiceField(
+        queryset=Strain.objects.none(),
         label=_("Strain"),
-        required=True
+        required=False
     )
 
     quantity = forms.IntegerField(
@@ -127,6 +130,7 @@ class GrowlogAddStrainForm(forms.Form):
         super().__init__(*args, **kwargs)
 
 
+'location'
 class GrowlogQuantityForm(forms.Form):
 
     quantity = forms.IntegerField(
@@ -137,3 +141,20 @@ class GrowlogQuantityForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+
+class GrowlogEntryForm(forms.ModelForm):
+
+    location = forms.ModelChoiceField(
+        queryset=Location.objects.all().order_by('name'),
+        label=_("Location"),
+        required=False
+    )
+
+    class Meta:
+        model = GrowlogEntry
+        fields = [
+            'content_type_data',
+            'content',
+            'location',
+        ]

@@ -10,11 +10,13 @@ from django.views.generic.edit import (
     CreateView,
     UpdateView,
 )
+from django.db.models import Count
 from django.db.models.functions import Lower
 from django.utils.safestring import mark_safe
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from django.views.generic import FormView
+
 
 from grow.growapi.models.strain import StrainUserComment
 
@@ -432,29 +434,6 @@ class StrainView(BaseView):
         strain = get_object_or_404(breeder.strains, slug=slug)
 
         language_code = get_language()
-
-        if 'language_code' in request.GET:
-            language_code = request.GET['language_code']
-        elif 'lang_code' in request.GET:
-            language_code = request.GET['lang_code']
-        elif 'lang' in request.GET:
-            language_code = request.GET['lang']
-
-        if language_code == 'en':
-            language_code = 'en-us'
-
-        supported_languages = [
-            i[0] for i in getattr(
-                django_settings,
-                'LANGUAGES',
-                [
-                    ('en-us',),
-                    ('de',)
-                ])
-        ]
-
-        if language_code not in supported_languages:
-            activate(language_code)
 
         translation = strain.get_translation(language_code)
         breeder_translation = breeder.get_translation(language_code)
@@ -1507,6 +1486,28 @@ class HxStrainAddToStock2View(StrainAddToStock2View):
         elif page > n_pages:
             page = n_pages
 
+        breeders = Breeder.objects.annotate(
+            strains_count=Count('strains')
+        ).filter(strains_count__gt=0).order_by('name')
+        breeder = breeders.first() if breeders else None
+        if breeder:
+            strains = breeder.strains.all().order_by('name')
+            strain = strains.first() if strains else None
+        else:
+            strains = Strain.objects.none()
+            strain = None
+
+
+
+        form = StrainAddToStock2Form(
+            data={
+                'breeder': breeder.pk if breeder else None,
+                'strain': strain.pk if strain else None,
+            }
+        )
+        form.fields['breeder'].choices = [(b.pk, b.name) for b in breeders]
+        form.fields['strain'].choices = [(s.pk, s.name) for s in strains] if strains else []
+
         context.update({
             'form': kwargs.get('form', StrainAddToStock2Form()),
             'n_seeds_in_stock': n_seeds_in_stock,
@@ -1695,16 +1696,53 @@ class HxSeedsInStockDialogView(HxSeedsInStockInfoView, HxStrainAddToStock2View):
             return self.form_invalid(form)
 
 
-class HxSeedsInStockDialogUpdateView(HxStrainAddToStock2View):
+class HxSeedsInStockDialogUpdateView(HxSeedsInStockDialogView):
     template_name = settings.GROW_TEMPLATES['grow/strain/hx-seeds_in_stock_dialog']
     form_class = StrainAddToStock2Form
 
+    def sanitize_form(self, form):
+        result = StrainAddToStock2Form(
+            data={
+                'breeder_filter': (
+                    form.cleaned_data['breeder_filter']
+                    if 'breeder_filter' in form.cleaned_data
+                    else None
+                ),
+                'breeder': (
+                    form.fields['breeder'].initial.id
+                    if form.fields['breeder'].initial
+                    else None
+                ),
+                'strain_filter': form.cleaned_data['strain_filter'],
+                'strain': (
+                    form.fields['strain'].initial.id
+                    if form.fields['strain'].initial else None
+                ),
+                'strain_type': form.cleaned_data['strain_type'],
+                'quantity': form.cleaned_data['quantity'],
+                'purchased_on_year': form.cleaned_data['purchased_on_year'],
+                'purchased_on_month': form.cleaned_data['purchased_on_month'],
+                'purchased_on_day': form.cleaned_data['purchased_on_day'],
+                'notes_type': form.cleaned_data['notes_type'],
+                'notes': form.cleaned_data['notes'],
+            }
+        )
+        return result
+
     def form_valid(self, form: StrainAddToStock2Form):
         return render(self.request, self.template_name, context=self.get_context_data(
-            form=form,
+            form=self.sanitize_form(form),
         ))
 
     def form_invalid(self, form: StrainAddToStock2Form):
         return render(self.request, self.template_name, context=self.get_context_data(
-            form=form,
+            form=self.sanitize_form(form),
         ))
+
+    def post(self, request: HttpRequest) -> HttpResponse:
+        form = self.get_form_class()(request.POST)
+
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
