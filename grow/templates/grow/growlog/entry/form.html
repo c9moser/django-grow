@@ -1,0 +1,33 @@
+{% extends base_template %}
+{% load i18n widget_tweaks %}
+{% block subtitle %}{% translate "Grow Log Entry" %}{% endblock subtitle %}
+
+{% block content %}
+<h1>{% if form.instance.pk %}{% translate "Edit Grow Log Entry" %}{% else %}{% translate "Create Grow Log Entry" %}{% endif %}</h1>
+<form method="post">
+    {% csrf_token %}
+    {% if form.location.errors %}
+    <div class="alert alert-danger" role="alert">
+        {% for error in form.location.errors %}<div>{{ error }}</div>{% endfor %}
+    </div>
+    {% endif %}
+    <div class="mb-3 input-group">
+        <span class="input-group-text">{% translate "Location" %}</span>
+        {% render_field form.location class="form-control" %}
+    </div>
+    <div class="mb-3 input-group">
+        <span class="input-group-text">{% translate "Content Type:" %}</span>
+        {% render_field form.content_type_data class="form-control" %}
+    </div>
+    <div class="form-floating mb-3">
+        {% render_field form.content class="form-control" style="height: 400px;"%}
+        <label class="form-label" for="{{ form.content.id_for_label }}">{% translate "Content" %}</label>
+    </div>
+
+    <div class="text-end">
+        <button type="submit" class="btn btn-success">{% if form.instance.pk %}{% translate "Update Entry" %}{% else %}{% translate "Create Entry" %}{% endif %}</button>
+        <a href="{% url 'grow:growlog-detail' pk=growlog.id %}" class="btn btn-secondary">{% translate "Cancel" %}</a>
+    </div>
+</form>
+
+{% endblock content %}

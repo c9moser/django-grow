@@ -1497,8 +1497,6 @@ class HxStrainAddToStock2View(StrainAddToStock2View):
             strains = Strain.objects.none()
             strain = None
 
-
-
         form = StrainAddToStock2Form(
             data={
                 'breeder': breeder.pk if breeder else None,

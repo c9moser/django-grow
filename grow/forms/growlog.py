@@ -130,7 +130,6 @@ class GrowlogAddStrainForm(forms.Form):
         super().__init__(*args, **kwargs)
 
 
-'location'
 class GrowlogQuantityForm(forms.Form):
 
     quantity = forms.IntegerField(
@@ -143,10 +142,15 @@ class GrowlogQuantityForm(forms.Form):
         super().__init__(*args, **kwargs)
 
 
+class LocationModelChoiceField(forms.ModelChoiceField):
+    def label_from_instance(self, obj: Location):
+        return f"{obj.name} ({obj.location_type.name})"
+
+
 class GrowlogEntryForm(forms.ModelForm):
 
-    location = forms.ModelChoiceField(
-        queryset=Location.objects.all().order_by('name'),
+    location = LocationModelChoiceField(
+        queryset=Location.objects.none(),
         label=_("Location"),
         required=False
     )
@@ -156,5 +160,4 @@ class GrowlogEntryForm(forms.ModelForm):
         fields = [
             'content_type_data',
             'content',
-            'location',
         ]

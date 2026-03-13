@@ -64,7 +64,8 @@
         <div class="card mb-3 w-100 m-3-auto">
             <div class="card-header">
                 <div class="d-flex justify-content-between align-items-center">
-                    <h5 class="card-title mb-0">{{ entry.date|date:"x X" }}
+                    <h5 class="card-title mb-0">{{ entry.timestamp|date:"SHORT_DATETIME_FORMAT" }}
+                        {% if entry.location %} - {{ entry.location.name }}{% endif %}
                         {% if entry.growlog.flowering_at %}
                         ({% blocktranslate count n=entry.growlog.flowering_days %}{{ n }} day{% plural %}{{ n }} days{% endblocktranslate %})
                         {% endif %}
@@ -80,7 +81,7 @@
                 </div>
             </div>
             <div class="card-body">
-                {{ entry.content_html }}
+                <div class="w-100">{{ entry.content_html }}</div>
             </div>
         </div>
         {% empty %}

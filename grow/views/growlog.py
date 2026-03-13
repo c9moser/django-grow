@@ -1,13 +1,16 @@
 from typing import Any
-from django.shortcuts import get_object_or_404, render
+from django.utils import timezone
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
 from django.http import HttpRequest, HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views import View
 from django.views.generic import CreateView, UpdateView, DeleteView, FormView
 from django.db.models import Count
 from grow.forms.growlog import (
     GrowlogAddStrainForm,
+    GrowlogEntryForm,
     GrowlogForm,
     GrowlogDescriptionForm,
     GrowlogNotesForm,
@@ -15,7 +18,7 @@ from grow.forms.growlog import (
     GrowlogSeedsFromStockForm,
     GrowlogStrainDeleteForm,
 )
-from grow.growapi.models.strain import Strain
+# from grow.growapi.models.strain import Strain
 from ..growapi.models import (
     Growlog,
     GrowlogEntry,
@@ -47,10 +50,11 @@ class GrowlogDetailView(BaseView):
         growlog_strains = GrowlogStrain.objects.filter(growlog=growlog).order_by(
             'strain__name', 'strain__breeder__name')
         entries = GrowlogEntry.objects.filter(growlog=growlog).order_by('-timestamp')
+
         context = {
             'growlog': growlog,
             'growlog_strains': growlog_strains,
-            'entries': entries,
+            'growlog_entries': entries,
             'can_edit': growlog_user_is_allowed_to_edit(request.user, growlog),
             'strains_template': self.strains_template_name,
             'entries_template': self.entries_template_name,
@@ -80,6 +84,66 @@ class GrowlogCreateView(LoginRequiredMixin, CreateView):
         growlog.save()
         self.instance = growlog
         return super().form_valid(form)
+
+
+class GrowlogSetGerminatingAtView(LoginRequiredMixin, View):
+    def post(self, request: HttpRequest, pk: int) -> HttpResponse:
+        self.growlog = get_object_or_404(Growlog, pk=pk)
+        if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
+            return HttpResponse(status=403)
+        self.growlog.germinating_at = timezone.now().date()
+        self.growlog.save()
+        return redirect(reverse('grow:growlog-detail', kwargs={'pk': self.growlog.pk}))
+
+
+class GrowlogSetCuttedAtView(LoginRequiredMixin, View):
+    def post(self, request: HttpRequest, pk: int) -> HttpResponse:
+        self.growlog = get_object_or_404(Growlog, pk=pk)
+        if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
+            return HttpResponse(status=403)
+        self.growlog.cutted_at = timezone.now().date()
+        self.growlog.save()
+        return redirect(reverse('grow:growlog-detail', kwargs={'pk': self.growlog.pk}))
+
+
+class GrwologSetVegetativeAtView(LoginRequiredMixin, View):
+    def post(self, request: HttpRequest, pk: int) -> HttpResponse:
+        self.growlog = get_object_or_404(Growlog, pk=pk)
+        if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
+            return HttpResponse(status=403)
+        self.growlog.vegetative_at = timezone.now().date()
+        self.growlog.save()
+        return redirect(reverse('grow:growlog-detail', kwargs={'pk': self.growlog.pk}))
+
+
+class GrowlogSetFloweringAtView(LoginRequiredMixin, View):
+    def post(self, request: HttpRequest, pk: int) -> HttpResponse:
+        self.growlog = get_object_or_404(Growlog, pk=pk)
+        if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
+            return HttpResponse(status=403)
+        self.growlog.flowering_at = timezone.now().date()
+        self.growlog.save()
+        return redirect(reverse('grow:growlog-detail', kwargs={'pk': self.growlog.pk}))
+
+
+class GrowlogSetHarvestedAtView(LoginRequiredMixin, View):
+    def post(self, request: HttpRequest, pk: int) -> HttpResponse:
+        self.growlog = get_object_or_404(Growlog, pk=pk)
+        if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
+            return HttpResponse(status=403)
+        self.growlog.harvested_at = timezone.now().date()
+        self.growlog.save()
+        return redirect(reverse('grow:growlog-detail', kwargs={'pk': self.growlog.pk}))
+
+
+class GrowlogSetFinishedAtView(LoginRequiredMixin, View):
+    def post(self, request: HttpRequest, pk: int) -> HttpResponse:
+        self.growlog = get_object_or_404(Growlog, pk=pk)
+        if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
+            return HttpResponse(status=403)
+        self.growlog.finished_at = timezone.now().date()
+        self.growlog.save()
+        return redirect(reverse('grow:growlog-detail', kwargs={'pk': self.growlog.pk}))
 
 
 class GrowlogUpdateView(LoginRequiredMixin, UpdateView):
@@ -410,7 +474,7 @@ class HxGrowlogAddStrainView(LoginRequiredMixin, HxGrowlogStrainsInfoView, FormV
         ))
 
     def post(self, request: HttpRequest, growlog_pk: int) -> HttpResponse:
-        self.growlog_strain = get_object_or_404(GrowlogStrain, pk=pk)
+        self.growlog_strain = get_object_or_404(GrowlogStrain, pk=growlog_pk)
         if not growlog_user_is_allowed_to_edit(request.user, self.growlog_strain.growlog):
             return HttpResponse(status=403)
 
@@ -505,7 +569,7 @@ class HxGrowlogAddStrainUpdateView(HxGrowlogAddStrainView):
         initial['quantity'] = form.cleaned_data['quantity']
         result_form = self.get_form(data=initial)
         result_form.fields['strain'].queryset = strains
-        #result_form.fields['strain'].initial = strain.id if strain else None
+        result_form.fields['strain'].initial = strain.id if strain else None
 
         return render(request, self.template_name, self.get_context_data(
             form=result_form,
@@ -713,12 +777,37 @@ class HxGrowlogFinishedInfoView(BaseView):
 
 class GrowlogEntryCreateView(LoginRequiredMixin, FormView):
     template_name = GROW_TEMPLATES['grow/growlog/entry_create']
-    form_class = GrowlogForm
+    form_template_name = GROW_TEMPLATES['grow/growlog/entry_form']
+
+    form_class = GrowlogEntryForm
 
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context['growlog'] = self.growlog
+        context['form_template'] = self.form_template_name
+        context['form'].fields['location'].queryset = self.request.user.locations.all(
+        ).order_by('name')
         return context
 
-    def get(self, request: HttpRequest) -> HttpResponse:
+    def get(self, request: HttpRequest, growlog_pk: int) -> HttpResponse:
+        self.growlog = get_object_or_404(Growlog, pk=growlog_pk)
+        if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
+            return HttpResponse(status=403)
         return render(request, self.template_name, context=self.get_context_data())
+
+    def post(self, request: HttpRequest, growlog_pk: int) -> HttpResponse:
+        self.growlog = get_object_or_404(Growlog, pk=growlog_pk)
+        if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
+            return HttpResponse(status=403)
+
+        form = self.form_class(request.POST)
+        form.fields['location'].queryset = request.user.locations.all().order_by('name')
+
+        if form.is_valid():
+            entry = form.save(commit=False)
+            entry.growlog = self.growlog
+            entry.location = form.cleaned_data['location']
+            entry.save()
+            return redirect(reverse('grow:growlog-detail', kwargs={'pk': self.growlog.pk}))
+        else:
+            return render(request, self.template_name, context=self.get_context_data(form=form))

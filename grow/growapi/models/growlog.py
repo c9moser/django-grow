@@ -2,6 +2,8 @@
 Growlog models
 """
 
+from datetime import date
+
 from django.db import models
 # from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
@@ -159,16 +161,6 @@ class Growlog(models.Model):
         choices=PERMISSION_CHOICES,
         db_column="permission")
 
-    def is_user_allowed_to_view(self, user: User) -> bool:
-        if self.is_public:
-            return True
-        elif self.is_members_only:
-            return user.is_authenticated
-        elif self.is_friends_only:
-            return not user.groups.filter(f"user-{self.grower.id}-friends")
-        else:
-            return user == self.grower
-
     @property
     def description_type(self) -> TextType:
         """
@@ -254,11 +246,31 @@ class Growlog(models.Model):
         return self.harvested_at is not None
 
     @property
-    def is_germinated(self) -> bool:
+    def is_germinating(self) -> bool:
         """
         Check if the grow log has been germinated.
         """
-        return self.germinated_at is not None
+        return (self.germinating_at is not None
+                and not self.cutted_at
+                and not self.vegetative_at
+                and not self.flowering_at)
+
+    @property
+    def is_germintated(self) -> bool:
+        """
+        Check if the seeds have germinated.
+
+        :return: _description_
+        :rtype: bool
+        """
+        return (self.germinating_at and not self.cutted_at
+                and (self.vegetative_at or self.flowering_at))
+
+    def is_vegetative(self) -> bool:
+        """
+        Check if the grow log is in vegetative stage.
+        """
+        return self.vegetative_at is not None and not self.flowering_at and not self.finished_at
 
     @property
     def is_cutted(self) -> bool:
@@ -284,15 +296,97 @@ class Growlog(models.Model):
         Calculate the age of the grow log in days since germination.
         Returns 0 if germination date and cutted date is not set.
         """
-        if not self.is_germinated and not self.is_cutted:
+        if not self.is_germintated and not self.is_cutted:
             return 0
 
-        if self.is_cutted:
-            delta = timezone.now().date() - self.germinated_at
-        else:
-            delta = timezone.now().date() - self.cutted_at
+        if self.is_germintated:
+            return date.today() - self.germinated_at
+        elif self.is_cutted:
+            return date.today() - self.cutted_at
+
+        delta = timezone.now().date() - self.germinated_at
 
         return delta.days
+
+    @property
+    def germinating_days(self):
+        """
+        Calculate the number of days since germination started.
+        Returns 0 if germination date is not set.
+        """
+        if not self.is_germinating:
+            return 0
+        if self.vegetative_at is not None:
+            delta = self.vegetative_at - self.germinating_at
+        elif self.flowering_at is not None:
+            delta = self.flowering_at - self.germinating_at
+        elif self.harvested_at is not None:
+            delta = self.harvested_at - self.germinating_at
+        elif self.finished_at is not None:
+            delta = self.finished_at - self.germinating_at
+        else:
+            delta = timezone.now().date() - self.germinating_at
+        return delta.days
+
+    @property
+    def germinating_weeks(self) -> int:
+        """
+        Calculate the number of weeks since germination started.
+        Returns 0 if germination date is not set.
+        """
+        if not self.is_germinating:
+            return 0
+        if self.germinating_days % 7 > 3:
+            return (self.germinating_days // 7) + 1
+        return self.germinating_days // 7
+
+    @property
+    def germinating_weeks_days(self) -> tuple[int, int] | None:
+        """
+        Calculate the number of weeks and days since germination started.
+        Returns (0, 0) if germination date is not set.
+        """
+        if not self.is_germinating:
+            return None
+
+        weeks = self.germinating_days // 7
+        days = self.germinating_days % 7
+        return (weeks, days)
+
+    @property
+    def rooting_days(self) -> int:
+        if not self.is_cutted:
+            return 0
+
+        if self.vegetative_at is not None:
+            delta = self.vegetative_at - self.cutted_at
+        elif self.flowering_at is not None:
+            delta = self.flowering_at - self.cutted_at
+        elif self.harvested_at is not None:
+            delta = self.harvested_at - self.cutted_at
+        elif self.finished_at is not None:
+            delta = self.finished_at - self.cutted_at
+        else:
+            delta = timezone.now().date() - self.cutted_at
+        return delta.days
+
+    @property
+    def rooting_weeks(self) -> int:
+        if not self.is_cutted:
+            return 0
+
+        if self.rooting_days % 7 > 3:
+            return (self.rooting_days // 7) + 1
+        return self.rooting_days // 7
+
+    @property
+    def rooting_weeks_days(self) -> tuple[int, int] | None:
+        if not self.is_cutted:
+            return None
+
+        weeks = self.rooting_days // 7
+        days = self.rooting_days % 7
+        return (weeks, days)
 
     @property
     def age_weeks(self) -> int:
@@ -300,7 +394,7 @@ class Growlog(models.Model):
         Calculate the age of the grow log in weeks since germination.
         Returns 0 if germination date is not set.
         """
-        if not self.is_germinated:
+        if not self.is_germinating and not self.is_cutted:
             return 0
 
         if self.age_days % 7 > 3:
@@ -313,7 +407,7 @@ class Growlog(models.Model):
         Calculate the age of the grow log in weeks and days since germination.
         Returns (0, 0) if germination date is not set.
         """
-        if not self.is_germinated:
+        if not self.is_germinating and not self.is_cutted:
             return None
 
         weeks = self.age_days // 7
@@ -369,14 +463,21 @@ class Growlog(models.Model):
         Calculate the total number of days the grow log has been active.
         Returns 0 if germination date is not set.
         """
-        if not self.is_germinated:
+        if not self.is_germinating and not self.is_cutted:
             return 0
 
-        if not self.is_germinated:
-            return 0
+        if self.harvested_at is not None:
+            end_date = self.harvested_at.date() if self.is_harvested else timezone.now().date()
+        else:
+            end_date = timezone.now().date()
 
-        end_date = self.harvested_at.date() if self.is_harvested else timezone.now().date()
-        delta = end_date - self.germinated_at
+        if self.is_cutted:
+            delta = end_date - self.cutted_at
+        else:
+            delta = end_date - self.germinating_at
+
+        if delta.days < 0:
+            return 0
 
         return delta.days
 
@@ -386,7 +487,7 @@ class Growlog(models.Model):
         Calculate the total number of weeks the grow log has been active.
         Returns 0 if germination date is not set.
         """
-        if not self.is_germinated:
+        if not self.is_germinating and not self.is_cutted:
             return 0
 
         if self.days_grown % 7 > 3:
@@ -405,20 +506,6 @@ class Growlog(models.Model):
         weeks = self.days_grown // 7
         days = self.days_grown % 7
         return (weeks, days)
-
-    @property
-    def strains(self) -> list[Strain]:
-        """
-        Get a list of strains associated with this grow log.
-        """
-        return [gs.strain for gs in self.growlog_strains.all()]
-
-    @property
-    def strain_count(self) -> int:
-        """
-        Get the number of different strains associated with this grow log.
-        """
-        return self.growlog_strains.count()
 
     @property
     def duration_days(self) -> int:
@@ -441,6 +528,61 @@ class Growlog(models.Model):
         if self.duration_days % 7 > 3:
             return (self.duration_days // 7) + 1
         return self.duration_days // 7
+
+    @property
+    def duration_week_days(self) -> dict[str, int]:
+        """
+        Calculate the total duration of the grow log in weeks and days.
+        Returns (0, 0) if the grow log is not finished.
+        """
+        weeks = self.duration_days // 7
+        days = self.duration_days % 7
+        return {'weeks': weeks, 'days': days}
+
+    @property
+    def duration_years(self) -> int:
+        """
+        Calculate the total duration of the grow log in years.
+        Returns 0 if the grow log is not finished.
+        """
+        return self.duration_days // 365
+
+    @property
+    def duration_years_weeks_days(self) -> dict[str, int]:
+        """
+        Calculate the total duration of the grow log in years, weeks and days.
+        Returns (0, 0, 0) if the grow log is not finished.
+        """
+        years = self.duration_years
+        remaining_days = self.duration_days - (years * 365)
+        weeks = remaining_days // 7
+        days = remaining_days % 7
+        return {'years': years, 'weeks': weeks, 'days': days}
+
+    def duration_delta(self) -> timezone.timedelta:
+        """
+        Calculate the total duration of the grow log as a timedelta.
+        Returns 0 if the grow log is not finished.
+        """
+        if self.finished_at is not None:
+            delta = self.finished_at - self.started_at
+        else:
+            delta = timezone.now() - self.started_at
+        return delta
+
+    @property
+    def strains(self) -> list[Strain]:
+        """
+        Get a list of strains associated with this grow log.
+        """
+        return [gs.strain for gs in self.growlog_strains.all()]
+
+    @property
+    def strain_count(self) -> int:
+        """
+        Get the number of different strains associated with this grow log.
+        """
+        return self.growlog_strains.count()
 
     @property
     def total_plants(self) -> int:
@@ -606,6 +748,22 @@ class GrowlogEntry(models.Model):
     #:
     #: **Note:** Must contain a text
     content = models.TextField(_("content"))
+
+    @property
+    def content_html(self) -> str:
+        """
+        Returns the HTML representation of the content.
+        """
+        if self.content:
+            if self.content_type == TextType.MARKDOWN:
+                from grow.growapi.parser.markdown import render_description_markdown
+                return render_description_markdown(self.content)
+            elif self.content_type == TextType.BBCODE:
+                from grow.growapi.parser.bbcode import render_description_bbcode
+                return render_description_bbcode(self.content)
+            else:
+                return self.content
+        return ""
 
     #: The text type of the content
     #:

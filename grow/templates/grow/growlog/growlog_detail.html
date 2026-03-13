@@ -4,13 +4,138 @@
 
 {% block content %}
 <h1>{{ growlog.name }}</h1>
+{% if can_edit %}
 <div class="mb-3">
+    <form class="form-inline d-inline" action="{% url 'grow:growlog-set-germinating-at' pk=growlog.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-outline-primary"><i class="bi bi-calendar-plus"></i></button>
+    </form>
+    <form class="form-inline d-inline" action="{% url 'grow:growlog-set-cutted-at' pk=growlog.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-outline-info"><i class="bi bi-calendar-plus"></i></button>
+    </form>
+    <form class="form-inline d-inline" action="{% url 'grow:growlog-set-vegetative-at' pk=growlog.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-outline-secondary"><i class="bi bi-calendar-range"></i></button>
+    </form>
+    <form class="form-inline d-inline" action="{% url 'grow:growlog-set-flowering-at' pk=growlog.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-outline-success"><i class="bi bi-flower3"></i></button>
+    </form>
+    {% if growlog.flowering_at %}
+    <form class="form-inline d-inline" action="{% url 'grow:growlog-set-harvested-at' pk=growlog.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-outline-warning"><i class="bi bi-calendar-range"></i></button>
+    </form>
+    {% endif %}
+    <form class="form-inline d-inline" action="{% url 'grow:growlog-set-finished-at' pk=growlog.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-outline-danger"><i class="bi bi-calendar-date"></i></button>
+    </form>
+
     <a href="#{#{% url 'grow:growlog-update' pk=growlog.id %}#}" class="btn btn-outline-primary"
         bs-toggle="tooltip" bs-placement="bottom" bs-title="{% translate 'Edit Grow Log' %}"
     ><i class="bi bi-pencil-square"></i></a>
     <a href="#{#{% url 'grow:growlog-delete' pk=growlog.id %}#}" class="btn btn-outline-danger"
         bs-toggle="tooltip" bs-placement="bottom" bs-title="{% translate 'Delete Grow Log' %}"
     ><i class="bi bi-trash"></i></a>
+</div>
+{% endif %}
+<h2>{% translate "Overview" %}</h2>
+<div id="growlog-overview">
+    <ul>
+        <li>
+            <b>{% translate "Duration:" %}</b>
+            {% if duration.days > 365 %}
+                {% with duration=growlog.duration_years_weeks_days %}
+                {% blocktranslate count years=duration.years %}{{ years }} year{% plural %}{{ years }} years{% endblocktranslate %}
+                {% if duration.weeks %}
+                {% blocktranslate count weeks=duration.weeks %}{{ weeks }} week{% plural %}{{ weeks }} weeks{% endblocktranslate %}
+                {% endif %}
+                {% if duration.days %}
+                {% blocktranslate count days=duration.days %}{{ days }} day{% plural %}{{ days }} days{% endblocktranslate %}
+                {% endif %}
+                {% endwith %}
+            {% elif duration.days > 30 %}
+                {% with duration=growlog.duration_weeks_days %}
+                {% if duration.weeks %}
+                {% blocktranslate count weeks=duration.weeks %}{{ weeks }} week{% plural %}{{ weeks }} weeks{% endblocktranslate %}
+                {% endif %}
+                {% if duration.days %}
+                {% blocktranslate count days=duration.days %}{{ days }} day{% plural %}{{ days }} days{% endblocktranslate %}
+                {% endif %}
+                {% endwith %}
+            {% else %}
+
+                {% blocktranslate count days=growlog.duration_days %}{{ days }} day{% plural %}{{ days }} days{% endblocktranslate %}
+            {% endif %}
+        </li>
+        {% if growlog.is_germinating %}
+        <li>
+            <b>{% translate "Germinated on:" %}</b> {{ growlog.germinating_at }}
+        </li>
+        <li>
+            <b>{% translate "Germination Period:" %}</b>
+            {% if growlog.germinating_days > 30 %}
+                {% with duration=growlog.germinating_weeks_days %}
+                {% if duration.weeks %}
+                {% blocktranslate count weeks=duration.weeks %}{{ weeks }} week{% plural %}{{ weeks }} weeks{% endblocktranslate %}
+                {% endif %}
+                {% if duration.days %}
+                {% blocktranslate count days=duration.days %}{{ days }} day{% plural %}{{ days }} days{% endblocktranslate %}
+                {% endif %}
+                {% endwith %}
+            {% else %}
+                {% blocktranslate count days=growlog.germinating_days %}{{ days }} day{% plural %}{{ days }} days{% endblocktranslate %}
+            {% endif %}
+        </li>
+        {% endif %}
+        {% if growlog.is_cutted %}
+        <li>
+            <b>{% translate "Cutted on:" %}</b> {{ growlog.cutted_at }}
+        </li>
+        {% endif %}
+        {% if growlog.vegetative_at %}
+        <li>
+            <b>{% translate "Vegetative stage started on:" %}</b> {{ growlog.vegetative_at }}
+        </li>
+        <li>
+            {% translate "Vegetative Period:" %}
+            {% if growlog.vegetative_days > 30 %}
+                {% with duration=growlog.vegetative_weeks_days %}
+                {% if duration.weeks %}
+                {% blocktranslate count weeks=duration.weeks %}{{ weeks }} week{% plural %}{{ weeks }} weeks{% endblocktranslate %}
+                {% endif %}
+                {% if duration.days %}
+                {% blocktranslate count days=duration.days %}{{ days }} day{% plural %}{{ days }} days{% endblocktranslate %}
+                {% endif %}
+                {% endwith %}
+            {% else %}
+                {% blocktranslate count days=growlog.vegetative_days %}{{ days }} day{% plural %}{{ days }} days{% endblocktranslate %}
+            {% endif %}
+        </li>
+        {% endif %}
+        {% if growlog.flowering_at %}
+        <li>
+            <b>{% translate "Flowering stage started on:" %}</b> {{ growlog.flowering_at }}
+        </li>
+        <li>
+            <b>{% translate "Flowering Period:" %}</b>
+            {% if growlog.flowering_days > 30 %}
+                {% with duration=growlog.flowering_weeks_days %}
+                {% if duration.weeks %}
+                {% blocktranslate count weeks=duration.weeks %}{{ weeks }} week{% plural %}{{ weeks }} weeks{% endblocktranslate %}
+                {% endif %}
+                {% if duration.days %}
+                {% blocktranslate count days=duration.days %}{{ days }} day{% plural %}{{ days }} days{% endblocktranslate %}
+                {% endif %}
+                {% endwith %}
+            {% else %}
+                {% blocktranslate count days=growlog.flowering_days %}{{ days }} day{% plural %}{{ days }} days{% endblocktranslate %}
+            {% endif %}
+        </li>
+        {% endif %}
+    </ul>
 </div>
 <p>
     {% if growlog.grower == request.user %}
@@ -69,9 +194,9 @@
 <h2 id="entries">{% translate "Entries" %}</h2>
 {% if can_edit %}
 <div class="mb-3">
-    <button type="button" class="btn btn-outline-primary btn-sm"
-        href="#{#{% url 'grow:growlog-entry-create' growlog_pk=growlog.id %}#}"
-    ><i class="bi bi-plus-square"></i> {% translate "Add Entry" %}</button>
+    <a type="button" class="btn btn-outline-primary btn-sm"
+        href="{% url 'grow:growlog-entry-create' growlog_pk=growlog.id %}"
+    ><i class="bi bi-plus-square"></i> {% translate "Add Entry" %}</a>
 </div>
 {% endif %}
 <div id="growlog-entries">
