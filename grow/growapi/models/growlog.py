@@ -10,8 +10,6 @@ from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 from django.conf import settings
 
-from core.models import User
-
 from ..enums import (
     TextType,
     TEXT_CHOICES,

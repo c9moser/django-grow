@@ -474,8 +474,9 @@ class HxGrowlogAddStrainView(LoginRequiredMixin, HxGrowlogStrainsInfoView, FormV
         ))
 
     def post(self, request: HttpRequest, growlog_pk: int) -> HttpResponse:
-        self.growlog_strain = get_object_or_404(GrowlogStrain, pk=growlog_pk)
-        if not growlog_user_is_allowed_to_edit(request.user, self.growlog_strain.growlog):
+        self.growlog = get_object_or_404(Growlog, pk=growlog_pk)
+
+        if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
             return HttpResponse(status=403)
 
         form = self.form_class(request.POST)
@@ -486,15 +487,19 @@ class HxGrowlogAddStrainView(LoginRequiredMixin, HxGrowlogStrainsInfoView, FormV
             return self.form_invalid(form)
 
     def form_valid(self, form):
-        self.growlog_strain.quantity += form.cleaned_data['quantity']
-        if self.growlog_strain.quantity < 0:
-            self.growlog_strain.quantity = 0
-        self.growlog_strain.save()
-
+        if form.cleaned_data['quantity'] < 0:
+            form.add_error('quantity', 'Quantity cannot be negative.')
+            return self.form_invalid(form)
+        self.growlog_strain = GrowlogStrain.objects.create(
+            growlog=self.growlog,
+            strain=form.cleaned_data['strain'],
+            is_grown_from_seed=form.cleaned_data['is_grown_from_seed'],
+            quantity=form.cleaned_data['quantity'],
+        )
         return render(self.request, self.result_template_name, self.get_context_data(
             strain=self.growlog_strain.strain,
             growlog_strain=self.growlog_strain,
-            growlog=self.growlog_strain.growlog,
+            growlog=self.growlog,
             is_grown_from_seed=self.growlog_strain.is_grown_from_seed,
             quantity=form.cleaned_data['quantity'],
         ))

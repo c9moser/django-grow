@@ -7,6 +7,7 @@ from django.shortcuts import render
 from ._base import BaseView
 from ..growapi.models import Growlog, Strain
 from ..growapi.enums import PermissionType as Permission
+from ..growapi.permission import growlog_user_is_allowed_to_view
 from .. import settings
 
 
@@ -20,15 +21,18 @@ class IndexView(BaseView):
                 finished_at__isnull=True)
             new_growlogs = []
             for growlog in Growlog.objects.all().order_by("-started_at"):
-                if growlog.is_user_allowed_to_view(request.user):
+                if growlog_user_is_allowed_to_view(request.user, growlog):
                     new_growlogs.append(growlog)
                 if len(new_growlogs) >= 10:
                     break
         else:
             user_growlogs = None
-            new_growlogs = Growlog.objects.filter(
-                permission_data=Permission.PUBLIC.value).order_by(
-                    'started_at')[:10]
+            new_growlogs = []
+            for growlog in Growlog.objects.filter(permission_data=Permission.PUBLIC.value).order_by('started_at'):
+                if growlog_user_is_allowed_to_view(request.user, growlog):
+                    new_growlogs.append(growlog)
+                if len(new_growlogs) >= 10:
+                    break
 
         new_strains = Strain.objects.all().order_by('-added_at')[:10]
 
