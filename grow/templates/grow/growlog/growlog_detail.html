@@ -49,11 +49,12 @@
         <button type="submit" class="btn btn-outline-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Set Finished Date' %}"><i class="bi bi-calendar-date"></i></button>
     </form>
 
-    <a href="#{#{% url 'grow:growlog-update' pk=growlog.id %}#}" class="btn btn-outline-primary"
-        bs-toggle="tooltip" bs-placement="bottom" bs-title="{% translate 'Edit Grow Log' %}"
+    <a href="{% url 'grow:growlog-update' pk=growlog.id %}"
+        class="btn btn-outline-primary"
+        data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Edit Grow Log' %}"
     ><i class="bi bi-pencil-square"></i></a>
     <a href="#{#{% url 'grow:growlog-delete' pk=growlog.id %}#}" class="btn btn-outline-danger"
-        bs-toggle="tooltip" bs-placement="bottom" bs-title="{% translate 'Delete Grow Log' %}"
+        data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Delete Grow Log' %}"
     ><i class="bi bi-trash"></i></a>
 </div>
 {% endif %}

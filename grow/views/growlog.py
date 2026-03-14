@@ -86,6 +86,27 @@ class GrowlogCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
+class GrowlogUpdateView(LoginRequiredMixin, UpdateView):
+    model = Growlog
+    form_class = GrowlogForm
+    template_name = GROW_TEMPLATES['grow/growlog/update']
+    parent_template_name = GROW_TEMPLATES['grow/growlog/form']
+
+    def get_success_url(self) -> str:
+        return reverse('grow:growlog-detail', kwargs={'pk': self.instance.pk})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['parent_template'] = self.parent_template_name
+        return context
+
+    def dispatch(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+        self.instance = self.get_object()
+        if not growlog_user_is_allowed_to_edit(request.user, self.instance):
+            return HttpResponse(status=403)
+        return super().dispatch(request, *args, **kwargs)
+
+
 class GrowlogSetGerminatingAtView(LoginRequiredMixin, View):
     def post(self, request: HttpRequest, pk: int) -> HttpResponse:
         self.growlog = get_object_or_404(Growlog, pk=pk)
@@ -144,21 +165,6 @@ class GrowlogSetFinishedAtView(LoginRequiredMixin, View):
         self.growlog.finished_at = timezone.now().date()
         self.growlog.save()
         return redirect(reverse('grow:growlog-detail', kwargs={'pk': self.growlog.pk}))
-
-
-class GrowlogUpdateView(LoginRequiredMixin, UpdateView):
-    model = Growlog
-    form_class = GrowlogForm
-    template_name = GROW_TEMPLATES['grow/growlog/update']
-    parent_template_name = GROW_TEMPLATES['grow/growlog/form']
-
-    def get_success_url(self) -> str:
-        return reverse('grow:growlog-detail', kwargs={'pk': self.instance.pk})
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['parent_template'] = self.parent_template_name
-        return context
 
 
 class GrowlogDeleteView(LoginRequiredMixin, DeleteView):

@@ -1,0 +1,43 @@
+{% extends base_template %}
+{% load i18n widget_tweaks %}
+
+{% block content %}
+<h1>{% block form_title %}{% translate "Create a new grow log" %}{% endblock %}</h1>
+<form method="post">
+    {% csrf_token %}
+    {% if form.errors %}
+
+        {% for field, error in form.errors.items %}
+        <div class="alert alert-danger">
+            <strong>{{ field }}:</strong> {{ error|striptags }}
+        </div>
+        {% endfor %}
+
+    {% endif %}
+    <div class="form-floating mb-3">
+        {% render_field form.name class="form-control" placeholder="Title" %}
+        <label for="{{ form.name.id_for_label }}">{% translate "Title" %}</label>
+    </div>
+    <div class="input-group mb-3">
+        <label class="input-group-text" for="{{ form.permission_data.id_for_label }}">{% translate "Permissions" %}</label>
+        {% render_field form.permission_data class="form-control" %}
+    </div>
+    <div class="input-group mb-3">
+        <label class="input-group-text" for="{{ form.notes_type_data.id_for_label }}">{% translate "Notes Type" %}</label>
+        {% render_field form.notes_type_data class="form-control" %}
+    </div>
+    <div class="form-floating mb-3">
+        {% render_field form.notes class="form-control" placeholder=form.notes.label style="height: 15rem;" %}
+        <label for="{{ form.notes.id_for_label }}">{{ form.notes.label }}</label>
+    </div>
+    <div class="input-group mb-3">
+        <label class="input-group-text" for="{{ form.description_type_data.id_for_label }}">{% translate "Description Type" %}</label>
+        {% render_field form.description_type_data class="form-control" %}
+    </div>
+    <div class="form-floating mb-3">
+        {% render_field form.description class="form-control" placeholder=form.description.label style="height: 15rem;" %}
+        <label for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
+    </div>
+    {% block form_buttons %}{% endblock form_buttons %}
+</form>
+{% endblock %}

@@ -206,9 +206,9 @@ user_patterns = [
 
 growlog_patterns = [
      path("growlog/create/", GrowlogCreateView.as_view(), name="growlog-create"),
-     #path("growlog/update/<int:pk>/", GrowlogUpdateView.as_view(), name="growlog-update"),
-     #path("growlog/delete/<int:pk>/", GrowlogDeleteView.as_view(), name="growlog-delete"),
-     path("growlog/detail/<int:pk>/", GrowlogDetailView.as_view(), name="growlog-detail"),
+     path("growlog/<int:pk>/update/", GrowlogUpdateView.as_view(), name="growlog-update"),
+     #path("growlog/<int:pk>/delete/", GrowlogDeleteView.as_view(), name="growlog-delete"),
+     path("growlog/<int:pk>/detail/", GrowlogDetailView.as_view(), name="growlog-detail"),
      path("__hx__/growlog/<int:pk>/edit_notes/",
           HxGrowlogEditNotesView.as_view(),
           name="hx-growlog-edit-notes"),
