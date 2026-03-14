@@ -179,7 +179,7 @@ msgstr "Kelvin"
 
 #: grow/growapi/enums.py:609
 msgid "active"
-msgstr ""
+msgstr "Aktiv"
 
 #: grow/growapi/enums.py:610
 #, fuzzy
@@ -189,29 +189,23 @@ msgstr "Gekeimt am"
 
 #: grow/growapi/enums.py:611
 msgid "rooting"
-msgstr ""
+msgstr "Anwurzeln"
 
 #: grow/growapi/enums.py:612
 msgid "vegetative"
-msgstr ""
+msgstr "Vegetativ"
 
 #: grow/growapi/enums.py:613
-#, fuzzy
-#| msgid "flowering at"
 msgid "flowering"
-msgstr "Blüte am"
+msgstr "Blüte"
 
 #: grow/growapi/enums.py:614
-#, fuzzy
-#| msgid "harvested at"
 msgid "harvested"
-msgstr "Geerntet am"
+msgstr "Geerntet"
 
 #: grow/growapi/enums.py:615
-#, fuzzy
-#| msgid "finished at"
 msgid "finished"
-msgstr "Beendet am"
+msgstr "Beendet"
 
 #: grow/growapi/models/growlog.py:25
 msgid "This determines who can view the grow log."
@@ -240,11 +234,9 @@ msgstr "Beschreibungstyp"
 
 #: grow/growapi/models/growlog.py:68
 msgid "personal notes"
-msgstr ""
+msgstr "Persönliche Notizen"
 
 #: grow/growapi/models/growlog.py:90
-#, fuzzy
-#| msgid "notes type"
 msgid "personal notes type"
 msgstr "Notizentyp"
 
@@ -257,14 +249,12 @@ msgid "started at"
 msgstr "Gestartet am"
 
 #: grow/growapi/models/growlog.py:112
-#, fuzzy
-#| msgid "germinated at"
 msgid "germinating at"
 msgstr "Gekeimt am"
 
 #: grow/growapi/models/growlog.py:118
 msgid "vegetative at"
-msgstr ""
+msgstr "Vegetativ am"
 
 #: grow/growapi/models/growlog.py:125
 msgid "Cutted at"
@@ -328,53 +318,47 @@ msgstr "Ort"
 #, python-brace-format
 msgid "Active ({n} day)"
 msgid_plural "Active ({n} days)"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Aktiv ({n} Tag)"
+msgstr[1] "Aktiv ({n} Tage)"
 
 #: grow/growapi/models/growlog.py:903
 #, python-brace-format
 msgid "Germinating ({n} day)"
 msgid_plural "Germinating ({n} days)"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Keimung ({n} Tag)"
+msgstr[1] "Keimung ({n} Tage)"
 
 #: grow/growapi/models/growlog.py:920
 #, python-brace-format
 msgid "Rooting ({n} day)"
 msgid_plural "Rooting ({n} days)"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Anwurzeln ({n} Tag)"
+msgstr[1] "Anwurzeln ({n} Tage)"
 
 #: grow/growapi/models/growlog.py:935
 #, python-brace-format
 msgid "Vegetative ({n} day)"
 msgid_plural "Vegetative ({n} days)"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Vegetativ ({n} Tag)"
+msgstr[1] "Vegetativ ({n} Tage)"
 
 #: grow/growapi/models/growlog.py:948
-#, fuzzy, python-brace-format
-#| msgid "flowering time (days)"
 msgid "Flowering ({n} day)"
 msgid_plural "Flowering ({n} days)"
-msgstr[0] "Blütezeit (Tage)"
-msgstr[1] "Blütezeit (Tage)"
+msgstr[0] "Blüte ({n} Tag)"
+msgstr[1] "Blüte ({n} Tage)"
 
 #: grow/growapi/models/growlog.py:959
-#, fuzzy, python-brace-format
-#| msgid "harvested at"
 msgid "Harvested ({n} day)"
 msgid_plural "Harvested ({n} days)"
-msgstr[0] "Geerntet am"
-msgstr[1] "Geerntet am"
+msgstr[0] "Geerntet ({n} Tag)"
+msgstr[1] "Geerntet ({n} Tage)"
 
 #: grow/growapi/models/growlog.py:966
-#, fuzzy, python-brace-format
-#| msgid "finished at"
 msgid "Finished ({n} day)"
 msgid_plural "Finished ({n} days)"
-msgstr[0] "Beendet am"
-msgstr[1] "Beendet am"
+msgstr[0] "Beendet ({n} Tag)"
+msgstr[1] "Beendet ({n} Tage)"
 
 #: grow/growapi/models/growlog.py:1091
 msgid "growlog entry"
@@ -463,7 +447,7 @@ msgstr "Tiefe"
 
 #: grow/growapi/models/location.py:230
 msgid "Depth in centimeters."
-msgstr "Tiefe in Zenitmeter"
+msgstr "Tiefe in Zentimeter"
 
 #: grow/growapi/models/location.py:269
 msgid "longitude"
@@ -539,8 +523,6 @@ msgid "language code"
 msgstr "Sprachcode"
 
 #: grow/growapi/models/strain.py:488
-#, fuzzy
-#| msgid "breeder"
 msgid "breeder name"
 msgstr "Name des Züchters"
 
@@ -676,24 +658,20 @@ msgid "text type"
 msgstr "Texttyp"
 
 #: grow/growapi/models/user.py:19
-#, fuzzy
-#| msgid "growlog entry"
 msgid "growlog paginate"
-msgstr "Growlog Eintrag"
+msgstr "Growlog Paginate"
 
 #: grow/growapi/models/user.py:24
 msgid "paginate"
-msgstr ""
+msgstr "Paginate"
 
 #: grow/growapi/models/user.py:29
-#, fuzzy
-#| msgid "grow log"
 msgid "grow setting"
-msgstr "Growlog"
+msgstr "Grow Einstellung"
 
 #: grow/growapi/models/user.py:30
 msgid "grow settings"
-msgstr ""
+msgstr "Grow Einstellungen"
 
 #: grow/growapi/parser/bbcode/text_formatters.py:91
 msgid "Page not found"
