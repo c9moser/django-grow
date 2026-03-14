@@ -3,6 +3,28 @@
 {% block subtitle %}{% translate "Grow Log" %}{% endblock subtitle %}
 
 {% block content %}
+{% if use_bootstrap%}
+<!-- style="--bs-breadcrumb-divider:'&#10093;';" -->
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb" >
+
+    {% if GROW_IS_MAIN_APP %}
+        <li class="breadcrumb-item"><a href="{% url 'grow:home' %}">{% translate "Home" %}</a></li>
+    {% else %}
+        <li class="breadcrumb-item"><a href="/">{% translate "Home" %}</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'grow:home' %}">{% translate "Grow" %}</a></li>
+    {% endif %}
+        <li class="breadcrumb-item">
+            <a href="#{#{% url 'grow:growlog-overview' %}#}">
+                {% translate "Growlogs" %}
+            </a>
+        </li>
+        <li class="breadcrumb-item active">{{ growlog.name }}</li>
+    </ol>
+</nav>
+{% endif %}
+
 <h1>{{ growlog.name }}</h1>
 {% if can_edit %}
 <div class="mb-3">

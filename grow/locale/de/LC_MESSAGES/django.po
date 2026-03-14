@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-14 23:23+0100\n"
+"POT-Creation-Date: 2026-03-14 18:23+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: DE\n"
@@ -20,6 +20,69 @@ msgstr ""
 #: grow/forms/generic.py:8
 msgid "Slug"
 msgstr "Slug"
+
+#: grow/forms/growlog.py:37
+msgid "Strain filter"
+msgstr "Sortenfilter"
+
+#: grow/forms/growlog.py:43
+#: grow/templates/grow/strain/hx_seeds_in_stock_info.html:78
+#: grow/templates/grow/strain/strain_detail.html:264
+msgid "Seeds in stock"
+msgstr "Samen auf Lager"
+
+#: grow/forms/growlog.py:48 grow/forms/growlog.py:117 grow/forms/growlog.py:136
+#: grow/forms/strain.py:73 grow/forms/strain.py:205 grow/forms/strain.py:251
+#: grow/templates/grow/growlog/hx_growlog_add_seeds.html:24
+#: grow/templates/grow/strain/hx_seeds_in_stock_dialog.html:46
+#: grow/templates/grow/strain/hx_seeds_in_stock_info.html:153
+#: grow/templates/grow/strain/hx_strain_add_to_stock.html:42
+#: grow/templates/grow/strain/hx_strain_add_to_stock2.html:20
+#: grow/templates/grow/strain/hx_strain_in_stock_update.html:6
+#: grow/templates/grow/strain/hx_strain_remove_from_stock.html:27
+#: grow/templates/grow/strain/strain_add_to_stock2.html:29
+#: grow/templates/grow/strain/strain_detail.html:270
+msgid "Quantity"
+msgstr "Anzahl"
+
+#: grow/forms/growlog.py:98
+msgid "Breeder filter"
+msgstr "Züchterfilter"
+
+#: grow/forms/growlog.py:106 grow/forms/strain.py:186
+#: grow/templates/grow/growlog/hx_growlog_strains.html:7
+#: grow/templates/grow/index/index.html:92
+#: grow/templates/grow/strain/hx_seeds_in_stock_dialog.html:17
+#: grow/templates/grow/strain/hx_seeds_in_stock_info.html:149
+#: grow/templates/grow/strain/hx_strain_add_to_stock2.html:6
+#: grow/templates/grow/strain/strain_add_to_stock2.html:15
+#: grow/templates/grow/strain/strain_form.html:11
+#: grow/templates/grow/strain/strain_form.html:211
+#: grow/templates/grow/strain/strain_search_results.html:22
+msgid "Breeder"
+msgstr "Züchter"
+
+#: grow/forms/growlog.py:112 grow/forms/strain.py:196
+#: grow/templates/grow/growlog/hx_growlog_add_seeds.html:19
+#: grow/templates/grow/growlog/hx_growlog_strains.html:6
+#: grow/templates/grow/strain/breeder_detail.html:180
+#: grow/templates/grow/strain/hx_seeds_in_stock_dialog.html:24
+#: grow/templates/grow/strain/hx_seeds_in_stock_info.html:148
+#: grow/templates/grow/strain/hx_strain_add_to_stock2.html:13
+#: grow/templates/grow/strain/hx_strain_filter.html:7
+#: grow/templates/grow/strain/strain_add_to_stock2.html:22
+#: grow/templates/grow/strain/strain_translation.html:16
+#: grow/templates/grow/strain/strain_translation.html:25
+msgid "Strain"
+msgstr "Sorte"
+
+#: grow/forms/growlog.py:124
+msgid "Grown from seed"
+msgstr "Vom Samen gezogen"
+
+#: grow/forms/growlog.py:154 grow/templates/grow/growlog/entry/form.html:15
+msgid "Location"
+msgstr "Ort"
 
 #: grow/forms/location.py:9 grow/forms/location.py:85
 #: grow/templates/grow/location/hx_locationtype_change.html:5
@@ -100,71 +163,51 @@ msgstr "Breitengrad"
 msgid "Latitude coordinate of the location."
 msgstr "Breitengrad-Koordinate des Standorts."
 
-#: grow/forms/strain.py:28
+#: grow/forms/strain.py:31
 msgid "Days"
 msgstr "Tage"
 
-#: grow/forms/strain.py:29
+#: grow/forms/strain.py:32
 msgid "Weeks"
 msgstr "Wochen"
 
-#: grow/forms/strain.py:61 grow/forms/strain.py:120 grow/forms/strain.py:182
-#: grow/templates/grow/strain/hx_strain_add_to_stock.html:42
-#: grow/templates/grow/strain/hx_strain_add_to_stock2.html:20
-#: grow/templates/grow/strain/hx_strain_in_stock_update.html:6
-#: grow/templates/grow/strain/hx_strain_remove_from_stock.html:27
-#: grow/templates/grow/strain/strain_add_to_stock2.html:29
-#: grow/templates/grow/strain/strain_detail.html:270
-#: grow/templates/grow/user/hx_info_seeds_in_stock.html:52
-#: grow/templates/grow/user/info.html:87
-msgid "Quantity"
-msgstr "Anzahl"
-
-#: grow/forms/strain.py:64 grow/forms/strain.py:123
+#: grow/forms/strain.py:76 grow/forms/strain.py:219
 msgid "Purchased on Year"
 msgstr "Gekauft im Jahr"
 
-#: grow/forms/strain.py:71 grow/forms/strain.py:130
+#: grow/forms/strain.py:83 grow/forms/strain.py:226
 msgid "Puchased on Month"
 msgstr "Gekauft im Monat"
 
-#: grow/forms/strain.py:77 grow/forms/strain.py:136
+#: grow/forms/strain.py:89 grow/forms/strain.py:232
 msgid "Purchased on Day"
 msgstr "Gekauft am Tag"
 
-#: grow/forms/strain.py:90 grow/forms/strain.py:149
+#: grow/forms/strain.py:102 grow/forms/strain.py:245
 msgid "Notes"
 msgstr "Notizen"
 
-#: grow/forms/strain.py:98 grow/forms/strain.py:191
+#: grow/forms/strain.py:179 grow/forms/strain.py:260
 msgid "Filter breeders..."
 msgstr "Züchter filtern..."
 
-#: grow/forms/strain.py:102 grow/templates/grow/index/index.html:91
-#: grow/templates/grow/strain/hx_strain_add_to_stock2.html:6
-#: grow/templates/grow/strain/strain_add_to_stock2.html:15
-#: grow/templates/grow/strain/strain_form.html:11
-#: grow/templates/grow/strain/strain_form.html:211
-#: grow/templates/grow/strain/strain_search_results.html:22
-msgid "Breeder"
-msgstr "Züchter"
-
-#: grow/forms/strain.py:108 grow/forms/strain.py:207
+#: grow/forms/strain.py:192 grow/forms/strain.py:276
 msgid "Filter strains..."
 msgstr "Sorten filtern..."
 
-#: grow/forms/strain.py:112 grow/templates/grow/strain/breeder_detail.html:180
-#: grow/templates/grow/strain/hx_strain_add_to_stock2.html:13
-#: grow/templates/grow/strain/hx_strain_filter.html:7
-#: grow/templates/grow/strain/strain_add_to_stock2.html:22
-#: grow/templates/grow/strain/strain_translation.html:16
-#: grow/templates/grow/strain/strain_translation.html:25
-#: grow/templates/grow/user/hx_info_seeds_in_stock.html:48
-#: grow/templates/grow/user/info.html:83
-msgid "Strain"
-msgstr "Sorte"
+#: grow/forms/strain.py:210
+#: grow/templates/grow/strain/hx_seeds_in_stock_dialog.html:35
+#: grow/templates/grow/strain/strain_form.html:76
+msgid "Feminized"
+msgstr "Feminisiert"
 
-#: grow/forms/strain.py:199 grow/templates/grow/strain/index.html:52
+#: grow/forms/strain.py:211
+#: grow/templates/grow/strain/hx_seeds_in_stock_dialog.html:41
+#: grow/templates/grow/strain/strain_form.html:67
+msgid "Regular"
+msgstr "Regulär"
+
+#: grow/forms/strain.py:268 grow/templates/grow/strain/index.html:52
 msgid "Search strains..."
 msgstr "Suche Sorten..."
 
@@ -180,7 +223,10 @@ msgstr "Voreingestellte Ortsberechtigungen"
 msgid "unit of length"
 msgstr "Längeneinheit"
 
-#: grow/templates/grow/bs_base.html:63 grow/templates/grow/index/index.html:8
+#: grow/templates/grow/bs_base.html:63
+#: grow/templates/grow/growlog/growlog_detail.html:13
+#: grow/templates/grow/growlog/growlog_detail.html:15
+#: grow/templates/grow/index/index.html:8
 #: grow/templates/grow/index/index.html:10
 #: grow/templates/grow/strain/breeder_detail.html:16
 #: grow/templates/grow/strain/breeder_detail.html:18
@@ -192,6 +238,7 @@ msgid "Home"
 msgstr "Start"
 
 #: grow/templates/grow/bs_base.html:73
+#: grow/templates/grow/growlog/growlog_detail.html:194
 #: grow/templates/grow/strain/breeder_detail.html:23
 #: grow/templates/grow/strain/breeder_detail.html:160
 #: grow/templates/grow/strain/hx_breeder_filter.html:7
@@ -293,61 +340,72 @@ msgstr "Einstellungen"
 msgid "Log out"
 msgstr "Abmelden"
 
-#: grow/templates/grow/growlog/growlog.html:3
+#: grow/templates/grow/growlog/entry/form.html:3
+msgid "Grow Log Entry"
+msgstr "Growlog Eintrag"
+
+#: grow/templates/grow/growlog/entry/form.html:6
+msgid "Edit Grow Log Entry"
+msgstr "Growlog Eintrag bearbeiten"
+
+#: grow/templates/grow/growlog/entry/form.html:6
+msgid "Create Grow Log Entry"
+msgstr "Growlog Eintrag erstellen"
+
+#: grow/templates/grow/growlog/entry/form.html:19
+msgid "Content Type:"
+msgstr "Kommentarart"
+
+#: grow/templates/grow/growlog/entry/form.html:24
+msgid "Content"
+msgstr "Inhalt"
+
+#: grow/templates/grow/growlog/entry/form.html:28
+msgid "Update Entry"
+msgstr "Eintrag aktualisieren"
+
+#: grow/templates/grow/growlog/entry/form.html:28
+msgid "Create Entry"
+msgstr "Eintrag erstellen"
+
+#: grow/templates/grow/growlog/entry/form.html:29
+#: grow/templates/grow/growlog/growlog_create.html:7
+#: grow/templates/grow/growlog/growlog_update.html:7
+#: grow/templates/grow/growlog/hx_growlog_add_plants.html:27
+#: grow/templates/grow/growlog/hx_growlog_add_seeds.html:32
+#: grow/templates/grow/growlog/hx_growlog_add_strain.html:35
+#: grow/templates/grow/growlog/hx_growlog_delete_strain.html:16
+#: grow/templates/grow/growlog/hx_growlog_edit_description.html:28
+#: grow/templates/grow/growlog/hx_growlog_edit_notes.html:29
+#: grow/templates/grow/growlog/hx_growlog_remove_plants.html:27
+#: grow/templates/grow/location/create.html:7
+#: grow/templates/grow/location/delete.html:21
+#: grow/templates/grow/location/delete.html:24
+#: grow/templates/grow/location/hx_delete.html:35
+#: grow/templates/grow/location/update.html:7
+#: grow/templates/grow/strain/hx_breeder_delete.html:30
+#: grow/templates/grow/strain/hx_seeds_in_stock_dialog.html:106
+#: grow/templates/grow/strain/hx_seeds_in_stock_dialog.html:110
+#: grow/templates/grow/strain/hx_strain_add_to_stock.html:83
+#: grow/templates/grow/strain/hx_strain_delete.html:30
+#: grow/templates/grow/strain/hx_strain_remove_from_stock.html:47
+#: grow/templates/grow/strain/strain_add_to_stock.html:27
+#: grow/templates/grow/strain/strain_add_to_stock2.html:88
+#: grow/templates/grow/strain/strain_add_to_stock2.html:93
+#: grow/templates/grow/strain/strain_delete.html:19
+#: grow/templates/grow/strain/strain_remove_from_stock.html:32
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: grow/templates/grow/growlog/growlog_create.html:6
+msgid "Create Growlog"
+msgstr "Erstelle Growlog"
+
+#: grow/templates/grow/growlog/growlog_detail.html:3
 msgid "Grow Log"
 msgstr "Growlog"
 
-#: grow/templates/grow/growlog/growlog.html:9
-msgid "Edit Grow Log"
-msgstr "Growlog bearbeiten"
-
-#: grow/templates/grow/growlog/growlog.html:12
-msgid "Delete Grow Log"
-msgstr "Growlog löschen"
-
-#: grow/templates/grow/growlog/growlog.html:16
-msgid ""
-"This is the grow log for your cultivation activities. Here you can track and "
-"manage your grows."
-msgstr ""
-"Dies ist das Growlog für deine Anbautätigkeiten. Hier kannst du deine Grows "
-"verfolgen und verwalten."
-
-#: grow/templates/grow/growlog/growlog.html:19
-#: grow/templates/grow/location/index.html:107
-msgid "Description"
-msgstr "Beschreibung"
-
-#: grow/templates/grow/growlog/growlog.html:22
-msgid "Entries"
-msgstr "Einträge"
-
-#: grow/templates/grow/growlog/growlog.html:32
-msgid "Edit Entry"
-msgstr "Eintrag bearbeiten"
-
-#: grow/templates/grow/growlog/growlog.html:35
-msgid "Delete Entry"
-msgstr "Eintrag löschen"
-
-#: grow/templates/grow/growlog/growlog.html:39
-#, python-format
-msgid "<b>Age:</b> %(age)s day"
-msgid_plural "<b>Age:</b> %(age)s days"
-msgstr[0] "<b>Alter:</b> %(age)s Tag"
-msgstr[1] "<b>Alter:</b> %(age)s Tage"
-
-#: grow/templates/grow/growlog/growlog.html:41
-#, python-format
-msgid "<b>Flowering Time:</b> %(ft)s day"
-msgid_plural "<b>Flowering Time:</b> %(ft)s days"
-msgstr[0] "<b>Blütezeit:</b> %(ft)s Tag"
-msgstr[1] "<b>Blütezeit:</b> %(ft)s Tage"
-
-#: grow/templates/grow/growlog/growlog.html:55
-msgid "Grow Log Entry Image"
-msgstr "Growlog Eintragsbild"
-
+#: grow/templates/grow/growlog/growlog_detail.html:16
 #: grow/templates/grow/index/index.html:11
 #: grow/templates/grow/strain/breeder_detail.html:19
 #: grow/templates/grow/strain/index.html:16
@@ -355,8 +413,515 @@ msgstr "Growlog Eintragsbild"
 msgid "Grow"
 msgstr "Grow"
 
-#: grow/templates/grow/index/index.html:19
+#: grow/templates/grow/growlog/growlog_detail.html:20
+#: grow/templates/grow/strain/breeder_detail.html:184
+#: grow/templates/grow/strain/hx_breeder_filter.html:8
+#: grow/templates/grow/strain/hx_strain_filter.html:11
+#: grow/templates/grow/strain/index.html:90
+msgid "Growlogs"
+msgstr "Growlogs"
+
+#: grow/templates/grow/growlog/growlog_detail.html:34
+msgid "Set Germinating Date"
+msgstr "Keimdatum setzen"
+
+#: grow/templates/grow/growlog/growlog_detail.html:38
+msgid "Set Cutted Date"
+msgstr "Datum des Schneidens setzen"
+
+#: grow/templates/grow/growlog/growlog_detail.html:43
+msgid "Unset Germinating Date"
+msgstr "Keimdatum zurücksetzen"
+
+#: grow/templates/grow/growlog/growlog_detail.html:50
+msgid "Unset Cutted Date"
+msgstr "Datum des Schneidens zurücksetzen"
+
+#: grow/templates/grow/growlog/growlog_detail.html:57
+msgid "Set Vegetative Date"
+msgstr "Vegetatives Datum setzen"
+
+#: grow/templates/grow/growlog/growlog_detail.html:61
+msgid "Set Flowering Date"
+msgstr "Blütezeit setzen"
+
+#: grow/templates/grow/growlog/growlog_detail.html:66
+msgid "Set Harvested Date"
+msgstr "Erntedatum setzen"
+
+#: grow/templates/grow/growlog/growlog_detail.html:71
+msgid "Set Finished Date"
+msgstr "Endedatum setzen"
+
+#: grow/templates/grow/growlog/growlog_detail.html:76
+msgid "Edit Grow Log"
+msgstr "Growlog bearbeiten"
+
+#: grow/templates/grow/growlog/growlog_detail.html:79
+msgid "Delete Grow Log"
+msgstr "Growlog löschen"
+
+#: grow/templates/grow/growlog/growlog_detail.html:83
+msgid "Overview"
+msgstr "Übersicht"
+
+#: grow/templates/grow/growlog/growlog_detail.html:87
+msgid "Duration:"
+msgstr "Dauer:"
+
+#: grow/templates/grow/growlog/growlog_detail.html:90
+msgid "%(years)s year"
+msgid_plural "%(years)s years"
+msgstr[0] "%(years)s Jahr"
+msgstr[1] "%(years)s Jahre"
+
+#: grow/templates/grow/growlog/growlog_detail.html:92
+#: grow/templates/grow/growlog/growlog_detail.html:101
+#: grow/templates/grow/growlog/growlog_detail.html:121
+#: grow/templates/grow/growlog/growlog_detail.html:146
+#: grow/templates/grow/growlog/growlog_detail.html:166
 #, python-format
+msgid "%(weeks)s week"
+msgid_plural "%(weeks)s weeks"
+msgstr[0] "%(weeks)s Woche"
+msgstr[1] "%(weeks)s Wochen"
+
+#: grow/templates/grow/growlog/growlog_detail.html:95
+#: grow/templates/grow/growlog/growlog_detail.html:104
+#: grow/templates/grow/growlog/growlog_detail.html:109
+#: grow/templates/grow/growlog/growlog_detail.html:124
+#: grow/templates/grow/growlog/growlog_detail.html:128
+#: grow/templates/grow/growlog/growlog_detail.html:149
+#: grow/templates/grow/growlog/growlog_detail.html:153
+#: grow/templates/grow/growlog/growlog_detail.html:169
+#: grow/templates/grow/growlog/growlog_detail.html:173
+#: grow/templates/grow/index/index.html:108
+#: grow/templates/grow/strain/breeder_detail.html:232
+#: grow/templates/grow/strain/hx_strain_filter.html:58
+#, python-format
+msgid "%(days)s day"
+msgid_plural "%(days)s days"
+msgstr[0] "%(days)s Tag"
+msgstr[1] "%(days)s Tage"
+
+#: grow/templates/grow/growlog/growlog_detail.html:114
+msgid "Germinated on:"
+msgstr "Keimdatum:"
+
+#: grow/templates/grow/growlog/growlog_detail.html:117
+msgid "Germination Period:"
+msgstr "Keimperiode:"
+
+#: grow/templates/grow/growlog/growlog_detail.html:134
+msgid "Cutted on:"
+msgstr "Geschnitten am:"
+
+#: grow/templates/grow/growlog/growlog_detail.html:139
+msgid "Vegetative stage started on:"
+msgstr "Vegetative Phase gestartet am:"
+
+#: grow/templates/grow/growlog/growlog_detail.html:142
+msgid "Vegetative Period:"
+msgstr "Vegetative Periode:"
+
+#: grow/templates/grow/growlog/growlog_detail.html:159
+msgid "Flowering stage started on:"
+msgstr "Blütephase gestartet am:"
+
+#: grow/templates/grow/growlog/growlog_detail.html:162
+msgid "Flowering Period:"
+msgstr "Blüteperiode:"
+
+#: grow/templates/grow/growlog/growlog_detail.html:181
+msgid ""
+"This is the grow log for your cultivation activities. Here you can track and "
+"manage your grows."
+msgstr ""
+"Dies ist das Growlog für deine Anbautätigkeiten. Hier kannst du deine Grows "
+"verfolgen und verwalten."
+
+#: grow/templates/grow/growlog/growlog_detail.html:183
+msgid ""
+"This is the grow log for %(grower_name)s's cultivation activities. Here you "
+"can track his/her grows."
+msgstr ""
+"Dies ist das Growlog für %(grower_name)s's Anbautätigkeiten. Hier kannst du seine/ihre Grows "
+"verfolgen und."
+
+#: grow/templates/grow/growlog/growlog_detail.html:188
+msgid "Go to Personal Notes"
+msgstr "Zu persönlichen Notizen gehen"
+
+#: grow/templates/grow/growlog/growlog_detail.html:190
+msgid "Go to Description"
+msgstr "Zur Beschreibung gehen"
+
+#: grow/templates/grow/growlog/growlog_detail.html:191
+msgid "Go to Entries"
+msgstr "Zu Einträgen gehen"
+
+#: grow/templates/grow/growlog/growlog_detail.html:200
+msgid "Personal Notes"
+msgstr "Persönliche Notizen"
+
+#: grow/templates/grow/growlog/growlog_detail.html:202
+msgid "These notes are only visible to you!"
+msgstr "Diese Notizen sind nur für dich sichtbar!"
+
+#: grow/templates/grow/growlog/growlog_detail.html:211
+#: grow/templates/grow/growlog/growlog_detail.html:212
+msgid "Edit Personal Notes"
+msgstr "Persönliche Notizen bearbeiten"
+
+#: grow/templates/grow/growlog/growlog_detail.html:220
+#: grow/templates/grow/location/index.html:107
+msgid "Description"
+msgstr "Beschreibung"
+
+#: grow/templates/grow/growlog/growlog_detail.html:227
+#: grow/templates/grow/growlog/growlog_detail.html:228
+msgid "Edit Description"
+msgstr "Beschreibung bearbeiten"
+
+#: grow/templates/grow/growlog/growlog_detail.html:233
+msgid "Entries"
+msgstr "Einträge"
+
+#: grow/templates/grow/growlog/growlog_detail.html:238
+msgid "Add Entry"
+msgstr "Eintrag hinzufügen"
+
+#: grow/templates/grow/growlog/growlog_form.html:5
+msgid "Create a new grow log"
+msgstr "Erstelle einen neuen Growlog"
+
+#: grow/templates/grow/growlog/growlog_form.html:19
+#: grow/templates/grow/index/index.html:33
+#: grow/templates/grow/index/index.html:62
+msgid "Title"
+msgstr "Titel"
+
+#: grow/templates/grow/growlog/growlog_form.html:22
+msgid "Permissions"
+msgstr "Berechtigungen"
+
+#: grow/templates/grow/growlog/growlog_form.html:26
+#: grow/templates/grow/growlog/hx_growlog_edit_notes.html:13
+msgid "Notes Type"
+msgstr "Notizen Typ"
+
+#: grow/templates/grow/growlog/growlog_form.html:34
+#: grow/templates/grow/growlog/hx_growlog_edit_description.html:13
+msgid "Description Type"
+msgstr "Beschreibungstyp"
+
+#: grow/templates/grow/growlog/growlog_update.html:3
+msgid "Edit grow log"
+msgstr "Growlog bearbeiten"
+
+#: grow/templates/grow/growlog/growlog_update.html:6
+msgid "Update Growlog"
+msgstr "Growlog aktualisieren"
+
+#: grow/templates/grow/growlog/hx_active_info.html:5
+msgid "Active grow logs"
+msgstr "Aktive Growlogs"
+
+#: grow/templates/grow/growlog/hx_active_info.html:8
+#, fuzzy
+#| msgid "Show active grow logs"
+msgid "Active grow logs pagination"
+msgstr "Aktive Growlogs Pagination"
+
+#: grow/templates/grow/growlog/hx_active_info.html:64
+#: grow/templates/grow/growlog/hx_finished_info.html:66
+#: grow/templates/grow/index/index.html:93
+#: grow/templates/grow/strain/hx_breeder_filter.html:6
+#: grow/templates/grow/strain/hx_strain_growlogs.html:66
+#: grow/templates/grow/strain/index.html:88
+msgid "Name"
+msgstr "Name"
+
+#: grow/templates/grow/growlog/hx_active_info.html:65
+#: grow/templates/grow/growlog/hx_finished_info.html:67
+msgid "Started at"
+msgstr "Gestartet am"
+
+#: grow/templates/grow/growlog/hx_active_info.html:66
+#: grow/templates/grow/growlog/hx_finished_info.html:68
+#: grow/templates/grow/strain/hx_strain_growlogs.html:68
+msgid "Duration"
+msgstr "Dauer"
+
+#: grow/templates/grow/growlog/hx_active_info.html:67
+#: grow/templates/grow/growlog/hx_finished_info.html:69
+msgid "Age"
+msgstr "Alter"
+
+#: grow/templates/grow/growlog/hx_active_info.html:68
+#: grow/templates/grow/growlog/hx_finished_info.html:70
+#: grow/templates/grow/index/index.html:36
+#: grow/templates/grow/index/index.html:66
+#: grow/templates/grow/index/index.html:95
+#: grow/templates/grow/strain/breeder_detail.html:183
+#: grow/templates/grow/strain/hx_seeds_in_stock_info.html:152
+#: grow/templates/grow/strain/hx_strain_filter.html:10
+msgid "Flowering time"
+msgstr "Blütezeit"
+
+#: grow/templates/grow/growlog/hx_active_info.html:80
+#: grow/templates/grow/growlog/hx_active_info.html:87
+#: grow/templates/grow/growlog/hx_active_info.html:93
+#: grow/templates/grow/growlog/hx_finished_info.html:84
+#: grow/templates/grow/growlog/hx_finished_info.html:91
+#: grow/templates/grow/growlog/hx_finished_info.html:97
+#: grow/templates/grow/growlog/hx_growlog_strains.html:50
+#: grow/templates/grow/index/index.html:44
+#: grow/templates/grow/index/index.html:45
+#: grow/templates/grow/index/index.html:75
+#: grow/templates/grow/index/index.html:76
+#: grow/templates/grow/strain/hx_strain_growlogs.html:79
+msgid "%(n)s week"
+msgid_plural "%(n)s weeks"
+msgstr[0] "%(n)s Woche"
+msgstr[1] "%(n)s Wochen"
+
+#: grow/templates/grow/growlog/hx_active_info.html:82
+#: grow/templates/grow/growlog/hx_active_info.html:89
+#: grow/templates/grow/growlog/hx_active_info.html:95
+#: grow/templates/grow/growlog/hx_finished_info.html:86
+#: grow/templates/grow/growlog/hx_finished_info.html:93
+#: grow/templates/grow/growlog/hx_finished_info.html:99
+#: grow/templates/grow/growlog/hx_growlog_entries.html:70
+#: grow/templates/grow/growlog/hx_growlog_strains.html:49
+#: grow/templates/grow/strain/hx_strain_growlogs.html:81
+#: grow/templates/grow/strain/strain_search_results.html:46
+#, python-format
+msgid "%(n)s day"
+msgid_plural "%(n)s days"
+msgstr[0] "%(n)s Tag"
+msgstr[1] "%(n)s Tage"
+
+#: grow/templates/grow/growlog/hx_active_info.html:101
+msgid "No active grow logs found."
+msgstr "Keine aktiven Growlogs gefunden."
+
+#: grow/templates/grow/growlog/hx_finished_info.html:6
+msgid "Finished grow logs"
+msgstr "Abgeschlossene Growlogs"
+
+#: grow/templates/grow/growlog/hx_finished_info.html:9
+#, fuzzy
+#| msgid "Show finished grow logs"
+msgid "Finished grow logs pagination"
+msgstr "Abgeschlossene Growlogs Pagination"
+
+#: grow/templates/grow/growlog/hx_finished_info.html:71
+#: grow/templates/grow/strain/hx_strain_growlogs.html:69
+msgid "End date"
+msgstr "Enddatum"
+
+#: grow/templates/grow/growlog/hx_finished_info.html:106
+msgid "No finished grow logs found."
+msgstr "Keine abgeschlossenen Growlogs gefunden."
+#: grow/templates/grow/growlog/hx_growlog_add_plants.html:5
+#: grow/templates/grow/growlog/hx_growlog_strains.html:59
+msgid "Add plants to grow log"
+msgstr "Pflanzen zum Growlog hinzufügen"
+
+#: grow/templates/grow/growlog/hx_growlog_add_plants.html:11
+msgid ""
+"How many plants of <em>%(strain_name)s</em> from <em>%(breeder_name)s</em> "
+"do you want to add?"
+msgstr ""
+"Wie viele Pflanzen von <i>%(strain_name)s</i> von <i>%(breeder_name)s</i> "
+"möchten Sie hinzufügen?"
+
+#: grow/templates/grow/growlog/hx_growlog_add_plants.html:13
+#: grow/templates/grow/growlog/hx_growlog_remove_plants.html:13
+#: grow/templates/grow/growlog/hx_growlog_strains.html:10
+msgid "Plants"
+msgstr "Pflanzen"
+
+#: grow/templates/grow/growlog/hx_growlog_add_plants.html:26
+msgid "Add plants"
+msgstr "Pflanzen hinzufügen"
+
+#: grow/templates/grow/growlog/hx_growlog_add_seeds.html:5
+msgid "Add seeds to grow log"
+msgstr "Samen zum Growlog hinzufügen"
+
+#: grow/templates/grow/growlog/hx_growlog_add_seeds.html:13
+#: grow/templates/grow/growlog/hx_growlog_add_strain.html:13
+msgid "Filter"
+msgstr "Filter"
+
+#: grow/templates/grow/growlog/hx_growlog_add_seeds.html:31
+#: grow/templates/grow/strain/hx_seeds_in_stock_dialog.html:105
+#: grow/templates/grow/strain/hx_seeds_in_stock_dialog.html:109
+#: grow/templates/grow/strain/hx_strain_add_to_stock.html:81
+#: grow/templates/grow/strain/strain_add_to_stock.html:24
+#: grow/templates/grow/strain/strain_add_to_stock2.html:87
+#: grow/templates/grow/strain/strain_add_to_stock2.html:92
+#: grow/templates/grow/user/hx_add_seeds_to_stock.html:15
+msgid "Add seeds"
+msgstr "Samen hinzufügen"
+
+#: grow/templates/grow/growlog/hx_growlog_add_strain.html:5
+msgid "Add strain to grow log"
+msgstr "Sorte zum Growlog hinzufügen"
+
+#: grow/templates/grow/growlog/hx_growlog_add_strain.html:12
+msgid "Breeder:"
+msgstr "Züchter:"
+
+#: grow/templates/grow/growlog/hx_growlog_add_strain.html:21
+msgid "Strain:"
+msgstr "Sorte:"
+
+#: grow/templates/grow/growlog/hx_growlog_add_strain.html:27
+#, fuzzy
+#| msgid "Plant age"
+msgid "Plant count"
+msgstr "Pflanzenanzahl"
+
+#: grow/templates/grow/growlog/hx_growlog_add_strain.html:30
+msgid "From Seed?"
+msgstr "Vom Samen gezogen?"
+
+#: grow/templates/grow/growlog/hx_growlog_add_strain.html:34
+msgid "Add strain"
+msgstr "Sorte hinzufügen"
+
+#: grow/templates/grow/growlog/hx_growlog_delete_strain.html:5
+msgid "Delete grow log entry"
+msgstr "Growlogeintrag löschen"
+
+#: grow/templates/grow/growlog/hx_growlog_delete_strain.html:11
+msgid "Are you sure you want to delete this strain from your grow log?"
+msgstr ""
+"Bist du sicher, dass du diese Sorte aus deinem Growlog löschen möchtest?"
+
+#: grow/templates/grow/growlog/hx_growlog_delete_strain.html:12
+msgid "This action cannot be undone!"
+msgstr "Diese Aktion kann nicht rückgängig gemacht werden!"
+
+#: grow/templates/grow/growlog/hx_growlog_delete_strain.html:15
+msgid "Delete entry"
+msgstr "Eintrag löschen"
+
+#: grow/templates/grow/growlog/hx_growlog_description.html:1
+msgid "No description available."
+msgstr "Keine Beschreibung verfügbar."
+
+#: grow/templates/grow/growlog/hx_growlog_edit_description.html:5
+msgid "Edit grow log description"
+msgstr "Sortenbeschreibung bearbeiten"
+
+#: grow/templates/grow/growlog/hx_growlog_edit_description.html:21
+msgid "Write your Description here"
+msgstr "Schreibe hier deine Beschreibung"
+
+#: grow/templates/grow/growlog/hx_growlog_edit_description.html:27
+msgid "Save description"
+msgstr "Beschreibung speichern"
+
+#: grow/templates/grow/growlog/hx_growlog_edit_notes.html:5
+msgid "Grow log - personal notes"
+msgstr "Growlog - persönliche Notizen"
+
+#: grow/templates/grow/growlog/hx_growlog_edit_notes.html:22
+msgid "Write your Notes here"
+msgstr "Schreibe hier deine Notizen"
+
+#: grow/templates/grow/growlog/hx_growlog_edit_notes.html:28
+msgid "Save notes"
+msgstr "Notizen speichern"
+
+#: grow/templates/grow/growlog/hx_growlog_entries.html:6
+msgid "Grow log entries"
+msgstr "Growlog Einträge"
+
+#: grow/templates/grow/growlog/hx_growlog_entries.html:9
+msgid "Grow log entries pagination"
+msgstr "Growlog Einträge Pagination"
+
+#: grow/templates/grow/growlog/hx_growlog_entries.html:76
+msgid "Edit Entry"
+msgstr "Eintrag bearbeiten"
+
+#: grow/templates/grow/growlog/hx_growlog_entries.html:79
+msgid "Delete Entry"
+msgstr "Eintrag löschen"
+
+#: grow/templates/grow/growlog/hx_growlog_entries.html:89
+msgid "No entries available."
+msgstr "Keine Einträge verfügbar."
+
+#: grow/templates/grow/growlog/hx_growlog_notes.html:1
+msgid "No personal notes available."
+msgstr "Keine persönlichen Notizen verfügbar."
+
+#: grow/templates/grow/growlog/hx_growlog_remove_plants.html:5
+#: grow/templates/grow/growlog/hx_growlog_strains.html:66
+msgid "Remove plants from grow log"
+msgstr "Pflanzen aus dem Growlog entfernen"
+
+#: grow/templates/grow/growlog/hx_growlog_remove_plants.html:11
+msgid ""
+"How many plants of <em>%(strain_name)s</em> from <em>%(breeder_name)s</em> "
+"do you want to remove?"
+msgstr ""
+"Wie viele Pflanzen von <i>%(strain_name)s</i> von <i>%(breeder_name)s</i> "
+"möchten Sie entfernen?"
+#: grow/templates/grow/growlog/hx_growlog_remove_plants.html:26
+msgid "Remove plants"
+msgstr "Pflanzen entfernen"
+
+#: grow/templates/grow/growlog/hx_growlog_strains.html:8
+#: grow/templates/grow/strain/strain_search_results.html:25
+msgid "Flowering Time"
+msgstr "Blütezeit"
+
+#: grow/templates/grow/growlog/hx_growlog_strains.html:9
+msgid "From seed"
+msgstr "Vom Samen"
+
+#: grow/templates/grow/growlog/hx_growlog_strains.html:22
+msgid "Add Strain to Grow Log"
+msgstr "Sorte zum Growlog hinzufügen"
+
+#: grow/templates/grow/growlog/hx_growlog_strains.html:35
+msgid "Add Seeds from stock to Growlog"
+msgstr "Samen zum Growlog hinzufügen"
+
+#: grow/templates/grow/growlog/hx_growlog_strains.html:52
+#: grow/templates/grow/strain/strain_detail.html:143
+#: grow/templates/grow/strain/strain_detail.html:147
+#: grow/templates/grow/strain/strain_detail.html:151
+#: grow/templates/grow/strain/strain_detail.html:156
+#: grow/templates/grow/strain/strain_detail.html:163
+msgid "Yes"
+msgstr "Ja"
+
+#: grow/templates/grow/growlog/hx_growlog_strains.html:52
+#: grow/templates/grow/strain/strain_detail.html:143
+#: grow/templates/grow/strain/strain_detail.html:147
+#: grow/templates/grow/strain/strain_detail.html:151
+#: grow/templates/grow/strain/strain_detail.html:158
+#: grow/templates/grow/strain/strain_detail.html:163
+msgid "No"
+msgstr "Nein"
+
+#: grow/templates/grow/growlog/hx_growlog_strains.html:74
+msgid "Delete Strain from Grow Log"
+msgstr "Sorte aus dem Growlog entfernen"
+
+#: grow/templates/grow/growlog/hx_growlog_strains.html:83
+msgid "No strains available."
+msgstr "Keine Sorten verfügbar."
+
+#: grow/templates/grow/index/index.html:19
 msgid "Welcome to Grow, %(user_short_name)s"
 msgstr "Willkommen bei Grow, %(user_short_name)s"
 
@@ -372,11 +937,6 @@ msgstr "Meine aktiven Growlogs"
 msgid "Create a new Growlog"
 msgstr "Erstelle einen neuen Growlog"
 
-#: grow/templates/grow/index/index.html:33
-#: grow/templates/grow/index/index.html:62
-msgid "Title"
-msgstr "Titel"
-
 #: grow/templates/grow/index/index.html:34
 #: grow/templates/grow/index/index.html:64
 msgid "Locations"
@@ -386,26 +946,6 @@ msgstr "Orte"
 #: grow/templates/grow/index/index.html:65
 msgid "Plant age"
 msgstr "Pflanzenalter"
-
-#: grow/templates/grow/index/index.html:36
-#: grow/templates/grow/index/index.html:66
-#: grow/templates/grow/index/index.html:94
-#: grow/templates/grow/strain/breeder_detail.html:183
-#: grow/templates/grow/strain/hx_strain_filter.html:10
-#: grow/templates/grow/user/hx_info_seeds_in_stock.html:51
-#: grow/templates/grow/user/info.html:86 grow/templates/grow/user/info.html:179
-msgid "Flowering time"
-msgstr "Blütezeit"
-
-#: grow/templates/grow/index/index.html:44
-#: grow/templates/grow/index/index.html:45
-#: grow/templates/grow/index/index.html:75
-#: grow/templates/grow/index/index.html:76
-#, python-format
-msgid "%(weeks)s week"
-msgid_plural "%(weeks)s weeks"
-msgstr[0] "%(weeks)s Woche"
-msgstr[1] "%(weeks)s Wochen"
 
 #: grow/templates/grow/index/index.html:52
 msgid "You have no Growlogs! How about creating one?"
@@ -427,60 +967,26 @@ msgstr "Es gibt keine neuen Growlogs anderer Nutzer, die die ansehen darfst!"
 msgid "New Strains"
 msgstr "Neue Sorten"
 
-#: grow/templates/grow/index/index.html:92
-#: grow/templates/grow/strain/hx_breeder_filter.html:6
-#: grow/templates/grow/strain/index.html:88
-#: grow/templates/grow/user/info.html:176
-#: grow/templates/grow/user/info.html:217
-msgid "Name"
-msgstr "Name"
-
-#: grow/templates/grow/index/index.html:93
+#: grow/templates/grow/index/index.html:94
 msgid "Genetics"
 msgstr "Genetik"
 
-#: grow/templates/grow/index/index.html:104
+#: grow/templates/grow/index/index.html:106
 #: grow/templates/grow/strain/breeder_detail.html:234
 #: grow/templates/grow/strain/hx_strain_filter.html:60
 #: grow/templates/grow/strain/hx_strain_in_stock_update.html:20
 #: grow/templates/grow/strain/hx_strain_in_stock_update.html:70
 #: grow/templates/grow/strain/strain_detail.html:132
 #: grow/templates/grow/strain/strain_detail.html:286
-#: grow/templates/grow/strain/strain_detail.html:370
+#: grow/templates/grow/strain/strain_detail.html:368
 msgid "Unknown"
 msgstr "Unbekannt"
-
-#: grow/templates/grow/index/index.html:106
-#: grow/templates/grow/strain/breeder_detail.html:232
-#: grow/templates/grow/strain/hx_strain_filter.html:58
-#, python-format
-msgid "%(days)s day"
-msgid_plural "%(days)s days"
-msgstr[0] "%(days)s Tag"
-msgstr[1] "%(days)s Tage"
 
 #: grow/templates/grow/location/create.html:3
 #: grow/templates/grow/location/create.html:4
 #: grow/templates/grow/location/create.html:6
 msgid "Create Location"
 msgstr "Neuer Ort"
-
-#: grow/templates/grow/location/create.html:7
-#: grow/templates/grow/location/delete.html:21
-#: grow/templates/grow/location/delete.html:24
-#: grow/templates/grow/location/hx_delete.html:35
-#: grow/templates/grow/location/update.html:7
-#: grow/templates/grow/strain/hx_breeder_delete.html:30
-#: grow/templates/grow/strain/hx_strain_add_to_stock.html:83
-#: grow/templates/grow/strain/hx_strain_delete.html:30
-#: grow/templates/grow/strain/hx_strain_remove_from_stock.html:47
-#: grow/templates/grow/strain/strain_add_to_stock.html:27
-#: grow/templates/grow/strain/strain_add_to_stock2.html:86
-#: grow/templates/grow/strain/strain_add_to_stock2.html:91
-#: grow/templates/grow/strain/strain_delete.html:19
-#: grow/templates/grow/strain/strain_remove_from_stock.html:32
-msgid "Cancel"
-msgstr "Abbrechen"
 
 #: grow/templates/grow/location/delete.html:3
 #: grow/templates/grow/location/delete.html:4
@@ -756,20 +1262,12 @@ msgid "Breeder information"
 msgstr "Züchterinformationen"
 
 #: grow/templates/grow/strain/breeder_detail.html:181
+#: grow/templates/grow/strain/hx_seeds_in_stock_info.html:151
 #: grow/templates/grow/strain/hx_strain_filter.html:8
 #: grow/templates/grow/strain/strain_form.html:57
 #: grow/templates/grow/strain/strain_search_results.html:24
-#: grow/templates/grow/user/hx_info_seeds_in_stock.html:50
-#: grow/templates/grow/user/info.html:85
 msgid "Genotype"
 msgstr "Genotyp"
-
-#: grow/templates/grow/strain/breeder_detail.html:184
-#: grow/templates/grow/strain/hx_breeder_filter.html:8
-#: grow/templates/grow/strain/hx_strain_filter.html:11
-#: grow/templates/grow/strain/index.html:90
-msgid "Growlogs"
-msgstr "Growlogs"
 
 #: grow/templates/grow/strain/breeder_detail.html:196
 #: grow/templates/grow/strain/hx_strain_filter.html:24
@@ -877,6 +1375,187 @@ msgstr "Bearbeiten"
 msgid "Delete"
 msgstr "Löschen"
 
+#: grow/templates/grow/strain/hx_seeds_in_stock_dialog.html:6
+msgid "Add Seeds to Stock"
+msgstr "Samen zum Lager hinzufügen"
+
+#: grow/templates/grow/strain/hx_seeds_in_stock_dialog.html:8
+#: grow/templates/grow/strain/hx_strain_add_to_stock.html:14
+#: grow/templates/grow/strain/hx_strain_in_stock_notes.html:8
+#: grow/templates/grow/strain/hx_strain_in_stock_notes.html:19
+msgid "Close"
+msgstr "Schließen"
+
+#: grow/templates/grow/strain/hx_seeds_in_stock_dialog.html:32
+#: grow/templates/grow/strain/hx_seeds_in_stock_info.html:150
+msgid "Type"
+msgstr "Typ"
+
+#: grow/templates/grow/strain/hx_seeds_in_stock_dialog.html:52
+#: grow/templates/grow/strain/hx_strain_add_to_stock.html:48
+#: grow/templates/grow/strain/hx_strain_in_stock_update.html:7
+#: grow/templates/grow/strain/strain_add_to_stock2.html:35
+#: grow/templates/grow/strain/strain_detail.html:271
+msgid "Purchased on"
+msgstr "Gekauft am"
+
+#: grow/templates/grow/strain/hx_seeds_in_stock_dialog.html:53
+#: grow/templates/grow/strain/hx_strain_add_to_stock.html:49
+#: grow/templates/grow/strain/strain_add_to_stock2.html:36
+msgid "Year"
+msgstr "Jahr"
+
+#: grow/templates/grow/strain/hx_seeds_in_stock_dialog.html:55
+#: grow/templates/grow/strain/hx_strain_add_to_stock.html:51
+#: grow/templates/grow/strain/strain_add_to_stock2.html:38
+msgid "Month"
+msgstr "Monat"
+
+#: grow/templates/grow/strain/hx_seeds_in_stock_dialog.html:57
+#: grow/templates/grow/strain/hx_strain_add_to_stock.html:53
+#: grow/templates/grow/strain/strain_add_to_stock2.html:40
+msgid "Day"
+msgstr "Tag"
+
+#: grow/templates/grow/strain/hx_seeds_in_stock_dialog.html:62
+#: grow/templates/grow/strain/hx_strain_add_to_stock.html:58
+#: grow/templates/grow/strain/strain_add_to_stock2.html:45
+msgid "Notes type"
+msgstr "Notizen Typ"
+
+#: grow/templates/grow/strain/hx_seeds_in_stock_dialog.html:88
+#: grow/templates/grow/strain/hx_seeds_in_stock_info.html:81
+#: grow/templates/grow/strain/strain_add_to_stock2.html:71
+msgid "Seeds in stock pagination"
+msgstr "Samen auf Lager Pagination"
+
+#: grow/templates/grow/strain/hx_seeds_in_stock_info.html:5
+msgid "%(user)s currently has one seed in stock."
+msgid_plural "%(user)s currently has %(n)s seeds in stock."
+msgstr[0] "%(user)s hat zur Zeit einen Samen auf Lager."
+msgstr[1] "%(user)s hat zur Zeit %(n)s Samen auf Lager."
+
+#: grow/templates/grow/strain/hx_seeds_in_stock_info.html:8
+#: grow/templates/grow/strain/hx_seeds_in_stock_info.html:41
+msgid "Of them, one is feminized."
+msgid_plural "Of them, %(n)s are feminized."
+msgstr[0] "Einer von ihnen ist feminisiert."
+msgstr[1] "%(n)s von ihnen sind feminisiert."
+
+#: grow/templates/grow/strain/hx_seeds_in_stock_info.html:9
+#: grow/templates/grow/strain/hx_seeds_in_stock_info.html:42
+#, python-format
+msgid "Of them, one is regular."
+msgid_plural "Of them, %(n)s are regular."
+msgstr[0] "Einer von ihnen ist regulär."
+msgstr[1] "%(n)s von ihnen sind regulär."
+
+#: grow/templates/grow/strain/hx_seeds_in_stock_info.html:11
+#: grow/templates/grow/strain/hx_seeds_in_stock_info.html:44
+msgid "All of them are regular."
+msgstr "Alle sind regulär."
+
+#: grow/templates/grow/strain/hx_seeds_in_stock_info.html:13
+#: grow/templates/grow/strain/hx_seeds_in_stock_info.html:46
+msgid "All of them are feminized."
+msgstr "Alle sind feminisiert."
+
+#: grow/templates/grow/strain/hx_seeds_in_stock_info.html:18
+#: grow/templates/grow/strain/hx_seeds_in_stock_info.html:50
+msgid "All of your seeds are autoflowering."
+msgstr "Alle deine Samen sind selbstblühend."
+
+#: grow/templates/grow/strain/hx_seeds_in_stock_info.html:20
+#: grow/templates/grow/strain/hx_seeds_in_stock_info.html:52
+#, python-format
+msgid "One is an autoflowering seed."
+msgid_plural "%(n)s are autoflowering seeds."
+msgstr[0] "Einer von ihnen ist selbstblühend."
+msgstr[1] "%(n)s von ihnen sind selbstblühend."
+
+#: grow/templates/grow/strain/hx_seeds_in_stock_info.html:23
+#: grow/templates/grow/strain/hx_seeds_in_stock_info.html:55
+msgid "You have no autoflowering seeds in stock."
+msgstr "Du hast keine selbstblühenden Samen auf Lager."
+
+#: grow/templates/grow/strain/hx_seeds_in_stock_info.html:28
+#: grow/templates/grow/strain/hx_seeds_in_stock_info.html:59
+msgid "All of your seeds are photoperiod."
+msgstr "Alle deine Samen sind photoperiodisch."
+
+#: grow/templates/grow/strain/hx_seeds_in_stock_info.html:30
+#: grow/templates/grow/strain/hx_seeds_in_stock_info.html:61
+#, python-format
+msgid "One is a photoperiod seed."
+msgid_plural "%(n)s are photoperiod seeds."
+msgstr[0] "Einer von ihnen ist photoperiodisch."
+msgstr[1] "%(n)s von ihnen sind photoperiodisch."
+
+#: grow/templates/grow/strain/hx_seeds_in_stock_info.html:33
+#, fuzzy, python-format
+#| msgid "You have no photoperiod seeds in stock."
+msgid "%(user)s has no photoperiod seeds in stock."
+msgstr "%(user)s hat keine photoperiodischen Samen auf Lager."
+
+#: grow/templates/grow/strain/hx_seeds_in_stock_info.html:38
+#, python-format
+msgid "You currently have one seed in stock."
+msgid_plural "You currently have %(n)s seeds in stock."
+msgstr[0] "Du hast zur Zeit einen Samen auf Lager."
+msgstr[1] "Du hast zur Zeit %(n)s Samen auf Lager."
+
+#: grow/templates/grow/strain/hx_seeds_in_stock_info.html:64
+msgid "You have no photoperiod seeds in stock."
+msgstr "Du hast keine photoperiodischen Samen auf Lager."
+
+#: grow/templates/grow/strain/hx_seeds_in_stock_info.html:69
+msgid "You can add more seeds to your stock in the strain detail page."
+msgstr ""
+"Du kannst weitere Samen auf der Detailseite der Sorte zu deinem Lager "
+"hinzufügen."
+
+#: grow/templates/grow/strain/hx_seeds_in_stock_info.html:180
+msgid "feminized"
+msgstr "Feminisiert"
+
+#: grow/templates/grow/strain/hx_seeds_in_stock_info.html:180
+msgid "regular"
+msgstr "Regulär"
+
+#: grow/templates/grow/strain/hx_seeds_in_stock_info.html:180
+msgid "autoflowering"
+msgstr "Autoflowering"
+
+#: grow/templates/grow/strain/hx_seeds_in_stock_info.html:183
+#, python-format
+msgid "One day"
+msgid_plural "%(n)s days"
+msgstr[0] "Einen Tag"
+msgstr[1] "%(n)s Tage"
+
+#: grow/templates/grow/strain/hx_seeds_in_stock_info.html:196
+#: grow/templates/grow/strain/hx_strain_in_stock_update.html:92
+#: grow/templates/grow/strain/strain_detail.html:309
+#: grow/templates/grow/strain/strain_detail.html:392
+msgid "Show notes."
+msgstr "Zeige Notizen."
+
+#: grow/templates/grow/strain/hx_seeds_in_stock_info.html:208
+msgid "Add seeds to stock."
+msgstr "Samen zum Lager hinzufügen"
+
+#: grow/templates/grow/strain/hx_seeds_in_stock_info.html:220
+msgid "Remove seeds from stock."
+msgstr "Samen aus dem Lager entfernen"
+
+#: grow/templates/grow/strain/hx_seeds_in_stock_info.html:228
+msgid "You have no seeds in stock."
+msgstr "Du hast keine Samen auf Lager."
+
+#: grow/templates/grow/strain/hx_seeds_in_stock_info.html:234
+msgid "Total"
+msgstr "Alle"
+
 #: grow/templates/grow/strain/hx_strain_add_to_stock.html:9
 msgid "Add Feminized Seeds to Stock"
 msgstr "Füge feminisierte Samen zum Lager hinzu"
@@ -884,12 +1563,6 @@ msgstr "Füge feminisierte Samen zum Lager hinzu"
 #: grow/templates/grow/strain/hx_strain_add_to_stock.html:11
 msgid "Add Regular Seeds to Stock"
 msgstr "Füge reguläre Samen zum Lager hinzu"
-
-#: grow/templates/grow/strain/hx_strain_add_to_stock.html:14
-#: grow/templates/grow/strain/hx_strain_in_stock_notes.html:8
-#: grow/templates/grow/strain/hx_strain_in_stock_notes.html:19
-msgid "Close"
-msgstr "Schließen"
 
 #: grow/templates/grow/strain/hx_strain_add_to_stock.html:28
 #, python-format
@@ -924,43 +1597,8 @@ msgid_plural "%(n)s regular seeds in stock."
 msgstr[0] "Ein regulärer Samen auf Lager."
 msgstr[1] "%(n)s reguläre Samen auf Lager."
 
-#: grow/templates/grow/strain/hx_strain_add_to_stock.html:48
-#: grow/templates/grow/strain/hx_strain_in_stock_update.html:7
-#: grow/templates/grow/strain/strain_add_to_stock2.html:35
-#: grow/templates/grow/strain/strain_detail.html:271
-msgid "Purchased on"
-msgstr "Gekauft am"
-
-#: grow/templates/grow/strain/hx_strain_add_to_stock.html:49
-#: grow/templates/grow/strain/strain_add_to_stock2.html:36
-msgid "Year"
-msgstr "Jahr"
-
-#: grow/templates/grow/strain/hx_strain_add_to_stock.html:51
-#: grow/templates/grow/strain/strain_add_to_stock2.html:38
-msgid "Month"
-msgstr "Monat"
-
-#: grow/templates/grow/strain/hx_strain_add_to_stock.html:53
-#: grow/templates/grow/strain/strain_add_to_stock2.html:40
-msgid "Day"
-msgstr "Tag"
-
-#: grow/templates/grow/strain/hx_strain_add_to_stock.html:58
-#: grow/templates/grow/strain/strain_add_to_stock2.html:45
-msgid "Notes type"
-msgstr "Notizen Typ"
-
-#: grow/templates/grow/strain/hx_strain_add_to_stock.html:81
-#: grow/templates/grow/strain/strain_add_to_stock.html:24
-#: grow/templates/grow/strain/strain_add_to_stock2.html:85
-#: grow/templates/grow/strain/strain_add_to_stock2.html:90
-#: grow/templates/grow/user/hx_add_seeds_to_stock.html:15
-msgid "Add seeds"
-msgstr "Samen hinzufügen"
-
 #: grow/templates/grow/strain/hx_strain_comments.html:18
-#: grow/templates/grow/strain/strain_detail.html:543
+#: grow/templates/grow/strain/strain_detail.html:527
 msgid ""
 "There are currently no comments for this strain. Be the first to add one!"
 msgstr ""
@@ -976,18 +1614,46 @@ msgid "Delete strain"
 msgstr "Sorte löschen"
 
 #: grow/templates/grow/strain/hx_strain_delete.html:13
+#, python-format
 msgid ""
 "If you really want to delete the strain <i>%(strain_name)s</i> from breeder "
 "<i>%(breeder_name)s</i> type <mark>%(slug)s</mark> in the field below and "
 "hit the <i>%(delete_strain_label)s</i> button below."
 msgstr ""
-"Wenn du wirklich die Sorte <i>%(strain_name)s</i> von dem Züchter <i>%(breeder_name)s</i> "
-"löschen willst, gib <mark>%(slug)s</mark> in das untenliegende Feld ein und drücke den "
-"<i>%(delete_strain_label)s</i> Knopf darunter."
+"Wenn du wirklich die Sorte <i>%(strain_name)s</i> von dem Züchter "
+"<i>%(breeder_name)s</i> löschen willst, gib <mark>%(slug)s</mark> in das "
+"untenliegende Feld ein und drücke den <i>%(delete_strain_label)s</i> Knopf "
+"darunter."
+
+#: grow/templates/grow/strain/hx_strain_growlogs.html:6
+msgid "Grow logs"
+msgstr "Growlogs"
+
+#: grow/templates/grow/strain/hx_strain_growlogs.html:9
+msgid "Grow logs pagination"
+msgstr "Growlogs Pagination"
+
+#: grow/templates/grow/strain/hx_strain_growlogs.html:67
+msgid "Start date"
+msgstr "Startdatum"
+
+#: grow/templates/grow/strain/hx_strain_growlogs.html:70
+msgid "Status"
+msgstr "Status"
+
+#: grow/templates/grow/strain/hx_strain_growlogs.html:84
+msgid "In progress"
+msgstr "In Bearbeitung"
+
+#: grow/templates/grow/strain/hx_strain_growlogs.html:89
+msgid "No grow logs available."
+msgstr "Keine Growlogs verfügbar."
 
 #: grow/templates/grow/strain/hx_strain_in_stock_notes.html:6
+#, python-format
 msgid "Notes for Seeds of <i>%(strain_name)s</i> from <i>%(breeder_name)s</i>."
-msgstr "Notizen für Samen von <i>%(strain_name)s</i> von <i>%(breeder_name)s</i>."
+msgstr ""
+"Notizen für Samen von <i>%(strain_name)s</i> von <i>%(breeder_name)s</i>."
 
 #: grow/templates/grow/strain/hx_strain_in_stock_notes.html:15
 msgid "No notes available."
@@ -1005,10 +1671,10 @@ msgstr "Reguläre Samen"
 
 #: grow/templates/grow/strain/hx_strain_in_stock_update.html:15
 #: grow/templates/grow/strain/hx_strain_in_stock_update.html:65
-#: grow/templates/grow/strain/hx_strain_in_stock_update.html:116
+#: grow/templates/grow/strain/hx_strain_in_stock_update.html:136
 #: grow/templates/grow/strain/strain_detail.html:280
-#: grow/templates/grow/strain/strain_detail.html:364
-#: grow/templates/grow/strain/strain_detail.html:447
+#: grow/templates/grow/strain/strain_detail.html:362
+#: grow/templates/grow/strain/strain_detail.html:445
 #, python-format
 msgid "%(n)s seed"
 msgid_plural "%(n)s seeds"
@@ -1016,12 +1682,12 @@ msgstr[0] "%(n)s Samen"
 msgstr[1] "%(n)s Samen"
 
 #: grow/templates/grow/strain/hx_strain_in_stock_update.html:64
-#: grow/templates/grow/strain/strain_detail.html:362
+#: grow/templates/grow/strain/strain_detail.html:360
 msgid "Feminized seeds"
 msgstr "Feminisierte Samen"
 
-#: grow/templates/grow/strain/hx_strain_in_stock_update.html:114
-#: grow/templates/grow/strain/strain_detail.html:445
+#: grow/templates/grow/strain/hx_strain_in_stock_update.html:134
+#: grow/templates/grow/strain/strain_detail.html:443
 msgid "Total seeds"
 msgstr "Alle Samen"
 
@@ -1271,22 +1937,6 @@ msgstr "Genotyp:"
 msgid "Is this is a autoflowering strain?"
 msgstr "Ist das eine selbstblühende Sorte?"
 
-#: grow/templates/grow/strain/strain_detail.html:143
-#: grow/templates/grow/strain/strain_detail.html:147
-#: grow/templates/grow/strain/strain_detail.html:151
-#: grow/templates/grow/strain/strain_detail.html:156
-#: grow/templates/grow/strain/strain_detail.html:163
-msgid "Yes"
-msgstr "Ja"
-
-#: grow/templates/grow/strain/strain_detail.html:143
-#: grow/templates/grow/strain/strain_detail.html:147
-#: grow/templates/grow/strain/strain_detail.html:151
-#: grow/templates/grow/strain/strain_detail.html:158
-#: grow/templates/grow/strain/strain_detail.html:163
-msgid "No"
-msgstr "Nein"
-
 #: grow/templates/grow/strain/strain_detail.html:146
 msgid "Can one get regular seeds?"
 msgstr "Kann man reguläre Samen erhalten?"
@@ -1316,6 +1966,7 @@ msgid "Jump to pictures"
 msgstr "Zu Bildern springen"
 
 #: grow/templates/grow/strain/strain_detail.html:190
+#: grow/templates/grow/user/info.html:35
 msgid "Jump to seeds in stock"
 msgstr "Zu Samen auf Lager springen"
 
@@ -1355,85 +2006,54 @@ msgstr ""
 "Anbaus hochladen, um anderen zu zeigen, wie diese Sorte während des "
 "Wachstums und der Blüte aussieht."
 
-#: grow/templates/grow/strain/strain_detail.html:264
-msgid "Seeds in stock"
-msgstr "Samen auf Lager"
-
-#: grow/templates/grow/strain/strain_detail.html:309
-#: grow/templates/grow/strain/strain_detail.html:394
-#: grow/templates/grow/user/hx_info_seeds_in_stock.html:79
-#: grow/templates/grow/user/info.html:114
-msgid "Show notes."
-msgstr "Zeige Notizen."
-
 #: grow/templates/grow/strain/strain_detail.html:326
 msgid "Add regular seeds to stock."
 msgstr "Füge reguläre Samen zum Lager hinzu"
 
 #: grow/templates/grow/strain/strain_detail.html:330
-#: grow/templates/grow/strain/strain_detail.html:414
+#: grow/templates/grow/strain/strain_detail.html:412
 msgid "add seeds"
 msgstr "Samen hinzufügen"
 
-#: grow/templates/grow/strain/strain_detail.html:348
+#: grow/templates/grow/strain/strain_detail.html:347
 msgid "Remove regular seeds from stock."
 msgstr "Reguläre Samen aus dem Lager entfernen"
 
-#: grow/templates/grow/strain/strain_detail.html:354
-#: grow/templates/grow/strain/strain_detail.html:436
+#: grow/templates/grow/strain/strain_detail.html:352
+#: grow/templates/grow/strain/strain_detail.html:434
 msgid "remove seeds"
 msgstr "Samen entfernen"
 
-#: grow/templates/grow/strain/strain_detail.html:409
+#: grow/templates/grow/strain/strain_detail.html:407
 msgid "Add feminized seeds to stock."
 msgstr "Füge feminisierte Samen zum Lager hinzu"
 
-#: grow/templates/grow/strain/strain_detail.html:430
+#: grow/templates/grow/strain/strain_detail.html:428
 msgid "Remove feminized seeds from stock."
 msgstr "Feminisierte Samen aus dem Lager entfernen"
 
-#: grow/templates/grow/strain/strain_detail.html:472
-msgid ""
-"There are currently no growlogs for this strain, at least none you are "
-"allowed to view. You could grow this strain yourself and add a growlog for "
-"the members here, so they can see how this strain grows and flowers. Others "
-"might want to learn from what you are doing."
-msgstr ""
-"Es gibt zu Zeit keine Growlogs für diese Sorte, zumindest keine die du "
-"ansehen darfst. Du könntest die Sorte aber selber anbauen und einen Growlog "
-"für die Mitglieder hier anlegen, damit sie sehen können wie die Sorte wächst "
-"und blüht. Andere könnten aus dem lernen wollen, was du machst."
-
-#: grow/templates/grow/strain/strain_detail.html:475
+#: grow/templates/grow/strain/strain_detail.html:459
 msgid "Comments"
 msgstr "Kommentare"
 
-#: grow/templates/grow/strain/strain_detail.html:478
-#: grow/templates/grow/strain/strain_detail.html:486
+#: grow/templates/grow/strain/strain_detail.html:462
+#: grow/templates/grow/strain/strain_detail.html:470
 msgid "Add comment"
 msgstr "Kommentar hinzufügen"
 
-#: grow/templates/grow/strain/strain_detail.html:482
+#: grow/templates/grow/strain/strain_detail.html:466
 msgid "View all comments"
 msgstr "Alle Kommentare ansehen"
 
-#: grow/templates/grow/strain/strain_detail.html:511
-#: grow/templates/grow/strain/strain_detail.html:531
+#: grow/templates/grow/strain/strain_detail.html:495
+#: grow/templates/grow/strain/strain_detail.html:515
 msgid "Edit comment"
 msgstr "Kommentar bearbeiten"
 
-#: grow/templates/grow/strain/strain_detail.html:527
-#: grow/templates/grow/strain/strain_detail.html:532
+#: grow/templates/grow/strain/strain_detail.html:511
+#: grow/templates/grow/strain/strain_detail.html:516
 msgid "Delete comment"
 msgstr "Kommentar löschen"
-
-#: grow/templates/grow/strain/strain_form.html:67
-msgid "Regular"
-msgstr "Regulär"
-
-#: grow/templates/grow/strain/strain_form.html:76
-msgid "Feminized"
-msgstr "Feminisiert"
 
 #: grow/templates/grow/strain/strain_form.html:84
 msgid "Automatic"
@@ -1561,17 +2181,6 @@ msgstr[1] ""
 msgid "Strain name"
 msgstr "Sortenname"
 
-#: grow/templates/grow/strain/strain_search_results.html:25
-msgid "Flowering Time"
-msgstr "Blütezeit"
-
-#: grow/templates/grow/strain/strain_search_results.html:46
-#, python-format
-msgid "%(n)s day"
-msgid_plural "%(n)s days"
-msgstr[0] "%(n)s Tag"
-msgstr[1] "%(n)s Tage"
-
 #: grow/templates/grow/strain/strain_search_results.html:53
 msgid "No strains found matching your search."
 msgstr "Keine Sorten gefunden, die deiner Suche entsprechen."
@@ -1595,136 +2204,6 @@ msgstr "Sorte aktualisieren"
 msgid "Update Strain"
 msgstr "Sorte aktualisieren"
 
-#: grow/templates/grow/user/hx_info_seeds_in_stock.html:3
-#: grow/templates/grow/user/info.html:37
-#, python-format
-msgid "You currently have one seed in stock."
-msgid_plural "You currently have %(n)s seeds in stock."
-msgstr[0] " Du hast zur Zeit einen Samen auf Lager."
-msgstr[1] " Du hast zur Zeit %(n)s Samen auf Lager."
-
-#: grow/templates/grow/user/hx_info_seeds_in_stock.html:6
-#: grow/templates/grow/user/info.html:40
-#, python-format
-msgid "Of them, one is feminized."
-msgid_plural "Of them, %(n)s are feminized."
-msgstr[0] "Einer von ihnen ist feminisiert."
-msgstr[1] "%(n)s von ihnen sind feminisiert."
-
-#: grow/templates/grow/user/hx_info_seeds_in_stock.html:7
-#: grow/templates/grow/user/info.html:41
-#, python-format
-msgid "Of them, one is regular."
-msgid_plural "Of them, %(n)s are regular."
-msgstr[0] "Einer von ihnen ist regulär."
-msgstr[1] "%(n)s von ihnen sind regulär."
-
-#: grow/templates/grow/user/hx_info_seeds_in_stock.html:9
-#: grow/templates/grow/user/info.html:43
-msgid "All of them are regular."
-msgstr "Alle sind regulär."
-
-#: grow/templates/grow/user/hx_info_seeds_in_stock.html:11
-#: grow/templates/grow/user/info.html:45
-msgid "All of them are feminized."
-msgstr "Alle sind feminisiert."
-
-#: grow/templates/grow/user/hx_info_seeds_in_stock.html:15
-#: grow/templates/grow/user/info.html:49
-msgid "All of your seeds are autoflowering."
-msgstr "Alle deine Samen sind selbstblühend."
-
-#: grow/templates/grow/user/hx_info_seeds_in_stock.html:17
-#: grow/templates/grow/user/info.html:51
-#, python-format
-msgid "One is an autoflowering seed."
-msgid_plural "%(n)s are autoflowering seeds."
-msgstr[0] "Einer von ihnen ist selbstblühend."
-msgstr[1] "%(n)s von ihnen sind selbstblühend."
-
-#: grow/templates/grow/user/hx_info_seeds_in_stock.html:20
-#: grow/templates/grow/user/info.html:54
-msgid "You have no autoflowering seeds in stock."
-msgstr "Du hast keine selbstblühenden Samen auf Lager."
-
-#: grow/templates/grow/user/hx_info_seeds_in_stock.html:24
-#: grow/templates/grow/user/info.html:58
-msgid "All of your seeds are photoperiod."
-msgstr "Alle deine Samen sind photoperiodisch."
-
-#: grow/templates/grow/user/hx_info_seeds_in_stock.html:26
-#: grow/templates/grow/user/info.html:60
-#, python-format
-msgid "One is a photoperiod seed."
-msgid_plural "%(n)s are photoperiod seeds."
-msgstr[0] "Einer von ihnen ist photoperiodisch."
-msgstr[1] "%(n)s von ihnen sind photoperiodisch."
-
-#: grow/templates/grow/user/hx_info_seeds_in_stock.html:29
-#: grow/templates/grow/user/info.html:63
-msgid "You have no photoperiod seeds in stock."
-msgstr "Du hast keine photoperiodischen Samen auf Lager."
-
-#: grow/templates/grow/user/hx_info_seeds_in_stock.html:34
-#: grow/templates/grow/user/info.html:68
-msgid "You can add more seeds to your stock in the strain detail page."
-msgstr ""
-"Du kannst weitere Samen auf der Detailseite der Sorte zu deinem Lager "
-"hinzufügen."
-
-#: grow/templates/grow/user/hx_info_seeds_in_stock.html:40
-#: grow/templates/grow/user/info.html:75
-msgid "Show seeds in stock"
-msgstr "Zeige Samen auf Lager"
-
-#: grow/templates/grow/user/hx_info_seeds_in_stock.html:49
-#: grow/templates/grow/user/info.html:84
-msgid "Type"
-msgstr "Typ"
-
-#: grow/templates/grow/user/hx_info_seeds_in_stock.html:53
-#: grow/templates/grow/user/info.html:88
-msgid "Actions"
-msgstr "Aktionen"
-
-#: grow/templates/grow/user/hx_info_seeds_in_stock.html:64
-#: grow/templates/grow/user/info.html:99
-msgid "feminized"
-msgstr "Feminisiert"
-
-#: grow/templates/grow/user/hx_info_seeds_in_stock.html:64
-#: grow/templates/grow/user/info.html:99
-msgid "regular"
-msgstr "Regulär"
-
-#: grow/templates/grow/user/hx_info_seeds_in_stock.html:64
-#: grow/templates/grow/user/info.html:99
-msgid "autoflowering"
-msgstr "Autoflowering"
-
-#: grow/templates/grow/user/hx_info_seeds_in_stock.html:67
-#: grow/templates/grow/user/info.html:102
-#, python-format
-msgid "One day"
-msgid_plural "%(n)s days"
-msgstr[0] "Einen Tag"
-msgstr[1] "%(n)s Tage"
-
-#: grow/templates/grow/user/hx_info_seeds_in_stock.html:91
-#: grow/templates/grow/user/info.html:126
-msgid "Add seeds to stock."
-msgstr "Samen zum Lager hinzufügen"
-
-#: grow/templates/grow/user/hx_info_seeds_in_stock.html:103
-#: grow/templates/grow/user/info.html:138
-msgid "Remove seeds from stock."
-msgstr "Samen aus dem Lager entfernen"
-
-#: grow/templates/grow/user/hx_info_seeds_in_stock.html:110
-#: grow/templates/grow/user/info.html:145
-msgid "You have no seeds in stock."
-msgstr "Du hast keine Samen auf Lager."
-
 #: grow/templates/grow/user/info.html:4 grow/templates/grow/user/info.html:10
 msgid "User Information"
 msgstr "Benutzerinformationen"
@@ -1745,88 +2224,96 @@ msgstr "Vorname"
 msgid "Last name"
 msgstr "Nachname"
 
-#: grow/templates/grow/user/info.html:34
+#: grow/templates/grow/user/info.html:36
+msgid "Jump to my grow logs"
+msgstr "Zu meinen Growlogs springen"
+
+#: grow/templates/grow/user/info.html:39
 msgid "My seeds in stock"
 msgstr "Meine Samen auf Lager"
 
-#: grow/templates/grow/user/info.html:157
+#: grow/templates/grow/user/info.html:45
 msgid "My grow logs"
 msgstr "Meine Growlogs"
 
-#: grow/templates/grow/user/info.html:159
+#: grow/templates/grow/user/info.html:46
+msgid "Create new grow log"
+msgstr "Erstelle einen neuen Growlog"
+
+#: grow/templates/grow/user/info.html:49
 #, python-format
 msgid "You currently have one grow log."
 msgid_plural "You currently have %(n)s grow logs."
 msgstr[0] "Du hast zur Zeit einen Growlog."
 msgstr[1] "Du hast zur Zeit %(n)s Growlogs."
 
-#: grow/templates/grow/user/info.html:160
+#: grow/templates/grow/user/info.html:50
 #, python-format
 msgid "One of them is finished."
 msgid_plural "%(n)s of them are finished."
 msgstr[0] "Einer von ihnen ist abgeschlossen."
 msgstr[1] "%(n)s von ihnen sind abgeschlossen."
 
-#: grow/templates/grow/user/info.html:161
+#: grow/templates/grow/user/info.html:51
 #, python-format
 msgid "One of them is still active."
 msgid_plural "%(n)s of them are still active."
 msgstr[0] "Einer von ihnen ist noch aktiv."
 msgstr[1] "%(n)s von ihnen sind noch aktiv."
 
-#: grow/templates/grow/user/info.html:168
-msgid "Show active grow logs"
-msgstr "Zeige aktive Growlogs"
-
-#: grow/templates/grow/user/info.html:177
-#: grow/templates/grow/user/info.html:218
-msgid "Started at"
-msgstr "Gestartet am"
-
-#: grow/templates/grow/user/info.html:178
-msgid "Age"
-msgstr "Alter"
-
-#: grow/templates/grow/user/info.html:189
-#, python-format
-msgid "One day old."
-msgid_plural "%(n)s days old."
-msgstr[0] "Einen Tag alt."
-msgstr[1] "%(n)s Tage alt."
-
-#: grow/templates/grow/user/info.html:190
-#: grow/templates/grow/user/info.html:231
-#, python-format
-msgid "One day."
-msgid_plural "%(n)s days."
-msgstr[0] "Einen Tag."
-msgstr[1] "%(n)s Tage."
-
-#: grow/templates/grow/user/info.html:194
-msgid "You have no active grow logs."
-msgstr "Du hast keine aktiven Growlogs."
-
-#: grow/templates/grow/user/info.html:209
-msgid "Show finished grow logs"
-msgstr "Zeige abgeschlossene Growlogs"
-
-#: grow/templates/grow/user/info.html:219
-msgid "Finished at"
-msgstr "Abgeschlossen am"
-
-#: grow/templates/grow/user/info.html:220
-msgid "Duration"
-msgstr "Dauer"
-
-#: grow/templates/grow/user/info.html:235
-msgid "You have no finished grow logs."
-msgstr "Du hast keine abgeschlossenen Growlogs."
-
 #: grow/views/location.py:223 grow/views/location.py:235
 #: grow/views/location.py:248 grow/views/location.py:259
 msgid "Location cannot be deleted because it has associated growlogs."
 msgstr ""
 "Der Standort kann nicht gelöscht werden, da er mit Growlogs verknüpft ist."
+
+#, python-format
+#~ msgid "<b>Age:</b> %(age)s day"
+#~ msgid_plural "<b>Age:</b> %(age)s days"
+#~ msgstr[0] "<b>Alter:</b> %(age)s Tag"
+#~ msgstr[1] "<b>Alter:</b> %(age)s Tage"
+
+#, python-format
+#~ msgid "<b>Flowering Time:</b> %(ft)s day"
+#~ msgid_plural "<b>Flowering Time:</b> %(ft)s days"
+#~ msgstr[0] "<b>Blütezeit:</b> %(ft)s Tag"
+#~ msgstr[1] "<b>Blütezeit:</b> %(ft)s Tage"
+
+#~ msgid ""
+#~ "There are currently no growlogs for this strain, at least none you are "
+#~ "allowed to view. You could grow this strain yourself and add a growlog "
+#~ "for the members here, so they can see how this strain grows and flowers. "
+#~ "Others might want to learn from what you are doing."
+#~ msgstr ""
+#~ "Es gibt zu Zeit keine Growlogs für diese Sorte, zumindest keine die du "
+#~ "ansehen darfst. Du könntest die Sorte aber selber anbauen und einen "
+#~ "Growlog für die Mitglieder hier anlegen, damit sie sehen können wie die "
+#~ "Sorte wächst und blüht. Andere könnten aus dem lernen wollen, was du "
+#~ "machst."
+
+#~ msgid "Show seeds in stock"
+#~ msgstr "Zeige Samen auf Lager"
+
+#~ msgid "Actions"
+#~ msgstr "Aktionen"
+
+#, python-format
+#~ msgid "One day old."
+#~ msgid_plural "%(n)s days old."
+#~ msgstr[0] "Einen Tag alt."
+#~ msgstr[1] "%(n)s Tage alt."
+
+#, python-format
+#~ msgid "One day."
+#~ msgid_plural "%(n)s days."
+#~ msgstr[0] "Einen Tag."
+#~ msgstr[1] "%(n)s Tage."
+
+#~ msgid "You have no active grow logs."
+#~ msgstr "Du hast keine aktiven Growlogs."
+
+#~ msgid "You have no finished grow logs."
+#~ msgstr "Du hast keine abgeschlossenen Growlogs."
 
 #, python-format
 #~ msgid ""

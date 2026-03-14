@@ -6,7 +6,7 @@ from datetime import date
 
 from django.db import models
 # from django.utils.safestring import mark_safe
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext_lazy as _, ngettext
 from django.utils import timezone
 from django.conf import settings
 
@@ -15,6 +15,7 @@ from ..enums import (
     TEXT_CHOICES,
     PermissionType,
     PERMISSION_CHOICES,
+    GrowlogStatus,
 )
 
 from .strain import Strain
@@ -785,6 +786,189 @@ class GrowlogEntry(models.Model):
     )
 
     @property
+    def status(self) -> GrowlogStatus:
+        """
+        Get the status of the grow log entry based on the grow log's current stage.
+        """
+        end_date = timezone.now().date()
+        if self.growlog.finished_at is not None:
+            end_date = self.growlog.finished_at.date()
+
+        if self.timestamp.date() > end_date:
+            return GrowlogStatus.FINISHED
+
+        if self.growlog.is_germinating:
+            if self.timestamp.date() < self.growlog.germinating_at:
+                return GrowlogStatus.ACTIVE
+
+            if self.growlog.vegetative_at:
+                if self.timestamp.date() < self.growlog.vegetative_at:
+                    return GrowlogStatus.GERMINATING
+            elif self.growlog.flowering_at:
+                if self.timestamp.date() < self.growlog.flowering_at:
+                    return GrowlogStatus.GERMINATING
+            elif self.growlog.harvested_at:
+                if self.timestamp.date() < self.growlog.harvested_at:
+                    return GrowlogStatus.GERMINATING
+            elif self.growlog.finished_at:
+                if self.timestamp < self.growlog.finished_at:
+                    return GrowlogStatus.GERMINATING
+            else:
+                return GrowlogStatus.GERMINATING
+
+        elif self.growlog.is_cutted:
+            if self.timestamp.date() < self.growlog.cutted_at:
+                return GrowlogStatus.ACTIVE
+            if self.growlog.vegetative_at:
+                if self.timestamp.date() < self.growlog.vegetative_at:
+                    return GrowlogStatus.ROOTING
+            elif self.growlog.flowering_at:
+                if self.timestamp.date() < self.growlog.flowering_at:
+                    return GrowlogStatus.ROOTING
+            elif self.growlog.harvested_at:
+                if self.timestamp.date() < self.growlog.harvested_at:
+                    return GrowlogStatus.ROOTING
+            elif self.growlog.finished_at:
+                if self.timestamp < self.growlog.finished_at:
+                    return GrowlogStatus.ROOTING
+            else:
+                return GrowlogStatus.ROOTING
+
+        if self.growlog.is_vegetative():
+            if self.timestamp.date() < self.growlog.vegetative_at:
+                return GrowlogStatus.ACTIVE
+            if self.growlog.flowering_at:
+                if self.timestamp.date() < self.growlog.flowering_at:
+                    return GrowlogStatus.VEGETATIVE
+            elif self.growlog.harvested_at:
+                if self.timestamp.date() < self.growlog.harvested_at:
+                    return GrowlogStatus.VEGETATIVE
+            elif self.growlog.finished_at:
+                if self.timestamp < self.growlog.finished_at:
+                    return GrowlogStatus.VEGETATIVE
+            else:
+                return GrowlogStatus.VEGETATIVE
+
+        if self.growlog.is_flowering:
+            if self.timestamp.date() < self.growlog.flowering_at:
+                return GrowlogStatus.ACTIVE
+            if self.growlog.harvested_at:
+                if self.timestamp.date() < self.growlog.harvested_at:
+                    return GrowlogStatus.FLOWERING
+            elif self.growlog.finished_at:
+                if self.timestamp < self.growlog.finished_at:
+                    return GrowlogStatus.FLOWERING
+
+        if self.growlog.is_harvested:
+            if self.timestamp.date() < self.growlog.harvested_at:
+                return GrowlogStatus.ACTIVE
+            if self.growlog.finished_at:
+                if self.timestamp < self.growlog.finished_at:
+                    return GrowlogStatus.HARVESTED
+            else:
+                return GrowlogStatus.HARVESTED
+
+        if self.growlog.is_finished:
+            if self.timestamp.date() >= self.growlog.finished_at:
+                return GrowlogStatus.FINISHED
+
+        return GrowlogStatus.ACTIVE
+
+    @property
+    def status_display(self) -> str:
+        """
+        Get the display value of the grow log entry's status.
+        """
+        if self.status == GrowlogStatus.ACTIVE:
+            return ngettext(
+                "Active ({n} day)",
+                "Active ({n} days)",
+                self.duration_days
+            ).format(n=self.duration_days)
+        elif self.status == GrowlogStatus.GERMINATING:
+            germinating_end = timezone.now().date()
+            if self.growlog.finished_at:
+                germinating_end = self.growlog.finished_at.date()
+            if self.growlog.harvested_at:
+                germinating_end = self.growlog.harvested_at
+            if self.growlog.flowering_at:
+                germinating_end = self.growlog.flowering_at
+            if self.growlog.vegetative_at:
+                germinating_end = self.growlog.vegetative_at
+
+            print(germinating_end, self.growlog.germinating_at)
+
+            germinating_days = (germinating_end - self.growlog.germinating_at).days
+            return ngettext(
+                "Germinating ({n} day)",
+                "Germinating ({n} days)",
+                germinating_days
+            ).format(n=germinating_days)
+        elif self.status == GrowlogStatus.ROOTING:
+            rooting_end = timezone.now().date()
+            if self.growlog.finished_at:
+                rooting_end = self.growlog.finished_at.date()
+            if self.growlog.harvested_at:
+                rooting_end = self.growlog.harvested_at
+            if self.growlog.flowering_at:
+                rooting_end = self.growlog.flowering_at
+            if self.growlog.vegetative_at:
+                rooting_end = self.growlog.vegetative_at
+
+            rooting_days = (rooting_end - self.growlog.cutted_at).days
+            return ngettext(
+                "Rooting ({n} day)",
+                "Rooting ({n} days)",
+                rooting_days
+            ).format(n=rooting_days)
+        elif self.status == GrowlogStatus.VEGETATIVE:
+            vegetative_end = timezone.now().date()
+            if self.growlog.finished_at:
+                vegetative_end = self.growlog.finished_at.date()
+            if self.growlog.harvested_at:
+                vegetative_end = self.growlog.harvested_at
+            if self.growlog.flowering_at:
+                vegetative_end = self.growlog.flowering_at
+
+            vegetative_days = (vegetative_end - self.growlog.vegetative_at).days
+            return ngettext(
+                "Vegetative ({n} day)",
+                "Vegetative ({n} days)",
+                vegetative_days.days
+            ).format(n=vegetative_days.days)
+        elif self.status == GrowlogStatus.FLOWERING:
+            flowering_end = timezone.now().date()
+            if self.growlog.finished_at:
+                flowering_end = self.growlog.finished_at.date()
+            if self.growlog.harvested_at:
+                flowering_end = self.growlog.harvested_at
+
+            flowering_days = (flowering_end - self.growlog.flowering_at).days
+            return ngettext(
+                "Flowering ({n} day)",
+                "Flowering ({n} days)",
+                flowering_days
+            ).format(n=flowering_days)
+        elif self.status == GrowlogStatus.HARVESTED:
+            harvested_end = timezone.now().date()
+            if self.growlog.finished_at:
+                harvested_end = self.growlog.finished_at.date()
+
+            harvested_days = (harvested_end - self.growlog.harvested_at).days
+            return ngettext(
+                "Harvested ({n} day)",
+                "Harvested ({n} days)",
+                harvested_days
+            ).format(n=harvested_days)
+        elif self.status == GrowlogStatus.FINISHED:
+            finished_days = (timezone.now().date() - self.growlog.finished_at.date()).days
+            return ngettext(
+                "Finished ({n} day)",
+                "Finished ({n} days)",
+                finished_days
+            ).format(n=finished_days)
+
+    @property
     def content_type(self) -> TextType:
         """
         Get the TextType enum for the content type.
@@ -808,9 +992,9 @@ class GrowlogEntry(models.Model):
             return 0
 
         if self.growlog.is_germinated:
-            delta = self.timestamp.date() - self.growlog.germinated_at
+            delta = self.timestamp.date() - self.growlog.germinating_at
         else:
-            delta = self.timestamp.date() - self.growlog.is_cutted
+            delta = self.timestamp.date() - self.growlog.cutted_at
 
         return delta.days
 
@@ -882,6 +1066,14 @@ class GrowlogEntry(models.Model):
             days = total_days % 7
 
         return (weeks, days)
+
+    @property
+    def duration_days(self) -> int:
+        """
+        Calculate the total number of days since the grow log started for this entry.
+        Returns 0 if germination date is not set.
+        """
+        return (timezone.now().date() - self.growlog.started_at.date()).days
 
     class Meta:
         db_table = "grow_growlogentry"

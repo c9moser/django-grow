@@ -822,3 +822,41 @@ class GrowlogEntryCreateView(LoginRequiredMixin, FormView):
             return redirect(reverse('grow:growlog-detail', kwargs={'pk': self.growlog.pk}))
         else:
             return render(request, self.template_name, context=self.get_context_data(form=form))
+
+
+class GrowlogEntryUpdateView(LoginRequiredMixin, FormView):
+    template_name = GROW_TEMPLATES['grow/growlog/entry_update']
+    form_template_name = GROW_TEMPLATES['grow/growlog/entry_form']
+
+    form_class = GrowlogEntryForm
+
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['growlog'] = self.growlog
+        context['form_template'] = self.form_template_name
+        context['form'].fields['location'].queryset = self.request.user.locations.all(
+        ).order_by('name')
+        return context
+
+    def get(self, request: HttpRequest, pk: int) -> HttpResponse:
+        self.entry = get_object_or_404(GrowlogEntry, pk=pk)
+        self.growlog = self.entry.growlog
+        if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
+            return HttpResponse(status=403)
+        form = self.form_class(instance=self.entry)
+        return render(request, self.template_name, context=self.get_context_data(form=form))
+
+    def post(self, request: HttpRequest, pk: int) -> HttpResponse:
+        self.entry = get_object_or_404(GrowlogEntry, pk=pk)
+        self.growlog = self.entry.growlog
+        if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
+            return HttpResponse(status=403)
+
+        form = self.form_class(request.POST, instance=self.entry)
+        form.fields['location'].queryset = request.user.locations.all().order_by('name')
+
+        if form.is_valid():
+            form.save()
+            return redirect(reverse('grow:growlog-detail', kwargs={'pk': self.growlog.pk}))
+        else:
+            return render(request, self.template_name, context=self.get_context_data(form=form))

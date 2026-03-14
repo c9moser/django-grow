@@ -581,6 +581,7 @@ class PermissionCode(IntEnum):
 class GrowlogStatus(StrEnum):
     ACTIVE = 'active'
     GERMINATING = 'germinating'
+    ROOTING = 'rooting'
     VEGETATIVE = 'vegetative'
     FLOWERING = 'flowering'
     HARVESTED = 'harvested'
@@ -591,6 +592,7 @@ class GrowlogStatus(StrEnum):
         mapping = {
             "active": GrowlogStatus.ACTIVE,
             "germinating": GrowlogStatus.GERMINATING,
+            "rooting": GrowlogStatus.ROOTING,
             "vegetative": GrowlogStatus.VEGETATIVE,
             "flowering": GrowlogStatus.FLOWERING,
             "harvested": GrowlogStatus.HARVESTED,
@@ -606,6 +608,7 @@ class GrowlogStatus(StrEnum):
         mapping = {
             GrowlogStatus.ACTIVE: _("active"),
             GrowlogStatus.GERMINATING: _("germinating"),
+            GrowlogStatus.ROOTING: _("rooting"),
             GrowlogStatus.VEGETATIVE: _("vegetative"),
             GrowlogStatus.FLOWERING: _("flowering"),
             GrowlogStatus.HARVESTED: _("harvested"),
