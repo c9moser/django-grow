@@ -64,11 +64,7 @@
         <div class="card mb-3 w-100 m-3-auto">
             <div class="card-header">
                 <div class="d-flex justify-content-between align-items-center">
-                    <h5 class="card-title mb-0">{{ entry.timestamp|date:"SHORT_DATETIME_FORMAT" }}
-                        {% if entry.growlog.flowering_at %}
-                        ({% blocktranslate count n=entry.growlog.flowering_days %}{{ n }} day{% plural %}{{ n }} days{% endblocktranslate %})
-                        {% endif %}
-                    </h5>
+                    <h5 class="card-title mb-0">{{ entry.timestamp|date:"SHORT_DATETIME_FORMAT" }}</h5>
                     <h5 class="text-muted mb-0">{{ entry.status_display }}</h5>
                     <div class="text-end">
                         {% if can_edit %}
@@ -114,7 +110,7 @@
             <div class="card-body">
                 <h3>{% translate "Details" %}</h3>
                 <ul>
-                    <li><strong>{% translate "Location:" %}</strong> {{ entry.location }}</li>
+                    <li><strong>{% translate "Location:" %}</strong> {% if entry.location %}{{ entry.location }}{% else %}-{% endif %}</li>
                     <li><strong>{% translate "Duration:" %}</strong> {{ entry.duration_display }}</li>
                     {% if entry.growlog.germinating_at %}
                     <li><strong>{% translate "Germinating for:" %}</strong> {{ entry.germinating_duration_display }}</li>
@@ -134,8 +130,6 @@
 
                 <h3>{% translate "Content" %}</h3>
                 {{ entry.content_html }}
-
-
             </div>
         </div>
         {% empty %}

@@ -733,8 +733,6 @@ class GrowlogEntry(models.Model):
     timestamp = models.DateTimeField(_("timestamp"),
                                      auto_now_add=True)
 
-
-
     #: The content of the entry
     #:
     #: **Note:** Must contain a text
@@ -809,11 +807,6 @@ class GrowlogEntry(models.Model):
             else:
                 return self.content
         return ""
-
-    #: The text type of the content
-    #:
-    #: Use the `content_type` property to get/set the text type.
-
 
     @property
     def status(self) -> GrowlogStatus:
