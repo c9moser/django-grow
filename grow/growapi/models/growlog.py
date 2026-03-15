@@ -1201,28 +1201,22 @@ class GrowlogEntry(models.Model):
         """
         if not self.growlog.germinating_at:
             return -1
+
+        delta = self.timestamp.date() - self.growlog.germinating_at
+
         if self.growlog.vegetative_at is not None:
-            if self.timestamp.date() < self.growlog.vegetative_at:
-                delta = self.timestamp.date() - self.growlog.germinating_at
-            else:
+            if self.timestamp.date() >= self.growlog.vegetative_at:
                 delta = self.growlog.vegetative_at - self.growlog.germinating_at
         elif self.growlog.flowering_at is not None:
-            if self.timestamp.date() < self.growlog.flowering_at:
-                delta = self.timestamp.date() - self.growlog.germinating_at
-            else:
+            if self.timestamp.date() >= self.growlog.flowering_at:
                 delta = self.growlog.flowering_at - self.growlog.germinating_at
         elif self.growlog.harvested_at is not None:
-            if self.timestamp.date() < self.growlog.harvested_at:
-                delta = self.timestamp.date() - self.growlog.germinating_at
-            else:
+            if self.timestamp.date() >= self.growlog.harvested_at:
                 delta = self.growlog.harvested_at - self.growlog.germinating_at
         elif self.growlog.finished_at is not None:
-            if self.timestamp.date() < self.growlog.finished_at:
-                delta = self.timestamp.date() - self.growlog.germinating_at
-            else:
+            if self.timestamp.date() >= self.growlog.finished_at.date():
                 delta = self.growlog.finished_at - self.growlog.germinating_at
-        else:
-            delta = self.timestamp.date() - self.growlog.germinating_at
+
         return delta.days
 
     @property
@@ -1230,7 +1224,7 @@ class GrowlogEntry(models.Model):
         """
         Get the display string for the germinating duration of this grow log entry.
         """
-        germinating_days = self.growlog.germinating_days
+        germinating_days = self.germinating_days
         if germinating_days < 0:
             return gettext("Not germinated")
         return ngettext("{n} day", "{n} days", germinating_days).format(n=germinating_days)
@@ -1243,6 +1237,7 @@ class GrowlogEntry(models.Model):
         """
         if not self.growlog.cutted_at:
             return -1
+
         if self.growlog.vegetative_at is not None:
             if self.timestamp.date() < self.growlog.vegetative_at:
                 delta = self.timestamp.date() - self.growlog.cutted_at
@@ -1272,7 +1267,7 @@ class GrowlogEntry(models.Model):
         """
         Get the display string for the rooting duration of this grow log entry.
         """
-        rooting_days = self.growlog.rooting_days
+        rooting_days = self.rooting_days
         if rooting_days < 0:
             return gettext("Not cutted")
         return ngettext("{n} day", "{n} days", rooting_days).format(n=rooting_days)
@@ -1282,7 +1277,7 @@ class GrowlogEntry(models.Model):
         """
         Get the display string for the vegetative duration of this grow log entry.
         """
-        vegetative_days = self.growlog.vegetative_days
+        vegetative_days = self.vegetative_days
         if vegetative_days < 0:
             return gettext("Not in vegetative stage")
 
