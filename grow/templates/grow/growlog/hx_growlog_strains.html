@@ -11,7 +11,7 @@
             {% if can_edit %}
             <th scope="col" class="text-end">
                 <button type="button"
-                    class="btn btn-link link-body-emphasis link-opacity-50 link-opacity-100-hover link-underline-opacity-0 p-0 m-0"
+                    class="btn btn-link link-dark link-opacity-50 link-opacity-100-hover link-underline-opacity-0 p-0 m-0"
                     hx-get="{% url 'grow:hx-growlog-strain-add' growlog_pk=growlog.pk %}"
                     hx-target="#modals-here"
                     hx-swap="innerHTML"
@@ -24,7 +24,7 @@
                     </span>
                 </button>
                 <button type="button"
-                    class="btn btn-link link-body-emphasis link-opacity-50 link-opacity-100-hover link-underline-opacity-0 p-0 m-0"
+                    class="btn btn-link link-dark link-opacity-50 link-opacity-100-hover link-underline-opacity-0 p-0 m-0"
                     hx-get="{% url 'grow:hx-growlog-seeds-add' growlog.pk %}"
                     hx-target="#modals-here"
                     hx-swap="innerHTML"
