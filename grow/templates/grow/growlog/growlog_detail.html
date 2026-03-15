@@ -79,6 +79,15 @@
         data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Delete Grow Log' %}"
     ><i class="bi bi-trash"></i></a>
 </div>
+
+<p>
+    {% if growlog.grower == request.user %}
+    {% translate "This is the grow log for your cultivation activities. Here you can track and manage your grows." %}
+    {% else %}
+    {% blocktranslate with grower_name=growlog.grower.username %}This is the grow log for {{ grower_name }}'s cultivation activities. Here you can track his/her grows.{% endblocktranslate %}
+    {% endif %}
+</p>
+
 {% endif %}
 <h2>{% translate "Overview" %}</h2>
 <div id="growlog-overview">
@@ -176,13 +185,6 @@
         {% endif %}
     </ul>
 </div>
-<p>
-    {% if growlog.grower == request.user %}
-    {% translate "This is the grow log for your cultivation activities. Here you can track and manage your grows." %}
-    {% else %}
-    {% blocktranslate with grower_name=growlog.grower.username %}This is the grow log for {{ grower_name }}'s cultivation activities. Here you can track and manage their grows.{% endblocktranslate %}
-    {% endif %}
-</p>
 <p>
     {% if can_edit %}
     <a href="#personal-notes" class="link-success"><i class="bi bi-arrow-down"></i> {% translate "Go to Personal Notes" %}</a><br>

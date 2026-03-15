@@ -10,6 +10,7 @@ from django.views.generic import CreateView, UpdateView, DeleteView, FormView
 from django.db.models import Count
 from grow.forms.growlog import (
     GrowlogAddStrainForm,
+    GrowlogDeleteForm,
     GrowlogEntryForm,
     GrowlogForm,
     GrowlogDescriptionForm,
@@ -792,12 +793,53 @@ class GrowlogEntryCreateView(LoginRequiredMixin, FormView):
 
     form_class = GrowlogEntryForm
 
+    def get_form(self, form_class=None, **form_kwargs):
+        if form_class is None:
+            form_class = self.get_form_class()
+
+        if 'initial' in form_kwargs:
+            initial = form_kwargs['initial']
+        else:
+            initial = {}
+
+        if 'data' in form_kwargs:
+            data = form_kwargs['data']
+        else:
+            data = {}
+
+        if self.growlog.last_location:
+            initial['location'] = self.growlog.last_location.id
+            data['location'] = self.growlog.last_location.id
+        else:
+            print("Growlog has no last location")
+
+        if 'location' in data:
+            try:
+                location_id = int(data['location'])
+                location = self.request.user.locations.filter(id=location_id).first()
+                if location:
+                    initial['location'] = location.id
+            except ValueError:
+                pass
+
+        form_kwargs['initial'] = initial
+        form_kwargs['data'] = data
+
+        form = form_class(**form_kwargs)
+        form.fields['location'].queryset = self.request.user.locations.all().order_by('name')
+
+        return form
+
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context['growlog'] = self.growlog
         context['form_template'] = self.form_template_name
+
+        print("Last location:", self.growlog.last_location)
+
         context['form'].fields['location'].queryset = self.request.user.locations.all(
         ).order_by('name')
+
         return context
 
     def get(self, request: HttpRequest, growlog_pk: int) -> HttpResponse:
@@ -813,6 +855,11 @@ class GrowlogEntryCreateView(LoginRequiredMixin, FormView):
 
         form = self.form_class(request.POST)
         form.fields['location'].queryset = request.user.locations.all().order_by('name')
+        form.fields['location'].initial = (
+            self.growlog.last_location.id
+            if self.growlog.last_location
+            else None
+        )
 
         if form.is_valid():
             entry = form.save(commit=False)
@@ -856,7 +903,42 @@ class GrowlogEntryUpdateView(LoginRequiredMixin, FormView):
         form.fields['location'].queryset = request.user.locations.all().order_by('name')
 
         if form.is_valid():
-            form.save()
+            form.save(commit=True)
             return redirect(reverse('grow:growlog-detail', kwargs={'pk': self.growlog.pk}))
         else:
             return render(request, self.template_name, context=self.get_context_data(form=form))
+
+
+class GrowlogEntryDeleteView(LoginRequiredMixin, DeleteView):
+    model = GrowlogEntry
+    template_name = GROW_TEMPLATES['grow/growlog/entry_delete']
+    form_class = GrowlogDeleteForm
+
+    def get_success_url(self) -> str:
+        return reverse('grow:growlog-detail', kwargs={'pk': self.growlog.pk})
+
+    def get_context_data(self, **kwargs):
+        kwargs['entry'] = self.entry
+        kwargs['growlog'] = self.growlog
+
+        return super().get_context_data(**kwargs)
+
+    def get(self, request: HttpRequest, pk: int):
+        self.entry = get_object_or_404(GrowlogEntry, pk=pk)
+        self.growlog = self.entry.growlog
+        if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
+            return HttpResponse(status=403)
+
+        return super().get(request, pk=pk)
+
+    def post(self, request: HttpRequest, pk, **kwargs) -> HttpResponse:
+        self.entry = get_object_or_404(GrowlogEntry, pk=pk)
+        self.growlog = self.entry.growlog
+        if not request.user.id == self.growlog.grower.id:
+            return HttpResponse(status=403)
+
+        form = self.form_class(request.POST)
+        if not form.is_valid():
+            return redirect(reverse('grow:growlog-detail', kwargs={'pk': self.growlog.pk}))
+
+        return super().post(request, pk=pk, **kwargs)

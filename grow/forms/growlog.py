@@ -149,15 +149,17 @@ class LocationModelChoiceField(forms.ModelChoiceField):
 
 class GrowlogEntryForm(forms.ModelForm):
 
-    location = LocationModelChoiceField(
-        queryset=Location.objects.none(),
-        label=_("Location"),
-        required=False
-    )
-
     class Meta:
         model = GrowlogEntry
         fields = [
             'content_type_data',
             'content',
+            'location',
         ]
+
+
+class GrowlogDeleteForm(forms.Form):
+    confirm = forms.BooleanField(
+        label=_("Confirm deletion"),
+        required=True,
+    )

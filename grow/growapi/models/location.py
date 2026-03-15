@@ -136,6 +136,9 @@ class Location(models.Model):
             growlogs.add(entry.growlog)
         return growlogs
 
+    def __str__(self):
+        return self.name
+
     class Meta:
         db_table = "grow_location"
         unique_together = [

@@ -6,7 +6,7 @@ from datetime import date
 
 from django.db import models
 # from django.utils.safestring import mark_safe
-from django.utils.translation import gettext_lazy as _, ngettext
+from django.utils.translation import gettext_lazy as _, gettext
 from django.utils import timezone
 from django.conf import settings
 
@@ -558,6 +558,7 @@ class Growlog(models.Model):
         days = remaining_days % 7
         return {'years': years, 'weeks': weeks, 'days': days}
 
+    @property
     def duration_delta(self) -> timezone.timedelta:
         """
         Calculate the total duration of the grow log as a timedelta.
@@ -668,10 +669,10 @@ class Growlog(models.Model):
         """
         Get the most recent location associated with this grow log.
         """
-        entries_with_location = self.entries.filter(location__isnull=False).order_by('-timestamp')
-        if not entries_with_location.exists():
-            return None
-        return entries_with_location.first().location
+        entries = self.entries.all().order_by('-timestamp')
+        if entries:
+            return entries.first().location
+        return None
 
     class Meta:
         db_table = "grow_growlog"
@@ -880,11 +881,7 @@ class GrowlogEntry(models.Model):
         Get the display value of the grow log entry's status.
         """
         if self.status == GrowlogStatus.ACTIVE:
-            return ngettext(
-                "Active ({n} day)",
-                "Active ({n} days)",
-                self.duration_days
-            ).format(n=self.duration_days)
+            return gettext("Active (Day {n})").format(n=self.duration_days + 1)
         elif self.status == GrowlogStatus.GERMINATING:
             germinating_end = timezone.now().date()
             if self.growlog.finished_at:
@@ -898,49 +895,27 @@ class GrowlogEntry(models.Model):
 
             print(germinating_end, self.growlog.germinating_at)
 
-            germinating_days = (germinating_end - self.growlog.germinating_at).days
-            return ngettext(
-                "Germinating ({n} day)",
-                "Germinating ({n} days)",
-                germinating_days
-            ).format(n=germinating_days)
+            germinating_days = (self.timestamp.date() - self.growlog.germinating_at).days
+            return gettext("Germinating (Day {n})").format(n=(germinating_days + 1))
+
         elif self.status == GrowlogStatus.ROOTING:
             rooting_days = (self.timestamp.date() - self.growlog.cutted_at).days
-            return ngettext(
-                "Rooting ({n} day)",
-                "Rooting ({n} days)",
-                rooting_days
-            ).format(n=rooting_days)
+            return gettext("Rooting (Day {n})").format(n=(rooting_days + 1))
         elif self.status == GrowlogStatus.VEGETATIVE:
-
             vegetative_days = (self.timestamp.date() - self.growlog.vegetative_at).days
-            return ngettext(
-                "Vegetative ({n} day)",
-                "Vegetative ({n} days)",
-                vegetative_days
-            ).format(n=vegetative_days)
+            return gettext("Vegetative (Day {n})").format(n=(vegetative_days + 1))
         elif self.status == GrowlogStatus.FLOWERING:
             flowering_days = (self.timestamp.date() - self.growlog.flowering_at).days
-            return ngettext(
-                "Flowering ({n} day)",
-                "Flowering ({n} days)",
-                flowering_days
-            ).format(n=flowering_days)
+            return gettext("Flowering (Day {n})").format(n=(flowering_days + 1))
         elif self.status == GrowlogStatus.HARVESTED:
-            harvested_days = (timezone.now().date() - self.growlog.harvested_at).days
-            return ngettext(
-                "Harvested ({n} day)",
-                "Harvested ({n} days)",
-                harvested_days
-            ).format(n=harvested_days)
+            harvested_days = (self.timestamp.date() - self.growlog.harvested_at).days
+            return gettext("Harvested (Day {n})").format(n=(harvested_days + 1))
         elif self.status == GrowlogStatus.FINISHED:
-            finished_days = (timezone.now().date() - self.growlog.finished_at.date()).days
+            finished_days = (self.timestamp.date() - self.growlog.finished_at.date()).days
 
-            return ngettext(
-                "Finished ({n} day)",
-                "Finished ({n} days)",
-                finished_days
-            ).format(n=finished_days)
+            return gettext("Finished (Day {n})").format(n=(finished_days + 1))
+
+        return gettext("Unknown Status")
 
     @property
     def content_type(self) -> TextType:
@@ -1047,7 +1022,7 @@ class GrowlogEntry(models.Model):
         Calculate the total number of days since the grow log started for this entry.
         Returns 0 if germination date is not set.
         """
-        return (timezone.now().date() - self.growlog.started_at.date).days
+        return (self.timestamp.date() - self.growlog.started_at.date()).days
 
     class Meta:
         db_table = "grow_growlogentry"
