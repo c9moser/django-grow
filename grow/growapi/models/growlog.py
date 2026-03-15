@@ -6,7 +6,7 @@ from datetime import date
 
 from django.db import models
 # from django.utils.safestring import mark_safe
-from django.utils.translation import gettext_lazy as _, gettext
+from django.utils.translation import gettext_lazy as _, gettext, ngettext
 from django.utils import timezone
 from django.conf import settings
 
@@ -265,6 +265,7 @@ class Growlog(models.Model):
         return (self.germinating_at and not self.cutted_at
                 and (self.vegetative_at or self.flowering_at))
 
+    @property
     def is_vegetative(self) -> bool:
         """
         Check if the grow log is in vegetative stage.
@@ -732,22 +733,66 @@ class GrowlogEntry(models.Model):
     timestamp = models.DateTimeField(_("timestamp"),
                                      auto_now_add=True)
 
+
+
+    #: The content of the entry
+    #:
+    #: **Note:** Must contain a text
+    content = models.TextField(_("content"))
+
+    content_type_data = models.CharField(
+        _("content type"),
+        max_length=50,
+        default="markdown",
+        choices=TEXT_CHOICES,
+        db_column="content_type"
+    )
+
+    #: The location of the plants
+    location = models.ForeignKey(
+        Location,
+        on_delete=models.SET_NULL,
+        related_name="growlog_entries",
+        verbose_name=_("location"),
+        blank=True,
+        null=True
+    )
+
     @property
     def age(self) -> int:
         """Get the age in days since the growlog started."""
-        return (self.timestamp - self.growlog.started_at).days
+        age_start = self.growlog.started_at
+        if self.growlog.is_germinating:
+            age_start = self.growlog.germinating_at
+        elif self.growlog.is_cutted:
+            age_start = self.growlog.cutted_at
+        elif self.growlog.is_vegetative():
+            age_start = self.growlog.vegetative_at
+
+        delta_days = (self.timestamp - age_start).days
+        if delta_days < 0:
+            return -1
+        return delta_days
+
+    @property
+    def vegetative_time(self) -> int:
+        """Get the vegetative time in days since vegetative started."""
+        if self.growlog.vegetative_at is None:
+            return -1
+        delta_days = (self.timestamp.date() - self.growlog.vegetative_at).days
+        if delta_days < 0:
+            return -1
+        return delta_days
 
     @property
     def flowering_time(self) -> int:
         """Get the flowering time in days since flowering started."""
         if self.growlog.flowering_at is None:
             return -1
-        return (self.timestamp.date() - self.growlog.flowering_at).days
-
-    #: The content of the entry
-    #:
-    #: **Note:** Must contain a text
-    content = models.TextField(_("content"))
+        delta_days = (self.timestamp.date() - self.growlog.flowering_at).days
+        if delta_days < 0:
+            return -1
+        return delta_days
 
     @property
     def content_html(self) -> str:
@@ -768,23 +813,7 @@ class GrowlogEntry(models.Model):
     #: The text type of the content
     #:
     #: Use the `content_type` property to get/set the text type.
-    content_type_data = models.CharField(
-        _("content type"),
-        max_length=50,
-        default="markdown",
-        choices=TEXT_CHOICES,
-        db_column="content_type"
-    )
 
-    #: The location of the plants
-    location = models.ForeignKey(
-        Location,
-        on_delete=models.SET_NULL,
-        related_name="growlog_entries",
-        verbose_name=_("location"),
-        blank=True,
-        null=True
-    )
 
     @property
     def status(self) -> GrowlogStatus:
@@ -937,12 +966,14 @@ class GrowlogEntry(models.Model):
         Calculate the age of the grow log entry in days since the grow log's germination.
         Returns 0 if germination date is not set.
         """
-        if not self.growlog.is_germinated and not self.growlog.is_cutted:
+        if not self.growlog.germinating_at and not self.growlog.cutted_at and not self.growlog.vegetative_at:  # noqa: E501
             return 0
 
-        if self.growlog.is_germinated:
+        if self.growlog.vegetative_at is not None:
+            delta = self.timestamp.date() - self.growlog.vegetative_at
+        elif self.growlog.germinating_at is not None:
             delta = self.timestamp.date() - self.growlog.germinating_at
-        else:
+        elif self.growlog.cutted_at is not None:
             delta = self.timestamp.date() - self.growlog.cutted_at
 
         return delta.days
@@ -953,9 +984,6 @@ class GrowlogEntry(models.Model):
         Calculate the age of the grow log entry in weeks since the grow log's germination.
         Returns None if germination date is not set.
         """
-        if not self.growlog.is_germinated:
-            return None
-
         if self.age_days % 7 > 3:
             return (self.age_days // 7) + 1
         return self.age_days // 7
@@ -966,7 +994,7 @@ class GrowlogEntry(models.Model):
         Calculate the age of the grow log entry in weeks and days since the grow log's germination.
         Returns None if germination date is not set.
         """
-        if not self.growlog.is_germinated:
+        if not self.growlog.germinating_at:
             return None
 
         weeks = self.age_days // 7
@@ -974,14 +1002,100 @@ class GrowlogEntry(models.Model):
         return (weeks, days)
 
     @property
+    def vegetative_days(self) -> int:
+        """
+        Calculate the number of days since vegetative started for the grow log entry.
+        Returns -1 if vegetative date is not set.
+        """
+        if not self.growlog.vegetative_at:
+            return -1
+        if self.timestamp.date() < self.growlog.vegetative_at:
+            return -1
+
+        if self.growlog.flowering_at and self.timestamp.date() > self.growlog.flowering_at:
+            delta = self.growlog.flowering_at - self.growlog.vegetative_at
+        elif self.growlog.harvested_at and self.timestamp.date() > self.growlog.harvested_at:
+            delta = self.growlog.harvested_at - self.growlog.vegetative_at
+        elif self.growlog.finished_at and self.timestamp.date() > self.growlog.finished_at.date():
+            delta = self.growlog.finished_at - self.growlog.vegetative_at
+        else:
+            delta = self.timestamp.date() - self.growlog.vegetative_at
+
+        return delta.days
+
+    @property
+    def vegetative_weeks(self) -> int:
+        """
+        Calculate the number of weeks since vegetative started for the grow log entry.
+        Returns 0 if vegetative date is not set.
+        """
+        if not self.growlog.vegetative_at:
+            return 0
+        if self.vegetative_days % 7 > 3:
+            return (self.vegetative_days // 7) + 1
+        return self.vegetative_days // 7
+
+    @property
+    def vegetative_weeks_days(self) -> tuple[int, int] | None:
+        """
+        Calculate the number of weeks and days since vegetative started for the grow log entry.
+        Returns None if vegetative date is not set.
+        """
+        if not self.growlog.is_vegetative():
+            return None
+
+        if not self.growlog.is_flowering:
+            weeks = self.vegetative_days // 7
+            days = self.vegetative_days % 7
+        else:
+            delta = self.growlog.flowering_at - self.growlog.vegetative_at
+            total_days = delta.days
+            weeks = total_days // 7
+            days = total_days % 7
+
+        return (weeks, days)
+
+    @property
+    def vegetative_years_weeks_days(self) -> tuple[int, int, int] | None:
+        """
+        Calculate the number of years, weeks and days since vegetative started
+        for the grow log entry.
+
+        Returns None if vegetative date is not set.
+        """
+        if not self.growlog.is_vegetative():
+            return None
+
+        if not self.growlog.is_flowering:
+            total_days = self.vegetative_days
+        else:
+            delta = self.growlog.flowering_at - self.growlog.vegetative_at
+            total_days = delta.days
+
+        years = total_days // 365
+        remaining_days = total_days % 365
+        weeks = remaining_days // 7
+        days = remaining_days % 7
+        return (years, weeks, days)
+
+    @property
     def flowering_days(self) -> int:
         """
         Calculate the number of days since flowering started for the grow log entry.
-        Returns 0 if flowering date is not set.
+        Returns -1 if flowering date is not set.
         """
-        if not self.growlog.is_flowering:
-            return 0
-        delta = self.timestamp.date() - self.growlog.flowering_at
+        if not self.growlog.flowering_at:
+            return -1
+        if self.timestamp.date() < self.growlog.flowering_at:
+            return -1
+
+        if self.growlog.harvested_at and self.timestamp.date() > self.growlog.harvested_at:
+            delta = self.growlog.harvested_at - self.growlog.flowering_at
+        elif self.growlog.finished_at and self.timestamp.date() > self.growlog.finished_at.date():
+            delta = self.growlog.finished_at - self.growlog.flowering_at
+        else:
+            delta = self.timestamp.date() - self.growlog.flowering_at
+
         return delta.days
 
     @property
@@ -990,7 +1104,7 @@ class GrowlogEntry(models.Model):
         Calculate the number of weeks since flowering started for the grow log entry.
         Returns 0 if flowering date is not set.
         """
-        if not self.growlog.is_flowering:
+        if not self.growlog.flowering_at:
             return 0
         if self.flowering_days % 7 > 3:
             return (self.flowering_days // 7) + 1
@@ -1019,10 +1133,207 @@ class GrowlogEntry(models.Model):
     @property
     def duration_days(self) -> int:
         """
-        Calculate the total number of days since the grow log started for this entry.
+        Calculate the total number of days since the grow log
+        started for this image.
+
         Returns 0 if germination date is not set.
         """
         return (self.timestamp.date() - self.growlog.started_at.date()).days
+
+    @property
+    def duration_weeks(self) -> int:
+        """
+        Calculate the total number of weeks since the grow log
+        started for this image.
+
+        Returns 0 if germination date is not set.
+        """
+        if self.duration_days % 7 > 3:
+            return (self.duration_days // 7) + 1
+        return self.duration_days // 7
+
+    @property
+    def duration_weeks_days(self) -> tuple[int, int]:
+        """
+        Calculate the total number of weeks and days since the grow log
+        started for this image.
+
+        Returns (0, 0) if germination date is not set.
+        """
+        weeks = self.duration_days // 7
+        days = self.duration_days % 7
+        return (weeks, days)
+
+    @property
+    def duration_years_weeks_days(self):
+        """
+        Calculate the total number of years, weeks and days of this entry
+        since  the grow log started.
+
+        Returns (0, 0, 0) if germination date is not set.
+        """
+        years = self.duration_days // 365
+        remaining_days = self.duration_days % 365
+        weeks = remaining_days // 7
+        days = remaining_days % 7
+        return (years, weeks, days)
+
+    @property
+    def duration_display(self) -> str:
+
+        years, weeks, days = self.duration_years_weeks_days
+        print(years, weeks, days)
+
+        parts = []
+        if years > 0:
+            years_str = ngettext("{n} year", "{n} years", years).format(n=years)
+            parts.append(years_str)
+        if weeks > 0:
+            weeks_str = ngettext("{n} week", "{n} weeks", weeks).format(n=weeks)
+            parts.append(weeks_str)
+        if days > 0:
+            days_str = ngettext("{n} day", "{n} days", days).format(n=days)
+            parts.append(days_str)
+
+        if parts:
+            return ", ".join(parts) if parts else gettext("0 days")
+
+        return gettext("0 days")
+
+    @property
+    def germinating_days(self):
+        """
+        Calculate the number of days since germination started for this grow log entry.
+        Returns -1 if germination date is not set.
+        """
+        if not self.growlog.germinating_at:
+            return -1
+        if self.growlog.vegetative_at is not None:
+            if self.timestamp.date() < self.growlog.vegetative_at:
+                delta = self.timestamp.date() - self.growlog.germinating_at
+            else:
+                delta = self.growlog.vegetative_at - self.growlog.germinating_at
+        elif self.growlog.flowering_at is not None:
+            if self.timestamp.date() < self.growlog.flowering_at:
+                delta = self.timestamp.date() - self.growlog.germinating_at
+            else:
+                delta = self.growlog.flowering_at - self.growlog.germinating_at
+        elif self.growlog.harvested_at is not None:
+            if self.timestamp.date() < self.growlog.harvested_at:
+                delta = self.timestamp.date() - self.growlog.germinating_at
+            else:
+                delta = self.growlog.harvested_at - self.growlog.germinating_at
+        elif self.growlog.finished_at is not None:
+            if self.timestamp.date() < self.growlog.finished_at:
+                delta = self.timestamp.date() - self.growlog.germinating_at
+            else:
+                delta = self.growlog.finished_at - self.growlog.germinating_at
+        else:
+            delta = self.timestamp.date() - self.growlog.germinating_at
+        return delta.days
+
+    @property
+    def germinating_duration_display(self) -> str:
+        """
+        Get the display string for the germinating duration of this grow log entry.
+        """
+        germinating_days = self.growlog.germinating_days
+        if germinating_days < 0:
+            return gettext("Not germinated")
+        return ngettext("{n} day", "{n} days", germinating_days).format(n=germinating_days)
+
+    @property
+    def rooting_days(self):
+        """
+        Calculate the number of days since germination started for this grow log entry.
+        Returns -1 if germination date is not set.
+        """
+        if not self.growlog.cutted_at:
+            return -1
+        if self.growlog.vegetative_at is not None:
+            if self.timestamp.date() < self.growlog.vegetative_at:
+                delta = self.timestamp.date() - self.growlog.cutted_at
+            else:
+                delta = self.growlog.vegetative_at - self.growlog.cutted_at
+        elif self.growlog.flowering_at is not None:
+            if self.timestamp.date() < self.growlog.flowering_at:
+                delta = self.timestamp.date() - self.growlog.cutted_at
+            else:
+                delta = self.growlog.flowering_at - self.growlog.cutted_at
+        elif self.growlog.harvested_at is not None:
+            if self.timestamp.date() < self.growlog.harvested_at:
+                delta = self.timestamp.date() - self.growlog.cutted_at
+            else:
+                delta = self.growlog.harvested_at - self.growlog.cutted_at
+        elif self.growlog.finished_at is not None:
+            if self.timestamp.date() < self.growlog.finished_at:
+                delta = self.timestamp.date() - self.growlog.cutted_at
+            else:
+                delta = self.growlog.finished_at - self.growlog.cutted_at
+        else:
+            delta = self.timestamp.date() - self.growlog.cutted_at
+        return delta.days
+
+    @property
+    def rooting_duration_display(self) -> str:
+        """
+        Get the display string for the rooting duration of this grow log entry.
+        """
+        rooting_days = self.growlog.rooting_days
+        if rooting_days < 0:
+            return gettext("Not cutted")
+        return ngettext("{n} day", "{n} days", rooting_days).format(n=rooting_days)
+
+    @property
+    def vegetative_duration_display(self) -> str:
+        """
+        Get the display string for the vegetative duration of this grow log entry.
+        """
+        vegetative_days = self.growlog.vegetative_days
+        if vegetative_days < 0:
+            return gettext("Not in vegetative stage")
+
+        years, weeks, days = self.vegetative_years_weeks_days
+
+        parts = []
+        if years > 0:
+            years_str = ngettext("{n} year", "{n} years", years).format(n=years)
+            parts.append(years_str)
+        if weeks > 0:
+            weeks_str = ngettext("{n} week", "{n} weeks", weeks).format(n=weeks)
+            parts.append(weeks_str)
+        if days > 0:
+            days_str = ngettext("{n} day", "{n} days", days).format(n=days)
+            parts.append(days_str)
+
+        if parts:
+            return ", ".join(parts)
+
+        return gettext("0 days")
+
+    @property
+    def flowering_duration_display(self) -> str:
+        """
+        Get the display string for the flowering duration of this grow log entry.
+        """
+        flowering_days = self.flowering_days
+        if flowering_days < 0:
+            return gettext("Not in flowering stage")
+
+        weeks, days = self.flowering_weeks_days
+
+        parts = []
+        if weeks > 0:
+            weeks_str = ngettext("{n} week", "{n} weeks", weeks).format(n=weeks)
+            parts.append(weeks_str)
+        if days > 0:
+            days_str = ngettext("{n} day", "{n} days", days).format(n=days)
+            parts.append(days_str)
+
+        if parts:
+            return ", ".join(parts)
+
+        return gettext("0 days")
 
     class Meta:
         db_table = "grow_growlogentry"

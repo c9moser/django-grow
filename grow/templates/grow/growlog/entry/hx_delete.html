@@ -1,0 +1,34 @@
+{% load i18n widget_tweaks %}
+<div class="modal-dialog modal-md modal-dialog-centered" id="growlog-entry-delete-dialog">
+    <div class="modal-content">
+        <div class="modal-header bg-danger text-white">
+            <h5 class="modal-title">{% translate "Delete Grow Log Entry" %}</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="{% translate 'Close' %}"></button>
+        </div>
+        <form method="post" id="growlog-entry-delete-form">
+            <div class="modal-body">
+                {% csrf_token %}
+                <p>{% translate "Are you sure you want to delete this grow log entry?" %}</p>
+                <p><strong>{{ entry }}</strong></p>
+            </div>
+            <p class="px-3 modal-text">
+                <span>{% render_field form.confirm class="form-check-input me-2" %} <label for="{{ form.confirm.id_for_label }}">{% translate "I confirm the deletion" %}</label></span>
+            </p>
+            <div class="modal-footer text-end">
+                <button
+                    type="submit"
+                    class="btn btn-danger"
+                    hx-post="{% url 'grow:hx-growlog-entry-delete' pk=entry.pk %}"
+                    hx-target="#growlog-entries"
+                    hx-swap="innerHTML"
+                    data-bs-dismiss="modal"
+                    data-bs-target="#modals-here"
+                >{% translate "Delete Entry" %}</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-bs-target="#modals-here">{% translate "Cancel" %}</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    htmx.process(document.getElementById('growlog-entry-delete-dialog'));
+</script>

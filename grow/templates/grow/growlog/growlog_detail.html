@@ -23,7 +23,33 @@
         <li class="breadcrumb-item active">{{ growlog.name }}</li>
     </ol>
 </nav>
+
+{% if request.user == growlog.grower %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb" >
+
+    {% if GROW_IS_MAIN_APP %}
+        <li class="breadcrumb-item"><a href="{% url 'grow:home' %}">{% translate "Home" %}</a></li>
+    {% else %}
+        <li class="breadcrumb-item"><a href="/">{% translate "Home" %}</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'grow:home' %}">{% translate "Grow" %}</a></li>
+    {% endif %}
+        <li class="breadcrumb-item">
+            <a href="{% url 'grow:user-info' %}">
+                {% translate "My Grow" %}
+            </a>
+        </li>
+        <li class="breadcrumb-item active">
+            <a href="#{#{% url 'grow:user-growlogs' %}#}">
+                {% translate "My Growlogs" %}
+            </a>
+        </li>
+        <li class="breadcrumb-item active">{{ growlog.name }}</li>
+
+    </ol>
+</nav>
 {% endif %}
+{% endif %}{# use_bootstrap #}
 
 <h1>{{ growlog.name }}</h1>
 {% if can_edit %}
@@ -235,9 +261,18 @@
 <h2 id="entries">{% translate "Entries" %}</h2>
 {% if can_edit %}
 <div class="mb-3">
-    <a type="button" class="btn btn-outline-primary btn-sm"
-        href="{% url 'grow:growlog-entry-create' growlog_pk=growlog.id %}"
-    ><i class="bi bi-plus-square"></i> {% translate "Add Entry" %}</a>
+    <button
+        type="button"
+        class="btn btn-outline-primary btn-sm"
+        hx-get="{% url 'grow:hx-growlog-entry-create' growlog_pk=growlog.id %}"
+        hx-target="#modals-here"
+        hx-swap="innerHTML"
+        data-bs-target="#modals-here"
+        data-bs-toggle="modal"
+    ><span data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Create a new Grow Log Entry with current timestamp' %}">
+        <i class="bi bi-plus-square"></i> {% translate "Create new entry" %}</i>
+    </span></button>
+
 </div>
 {% endif %}
 <div id="growlog-entries">
