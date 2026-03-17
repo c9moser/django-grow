@@ -183,7 +183,7 @@ msgstr "Aktiv"
 
 #: grow/growapi/enums.py:610
 msgid "germinating"
-msgstr "Keimung"
+msgstr "Keimend"
 
 #: grow/growapi/enums.py:611
 msgid "rooting"
@@ -318,7 +318,7 @@ msgstr "Aktiv (Tag {n})"
 
 #: grow/growapi/models/growlog.py:921
 msgid "Germinating (Day {n})"
-msgstr "Keimung (Tag {n})"
+msgstr "Keimen (Tag {n})"
 
 #: grow/growapi/models/growlog.py:925
 msgid "Rooting (Day {n})"
@@ -452,7 +452,7 @@ msgid "ventilation intensity"
 msgstr "Intensität der Belüftung"
 
 #: grow/growapi/models/location.py:204
-msgid "Ventilation intensity in cubic meters per hour."
+msgid "Ventilation intensity in cubic meters per hour"
 msgstr "Intensität der Belüftung in Kubikmetern pro Stunde"
 
 #: grow/growapi/models/location.py:210
