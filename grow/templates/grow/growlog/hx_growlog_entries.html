@@ -1,4 +1,4 @@
-{% load i18n %}
+{% load i18n growlog %}
 <div class="card mb-3" id="growlog-entries-card">
     <div class="card-header">
         <div class="d-flex justify-content-between align-items-center">
@@ -64,7 +64,7 @@
         <div class="card mb-3 w-100 m-3-auto">
             <div class="card-header">
                 <div class="d-flex justify-content-between align-items-center">
-                    <h5 class="card-title mb-0">{{ entry.timestamp|date:"SHORT_DATETIME_FORMAT" }}</h5>
+                    <h5 class="card-title mb-0">{{ entry|growlog_entry_timestamp:request }}</h5>
                     <h5 class="text-muted mb-0">{{ entry.status_display }}</h5>
                     <div class="text-end">
                         {% if can_edit %}
@@ -107,30 +107,45 @@
                     </div>
                 </div>
             </div>
-            <div class="card-body">
-                <h3>{% translate "Details" %}</h3>
-                <ul>
-                    <li><strong>{% translate "Location:" %}</strong> {% if entry.location %}{{ entry.location }}{% else %}-{% endif %}</li>
-                    <li><strong>{% translate "Duration:" %}</strong> {{ entry.duration_display }}</li>
-                    {% if entry.growlog.germinating_at %}
-                    <li><strong>{% translate "Germinating for:" %}</strong> {{ entry.germinating_duration_display }}</li>
-                    {% elif entry.growlog.cutted_at %}
-                    <li><strong>{% translate "Rooting for:" %}</strong> {{ entry.rooting_duration_display }}</li>
-                    {% endif %}
-                    {% if entry.growlog.vegetative_at and entry.growlog.vegetative_at >= entry.timestamp.date %}
-                    <li><strong>{% translate "Vegetative for:" %}</strong> {{ entry.vegetative_duration_display }}</li>
-                    {% endif %}
-                    {% if entry.growlog.flowering_at and entry.growlog.flowering_at >= entry.timestamp.date %}
-                    <li><strong>{% translate "Flowering for:" %}</strong> {{ entry.flowering_duration_display }}</li>
-                    {% endif %}
-                    {% if entry.growlog.harvesting_at and entry.growlog.harvesting_at >= entry.timestamp.date %}
-                    <li><strong>{% translate "Since harvest:" %}</strong> {{ entry.harvesting_duration_display }}</li>
-                    {% endif %}
-                </ul>
 
-                <h3>{% translate "Content" %}</h3>
-                {{ entry.content_html }}
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <ul>
+                        <li><strong>{% translate "Location:" %}</strong> {% if entry.location %}{{ entry.location }}{% else %}-{% endif %}</li>
+                        <li><strong>{% translate "Duration:" %}</strong> {{ entry.duration_display }}</li>
+                        {% if entry.growlog.germinating_at %}
+                        <li><strong>{% translate "Germinating for:" %}</strong> {{ entry.germinating_duration_display }}</li>
+                        {% elif entry.growlog.cutted_at %}
+                        <li><strong>{% translate "Rooting for:" %}</strong> {{ entry.rooting_duration_display }}</li>
+                        {% endif %}
+                        {% if entry.growlog.vegetative_at and entry.growlog.vegetative_at >= entry.timestamp.date %}
+                        <li><strong>{% translate "Vegetative for:" %}</strong> {{ entry.vegetative_duration_display }}</li>
+                        {% endif %}
+                        {% if entry.growlog.flowering_at and entry.growlog.flowering_at >= entry.timestamp.date %}
+                        <li><strong>{% translate "Flowering for:" %}</strong> {{ entry.flowering_duration_display }}</li>
+                        {% endif %}
+                        {% if entry.growlog.harvesting_at and entry.growlog.harvesting_at >= entry.timestamp.date %}
+                        <li><strong>{% translate "Since harvest:" %}</strong> {{ entry.harvesting_duration_display }}</li>
+                        {% endif %}
+                    </ul>
+                </li>
+                <li class="list-group-item">
+                    {{ entry.content_html }}
+                </li>
+            </ul>
+
+            {% if entry.images.exists %}
+            <div class="card-footer">
+                <h3>{% translate "Images" %}</h3>
+                <div class="row">
+                    {% for image in entry.images.all %}
+                    <div class="col-4">
+                        <img src="{{ image.url }}" class="img-fluid" alt="{% translate "Entry Image" %}">
+                    </div>
+                    {% endfor %}
+                </div>
             </div>
+            {% endif %}
         </div>
         {% empty %}
         <p>{% translate "No entries available." %}</p>

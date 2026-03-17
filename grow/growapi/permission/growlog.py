@@ -29,7 +29,7 @@ def growlog_user_is_friend(user, growlog, *args,
                            on_success: PermissionCode.ALLOW,
                            on_failure: PermissionCode.CONTINUE) -> PermissionCode:
     if (growlog.permission == PermissionType.FRIENDS_ONLY
-            and user.groups.filter(f"user-{growlog.grower.id}-friends")):
+            and user.groups.filter(name=f"user-{growlog.grower.id}-friends")):
         return on_success
     if on_failure == PermissionCode.RAISE_EXCEPTION:
         raise NotPermitted()
@@ -49,8 +49,8 @@ def growlog_user_is_member(user, growlog, *args,
 def growlog_user_is_editor(user, growlog, *args,
                            on_success: PermissionCode.ALLOW,
                            on_failure: PermissionCode.RAISE_EXCEPTION) -> PermissionCode:
-    if user.groups.filter(f"user-{growlog.grower.id}-growlogeditor"):
+    if user.groups.filter(name=f"user-{growlog.grower.id}-growlogeditor"):
         return on_success
     if on_failure == PermissionCode.RAISE_EXCEPTION:
-        raise NotPermitted
+        raise NotPermitted()
     return on_failure

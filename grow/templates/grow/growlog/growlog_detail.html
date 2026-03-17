@@ -118,6 +118,16 @@
 <h2>{% translate "Overview" %}</h2>
 <div id="growlog-overview">
     <ul>
+        <li><strong>{% translate "Grower:" %}</strong>
+            {% if request.user == growlog.grower %}
+                <a href="{% url 'grow:user-info' %}">{{ growlog.grower.username }}</a>
+            {% else %}
+                {{ growlog.grower.username }}
+            {% endif %}
+        </li>
+        <li><strong>{% translate "Started on:" %}</strong>
+            <time datetime="{{ growlog.started_at|date:"c" }}">{{ growlog.started_at }}</time>
+        </li>
         <li>
             <b>{% translate "Duration:" %}</b>
             {% if duration.days > 365 %}
@@ -146,7 +156,7 @@
         </li>
         {% if growlog.is_germinating %}
         <li>
-            <b>{% translate "Germinated on:" %}</b> {{ growlog.germinating_at }}
+            <b>{% translate "Germinated on:" %}</b> <time datetime="{{ growlog.germinating_at|date:"c" }}">{{ growlog.germinating_at }}</time>
         </li>
         <li>
             <b>{% translate "Germination Period:" %}</b>
@@ -166,12 +176,12 @@
         {% endif %}
         {% if growlog.is_cutted %}
         <li>
-            <b>{% translate "Cutted on:" %}</b> {{ growlog.cutted_at }}
+            <b>{% translate "Cutted on:" %}</b> <time datetime="{{ growlog.cutted_at|date:"c" }}">{{ growlog.cutted_at }}</time>
         </li>
         {% endif %}
         {% if growlog.vegetative_at %}
         <li>
-            <b>{% translate "Vegetative stage started on:" %}</b> {{ growlog.vegetative_at }}
+            <b>{% translate "Vegetative stage started on:" %}</b> <time datetime="{{ growlog.vegetative_at|date:"c" }}">{{ growlog.vegetative_at }}</time>
         </li>
         <li>
             {% translate "Vegetative Period:" %}
