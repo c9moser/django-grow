@@ -1,4 +1,4 @@
-{% extends "grow/strain/strain_form.html" %}
+{% extends "grow/strain/strain/form.html" %}
 {% load i18n %}
 
 {% block head_title %}{{ grow_head_title }}{% endblock %}
@@ -18,7 +18,7 @@
 <button type="submit">
     {% translate "Create Strain" %}
 </button>
-<button type="button" onclik="location.href='{% url 'grow:breeder-detail' slug="breeder.slug" %}'">
+<button type="button" onclick="location.href='{% url 'grow:breeder-detail' slug=breeder.slug %}'">
     {% translate "Back to breeder" %}
 </button>
 {% endif %}
