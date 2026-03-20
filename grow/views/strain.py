@@ -114,7 +114,7 @@ class BreederIndexView(BaseView):
 
 
 class HxBreederFilterView(BaseView):
-    template_name = settings.GROW_TEMPLATES['grow/breeder/hx-breeder-filter']
+    template_name = settings.GROW_TEMPLATES['grow/breeder/hx/filter']
 
     def post(self, request: HttpRequest) -> HttpResponse:
         form = BreederFilterForm(request.POST)
@@ -264,7 +264,7 @@ class BreederView(BaseView):
 
 
 class HxStrainFilterView(BaseView):
-    template_name = settings.GROW_TEMPLATES['grow/strain/hx-strain-filter']
+    template_name = settings.GROW_TEMPLATES['grow/strain/strain/hx/filter']
 
     def post(self, request: HttpRequest, breeder_pk: int) -> HttpResponse:
         form = StrainFilterForm(request.POST)
@@ -388,7 +388,7 @@ class BreederDeleteView(LoginRequiredMixin, View):
 
 
 class HxBreederDeleteView(LoginRequiredMixin, FormView):
-    template_name = settings.GROW_TEMPLATES['grow/breeder/hx-delete']
+    template_name = settings.GROW_TEMPLATES['grow/breeder/hx/delete']
     form_class = DeleteWithSlugForm
     success_url = reverse_lazy("grow:breeder-overview")
 
@@ -427,7 +427,7 @@ class HxBreederDeleteView(LoginRequiredMixin, FormView):
 
 
 class StrainView(BaseView):
-    template_name = settings.GROW_TEMPLATES["grow/strain/detail"]
+    template_name = settings.GROW_TEMPLATES["grow/strain/strain"]
 
     def get(self, request: HttpRequest, breeder_slug: str, slug: str) -> HttpResponse:
         breeder = get_object_or_404(Breeder, slug=breeder_slug)
@@ -606,7 +606,7 @@ class StrainDeleteView(LoginRequiredMixin, FormView):
 
 
 class HxStrainDeleteView(LoginRequiredMixin, FormView):
-    template_name = settings.GROW_TEMPLATES['grow/strain/hx-delete']
+    template_name = settings.GROW_TEMPLATES['grow/strain/hx/delete']
     form_class = DeleteWithSlugForm
 
     def get_success_url(self):
@@ -645,7 +645,7 @@ class HxStrainDeleteView(LoginRequiredMixin, FormView):
 
 
 class StrainAddToStockView(LoginRequiredMixin, FormView):
-    template_name = settings.GROW_TEMPLATES['grow/strain/add_to_stock']
+    template_name = settings.GROW_TEMPLATES['grow/strain/strain/add_to_stock']
     form_class = StrainAddToStockForm
 
     def get_context_data(self, **kwargs):
@@ -718,8 +718,8 @@ class StrainAddToStockView(LoginRequiredMixin, FormView):
 
 
 class StrainRemoveFromStockView(LoginRequiredMixin, FormView):
-    template_name = settings.GROW_TEMPLATES['grow/strain/remove_from_stock']
-    invalid_template_name = settings.GROW_TEMPLATES['grow/strain/remove_from_stock_invalid']
+    template_name = settings.GROW_TEMPLATES['grow/strain/strain/remove_from_stock']
+    invalid_template_name = settings.GROW_TEMPLATES['grow/strain/strain/remove_from_stock_invalid']
     form_class = StrainRemoveFromStockForm
 
     def get_context_data(self, **kwargs):
@@ -801,8 +801,9 @@ class StrainRemoveFromStockView(LoginRequiredMixin, FormView):
 
 
 class HxStrainAddToStockView(LoginRequiredMixin, FormView):
-    template_name = settings.GROW_TEMPLATES['grow/strain/hx-add_to_stock']
-    update_template_name = settings.GROW_TEMPLATES['grow/strain/hx-strain_in_stock_update']  # noqa: E501
+    template_name = settings.GROW_TEMPLATES['grow/strain/strain/hx/add_to_stock']
+    update_template_name = settings.GROW_TEMPLATES['grow/strain/strain/in_stock/hx/update']  # noqa: E501
+
     form_class = StrainAddToStockForm
 
     def get_context_data(self, **kwargs):
@@ -920,9 +921,9 @@ class HxStrainAddToStockView(LoginRequiredMixin, FormView):
 
 
 class HxStrainRemoveFromStockView(LoginRequiredMixin, FormView):
-    template_name = settings.GROW_TEMPLATES['grow/strain/hx-remove_from_stock']
-    invalid_template_name = settings.GROW_TEMPLATES['grow/strain/hx-remove_from_stock_invalid']
-    update_template_name = settings.GROW_TEMPLATES['grow/strain/hx-strain_in_stock_update']  # noqa: E501
+    template_name = settings.GROW_TEMPLATES['grow/strain/strain/in_stock/hx/remove']
+    invalid_template_name = settings.GROW_TEMPLATES['grow/strain/strain/in_stock/hx/remove_invalid']
+    update_template_name = settings.GROW_TEMPLATES['grow/strain/strain/in_stock/hx/update']  # noqa: E501
 
     form_class = StrainRemoveFromStockForm
 
@@ -1041,7 +1042,7 @@ class StrainSearchView(BaseView):
 
 
 class StrainImageUploadView(LoginRequiredMixin, View):
-    template_name = settings.GROW_TEMPLATES['grow/strain/image_upload']
+    template_name = settings.GROW_TEMPLATES['grow/strain/strain/image_upload']
 
     def get(self, request: HttpRequest, strain_pk: int) -> HttpResponse:
         strain = get_object_or_404(Strain, pk=strain_pk)
@@ -1150,7 +1151,7 @@ class BreederTranslationView(LoginRequiredMixin, View):
 
 
 class HxBreederTranslationView(LoginRequiredMixin, View):
-    template_name = settings.GROW_TEMPLATES['grow/breeder/hx-translation']
+    template_name = settings.GROW_TEMPLATES['grow/breeder/hx/translation']
 
     def get(self, request: HttpRequest, pk: int) -> HttpResponse:
         breeder = get_object_or_404(Breeder, pk=pk)
@@ -1193,7 +1194,7 @@ class HxBreederTranslationView(LoginRequiredMixin, View):
 
 
 class StrainTranslationView(LoginRequiredMixin, View):
-    template_name = settings.GROW_TEMPLATES['grow/strain/translation']
+    template_name = settings.GROW_TEMPLATES['grow/strain/strain/translation']
 
     def get(self, request: HttpRequest, pk: int) -> HttpResponse:
         strain = get_object_or_404(Strain, pk=pk)
@@ -1265,7 +1266,7 @@ class StrainTranslationView(LoginRequiredMixin, View):
 
 
 class HxStrainTranslationView(LoginRequiredMixin, View):
-    template_name = settings.GROW_TEMPLATES['grow/strain/hx-translation']
+    template_name = settings.GROW_TEMPLATES['grow/strain/strain/hx/translation']
 
     def get(self, request: HttpRequest, pk: int) -> HttpResponse:
         strain = get_object_or_404(Strain, pk=pk)
@@ -1306,7 +1307,7 @@ class HxStrainTranslationView(LoginRequiredMixin, View):
 
 
 class StrainCommentCreateView(LoginRequiredMixin, View):
-    template_name = settings.GROW_TEMPLATES['grow/strain/comment_create']
+    template_name = settings.GROW_TEMPLATES['grow/strain/strain/comment_create']
 
     def get(self, request: HttpRequest, strain_pk: int) -> HttpResponse:
         strain = get_object_or_404(Strain, pk=strain_pk)
@@ -1338,7 +1339,7 @@ class StrainCommentCreateView(LoginRequiredMixin, View):
 
 
 class StrainCommentUpdateView(LoginRequiredMixin, View):
-    template_name = settings.GROW_TEMPLATES['grow/strain/comment_update']
+    template_name = settings.GROW_TEMPLATES['grow/strain/strain/comment_update']
 
     def get(self, request: HttpRequest, comment_pk: int) -> HttpResponse:
         comment = get_object_or_404(StrainUserComment, pk=comment_pk)
@@ -1386,7 +1387,7 @@ class StrainGalleryView(View):
 
 
 class StrainGallerySlidesView(View):
-    template_name = settings.GROW_TEMPLATES['grow/strain/gallery_slides']
+    template_name = settings.GROW_TEMPLATES['grow/strain/gallery/slides']
 
     def get(self, request: HttpRequest, strain_pk: int) -> HttpResponse:
         strain = get_object_or_404(Strain, pk=strain_pk)
@@ -1403,7 +1404,7 @@ class StrainGallerySlidesView(View):
 
 
 class HxStrainSearchView(BaseView):
-    template_name = settings.GROW_TEMPLATES['grow/strain/hx-search']
+    template_name = settings.GROW_TEMPLATES['grow/strain/hx/search']
 
     def get(self, request: HttpRequest) -> HttpResponse:
         form = StrainSearchForm()
@@ -1414,7 +1415,7 @@ class HxStrainSearchView(BaseView):
 
 
 class HxStrainStockNotesView(LoginRequiredMixin, BaseView):
-    template_name = settings.GROW_TEMPLATES['grow/strain/hx-strain_in_stock_notes']
+    template_name = settings.GROW_TEMPLATES['grow/strain/strain/in_stock/hx/notes']
 
     def get(self, request: HttpRequest, pk: int) -> HttpResponse:
         try:
@@ -1431,8 +1432,9 @@ class HxStrainStockNotesView(LoginRequiredMixin, BaseView):
 
 
 class StrainAddToStock2View(LoginRequiredMixin, FormView):
-    template_name = settings.GROW_TEMPLATES['grow/strain/add_to_stock2']
-    success_template_name = settings.GROW_TEMPLATES['grow/strain/seeds_in_stock']
+    template_name = settings.GROW_TEMPLATES['grow/strain/strain/add_to_stock2']
+    success_template_name = settings.GROW_TEMPLATES['grow/strain/strain']
+
     form_class = StrainAddToStock2Form
 
     def get_success_url(self):
@@ -1451,8 +1453,8 @@ class StrainAddToStock2View(LoginRequiredMixin, FormView):
 
 
 class HxStrainAddToStock2View(StrainAddToStock2View):
-    template_name = settings.GROW_TEMPLATES['grow/strain/hx-add_to_stock2']
-    info_template_name = settings.GROW_TEMPLATES['grow/strain/hx-seeds_in_stock_info']
+    template_name = settings.GROW_TEMPLATES['grow/strain/strain/hx/add_to_stock2']
+    info_template_name = settings.GROW_TEMPLATES['grow/seeds_in_stock/hx/info']
 
     def get(self, request: HttpRequest) -> HttpResponse:
         return render(request, self.template_name, self.get_context_data())
@@ -1581,15 +1583,21 @@ class HxStrainAddToStock2View(StrainAddToStock2View):
 
 
 class StrainUpdateStockView(LoginRequiredMixin, CreateView):
-    template_name = settings.GROW_TEMPLATES['grow/strain/add_to_stock2']
-    success_template_name = settings.GROW_TEMPLATES['grow/strain/seeds_in_stock']
+    template_name = settings.GROW_TEMPLATES['grow/strain/strain/add_to_stock']
+
     form_class = StrainAddToStock2Form
+
+    def get_success_url(self):
+        return reverse('grow:strain-detail', kwargs={
+            'breeder_slug': self.instance.strain.breeder.slug,
+            'slug': self.instance.strain.slug,
+        })
 
     def form_valid(self, form):
         print("Form is valid!")
         self.instance = form.save(commit=False)
         self.instance.user = self.request.user
-        super(StrainUpdateStockView, self).form_valid(form)
+        return super(StrainUpdateStockView, self).form_valid(form)
 
     def form_invalid(self, form):
         print("Form is invalid!")
@@ -1600,7 +1608,7 @@ class StrainUpdateStockView(LoginRequiredMixin, CreateView):
 
 
 class HxSeedsInStockInfoView(LoginRequiredMixin, BaseView):
-    template_name = settings.GROW_TEMPLATES['grow/strain/hx-seeds_in_stock_info']
+    template_name = settings.GROW_TEMPLATES['grow/seeds_in_stock/hx/info']
 
     def get_context_data(self, **kwargs):
         render_table = self.request.GET.get('render_table', '1') == '1'
@@ -1663,8 +1671,8 @@ class HxSeedsInStockInfoView(LoginRequiredMixin, BaseView):
 
 class HxSeedsInStockDialogView(HxSeedsInStockInfoView, HxStrainAddToStock2View):
     form_class = StrainAddToStock2Form
-    template_name = settings.GROW_TEMPLATES['grow/strain/hx-seeds_in_stock_dialog']
-    info_template_name = settings.GROW_TEMPLATES['grow/strain/hx-seeds_in_stock_info']
+    template_name = settings.GROW_TEMPLATES['grow/seeds_in_stock/hx/dialog']
+    info_template_name = settings.GROW_TEMPLATES['grow/seeds_in_stock/hx/info']
 
     def get_context_data(self, **kwargs):
         context = StrainAddToStock2View.get_context_data(
@@ -1695,7 +1703,7 @@ class HxSeedsInStockDialogView(HxSeedsInStockInfoView, HxStrainAddToStock2View):
 
 
 class HxSeedsInStockDialogUpdateView(HxSeedsInStockDialogView):
-    template_name = settings.GROW_TEMPLATES['grow/strain/hx-seeds_in_stock_dialog']
+    template_name = settings.GROW_TEMPLATES['grow/seeds_in_stock/hx/dialog']
     form_class = StrainAddToStock2Form
 
     def sanitize_form(self, form):

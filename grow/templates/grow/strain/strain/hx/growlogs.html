@@ -64,16 +64,18 @@
             <thead>
                 <tr class="{% if use_bootstrap %}table-success{% endif %}">
                     <th scope="col">{% translate "Name" %}</th>
+                    <th scope="col">{% translate "Grower" %}</th>
                     <th scope="col">{% translate "Start date" %}</th>
                     <th scope="col">{% translate "Duration" %}</th>
                     <th scope="col">{% translate "End date" %}</th>
-                    <th scope="col">{% translate "Status" %}</th>
+                    <th scope="col">{% translate "Current Stage" %}</th>
                 </tr>
             </thead>
             <tbody>
                 {% for growlog in growlogs %}
                 <tr>
                     <td><a href="{% url 'grow:growlog-detail' growlog.pk %}">{{ growlog.name }}</a></td>
+                    <td>{{ growlog.grower.username }}</td>
                     <td>{{ growlog.started_at|date }}</td>
                     <td>{% if growlog.duration_days > 30 %}
                             {% blocktranslate count n=growlog.duration_weeks %}{{ n }} week{% plural %}{{ n }} weeks{% endblocktranslate %}
@@ -82,7 +84,7 @@
                         {% endif %}
                     </td>
                     <td>{% if growlog.finsihed_at %}{{ growlog.finsihed_at|date }}{% else %}{% translate "In progress" %}{% endif %}</td>
-                    <td>{{ growlog.get_status_display }}</td>
+                    <td>{{ growlog.current_stage }}</td>
                 </tr>
                 {% empty %}
                 <tr>

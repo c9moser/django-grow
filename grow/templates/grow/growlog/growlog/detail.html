@@ -40,7 +40,7 @@
             </a>
         </li>
         <li class="breadcrumb-item active">
-            <a href="#{#{% url 'grow:user-growlogs' %}#}">
+            <a href="{% url 'grow:my-growlogs' %}">
                 {% translate "My Growlogs" %}
             </a>
         </li>
@@ -66,6 +66,7 @@
     {% elif growlog.germinating_at and not growlog.vegetative_at and not growlog.flowering_at and not growlog.finished_at %}
     <form class="form-inline d-inline" action="#{#{% url 'grow:growlog-unset-germinating-at' pk=growlog.id %}#}" method="post">
         {% csrf_token %}
+
         <button type="submit" class="btn btn-outline-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Unset Germinating Date' %}">
             <i class="bi bi-calendar-minus"></i>
         </button>
@@ -74,7 +75,7 @@
     <form class="form-inline d-inline" action="#{#{% url 'grow:growlog-unset-cutted-at' pk=growlog.id %}#}" method="post">
         {% csrf_token %}
         <button type="submit" class="btn btn-outline-info" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Unset Cutted Date' %}">
-            <i class="bi bi-calendar-calender-minus"></i>
+            <i class="bi bi-calendar-calendar-minus"></i>
         </button>
     </form>
     {% endif %}
@@ -126,32 +127,25 @@
             {% endif %}
         </li>
         <li><strong>{% translate "Started on:" %}</strong>
-            <time datetime="{{ growlog.started_at|date:"c" }}">{{ growlog.started_at }}</time>
+            <time datetime="{{ growlog.started_at|date:"c" }}">{{ growlog.started_at|date:'SHORT_DATE_FORMAT' }}</time>
         </li>
         <li>
             <b>{% translate "Duration:" %}</b>
-            {% if duration.days > 365 %}
-                {% with duration=growlog.duration_years_weeks_days %}
-                {% blocktranslate count years=duration.years %}{{ years }} year{% plural %}{{ years }} years{% endblocktranslate %}
-                {% if duration.weeks %}
-                {% blocktranslate count weeks=duration.weeks %}{{ weeks }} week{% plural %}{{ weeks }} weeks{% endblocktranslate %}
-                {% endif %}
-                {% if duration.days %}
-                {% blocktranslate count days=duration.days %}{{ days }} day{% plural %}{{ days }} days{% endblocktranslate %}
-                {% endif %}
-                {% endwith %}
-            {% elif duration.days > 30 %}
-                {% with duration=growlog.duration_weeks_days %}
-                {% if duration.weeks %}
-                {% blocktranslate count weeks=duration.weeks %}{{ weeks }} week{% plural %}{{ weeks }} weeks{% endblocktranslate %}
-                {% endif %}
-                {% if duration.days %}
-                {% blocktranslate count days=duration.days %}{{ days }} day{% plural %}{{ days }} days{% endblocktranslate %}
-                {% endif %}
-                {% endwith %}
+            {% if growlog.duration_days > 14 %}
+            {% with growlog.duration_years_weeks_days as duration%}
+            {% if duration.years %}
+                {% blocktranslate count n=duration.years %}{{ n }} year{% plural %}{{ n }} years{% endblocktranslate %}
+            {% endif %}
+            {% if duration.weeks %}
+                {% blocktranslate count n=duration.weeks %}{{ n }} week{% plural %}{{ n }} weeks{% endblocktranslate %}
+            {% endif %}
+            {% if duration.days %}
+                {% blocktranslate count n=duration.days %}{{ n }} day{% plural %}{{ n }} days{% endblocktranslate %}
+            {% endif %}
+            {% endwith %}
+            ({% blocktranslate count n=growlog.duration_days %}{{ n }} day{% plural %}{{ n }} days{% endblocktranslate %})
             {% else %}
-
-                {% blocktranslate count days=growlog.duration_days %}{{ days }} day{% plural %}{{ days }} days{% endblocktranslate %}
+                {% blocktranslate count n=growlog.duration_days %}{{ n }} day{% plural %}{{ n }} days{% endblocktranslate %}
             {% endif %}
         </li>
         {% if growlog.is_germinating %}
@@ -160,17 +154,18 @@
         </li>
         <li>
             <b>{% translate "Germination Period:" %}</b>
-            {% if growlog.germinating_days > 30 %}
+            {% if growlog.germinating_days > 14 %}
                 {% with duration=growlog.germinating_weeks_days %}
                 {% if duration.weeks %}
-                {% blocktranslate count weeks=duration.weeks %}{{ weeks }} week{% plural %}{{ weeks }} weeks{% endblocktranslate %}
+                {% blocktranslate count n=duration.weeks %}{{ n }} week{% plural %}{{ n }} weeks{% endblocktranslate %}
                 {% endif %}
                 {% if duration.days %}
-                {% blocktranslate count days=duration.days %}{{ days }} day{% plural %}{{ days }} days{% endblocktranslate %}
+                {% blocktranslate count n=duration.days %}{{ n }} day{% plural %}{{ n }} days{% endblocktranslate %}
                 {% endif %}
                 {% endwith %}
+                ({% blocktranslate count n=growlog.germinating_days %}{{ n }} day{% plural %}{{ n }} days{% endblocktranslate %})
             {% else %}
-                {% blocktranslate count days=growlog.germinating_days %}{{ days }} day{% plural %}{{ days }} days{% endblocktranslate %}
+                {% blocktranslate count n=growlog.germinating_days %}{{ n }} day{% plural %}{{ n }} days{% endblocktranslate %}
             {% endif %}
         </li>
         {% endif %}
@@ -185,37 +180,39 @@
         </li>
         <li>
             {% translate "Vegetative Period:" %}
-            {% if growlog.vegetative_days > 30 %}
+            {% if growlog.vegetative_days > 14 %}
                 {% with duration=growlog.vegetative_weeks_days %}
                 {% if duration.weeks %}
-                {% blocktranslate count weeks=duration.weeks %}{{ weeks }} week{% plural %}{{ weeks }} weeks{% endblocktranslate %}
+                {% blocktranslate count weeks=duration.weeks %}{{ duration.weeks }} week{% plural %}{{ duration.weeks }} weeks{% endblocktranslate %}
                 {% endif %}
                 {% if duration.days %}
-                {% blocktranslate count days=duration.days %}{{ days }} day{% plural %}{{ days }} days{% endblocktranslate %}
+                {% blocktranslate count days=duration.days %}{{ duration.days }} day{% plural %}{{ duration.days }} days{% endblocktranslate %}
                 {% endif %}
                 {% endwith %}
+                ({% blocktranslate count n=growlog.duration_days %}{{ growlog.duration_days }} day{% plural %}{{ growlog.duration_days }} days{% endblocktranslate %})
             {% else %}
-                {% blocktranslate count days=growlog.vegetative_days %}{{ days }} day{% plural %}{{ days }} days{% endblocktranslate %}
+                {% blocktranslate count days=growlog.vegetative_days %}{{ growlog.vegetative_days }} day{% plural %}{{ growlog.vegetative_days }} days{% endblocktranslate %}
             {% endif %}
         </li>
         {% endif %}
         {% if growlog.flowering_at %}
         <li>
-            <b>{% translate "Flowering stage started on:" %}</b> {{ growlog.flowering_at }}
+            <b>{% translate "Flowering stage started on:" %}</b> <time datetime="{{ growlog.flowering_at|date:"c" }}">{{ growlog.flowering_at }}</time>
         </li>
         <li>
             <b>{% translate "Flowering Period:" %}</b>
-            {% if growlog.flowering_days > 30 %}
+            {% if growlog.flowering_days > 6 %}
                 {% with duration=growlog.flowering_weeks_days %}
                 {% if duration.weeks %}
-                {% blocktranslate count weeks=duration.weeks %}{{ weeks }} week{% plural %}{{ weeks }} weeks{% endblocktranslate %}
+                {% blocktranslate count weeks=duration.weeks %}{{ duration.weeks }} week{% plural %}{{ duration.weeks }} weeks{% endblocktranslate %}
                 {% endif %}
                 {% if duration.days %}
-                {% blocktranslate count days=duration.days %}{{ days }} day{% plural %}{{ days }} days{% endblocktranslate %}
+                {% blocktranslate count days=duration.days %}{{ duration.days }} day{% plural %}{{ duration.days }} days{% endblocktranslate %}
                 {% endif %}
                 {% endwith %}
+                ({% blocktranslate count n=growlog.duration_days %}{{ growlog.duration_days }} day{% plural %}{{ growlog.duration_days }} days{% endblocktranslate %})
             {% else %}
-                {% blocktranslate count days=growlog.flowering_days %}{{ days }} day{% plural %}{{ days }} days{% endblocktranslate %}
+                {% blocktranslate count days=growlog.flowering_days %}{{ growlog.flowering_days }} day{% plural %}{{ growlog.flowering_days }} days{% endblocktranslate %}
             {% endif %}
         </li>
         {% endif %}
@@ -282,7 +279,6 @@
     ><span data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Create a new Grow Log Entry with current timestamp' %}">
         <i class="bi bi-plus-square"></i> {% translate "Create new entry" %}</i>
     </span></button>
-
 </div>
 {% endif %}
 <div id="growlog-entries">

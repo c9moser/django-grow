@@ -1,0 +1,48 @@
+{% extends base_template %}
+{% load i18n %}
+{% block subtitle %}{% translate "Strains Grown" %}{% endblock subtitle %}
+
+{% block content %}
+{% if use_bootstrap%}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb" >
+        {% if GROW_IS_MAIN_APP %}
+        <li class="breadcrumb-item"><a href="{% url 'grow:home' %}">{% translate "Home" %}</a></li>
+        {% else %}
+        <li class="breadcrumb-item"><a href="/">{% translate "Home" %}</li>
+        <li class="breadcrumb-item"><a href="{% url 'grow:index' %}">{% translate "Grow" %}</a></li>
+        {% endif %}
+        <li class="breadcrumb-item"><a href="{% url 'grow:user-info' %}">{% translate "My Grow" %}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{% translate "Strains Grown" %}</li>
+    </ol>
+</nav>
+{% endif %}{# use_bootstrap #}
+<main>
+<h1>{% translate "Strains Grown" %}</h1>
+<table class="{% if use_bootstrap %}table table-hover mb-0{% endif %}">
+    <thead>
+        <tr class="{% if use_bootstrap %}table-success{% endif %}">
+            <th>{% translate "Strain" %}</th>
+            <th>{% translate "Breeder" %}</th>
+            <th>{% translate "Grow Log" %}</th>
+            <th>{% translate "Current Stage" %}</th>
+
+        </tr>
+    </thead>
+    <tbody>
+    {% for growlog_strain in strains_grown %}
+        <tr>
+            <td><a href="{% url 'grow:strain-detail' breeder_slug=growlog_strain.strain.breeder.slug slug=growlog_strain.strain.slug %}">{{ growlog_strain.strain.name }}</a></td>
+            <td><a href="{% url 'grow:breeder-detail' slug=growlog_strain.strain.breeder.slug %}">{{ growlog_strain.strain.breeder.name }}</a></td>
+            <td><a href="{% url 'grow:growlog-detail' pk=growlog_strain.growlog.pk %}">{{ growlog_strain.growlog.name }}</a></td>
+            <td>{{ growlog_strain.growlog.current_stage }}</td>
+        </tr>
+    {% empty %}
+        <tr>
+            <td colspan="4">{% translate "You haven't grown any strains yet. How about starting a new grow?" %}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</main>
+{% endblock %}

@@ -1,5 +1,5 @@
 {% extends base_template %}
-{% load static i18n tz %}
+{% load static i18n tz grow %}
 
 {% block subtitle %}{{ strain.breeder.name }} - {{ strain.name }}{% endblock %}
 {% block head_title %}{{ grow_head_title }}{% endblock %}
@@ -453,7 +453,9 @@
 
 <h2 id="growlogs">Growlogs</h2>
 <div id="growlogs-info">
-    {% include 'grow/strain/hx_strain_growlogs.html' %}
+{% with 'grow/strain/strain/hx/growlogs'|grow_template as hx_growlogs_template %}
+    {% include  hx_growlogs_template %}
+{% endwith %}
 </div>
 
 <h2 id="comments">{% translate "Comments" %}</h2>

@@ -63,10 +63,10 @@
         {% for entry in growlog_entries %}
         <div class="card mb-3 w-100 m-3-auto">
             <div class="card-header">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h5 class="card-title mb-0">{{ entry|growlog_entry_timestamp:request }}</h5>
-                    <h5 class="text-muted mb-0">{{ entry.status_display }}</h5>
-                    <div class="text-end">
+                <div class="d-flex {% if can_edit %}justify-content-between{% endif %} align-items-center">
+                    <h5 class="card-title mb-0" style="width:33%;">{{ entry|growlog_entry_timestamp:request }}</h5>
+                    <h5 class="text-muted mb-0 text-center" style="width:33%;">{{ entry.status_display }}</h5>
+                    <div class="text-end" style="width:33%;">
                         {% if can_edit %}
                         <a href="#{#{% url 'grow:growlog-entry-image-upload' entry_pk=entry.id %}#}"
                            class="btn btn-outline-success btn-sm">

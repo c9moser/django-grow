@@ -6,6 +6,22 @@
 
 {% block content %}
 <main>
+
+{% if use_bootstrap %}
+<nav aria-label="breadcrumb">
+<ol class="breadcrumb" >
+{% if GROW_IS_MAIN_APP %}
+    <li class="breadcrumb-item"><a href="{% url 'grow:home' %}">{% translate "Home" %}</a></li>
+{% else %}
+    <li class="breadcrumb-item"><a href="/">{% translate "Home" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'grow:home' %}">{% translate "Grow" %}</a></li>
+{% endif %}
+    <li class="breadcrumb-item active">{% translate "My Grow" %}</li>
+</ol>
+</nav>
+{% endif %}{# use_bootstrap #}
+
+
 <h1>{% translate "My Grow" %}</h1>
 <h2>{% translate "User Information" %}</h2>
 <table class="{% if use_bootstrap %}table{% endif %}">
@@ -39,6 +55,7 @@
 <h2 id="seeds-in-stock">{% translate "My seeds in stock" %}</h2>
 
 <div id ="seeds-in-stock-info">
+    {{ seeds_in_stock_template }}
 {% include seeds_in_stock_template %}
 </div>
 

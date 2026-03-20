@@ -27,8 +27,6 @@ from ..growapi.models import (
     # GrowlogEntryImage,
     GrowlogStrain,
     Breeder,
-    # Strain,
-
 )
 # from django.urls import reverse
 
@@ -42,8 +40,8 @@ from ..growapi.permission import (
 
 class GrowlogDetailView(BaseView):
     template_name = GROW_TEMPLATES['grow/growlog/detail']
-    strains_template_name = GROW_TEMPLATES['grow/growlog/hx-growlog-strains']
-    entries_template_name = GROW_TEMPLATES['grow/growlog/hx-growlog-entries']
+    strains_template_name = GROW_TEMPLATES['grow/growlog/growlog/hx/strains']
+    entries_template_name = GROW_TEMPLATES['grow/growlog/growlog/hx/entries']
 
     def get(self, request: HttpRequest, pk: int) -> HttpResponse:
         growlog = get_object_or_404(Growlog, pk=pk)
@@ -65,14 +63,42 @@ class GrowlogDetailView(BaseView):
             'can_edit': growlog_user_is_allowed_to_edit(request.user, growlog),
             'strains_template': self.strains_template_name,
             'entries_template': self.entries_template_name,
-            'notes_template': GROW_TEMPLATES['grow/growlog/hx-growlog-notes'],
-            'description_template': GROW_TEMPLATES['grow/growlog/hx-growlog-description'],
+            'notes_template': GROW_TEMPLATES['grow/growlog/growlog/hx/notes'],
+            'description_template': GROW_TEMPLATES['grow/growlog/growlog/hx/description'],
+        }
+        return render(request, self.template_name, context)
+
+
+class MyGrowlogsView(LoginRequiredMixin, BaseView):
+    template_name = GROW_TEMPLATES['grow/growlog/my_growlogs']
+
+    def get(self, request: HttpRequest) -> HttpResponse:
+        active_growlogs = Growlog.objects.filter(
+            grower=request.user,
+            finished_at__isnull=True
+        ).order_by('-started_at')
+
+        finished_growlogs = Growlog.objects.filter(
+            grower=request.user,
+            finished_at__isnull=False
+        ).order_by('name')
+
+        context = {
+            'active_growlogs': active_growlogs,
+            'finished_growlogs': finished_growlogs,
+            'strains_grown': GrowlogStrain.objects.filter(
+                growlog__grower=request.user
+            ).order_by(
+                'strain__name',
+                'strain__breeder__name',
+                'growlog__name',
+            )
         }
         return render(request, self.template_name, context)
 
 
 class HxGrowlogEntriesView(BaseView):
-    template_name = GROW_TEMPLATES['grow/growlog/hx-growlog-entries']
+    template_name = GROW_TEMPLATES['grow/growlog/growlog/hx/entries']
 
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         entries = self.growlog.entries.filter().order_by('timestamp')
@@ -216,7 +242,7 @@ class GrowlogDeleteView(LoginRequiredMixin, DeleteView):
 
 
 class HxGrowlogStrainsInfoView(BaseView):
-    template_name = GROW_TEMPLATES['grow/growlog/hx-growlog-strains']
+    template_name = GROW_TEMPLATES['grow/growlog/growlog/hx/strains']
 
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = kwargs
@@ -235,8 +261,8 @@ class HxGrowlogStrainsInfoView(BaseView):
 
 
 class HxGrowlogAddSeedsView(LoginRequiredMixin, HxGrowlogStrainsInfoView, FormView):
-    template_name = GROW_TEMPLATES['grow/growlog/hx-growlog-seeds_add']
-    info_template_name = GROW_TEMPLATES['grow/growlog/hx-growlog-strains']
+    template_name = GROW_TEMPLATES['grow/growlog/growlog/hx/seeds_add']
+    info_template_name = GROW_TEMPLATES['grow/growlog/growlog/hx/strains']
     form_class = GrowlogSeedsFromStockForm
 
     def get_form_kwargs(self):
@@ -312,8 +338,8 @@ class HxGrowlogAddSeedsView(LoginRequiredMixin, HxGrowlogStrainsInfoView, FormVi
 
 
 class HxGrowlogAddPlantsView(LoginRequiredMixin, HxGrowlogStrainsInfoView, FormView):
-    template_name = GROW_TEMPLATES['grow/growlog/hx-growlog-plants_add']
-    result_template_name = GROW_TEMPLATES['grow/growlog/hx-growlog-strains']
+    template_name = GROW_TEMPLATES['grow/growlog/growlog/hx/add_plants']
+    result_template_name = GROW_TEMPLATES['grow/growlog/growlog/hx/strains']
     form_class = GrowlogQuantityForm
 
     def get_context_data(self, **kwargs):
@@ -373,8 +399,8 @@ class HxGrowlogAddPlantsView(LoginRequiredMixin, HxGrowlogStrainsInfoView, FormV
 
 
 class HxGrowlogRemovePlantsView(LoginRequiredMixin, HxGrowlogStrainsInfoView, FormView):
-    template_name = GROW_TEMPLATES['grow/growlog/hx-growlog-plants_remove']
-    result_template_name = GROW_TEMPLATES['grow/growlog/hx-growlog-strains']
+    template_name = GROW_TEMPLATES['grow/growlog/growlog/hx/remove_plants']
+    result_template_name = GROW_TEMPLATES['grow/growlog/growlog/hx/strains']
     form_class = GrowlogQuantityForm
 
     def get_context_data(self, **kwargs):
@@ -434,8 +460,8 @@ class HxGrowlogRemovePlantsView(LoginRequiredMixin, HxGrowlogStrainsInfoView, Fo
 
 
 class HxGrowlogAddStrainView(LoginRequiredMixin, HxGrowlogStrainsInfoView, FormView):
-    template_name = GROW_TEMPLATES['grow/growlog/hx-growlog-strain_add']
-    result_template_name = GROW_TEMPLATES['grow/growlog/hx-growlog-strains']
+    template_name = GROW_TEMPLATES['grow/growlog/growlog/hx/add_strain']
+    result_template_name = GROW_TEMPLATES['grow/growlog/growlog/hx/strains']
     form_class = GrowlogAddStrainForm
 
     def get_form(self, form_class=None, **form_kwargs):
@@ -554,7 +580,7 @@ class HxGrowlogAddStrainView(LoginRequiredMixin, HxGrowlogStrainsInfoView, FormV
 
 
 class HxGrowlogAddStrainUpdateView(HxGrowlogAddStrainView):
-    template_name = GROW_TEMPLATES['grow/growlog/hx-growlog-strain_add']
+    template_name = GROW_TEMPLATES['grow/growlog/growlog/hx/add_strain']
 
     def post(self, request: HttpRequest, growlog_pk: int) -> HttpResponse:
         self.growlog = get_object_or_404(Growlog, pk=growlog_pk)
@@ -620,8 +646,9 @@ class HxGrowlogAddStrainUpdateView(HxGrowlogAddStrainView):
 
 
 class HxGrowlogDeleteStrainView(LoginRequiredMixin, HxGrowlogStrainsInfoView, FormView):
-    template_name = GROW_TEMPLATES['grow/growlog/hx-growlog-strain_delete']
-    info_template_name = GROW_TEMPLATES['grow/growlog/hx-growlog-strains']
+    template_name = GROW_TEMPLATES['grow/growlog/growlog/hx/delete_strain']
+    result_template_name = GROW_TEMPLATES['grow/growlog/growlog/hx/strains']
+
     form_class = GrowlogStrainDeleteForm
 
     def get_context_data(self, **kwargs):
@@ -649,12 +676,12 @@ class HxGrowlogDeleteStrainView(LoginRequiredMixin, HxGrowlogStrainsInfoView, Fo
             return HttpResponse(status=403)
         self.growlog_strain.delete()
 
-        return render(request, self.info_template_name, self.get_context_data())
+        return render(request, self.result_template_name, self.get_context_data())
 
 
 class HxGrowlogEditNotesView(LoginRequiredMixin, FormView):
-    template_name = GROW_TEMPLATES['grow/growlog/hx-growlog-notes_edit']
-    success_template_name = GROW_TEMPLATES['grow/growlog/hx-growlog-notes']
+    template_name = GROW_TEMPLATES['grow/growlog/growlog/hx/edit_notes']
+    result_template_name = GROW_TEMPLATES['grow/growlog/growlog/hx/notes']
 
     form_class = GrowlogNotesForm
 
@@ -684,12 +711,12 @@ class HxGrowlogEditNotesView(LoginRequiredMixin, FormView):
         if form.is_valid():
             form.save(commit=True)
 
-        return render(request, self.success_template_name, context=self.get_context_data())
+        return render(request, self.result_template_name, context=self.get_context_data())
 
 
 class HxGrowlogEditDescriptionView(LoginRequiredMixin, FormView):
-    template_name = GROW_TEMPLATES['grow/growlog/hx-growlog-description_edit']
-    success_template_name = GROW_TEMPLATES['grow/growlog/hx-growlog-description']
+    template_name = GROW_TEMPLATES['grow/growlog/growlog/hx/edit_description']
+    result_template_name = GROW_TEMPLATES['grow/growlog/growlog/hx/description']
 
     form_class = GrowlogDescriptionForm
 
@@ -720,11 +747,11 @@ class HxGrowlogEditDescriptionView(LoginRequiredMixin, FormView):
         if form.is_valid():
             form.save(commit=True)
 
-        return render(request, self.success_template_name, context=self.get_context_data())
+        return render(request, self.result_template_name, context=self.get_context_data())
 
 
 class HxGrowlogActiveInfoView(LoginRequiredMixin, BaseView):
-    template_name = GROW_TEMPLATES['grow/growlog/hx-active_info']
+    template_name = GROW_TEMPLATES['grow/growlog/hx/active_info']
 
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = dict(kwargs)
@@ -771,7 +798,7 @@ class HxGrowlogActiveInfoView(LoginRequiredMixin, BaseView):
 
 
 class HxGrowlogFinishedInfoView(BaseView):
-    template_name = GROW_TEMPLATES['grow/growlog/hx-finished_info']
+    template_name = GROW_TEMPLATES['grow/growlog/hx/finished_info']
 
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = dict(kwargs)
@@ -818,8 +845,8 @@ class HxGrowlogFinishedInfoView(BaseView):
 
 
 class GrowlogEntryCreateView(LoginRequiredMixin, FormView):
-    template_name = GROW_TEMPLATES['grow/growlog/entry_create']
-    form_template_name = GROW_TEMPLATES['grow/growlog/entry_form']
+    template_name = GROW_TEMPLATES['grow/growlog/entry/create']
+    form_template_name = GROW_TEMPLATES['grow/growlog/entry/form']
 
     form_class = GrowlogEntryForm
 
@@ -905,8 +932,8 @@ class GrowlogEntryCreateView(LoginRequiredMixin, FormView):
 
 
 class HxGrowlogEntryCreateView(GrowlogEntryCreateView, HxGrowlogEntriesView):
-    template_name = GROW_TEMPLATES['grow/growlog/hx-entry_create']
-    result_template_name = GROW_TEMPLATES['grow/growlog/hx-growlog-entries']
+    template_name = GROW_TEMPLATES['grow/growlog/entry/hx/create']
+    result_template_name = GROW_TEMPLATES['grow/growlog/growlog/hx/entries']
 
     def get_context_data(self, **kwargs):
         context = GrowlogEntryCreateView.get_context_data(
@@ -924,8 +951,8 @@ class HxGrowlogEntryCreateView(GrowlogEntryCreateView, HxGrowlogEntriesView):
 
 
 class GrowlogEntryUpdateView(LoginRequiredMixin, FormView):
-    template_name = GROW_TEMPLATES['grow/growlog/entry_update']
-    form_template_name = GROW_TEMPLATES['grow/growlog/entry_form']
+    template_name = GROW_TEMPLATES['grow/growlog/entry/update']
+    form_template_name = GROW_TEMPLATES['grow/growlog/entry/form']
 
     form_class = GrowlogEntryForm
 
@@ -967,8 +994,8 @@ class GrowlogEntryUpdateView(LoginRequiredMixin, FormView):
 
 
 class HxGrowlogEntryUpdateView(GrowlogEntryUpdateView, HxGrowlogEntriesView):
-    template_name = GROW_TEMPLATES['grow/growlog/hx-entry_update']
-    result_template_name = GROW_TEMPLATES['grow/growlog/hx-growlog-entries']
+    template_name = GROW_TEMPLATES['grow/growlog/entry/hx/update']
+    result_template_name = GROW_TEMPLATES['grow/growlog/growlog/hx/entries']
 
     def get_context_data(self, **kwargs):
         context = GrowlogEntryUpdateView.get_context_data(
@@ -987,7 +1014,7 @@ class HxGrowlogEntryUpdateView(GrowlogEntryUpdateView, HxGrowlogEntriesView):
 
 class GrowlogEntryDeleteView(LoginRequiredMixin, DeleteView):
     model = GrowlogEntry
-    template_name = GROW_TEMPLATES['grow/growlog/entry_delete']
+    template_name = GROW_TEMPLATES['grow/growlog/entry/delete']
     form_class = GrowlogDeleteForm
 
     def get_success_url(self) -> str:
@@ -1031,8 +1058,8 @@ class GrowlogEntryDeleteView(LoginRequiredMixin, DeleteView):
 
 
 class HxGrowlogEntryDeleteView(GrowlogEntryDeleteView, HxGrowlogEntriesView):
-    template_name = GROW_TEMPLATES['grow/growlog/hx-entry_delete']
-    result_template_name = GROW_TEMPLATES['grow/growlog/hx-growlog-entries']
+    template_name = GROW_TEMPLATES['grow/growlog/entry/hx/delete']
+    result_template_name = GROW_TEMPLATES['grow/growlog/growlog/hx/entries']
 
     def get_context_data(self, **kwargs):
         context = GrowlogEntryDeleteView.get_context_data(
@@ -1048,3 +1075,20 @@ class HxGrowlogEntryDeleteView(GrowlogEntryDeleteView, HxGrowlogEntriesView):
     def form_invalid(self, form):
         print("Form invalid")
         return render(self.request, self.result_template_name, context=self.get_context_data())
+
+
+class MyStrainsGrownView(LoginRequiredMixin, BaseView):
+    template_name = GROW_TEMPLATES['grow/growlog/strains_grown']
+
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
+        strains_grown = GrowlogStrain.objects.filter(
+            growlog__grower=self.request.user,
+            quantity__gt=0,
+        ).order_by('strain__name', 'strain__breeder__name')
+
+        context = dict(kwargs)
+        context['strains_grown'] = strains_grown
+        return context
+
+    def get(self, request: HttpRequest, **kwargs) -> HttpResponse:
+        return render(request, self.template_name, context=self.get_context_data())

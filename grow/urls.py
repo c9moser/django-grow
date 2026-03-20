@@ -83,6 +83,8 @@ from .views.growlog import (  # noqa: F401
      GrowlogSetFloweringAtView,
      GrowlogSetHarvestedAtView,
      GrowlogSetFinishedAtView,
+     MyGrowlogsView,
+     MyStrainsGrownView,
 )
 
 from .views.utils import HxSelectDateDaysSanitizeView
@@ -287,6 +289,8 @@ growlog_patterns = [
      path("growlog/entry/delete/<int:pk>/",
           GrowlogEntryDeleteView.as_view(),
           name="growlog-entry-delete"),
+     path('my-grow/growlogs/', MyGrowlogsView.as_view(), name='my-growlogs'),
+     path('my-grow/strains-grown/', MyStrainsGrownView.as_view(), name='my-strains-grown'),
 ]
 
 urlpatterns = [

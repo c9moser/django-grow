@@ -116,6 +116,42 @@
                                         {% translate "My Infos" %}
                                     </a>
                                 </li>
+                                <li>
+                                    <a
+                                        class="dropdown-item"
+                                        href="{% url 'grow:my-growlogs' %}"
+                                    >
+                                        <i class="bi bi-clipboard-data"></i>
+                                        {% translate "My Growlogs" %}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a
+                                        class="dropdown-item"
+                                        href="{% url 'grow:my-strains-grown' %}"
+                                    >
+                                        <i class="bi bi-flower2"></i>
+                                        {% translate "Strains I've Grown" %}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a
+                                        class="dropdown-item"
+                                        href="{% url 'grow:location-index' %}"
+                                    >
+                                        <i class="bi bi-house-check"></i>
+                                        {% translate "My Locations" %}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a
+                                        class="dropdown-item"
+                                        href="#"
+                                    >
+                                        <i class="bi bi-thermometer-half"></i>
+                                        {% translate "My Sensors" %}
+                                    </a>
+                                </li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
                                     <a
@@ -141,34 +177,6 @@
                                     >
                                         <i class="bi bi-thermometer"></i>
                                         {% translate "New Sensor" %}
-                                    </a>
-                                </li>
-                                <li><hr class="dropdown-group-divider"></li>
-                                <li>
-                                    <a
-                                        class="dropdown-item"
-                                        href="#"
-                                    >
-                                        <i class="bi bi-clipboard-data"></i>
-                                        {% translate "My Growlogs" %}
-                                    </a>
-                                </li>
-                                <li>
-                                    <a
-                                        class="dropdown-item"
-                                        href="{% url 'grow:location-index' %}"
-                                    >
-                                        <i class="bi bi-house-check"></i>
-                                        {% translate "My Locations" %}
-                                    </a>
-                                </li>
-                                <li>
-                                    <a
-                                        class="dropdown-item"
-                                        href="#"
-                                    >
-                                        <i class="bi bi-thermometer-half"></i>
-                                        {% translate "My Sensors" %}
                                     </a>
                                 </li>
                             </ul>

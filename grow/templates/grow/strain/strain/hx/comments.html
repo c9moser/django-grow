@@ -10,7 +10,8 @@
             </span>
         </div>
         <div class="card-body">
-            <p class="card-text">{{ comment.text_html }}</p>
+            {{ comment.comment }}
+            <p class="card-text">{{ comment.comment_html }}</p>
         </div>
     </div>
     {% empty %}
