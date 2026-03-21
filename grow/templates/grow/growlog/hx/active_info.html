@@ -66,6 +66,7 @@
                     <th>{% translate "Duration" %}</th>
                     <th>{% translate "Age" %}</th>
                     <th>{% translate "Flowering time" %}</th>
+                    <th>{% translate "Strains" %}</th>
                 </tr>
             </thead>
             <tbody class="{% if use_bootstrap %}table-group-divider{% endif %}">
@@ -95,10 +96,19 @@
                         {% blocktranslate count n=growlog.flowering_days %}{{ n}} day{% plural %}{{ n}} days{% endblocktranslate %}
                         {% endif %}
                     </td>
+                    <td>
+                        <ul class="mx-0 my-0 px-0 py-0 list-unstyled">
+                        {% for growlog_strain in growlog.growlog_strains.all %}
+                            <li><a href="{% url 'grow:strain-detail' breeder_slug=growlog_strain.strain.breeder.slug slug=growlog_strain.strain.slug %}" class="link-success">{{ growlog_strain.strain.name }}</a></li>
+                        {% empty %}
+                            <li>{% translate "No strains added yet." %}</li>
+                        {% endfor %}
+                        </ul>
+                    </td>
                 </tr>
             {% empty %}
                 <tr class="table-warning">
-                    <td colspan="5">{% translate "No active grow logs found." %}</td>
+                    <td colspan="6">{% translate "No active grow logs found." %}</td>
                 </tr>
             {% endfor %}
             </tbody>

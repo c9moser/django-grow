@@ -108,9 +108,9 @@ class GrowlogAddStrainForm(forms.Form):
     )
 
     strain = StrainModelChoiceField(
-        queryset=Strain.objects.none(),
+        queryset=Strain.objects.all(),
         label=_("Strain"),
-        required=False
+        required=True
     )
 
     quantity = forms.IntegerField(

@@ -573,26 +573,26 @@ class HxGrowlogAddStrainView(LoginRequiredMixin, HxGrowlogStrainsInfoView, FormV
         if form.cleaned_data['quantity'] < 0:
             form.add_error('quantity', 'Quantity cannot be negative.')
             return self.form_invalid(form)
+
+        strain = form.cleaned_data['strain']
         self.growlog_strain = GrowlogStrain.objects.create(
             growlog=self.growlog,
-            strain=form.cleaned_data['strain'],
+            strain=strain,
             is_grown_from_seed=form.cleaned_data['is_grown_from_seed'],
             quantity=form.cleaned_data['quantity'],
         )
+
         return render(self.request, self.result_template_name, self.get_context_data(
-            strain=self.growlog_strain.strain,
-            growlog_strain=self.growlog_strain,
+            strain=strain,
             growlog=self.growlog,
             is_grown_from_seed=self.growlog_strain.is_grown_from_seed,
-            quantity=form.cleaned_data['quantity'],
+            quantity=self.growlog_strain.quantity,
         ))
 
     def form_invalid(self, form):
         return render(self.request, self.result_template_name, self.get_context_data(
             form=form,
-            strain=self.growlog_strain.strain,
-            growlog_strain=self.growlog_strain,
-            growlog=self.growlog_strain.growlog,
+            growlog=self.growlog,
         ))
 
 
