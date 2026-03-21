@@ -227,18 +227,35 @@ class GrowlogSetFinishedAtView(LoginRequiredMixin, View):
         return redirect(reverse('grow:growlog-detail', kwargs={'pk': self.growlog.pk}))
 
 
-class GrowlogDeleteView(LoginRequiredMixin, DeleteView):
+class GrowlogDeleteView(LoginRequiredMixin, FormView):
     model = Growlog
+    form_class = GrowlogDeleteForm
     template_name = GROW_TEMPLATES['grow/growlog/delete']
 
     def get_success_url(self) -> str:
         return reverse('grow:user-info')
 
+    def form_valid(self, form):
+        if form.cleaned_data['confirm']:
+            self.growlog.delete()
+            return redirect(self.get_success_url())
+        else:
+            return self.form_invalid(form)
+
+    def form_invalid(self, form):
+        return super().form_invalid(form)
+
     def post(self, request: HttpRequest, pk, **kwargs) -> HttpResponse:
-        growlog = get_object_or_404(Growlog, pk=pk)  # check if growlog exists
-        if growlog.grower != request.user:
+        self.growlog = get_object_or_404(Growlog, pk=pk)  # check if growlog exists
+        if self.growlog.grower != request.user:
             return HttpResponse(status=403)  # forbid deletion if user is not the grower
-        return super().post(request, pk=pk, **kwargs)
+
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            self.growlog.delete()
+            return redirect(self.get_success_url())
+        else:
+            return super().post(request, pk=pk, **kwargs)
 
 
 class HxGrowlogStrainsInfoView(BaseView):

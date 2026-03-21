@@ -102,7 +102,7 @@
         class="btn btn-outline-primary"
         data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Edit Grow Log' %}"
     ><i class="bi bi-pencil-square"></i></a>
-    <a href="#{#{% url 'grow:growlog-delete' pk=growlog.id %}#}" class="btn btn-outline-danger"
+    <a href="{% url 'grow:growlog-delete' pk=growlog.id %}" class="btn btn-outline-danger"
         data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Delete Grow Log' %}"
     ><i class="bi bi-trash"></i></a>
 </div>

@@ -1,0 +1,45 @@
+{% extends base_template %}
+{% load i18n widget_tweaks %}
+{% block subtitle %}{% translate "Delete Grow Log" %}{% endblock subtitle %}
+
+{% block content %}
+<h1>{% translate "Delete Grow Log" %}</h1>
+<p>{% blocktranslate with growlog_name=growlog.name %}Are you sure you want to delete the grow log "{{ growlog_name }}"?{% endblocktranslate %}</p>
+<form method="post">
+    {% csrf_token %}
+    {% if use_bootstrap %}
+    <div class="alert alert-danger" role="alert">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        {% translate "This action cannot be undone!" %}
+    </div>
+
+    <p>
+        {% render_field form.confirm class="form-check-input mb-0 me-2" %}
+        <label class="form-check-label" for="{{ form.confirm.id_for_label }}">
+            {% translate "Yes, I want to delete this grow log." %}
+        </label>
+    </p>
+    {% else %}
+    <p><strong>{% translate "This action cannot be undone!" %}</strong></p>
+    {% render_field form.confirm %}
+    <label for="{{ form.confirm.id_for_label }}">
+        {% translate "Yes, I want to delete this grow log." %}
+    </label>
+    {% endif %}
+
+
+    {% if use_bootstrap %}
+    <button type="submit" class="btn btn-danger">
+        <i class="bi bi-trash"></i>
+        {% translate "Delete Grow Log" %}
+    </button>
+    <button type="button" class="btn btn-secondary ms-2" onclick="history.back()">
+        <i class="bi bi-x"></i>
+        {% translate "Cancel" %}
+    </button>
+    {% else %}
+    <button type="submit">{% translate "Delete Grow Log" %}</button>
+    <button type="button" onclick="history.back()">{% translate "Cancel" %}</button>
+    {% endif %}
+</form>
+{% endblock %}
