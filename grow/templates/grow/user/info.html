@@ -1,5 +1,5 @@
 {% extends base_template %}
-{% load i18n %}
+{% load i18n grow %}
 
 {% block title %}{{ grow_site_title }}: <span class="{% if use_bootstrap %}fs-2{% endif %}">{% translate "User Information" %}</span>{% endblock title %}
 {% block head_title %}{{ grow_head_title }}{% endblock %}
@@ -55,8 +55,9 @@
 <h2 id="seeds-in-stock">{% translate "My seeds in stock" %}</h2>
 
 <div id ="seeds-in-stock-info">
-    {{ seeds_in_stock_template }}
+{% with "grow/seeds_in_stock/hx/info"|grow_template as seeds_in_stock_template %}
 {% include seeds_in_stock_template %}
+{% endwith %}
 </div>
 
 <h2 id="my-growlogs">{% translate "My grow logs" %}</h2>
