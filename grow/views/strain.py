@@ -533,7 +533,7 @@ class StrainCreateView(LoginRequiredMixin, View):
 
 
 class StrainUpdateView(LoginRequiredMixin, View):
-    template_name = "grow/strain/strain_update.html"
+    template_name = settings.GROW_TEMPLATES["grow/strain/strain/update"]
 
     def get(self, request: HttpRequest, pk: int) -> HttpResponse:
         self.strain = get_object_or_404(Strain, pk=pk)
