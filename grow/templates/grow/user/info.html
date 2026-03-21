@@ -69,13 +69,13 @@
 {% blocktranslate count n=n_active_growlogs %}One of them is still active.{% plural %}{{ n }} of them are still active.{% endblocktranslate %}
 </p>
 <div id="active-growlogs-info">
-{% with "grow/growlog/hx/active_growlogs"|grow_template as active_growlogs_template %}
+{% with "grow/growlog/hx/active_info"|grow_template as active_growlogs_template %}
     {% include active_growlogs_template %}
 {% endwith %}
 
 </div>
 <div id="finished-growlogs-info">
-{% with "grow/growlog/hx/finished_growlogs"|grow_template as finished_growlogs_template %}
+{% with "grow/growlog/hx/finished_info"|grow_template as finished_growlogs_template %}
     {% include finished_growlogs_template %}
 {% endwith %}
 </div>
