@@ -1,13 +1,15 @@
 from typing import Any
 from django.utils import timezone
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
-
+from django.utils.translation import gettext as _
 from django.http import HttpRequest, HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from django.views.generic import CreateView, UpdateView, DeleteView, FormView
 from django.db.models import Count
+
 from grow.forms.growlog import (
     GrowlogAddStrainForm,
     GrowlogDeleteForm,
@@ -46,12 +48,11 @@ class GrowlogDetailView(BaseView):
     def get(self, request: HttpRequest, pk: int) -> HttpResponse:
         growlog = get_object_or_404(Growlog, pk=pk)
         if not growlog_user_is_allowed_to_view(request.user, growlog):
-            return HttpResponse(status=403)
+            raise PermissionDenied(_("You do not have permission to view this growlog."))
 
         growlog_strains = GrowlogStrain.objects.filter(growlog=growlog).order_by(
             'strain__name', 'strain__breeder__name')
-        if (growlog_user_is_allowed_to_edit(request.user, growlog)
-                and not growlog.is_finished):
+        if (growlog_user_is_allowed_to_edit(request.user, growlog) and not growlog.is_finished):
             entries = growlog.entries.all().order_by('-timestamp')
         else:
             entries = growlog.entries.filter().order_by('timestamp')
@@ -119,7 +120,7 @@ class HxGrowlogEntriesView(BaseView):
     def get(self, request: HttpRequest, growlog_pk: int) -> HttpResponse:
         self.growlog = get_object_or_404(Growlog, pk=growlog_pk)
         if not growlog_user_is_allowed_to_view(request.user, self.growlog):
-            return HttpResponse(status=403)
+            raise PermissionDenied(_("You do not have permission to view this growlog."))
 
         return render(request, self.template_name, self.get_context_data())
 
@@ -163,7 +164,7 @@ class GrowlogUpdateView(LoginRequiredMixin, UpdateView):
     def dispatch(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         self.instance = self.get_object()
         if not growlog_user_is_allowed_to_edit(request.user, self.instance):
-            return HttpResponse(status=403)
+            raise PermissionDenied(_("You do not have permission to edit this growlog."))
         return super().dispatch(request, *args, **kwargs)
 
 
@@ -171,9 +172,36 @@ class GrowlogSetGerminatingAtView(LoginRequiredMixin, View):
     def post(self, request: HttpRequest, pk: int) -> HttpResponse:
         self.growlog = get_object_or_404(Growlog, pk=pk)
         if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
-            return HttpResponse(status=403)
-        self.growlog.germinating_at = timezone.now().date()
-        self.growlog.save()
+            raise PermissionDenied(_("You do not have permission to edit this growlog."))
+        if (
+            not self.growlog.germinating_at
+            and not self.growlog.flowering_at
+            and not self.growlog.vegetative_at
+            and not self.growlog.cutted_at
+            and not self.growlog.harvested_at
+            and not self.growlog.finished_at
+        ):
+            self.growlog.germinating_at = timezone.now().date()
+            self.growlog.save()
+        return redirect(reverse('grow:growlog-detail', kwargs={'pk': self.growlog.pk}))
+
+
+class GrowlogUnsetGerminatingAtView(LoginRequiredMixin, View):
+    def post(self, request: HttpRequest, pk: int) -> HttpResponse:
+        self.growlog = get_object_or_404(Growlog, pk=pk)
+        if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
+            raise PermissionDenied(_("You do not have permission to edit this growlog."))
+
+        if (
+            self.growlog.germinating_at
+            and not self.growlog.flowering_at
+            and not self.growlog.vegetative_at
+            and not self.growlog.cutted_at
+            and not self.growlog.harvested_at
+            and not self.growlog.finished_at
+        ):
+            self.growlog.germinating_at = None
+            self.growlog.save()
         return redirect(reverse('grow:growlog-detail', kwargs={'pk': self.growlog.pk}))
 
 
@@ -181,19 +209,65 @@ class GrowlogSetCuttedAtView(LoginRequiredMixin, View):
     def post(self, request: HttpRequest, pk: int) -> HttpResponse:
         self.growlog = get_object_or_404(Growlog, pk=pk)
         if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
-            return HttpResponse(status=403)
-        self.growlog.cutted_at = timezone.now().date()
-        self.growlog.save()
+            raise PermissionDenied(_("You do not have permission to edit this growlog."))
+        if (
+            not self.growlog.cutted_at
+            and not self.growlog.harvested_at
+            and not self.growlog.finished_at
+            and not self.growlog.flowering_at
+            and not self.growlog.vegetative_at
+            and not self.growlog.germinating_at
+        ):
+            self.growlog.cutted_at = timezone.now().date()
+            self.growlog.save()
         return redirect(reverse('grow:growlog-detail', kwargs={'pk': self.growlog.pk}))
 
 
-class GrwologSetVegetativeAtView(LoginRequiredMixin, View):
+class GrowlogUnsetCuttedAtView(LoginRequiredMixin, View):
     def post(self, request: HttpRequest, pk: int) -> HttpResponse:
         self.growlog = get_object_or_404(Growlog, pk=pk)
         if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
-            return HttpResponse(status=403)
-        self.growlog.vegetative_at = timezone.now().date()
-        self.growlog.save()
+            raise PermissionDenied(_("You do not have permission to edit this growlog."))
+        if (
+            self.growlog.cutted_at
+            and not self.growlog.harvested_at
+            and not self.growlog.finished_at
+            and not self.growlog.flowering_at
+        ):
+            self.growlog.cutted_at = None
+            self.growlog.save()
+        return redirect(reverse('grow:growlog-detail', kwargs={'pk': self.growlog.pk}))
+
+
+class GrowlogSetVegetativeAtView(LoginRequiredMixin, View):
+    def post(self, request: HttpRequest, pk: int) -> HttpResponse:
+        self.growlog = get_object_or_404(Growlog, pk=pk)
+        if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
+            raise PermissionDenied(_("You do not have permission to edit this growlog."))
+        if (
+            not self.growlog.vegetative_at
+            and not self.growlog.flowering_at
+            and not self.growlog.harvested_at
+            and not self.growlog.finished_at
+        ):
+            self.growlog.vegetative_at = timezone.now().date()
+            self.growlog.save()
+        return redirect(reverse('grow:growlog-detail', kwargs={'pk': self.growlog.pk}))
+
+
+class GrowlogUnsetVegetativeAtView(LoginRequiredMixin, View):
+    def post(self, request: HttpRequest, pk: int) -> HttpResponse:
+        self.growlog = get_object_or_404(Growlog, pk=pk)
+        if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
+            raise PermissionDenied(_("You do not have permission to edit this growlog."))
+        if (
+            self.growlog.vegetative_at
+            and not self.growlog.flowering_at
+            and not self.growlog.harvested_at
+            and not self.growlog.finished_at
+        ):
+            self.growlog.vegetative_at = None
+            self.growlog.save()
         return redirect(reverse('grow:growlog-detail', kwargs={'pk': self.growlog.pk}))
 
 
@@ -201,9 +275,29 @@ class GrowlogSetFloweringAtView(LoginRequiredMixin, View):
     def post(self, request: HttpRequest, pk: int) -> HttpResponse:
         self.growlog = get_object_or_404(Growlog, pk=pk)
         if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
-            return HttpResponse(status=403)
-        self.growlog.flowering_at = timezone.now().date()
-        self.growlog.save()
+            raise PermissionDenied(_("You do not have permission to edit this growlog."))
+        if (
+            not self.growlog.flowering_at
+            and not self.growlog.harvested_at
+            and not self.growlog.finished_at
+        ):
+            self.growlog.flowering_at = timezone.now().date()
+            self.growlog.save()
+        return redirect(reverse('grow:growlog-detail', kwargs={'pk': self.growlog.pk}))
+
+
+class GrowlogUnsetFloweringAtView(LoginRequiredMixin, View):
+    def post(self, request: HttpRequest, pk: int) -> HttpResponse:
+        self.growlog = get_object_or_404(Growlog, pk=pk)
+        if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
+            raise PermissionDenied(_("You do not have permission to edit this growlog."))
+        if (
+            self.growlog.flowering_at
+            and not self.growlog.harvested_at
+            and not self.growlog.finished_at
+        ):
+            self.growlog.flowering_at = None
+            self.growlog.save()
         return redirect(reverse('grow:growlog-detail', kwargs={'pk': self.growlog.pk}))
 
 
@@ -211,9 +305,25 @@ class GrowlogSetHarvestedAtView(LoginRequiredMixin, View):
     def post(self, request: HttpRequest, pk: int) -> HttpResponse:
         self.growlog = get_object_or_404(Growlog, pk=pk)
         if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
-            return HttpResponse(status=403)
-        self.growlog.harvested_at = timezone.now().date()
-        self.growlog.save()
+            raise PermissionDenied(_("You do not have permission to edit this growlog."))
+
+        if not self.growlog.harvested_at and not self.growlog.finished_at:
+            self.growlog.harvested_at = timezone.now().date()
+            self.growlog.save()
+
+        return redirect(reverse('grow:growlog-detail', kwargs={'pk': self.growlog.pk}))
+
+
+class GrowlogUnsetHarvestedAtView(LoginRequiredMixin, View):
+    def post(self, request: HttpRequest, pk: int) -> HttpResponse:
+        self.growlog = get_object_or_404(Growlog, pk=pk)
+        if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
+            raise PermissionDenied(_("You do not have permission to edit this growlog."))
+
+        if self.growlog.harvested_at and not self.growlog.finished_at:
+            self.growlog.harvested_at = None
+            self.growlog.save()
+
         return redirect(reverse('grow:growlog-detail', kwargs={'pk': self.growlog.pk}))
 
 
@@ -221,9 +331,23 @@ class GrowlogSetFinishedAtView(LoginRequiredMixin, View):
     def post(self, request: HttpRequest, pk: int) -> HttpResponse:
         self.growlog = get_object_or_404(Growlog, pk=pk)
         if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
-            return HttpResponse(status=403)
-        self.growlog.finished_at = timezone.now().date()
-        self.growlog.save()
+            raise PermissionDenied(_("You do not have permission to edit this growlog."))
+        if not self.growlog.finished_at:
+            self.growlog.finished_at = timezone.now().date()
+            self.growlog.save()
+        return redirect(reverse('grow:growlog-detail', kwargs={'pk': self.growlog.pk}))
+
+
+class GrowlogUnsetFinishedAtView(LoginRequiredMixin, View):
+    def post(self, request: HttpRequest, pk: int) -> HttpResponse:
+        self.growlog = get_object_or_404(Growlog, pk=pk)
+        if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
+            raise PermissionDenied(_("You do not have permission to edit this growlog."))
+
+        if self.growlog.finished_at:
+            self.growlog.finished_at = None
+            self.growlog.save()
+
         return redirect(reverse('grow:growlog-detail', kwargs={'pk': self.growlog.pk}))
 
 
@@ -247,8 +371,9 @@ class GrowlogDeleteView(LoginRequiredMixin, FormView):
 
     def post(self, request: HttpRequest, pk, **kwargs) -> HttpResponse:
         self.growlog = get_object_or_404(Growlog, pk=pk)  # check if growlog exists
-        if self.growlog.grower != request.user:
-            return HttpResponse(status=403)  # forbid deletion if user is not the grower
+
+        if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
+            raise PermissionDenied(_("You do not have permission to delete this growlog."))
 
         form = self.form_class(request.POST)
         if form.is_valid():
@@ -271,8 +396,9 @@ class HxGrowlogStrainsInfoView(BaseView):
 
     def get(self, request: HttpRequest, growlog_pk: int) -> HttpResponse:
         self.growlog = get_object_or_404(Growlog, pk=growlog_pk)
-        if not self.growlog.is_user_allowed_to_view(request.user):
-            return HttpResponse(status=403)
+
+        if not growlog_user_is_allowed_to_view(request.user, self.growlog):
+            raise PermissionDenied(_("You do not have permission to view this growlog."))
 
         return render(request, self.template_name, self.get_context_data())
 
@@ -295,8 +421,8 @@ class HxGrowlogAddSeedsView(LoginRequiredMixin, HxGrowlogStrainsInfoView, FormVi
 
     def get(self, request, growlog_pk: int) -> HttpResponse:
         self.growlog = get_object_or_404(Growlog, pk=growlog_pk)
-        if self.growlog.grower != request.user:
-            return HttpResponse(status=403)
+        if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
+            raise PermissionDenied(_("You do not have permission to edit this growlog."))
 
         form = GrowlogSeedsFromStockForm(user=request.user)
         return render(request, self.template_name, {
@@ -344,8 +470,8 @@ class HxGrowlogAddSeedsView(LoginRequiredMixin, HxGrowlogStrainsInfoView, FormVi
 
     def post(self, request: HttpRequest, growlog_pk: int) -> HttpResponse:
         self.growlog = get_object_or_404(Growlog, pk=growlog_pk)
-        if self.growlog.grower != request.user:
-            return HttpResponse(status=403)
+        if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
+            raise PermissionDenied(_("You do not have permission to edit this growlog."))
 
         form = GrowlogSeedsFromStockForm(request.POST, user=request.user)
         if form.is_valid():
@@ -382,7 +508,7 @@ class HxGrowlogAddPlantsView(LoginRequiredMixin, HxGrowlogStrainsInfoView, FormV
         self.growlog = self.growlog_strain.growlog
 
         if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
-            return HttpResponse(status=403)
+            raise PermissionDenied(_("You do not have permission to edit this growlog."))
 
         form = self.form_class(request.POST)
 
@@ -429,7 +555,7 @@ class HxGrowlogRemovePlantsView(LoginRequiredMixin, HxGrowlogStrainsInfoView, Fo
     def get(self, request: HttpRequest, pk: int) -> HttpResponse:
         self.growlog_strain = get_object_or_404(GrowlogStrain, pk=pk)
         if not growlog_user_is_allowed_to_edit(request.user, self.growlog_strain.growlog):
-            return HttpResponse(status=403)
+            raise PermissionDenied(_("You do not have permission to edit this growlog."))
 
         return render(request, self.template_name, {
             'form': self.form_class(),
@@ -443,7 +569,7 @@ class HxGrowlogRemovePlantsView(LoginRequiredMixin, HxGrowlogStrainsInfoView, Fo
         self.growlog = self.growlog_strain.growlog
 
         if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
-            return HttpResponse(status=403)
+            raise PermissionDenied(_("You do not have permission to edit this growlog."))
 
         form = self.form_class(request.POST)
 
@@ -549,7 +675,7 @@ class HxGrowlogAddStrainView(LoginRequiredMixin, HxGrowlogStrainsInfoView, FormV
         self.growlog = get_object_or_404(Growlog, pk=growlog_pk)
 
         if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
-            return HttpResponse(status=403)
+            raise PermissionDenied(_("You do not have permission to edit this growlog."))
 
         return render(request, self.template_name, self.get_context_data(
             form=self.get_form(),
@@ -560,7 +686,7 @@ class HxGrowlogAddStrainView(LoginRequiredMixin, HxGrowlogStrainsInfoView, FormV
         self.growlog = get_object_or_404(Growlog, pk=growlog_pk)
 
         if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
-            return HttpResponse(status=403)
+            raise PermissionDenied(_("You do not have permission to edit this growlog."))
 
         form = self.form_class(request.POST)
 
@@ -602,7 +728,7 @@ class HxGrowlogAddStrainUpdateView(HxGrowlogAddStrainView):
     def post(self, request: HttpRequest, growlog_pk: int) -> HttpResponse:
         self.growlog = get_object_or_404(Growlog, pk=growlog_pk)
         if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
-            return HttpResponse(status=403)
+            raise PermissionDenied(_("You do not have permission to edit this growlog."))
 
         form = self.get_form(data=request.POST)
         initial = {}
@@ -679,7 +805,7 @@ class HxGrowlogDeleteStrainView(LoginRequiredMixin, HxGrowlogStrainsInfoView, Fo
     def get(self, request: HttpRequest, pk: int) -> HttpResponse:
         self.growlog_strain = get_object_or_404(GrowlogStrain, pk=pk)
         if not growlog_user_is_allowed_to_edit(request.user, self.growlog_strain.growlog):
-            return HttpResponse(status=403)
+            raise PermissionDenied(_("You do not have permission to edit this growlog."))
         self.growlog = self.growlog_strain.growlog
         self.strain = self.growlog_strain.strain
 
@@ -690,7 +816,7 @@ class HxGrowlogDeleteStrainView(LoginRequiredMixin, HxGrowlogStrainsInfoView, Fo
         self.growlog = self.growlog_strain.growlog
 
         if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
-            return HttpResponse(status=403)
+            raise PermissionDenied(_("You do not have permission to edit this growlog."))
         self.growlog_strain.delete()
 
         return render(request, self.result_template_name, self.get_context_data())
@@ -721,8 +847,9 @@ class HxGrowlogEditNotesView(LoginRequiredMixin, FormView):
 
     def post(self, request: HttpRequest, pk: int) -> HttpResponse:
         self.growlog = get_object_or_404(Growlog, pk=pk)
+
         if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
-            return HttpResponse(status=403)
+            raise PermissionDenied(_("You do not have permission to edit this growlog."))
 
         form = GrowlogNotesForm(request.POST, instance=self.growlog)
         if form.is_valid():
@@ -750,14 +877,14 @@ class HxGrowlogEditDescriptionView(LoginRequiredMixin, FormView):
     def get(self, request: HttpRequest, pk: int) -> HttpResponse:
         self.growlog = get_object_or_404(Growlog, pk=pk)
         if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
-            return HttpResponse(status=403)
+            raise PermissionDenied(_("You do not have permission to edit this growlog."))
 
         return render(request, self.template_name, context=self.get_context_data())
 
     def post(self, request: HttpRequest, pk: int) -> HttpResponse:
         self.growlog = get_object_or_404(Growlog, pk=pk)
         if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
-            return HttpResponse(status=403)
+            raise PermissionDenied(_("You do not have permission to edit this growlog."))
 
         form = self.form_class(request.POST, instance=self.growlog)
 
@@ -926,13 +1053,13 @@ class GrowlogEntryCreateView(LoginRequiredMixin, FormView):
     def get(self, request: HttpRequest, growlog_pk: int) -> HttpResponse:
         self.growlog = get_object_or_404(Growlog, pk=growlog_pk)
         if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
-            return HttpResponse(status=403)
+            raise PermissionDenied(_("You do not have permission to edit this growlog."))
         return render(request, self.template_name, context=self.get_context_data())
 
     def post(self, request: HttpRequest, growlog_pk: int) -> HttpResponse:
         self.growlog = get_object_or_404(Growlog, pk=growlog_pk)
         if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
-            return HttpResponse(status=403)
+            raise PermissionDenied(_("You do not have permission to edit this growlog."))
 
         form = self.form_class(request.POST)
         form.fields['location'].queryset = request.user.locations.all().order_by('name')
@@ -984,8 +1111,10 @@ class GrowlogEntryUpdateView(LoginRequiredMixin, FormView):
     def get(self, request: HttpRequest, pk: int) -> HttpResponse:
         self.entry = get_object_or_404(GrowlogEntry, pk=pk)
         self.growlog = self.entry.growlog
+
         if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
-            return HttpResponse(status=403)
+            raise PermissionDenied(_("You do not have permission to edit this growlog."))
+
         form = self.form_class(instance=self.entry)
         return render(request, self.template_name, context=self.get_context_data(form=form))
 
@@ -1000,7 +1129,7 @@ class GrowlogEntryUpdateView(LoginRequiredMixin, FormView):
         self.entry = get_object_or_404(GrowlogEntry, pk=pk)
         self.growlog = self.entry.growlog
         if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
-            return HttpResponse(status=403)
+            raise PermissionDenied(_("You do not have permission to edit this growlog."))
 
         form = self.form_class(request.POST, instance=self.entry)
 
@@ -1047,7 +1176,7 @@ class GrowlogEntryDeleteView(LoginRequiredMixin, DeleteView):
         self.entry = get_object_or_404(GrowlogEntry, pk=pk)
         self.growlog = self.entry.growlog
         if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
-            return HttpResponse(status=403)
+            raise PermissionDenied(_("You do not have permission to edit this growlog."))
 
         return super().get(request, pk=pk)
 
@@ -1064,7 +1193,7 @@ class GrowlogEntryDeleteView(LoginRequiredMixin, DeleteView):
         self.growlog = self.entry.growlog
 
         if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
-            return HttpResponse(status=403)
+            raise PermissionDenied(_("You do not have permission to edit this growlog."))
 
         form = self.form_class(request.POST)
 

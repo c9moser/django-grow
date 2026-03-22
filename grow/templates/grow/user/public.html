@@ -1,0 +1,83 @@
+{% extends base_template %}
+{% load i18n grow %}
+
+{% block subtitle %}{% translate "User info" %}{% endblock subtitle %}
+{% block head_title %}{{ site_title }} - {% blocktranslate with username=user.username %}User info: {{ username }}{% endblocktranslate %}{% endblock %}
+
+{% block content %}
+<main>
+    <h1>{% blocktranslate with username=user.username %}User <i>{{ username }}</i>{% endblocktranslate %}</h1>
+
+    <h2>{% translate "User Details" %}</h2>
+    <table class="{% if use_bootstrap %}table{% endif %}">
+        <tr>
+            <th class="{% if use_bootstrap %}table-success fit-content{% endif %}">{% translate "Username" %}</th>
+            <td>{{ user.username }}</td>
+        </tr>
+        {% if user.date_joined %}
+        <tr>
+            <th class="{% if use_bootstrap %}table-success fit-content{% endif %}">{% translate "Joined on" %}</th>
+            <td>{{ user.date_joined|date:"SHORT_DATE_FORMAT" }}</td>
+        </tr>
+        {% endif %}
+    </table>
+
+    <h2 id="user-active-growlogs">{% translate "Active Growlogs"%}</h2>
+
+    <div id="user-active-growlogs-info">
+        <table class="{% if use_bootstrap %}table{% endif %}">
+            <thead>
+                <tr>
+                    <th>{% translate "Growlog" %}</th>
+                    <th>{% translate "Strain" %}</th>
+                    <th>{% translate "Started on" %}</th>
+                    <th>{% translate "Status" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for growlog in active_growlogs %}
+                <tr>
+                    <td><a href="{% url 'grow:growlog' growlog.slug %}">{{ growlog.name }}</a></td>
+                    <td>{{ growlog.strain }}</td>
+                    <td>{{ growlog.started_on }}</td>
+                    <td>{{ growlog.status }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="4">{% translate "No active growlogs you are allowed to view." %}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+    <h2 id="user-finished-growlogs">{% translate "Finished Growlogs" %}</h2>
+    <div id="user-finished-growlogs-info">
+        <table class="{% if use_bootstrap %}table{% endif %}">
+            <thead>
+                <tr>
+                    <th>{% translate "Growlog" %}</th>
+                    <th>{% translate "Strain" %}</th>
+                    <th>{% translate "Started on" %}</th>
+                    <th>{% translate "Finished on" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for growlog in finished_growlogs %}
+                <tr>
+                    <td><a href="{% url 'grow:growlog' growlog.slug %}">{{ growlog.name }}</a></td>
+                    <td>{{ growlog.strain }}</td>
+                    <td>{{ growlog.started_on }}</td>
+                    <td>{{ growlog.finished_on }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="4">{% translate "No finished growlogs you are allowed to view." %}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</main>
+{% endblock content %}

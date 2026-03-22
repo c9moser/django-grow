@@ -54,7 +54,7 @@
 <h1>{{ growlog.name }}</h1>
 {% if can_edit %}
 <div class="mb-3">
-    {% if not growlog.germinating_at and not growlog.cutted_at and not growlog.vegetative_at and not growlog.flowering_at and not growlog.finished_at %}
+    {% if not growlog.germinating_at and not growlog.cutted_at and not growlog.vegetative_at and not growlog.flowering_at and not growlog.harvested_at and not growlog.finished_at %}
     <form class="form-inline d-inline" action="{% url 'grow:growlog-set-germinating-at' pk=growlog.id %}" method="post">
         {% csrf_token %}
         <button type="submit" class="btn btn-outline-primary" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Set Germinating Date' %}"><i class="bi bi-calendar-plus"></i></button>
@@ -63,40 +63,70 @@
         {% csrf_token %}
         <button type="submit" class="btn btn-outline-info" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Set Cutted Date' %}"><i class="bi bi-calendar-plus"></i></button>
     </form>
-    {% elif growlog.germinating_at and not growlog.vegetative_at and not growlog.flowering_at and not growlog.finished_at %}
-    <form class="form-inline d-inline" action="#{#{% url 'grow:growlog-unset-germinating-at' pk=growlog.id %}#}" method="post">
+    {# allow to unset germinating or cutted date if vegetative, flowering or finished date is not set #}
+    {% elif growlog.germinating_at and not growlog.vegetative_at and not growlog.flowering_at and not growlog.harvested_at and not growlog.finished_at %}
+    <form class="form-inline d-inline" action="{% url 'grow:growlog-unset-germinating-at' pk=growlog.id %}" method="post">
         {% csrf_token %}
 
         <button type="submit" class="btn btn-outline-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Unset Germinating Date' %}">
             <i class="bi bi-calendar-minus"></i>
         </button>
     </form>
-    {% elif growlog.cutted_at and not growlog.vegetative_at and not growlog.flowering_at and not growlog.finished_at %}
-    <form class="form-inline d-inline" action="#{#{% url 'grow:growlog-unset-cutted-at' pk=growlog.id %}#}" method="post">
+    {% elif growlog.cutted_at and not growlog.vegetative_at and not growlog.flowering_at and not growlog.harvested_at and not growlog.finished_at %}
+    <form class="form-inline d-inline" action="{% url 'grow:growlog-unset-cutted-at' pk=growlog.id %}" method="post">
         {% csrf_token %}
         <button type="submit" class="btn btn-outline-info" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Unset Cutted Date' %}">
             <i class="bi bi-calendar-calendar-minus"></i>
         </button>
     </form>
     {% endif %}
+    {% if not growlog.vegetative_at and not growlog.flowering_at and not growlog.harvested_at and not growlog.finished_at %}
     <form class="form-inline d-inline" action="{% url 'grow:growlog-set-vegetative-at' pk=growlog.id %}" method="post">
         {% csrf_token %}
         <button type="submit" class="btn btn-outline-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Set Vegetative Date' %}"><i class="bi bi-calendar-range"></i></button>
     </form>
+    {% elif growlog.vegetative_at and not growlog.flowering_at and not growlog.harvested_at and not growlog.finished_at %}
+    <form class="form-inline d-inline" action="{% url 'grow:growlog-unset-vegetative-at' pk=growlog.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-outline-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Unset Vegetative Date' %}"><i class="bi bi-calendar-minus"></i></button>
+    </form>
+    {% endif %}
+
+    {% if not growlog.flowering_at and not growlog.harvested_at and not growlog.finished_at %}
     <form class="form-inline d-inline" action="{% url 'grow:growlog-set-flowering-at' pk=growlog.id %}" method="post">
         {% csrf_token %}
         <button type="submit" class="btn btn-outline-success" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Set Flowering Date' %}"><i class="bi bi-flower3"></i></button>
     </form>
-    {% if growlog.flowering_at %}
-    <form class="form-inline d-inline" action="{% url 'grow:growlog-set-harvested-at' pk=growlog.id %}" method="post">
+    {% elif growlog.flowering_at and not growlog.harvested_at and not growlog.finished_at %}
+    <form class="form-inline d-inline" action="{% url 'grow:growlog-unset-flowering-at' pk=growlog.id %}" method="post">
         {% csrf_token %}
-        <button type="submit" class="btn btn-outline-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Set Harvested Date' %}"><i class="bi bi-calendar-range"></i></button>
+        <button type="submit" class="btn btn-outline-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Unset Flowering Date' %}"><i class="bi bi-calendar-minus"></i></button>
     </form>
     {% endif %}
+
+    {% if not growlog.harvested_at and not growlog.finished_at %}
+    <form class="form-inline d-inline" action="{% url 'grow:growlog-set-harvested-at' pk=growlog.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-outline-info" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Set Harvested Date' %}"><i class="bi bi-calendar-check"></i></button>
+    </form>
+    {% elif growlog.harvested_at and not growlog.finished_at %}
+    <form class="form-inline d-inline" action="{% url 'grow:growlog-unset-harvested-at' pk=growlog.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-outline-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Unset Harvested Date' %}"><i class="bi bi-calendar-minus"></i></button>
+    </form>
+    {% endif %}
+
+    {% if not growlog.finished_at %}
     <form class="form-inline d-inline" action="{% url 'grow:growlog-set-finished-at' pk=growlog.id %}" method="post">
         {% csrf_token %}
         <button type="submit" class="btn btn-outline-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Set Finished Date' %}"><i class="bi bi-calendar-date"></i></button>
     </form>
+    {% else %}
+    <form class="form-inline d-inline" action="{% url 'grow:growlog-unset-finished-at' pk=growlog.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-outline-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Unset Finished Date' %}"><i class="bi bi-calendar-minus"></i></button>
+    </form>
+    {% endif %}
 
     <a href="{% url 'grow:growlog-update' pk=growlog.id %}"
         class="btn btn-outline-primary"

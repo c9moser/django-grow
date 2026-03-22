@@ -103,6 +103,7 @@ GROW_BUILTIN_TEMPLATES = {
     'grow/growlog/entry/hx/delete': 'grow/growlog/entry/hx/delete.html',
     'grow/growlog/entry/hx/create': 'grow/growlog/entry/hx/form_dialog.html',
     'grow/growlog/entry/hx/update': 'grow/growlog/entry/hx/form_dialog.html',
+    'grow/growlog/forbidden': 'grow/growlog/forbidden.html',
     'grow/growlog/hx/active_info' : 'grow/growlog/hx/active_info.html',
     'grow/growlog/hx/finished_info' : 'grow/growlog/hx/finished_info.html',
     'grow/growlog/hx/strains_grown': 'grow/growlog/hx/strains_grown.html',
