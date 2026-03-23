@@ -4,7 +4,7 @@
 
 {% block content %}
 <h1>{% translate "Delete Grow Log" %}</h1>
-<p>{% blocktranslate with growlog_name=growlog.name %}Are you sure you want to delete the grow log "{{ growlog_name }}"?{% endblocktranslate %}</p>
+<p>{% blocktranslate with name=growlog.name %}Are you sure you want to delete the grow log <i>{{ name }}</i>?{% endblocktranslate %}</p>
 <form method="post">
     {% csrf_token %}
     {% if use_bootstrap %}

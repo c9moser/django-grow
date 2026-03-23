@@ -356,6 +356,9 @@ class GrowlogDeleteView(LoginRequiredMixin, FormView):
     form_class = GrowlogDeleteForm
     template_name = GROW_TEMPLATES['grow/growlog/delete']
 
+    def get_context_data(self, **kwargs):
+        return super().get_context_data(growlog=self.growlog, **kwargs)
+
     def get_success_url(self) -> str:
         return reverse('grow:user-info')
 
@@ -368,6 +371,14 @@ class GrowlogDeleteView(LoginRequiredMixin, FormView):
 
     def form_invalid(self, form):
         return super().form_invalid(form)
+
+    def get(self, request: HttpRequest, pk, **kwargs) -> HttpResponse:
+        self.growlog = get_object_or_404(Growlog, pk=pk)  # check if growlog exists
+
+        if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
+            raise PermissionDenied(_("You do not have permission to delete this growlog."))
+
+        return super().get(request, pk=pk, **kwargs)
 
     def post(self, request: HttpRequest, pk, **kwargs) -> HttpResponse:
         self.growlog = get_object_or_404(Growlog, pk=pk)  # check if growlog exists

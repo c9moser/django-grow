@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-23 12:48+0100\n"
+"POT-Creation-Date: 2026-03-23 13:10+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: DE\n"
@@ -795,8 +795,8 @@ msgid "Delete Grow Log"
 msgstr "Growlog löschen"
 
 #: grow/templates/grow/growlog/growlog/delete.html:7
-msgid "Are you sure you want to delete the grow log \"%(growlog_name)s\"?"
-msgstr "Bist du sicher, dass du das Growlog \"%(growlog_name)s\" löschen möchtest?"
+msgid "Are you sure you want to delete the grow log <i>%(name)s</i>?"
+msgstr "Bist du sicher, dass du den Growlog <i>%(name)s</i> löschen möchtest?"
 
 #: grow/templates/grow/growlog/growlog/delete.html:13
 #: grow/templates/grow/growlog/growlog/delete.html:23
@@ -1370,7 +1370,8 @@ msgstr "Aktualisiert"
 #: grow/templates/grow/growlog/my_growlogs.html:43
 #: grow/templates/grow/growlog/user.html:30
 msgid "You don't have any grow logs yet. How about starting a new one?"
-msgstr "Du hast noch keine Growlogs! Wie wäre es, wenn du einen neuen startest?"
+msgstr ""
+"Du hast noch keine Growlogs! Wie wäre es, wenn du einen neuen startest?"
 
 #: grow/templates/grow/growlog/my_growlogs.html:49
 #: grow/templates/grow/growlog/user.html:36
@@ -1409,7 +1410,9 @@ msgstr "Aktuelle Phase"
 
 #: grow/templates/grow/growlog/strains_grown.html:42
 msgid "You haven't grown any strains yet. How about starting a new grow?"
-msgstr "Du hast noch keine Sorten gezüchtet! Wie wäre es, wenn du einen neuen Grow startest?"
+msgstr ""
+"Du hast noch keine Sorten gezüchtet! Wie wäre es, wenn du einen neuen Grow "
+"startest?"
 
 #: grow/templates/grow/growlog/user.html:13
 #: grow/templates/grow/growlog/user.html:43
@@ -2504,6 +2507,7 @@ msgid "User info: %(username)s"
 msgstr "Benutzerinformationen: %(username)s"
 
 #: grow/templates/grow/user/public.html:9
+#, python-format
 msgid "User <i>%(username)s</i>"
 msgstr "Benutzer <i>%(username)s</i>"
 
@@ -2570,7 +2574,7 @@ msgid_plural "{n} days"
 msgstr[0] "Einen Tag"
 msgstr[1] "{n} Tage"
 
-#: grow/views/growlog.py:51 grow/views/growlog.py:123 grow/views/growlog.py:401
+#: grow/views/growlog.py:51 grow/views/growlog.py:123 grow/views/growlog.py:412
 msgid "You do not have permission to view this growlog."
 msgstr "Du hast keine Berechtigung, diesen Growlog anzusehen."
 
@@ -2580,20 +2584,20 @@ msgstr "Du hast keine Berechtigung, diesen Growlog anzusehen."
 #: grow/views/growlog.py:262 grow/views/growlog.py:278
 #: grow/views/growlog.py:293 grow/views/growlog.py:308
 #: grow/views/growlog.py:321 grow/views/growlog.py:334
-#: grow/views/growlog.py:345 grow/views/growlog.py:425
-#: grow/views/growlog.py:474 grow/views/growlog.py:511
-#: grow/views/growlog.py:558 grow/views/growlog.py:572
-#: grow/views/growlog.py:678 grow/views/growlog.py:689
-#: grow/views/growlog.py:731 grow/views/growlog.py:808
-#: grow/views/growlog.py:819 grow/views/growlog.py:852
-#: grow/views/growlog.py:880 grow/views/growlog.py:887
-#: grow/views/growlog.py:1056 grow/views/growlog.py:1062
-#: grow/views/growlog.py:1116 grow/views/growlog.py:1132
-#: grow/views/growlog.py:1179 grow/views/growlog.py:1196
+#: grow/views/growlog.py:345 grow/views/growlog.py:436
+#: grow/views/growlog.py:485 grow/views/growlog.py:522
+#: grow/views/growlog.py:569 grow/views/growlog.py:583
+#: grow/views/growlog.py:689 grow/views/growlog.py:700
+#: grow/views/growlog.py:742 grow/views/growlog.py:819
+#: grow/views/growlog.py:830 grow/views/growlog.py:863
+#: grow/views/growlog.py:891 grow/views/growlog.py:898
+#: grow/views/growlog.py:1067 grow/views/growlog.py:1073
+#: grow/views/growlog.py:1127 grow/views/growlog.py:1143
+#: grow/views/growlog.py:1190 grow/views/growlog.py:1207
 msgid "You do not have permission to edit this growlog."
 msgstr "Du hast keine Berechtigung, diesen Growlog zu bearbeiten."
 
-#: grow/views/growlog.py:376
+#: grow/views/growlog.py:379 grow/views/growlog.py:387
 msgid "You do not have permission to delete this growlog."
 msgstr "Du hast keine Berechtigung, diesen Growlog zu löschen."
 
