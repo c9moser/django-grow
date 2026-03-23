@@ -666,7 +666,6 @@ class StrainAddToStockView(LoginRequiredMixin, FormView):
         })
 
     def form_valid(self, form: StrainAddToStockForm):
-        print("Form is valid!")
         year = form.cleaned_data['purchased_on_year']
         month = form.cleaned_data['purchased_on_month']
         day = form.cleaned_data['purchased_on_day']
@@ -701,7 +700,6 @@ class StrainAddToStockView(LoginRequiredMixin, FormView):
         return redirect(self.get_success_url())
 
     def form_invalid(self, form):
-        print(form.errors)
         return super(StrainAddToStockView, self).form_invalid(form)
 
     def get(self, request: HttpRequest, strain: int, feminized: int) -> HttpResponse:
@@ -743,7 +741,6 @@ class StrainRemoveFromStockView(LoginRequiredMixin, FormView):
         })
 
     def form_valid(self, form: StrainRemoveFromStockForm):
-        print(self.feminized)
         if self.feminized:
             self.strain.remove_feminized_seeds_from_stock(
                 self.request.user,
@@ -757,8 +754,6 @@ class StrainRemoveFromStockView(LoginRequiredMixin, FormView):
         return redirect(self.get_success_url())
 
     def form_invalid(self, form):
-        print("Form is invalid!")
-        print(form.errors)
         return super().form_invalid(form)
 
     def validate(self):
@@ -781,7 +776,6 @@ class StrainRemoveFromStockView(LoginRequiredMixin, FormView):
         return super(StrainRemoveFromStockView, self).get(request)
 
     def post(self, request: HttpRequest, strain: int, feminized: int) -> HttpResponse:
-        print("POST request handler")
         self.strain = get_object_or_404(Strain, pk=strain)
         self.feminized = bool(feminized)
 
@@ -842,12 +836,9 @@ class HxStrainAddToStockView(LoginRequiredMixin, FormView):
         })
 
     def form_valid(self, form: StrainAddToStockForm):
-        print("Form is valid!")
         year = int(form.cleaned_data['purchased_on_year'])
         month = int(form.cleaned_data['purchased_on_month'])
         day = int(form.cleaned_data['purchased_on_day'])
-
-        print(year, month, day)
 
         def sanitize_day() -> int:
             import calendar
@@ -858,8 +849,6 @@ class HxStrainAddToStockView(LoginRequiredMixin, FormView):
             return day
 
         purchased_on = date(year, month, sanitize_day()) if year and month and day else None
-
-        print("Notes:", form.cleaned_data['notes'])
 
         if self.feminized:
             self.strain.add_feminized_seeds_to_stock(
@@ -888,8 +877,6 @@ class HxStrainAddToStockView(LoginRequiredMixin, FormView):
         ))
 
     def form_invalid(self, form):
-        print("form invalid handler")
-        print(form.errors)
         return render(self.request, self.update_template_name, context=self.get_context_data(
             success=False,
             seeds_added=True,
@@ -913,10 +900,8 @@ class HxStrainAddToStockView(LoginRequiredMixin, FormView):
         form = self.get_form_class()(request.POST)
 
         if form.is_valid():
-            print("Form is valid!")
             return self.form_valid(form)
         else:
-            print("Form is invalid!")
             return self.form_invalid(form)
 
 
@@ -948,14 +933,14 @@ class HxStrainRemoveFromStockView(LoginRequiredMixin, FormView):
         })
 
     def form_valid(self, form: StrainRemoveFromStockForm):
-        print(self.feminized)
+
         if self.feminized:
             self.strain.remove_feminized_seeds_from_stock(
                 self.request.user,
                 form.cleaned_data['quantity']
             )
         else:
-            self.strain.remove_regualar_seeds_from_stock(
+            self.strain.remove_regular_seeds_from_stock(
                 self.request.user,
                 form.cleaned_data['quantity']
             )
@@ -970,8 +955,6 @@ class HxStrainRemoveFromStockView(LoginRequiredMixin, FormView):
         ))
 
     def form_invalid(self, form):
-        print("Form is invalid!")
-        print(form.errors)
         return render(self.request, self.update_template_name, context=self.get_context_data(
             success=False,
             seeds_added=False,
@@ -1002,7 +985,6 @@ class HxStrainRemoveFromStockView(LoginRequiredMixin, FormView):
         return super(HxStrainRemoveFromStockView, self).get(request)
 
     def post(self, request: HttpRequest, strain: int, feminized: int) -> HttpResponse:
-        print("POST request handler")
         self.strain = get_object_or_404(Strain, pk=strain)
         self.feminized = bool(feminized)
 
@@ -1067,8 +1049,6 @@ class StrainImageUploadView(LoginRequiredMixin, View):
                 'slug': strain.slug,
             }))
 
-        print("form invalid")
-        print(form.errors)
         return render(request, self.template_name, context={
             'strain': strain,
             'form': form,
@@ -1141,8 +1121,7 @@ class BreederTranslationView(LoginRequiredMixin, View):
                 'slug': breeder.slug,
             }))
         else:
-            print("form invalid")
-            print(form.errors)
+            pass
 
         return render(request, self.template_name, context={
             'breeder': breeder,
@@ -1441,12 +1420,9 @@ class StrainAddToStock2View(LoginRequiredMixin, FormView):
         return reverse('grow:user-info')
 
     def form_valid(self, form):
-        print("Form is valid!")
         return super(StrainAddToStock2View, self).form_valid(form)
 
     def form_invalid(self, form):
-        print("Form is invalid!")
-        print(form.errors)
         super(StrainAddToStock2View, self).form_invalid(form)
         return render(self.request, self.success_template_name,
                       context=self.get_context_data(form=form))
@@ -1523,18 +1499,14 @@ class HxStrainAddToStock2View(StrainAddToStock2View):
         return context
 
     def form_valid(self, form):
-        print("Form is valid!xxx")
         try:
-            print(form.cleaned_data['strain'])
             strain = Strain.objects.get(pk=int(form.cleaned_data['strain'])
                                         if form.cleaned_data['strain'] else 0)
         except Strain.DoesNotExist:
-            print("Strain not found!")
             strain = None
             raise Http404("Strain not found!")
 
         if strain:
-            print("adding seeds to stock")
             if form.cleaned_data['strain_type'] == 'feminized':
                 strain.add_feminized_seeds_to_stock(
                     self.request.user,
@@ -1594,14 +1566,12 @@ class StrainUpdateStockView(LoginRequiredMixin, CreateView):
         })
 
     def form_valid(self, form):
-        print("Form is valid!")
+
         self.instance = form.save(commit=False)
         self.instance.user = self.request.user
         return super(StrainUpdateStockView, self).form_valid(form)
 
     def form_invalid(self, form):
-        print("Form is invalid!")
-        print(form.errors)
         super(StrainUpdateStockView, self).form_invalid(form)
         return render(self.request, self.success_template_name,
                       context=self.get_context_data(form=form))

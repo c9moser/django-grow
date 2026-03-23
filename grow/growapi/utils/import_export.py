@@ -206,6 +206,8 @@ def import_data(filename: str | Path, user=None, moderator=None) -> bool:
         except Exception:
             return False
 
+        print(f"Importing breeder: {data['name']} ...")
+
         try:
             breeder = Breeder.objects.get(slug=data['slug'])
             breeder.name = data['name']
@@ -231,7 +233,7 @@ def import_data(filename: str | Path, user=None, moderator=None) -> bool:
                 created_by=get_creator_user(user, data['creator_name'])
             )
 
-        if 'logo_image' in data:
+        if ('logo_url' not in data or not data['logo_url']) and 'logo_image' in data:
             if (not breeder.logo_image
                     or os.path.basename(breeder.logo_image.path) != data['logo_image']):
                 zimage = _breeder_logo_archname_format.format(basename=data['logo_image'])
@@ -273,7 +275,7 @@ def import_data(filename: str | Path, user=None, moderator=None) -> bool:
     # ## END import_breeder()
 
     def import_strain(zarchive: zipfile.ZipFile, breeder: Breeder, slug: str, data: dict):
-        print(data['name'])
+        print(f"\t{data['name']}")
         try:
             strain = breeder.strains.get(slug=slug)
             strain.name = data['name']

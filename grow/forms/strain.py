@@ -17,7 +17,6 @@ from ..enums import TextType, TEXT_CHOICES
 
 
 def get_year_choices(n=20):
-
     today = now().date()
 
     return [
@@ -118,7 +117,6 @@ class StrainAddToStock2Form(forms.Form):
         self.fields['purchased_on_day'].initial = today.day
 
         if 'breeder_filter' in self.data and self.data['breeder_filter']:
-            print("Filtering breeders with:", self.data['breeder_filter'])
             breeders = Breeder.objects.annotate(
                 strains_count=Count('strains')
             ).filter(
@@ -145,9 +143,6 @@ class StrainAddToStock2Form(forms.Form):
         self.fields['breeder'].queryset = breeders
         self.fields['breeder'].initial = breeder
         self.fields['breeder'].value = breeder.id if breeder else None
-
-        print("Initial breeder:", breeder)
-        # self.data['breeder'] = breeder.id if breeder else None
 
         if breeder:
             if 'strain_filter' in self.data and self.data['strain_filter']:

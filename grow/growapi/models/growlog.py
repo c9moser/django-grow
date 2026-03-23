@@ -736,7 +736,6 @@ class Growlog(models.Model):
         """
         years = self.duration_days // 365
         remaining_days = self.duration_days % 365
-        print("remaining_days:", remaining_days)
         weeks = remaining_days // 7
         days = remaining_days % 7
         return {'years': years, 'weeks': weeks, 'days': days}
@@ -1096,8 +1095,6 @@ class GrowlogEntry(models.Model):
             if self.growlog.vegetative_at:
                 germinating_end = self.growlog.vegetative_at
 
-            print(germinating_end, self.growlog.germinating_at)
-
             germinating_days = (self.timestamp.date() - self.growlog.germinating_at).days
             return gettext("Germinating (Day {n})").format(n=(germinating_days + 1))
 
@@ -1356,7 +1353,6 @@ class GrowlogEntry(models.Model):
     def duration_display(self) -> str:
 
         years, weeks, days = self.duration_years_weeks_days
-        print(years, weeks, days)
 
         parts = []
         if years > 0:

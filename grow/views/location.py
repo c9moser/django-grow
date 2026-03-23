@@ -54,8 +54,7 @@ class LocationCreateView(LoginRequiredMixin, BaseView):
                                                longitude=form.cleaned_data.get('longitude', None),
                                                latitude=form.cleaned_data.get('latitude', None))
             return redirect(reverse('grow:location-index'))
-        print("Form is not valid:")
-        print(form.errors)
+
         return render(request, self.template_name, {
             'form': form,
             'location_pk': 0,
@@ -142,8 +141,7 @@ class LocationUpdateView(LoginRequiredMixin, BaseView):
                                                        'latitude', None))
 
             return redirect(reverse('grow:location-index'))
-        print("Form is not valid:")
-        print(form.errors)
+
         return render(request, self.template_name, {
             'form': form,
             'location': location,

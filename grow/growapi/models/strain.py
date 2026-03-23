@@ -139,11 +139,9 @@ class Breeder(models.Model):
                     pass
 
         if translation:
-            print("USING TRANSLATION")
             description_type = translation.description_type
             description = translation.description if translation.description else self.description
         else:
-            print("USING DEFAULT")
             description_type = self.description_type
             description = self.description
 
@@ -715,11 +713,8 @@ class Strain(models.Model):
                 except StrainTranslation.DoesNotExist:
                     pass
         if translation:
-            print("USING TRANSLATION")
             description_type = translation.description_type
             description = translation.description if translation.description else self.description
-        else:
-            print("USING DEFAULT")
             description_type = self.description_type
             description = self.description
 
@@ -1071,7 +1066,6 @@ class Strain(models.Model):
         :rtype: int
         """
 
-        print("Notes:", notes)
         if self.is_feminized:
             try:
                 sis = self.seeds_in_stock.get(is_feminized=True, user=user)
@@ -1194,7 +1188,6 @@ class Strain(models.Model):
         :return: The updated quantity of regular seeds in stock.
         :rtype: int
         """
-        print("REMOVE REGULAR SEEDS")
         if self.is_regular:
             try:
                 sis = self.seeds_in_stock.get(is_regular=True, user=user)

@@ -78,7 +78,6 @@ def render_wiki_link(tag_name: str, value, options, parent, context):
     from tinywiki.models import Page
     if tag_name in options:
         slug = options[tag_name]
-        print("slug", slug)
         try:
             page = Page.objects.get(slug=slug)
             title = page.title

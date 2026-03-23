@@ -1012,7 +1012,7 @@ class GrowlogEntryCreateView(LoginRequiredMixin, FormView):
             initial['location'] = self.growlog.last_location.id
             data['location'] = self.growlog.last_location.id
         else:
-            print("Growlog has no last location")
+            pass
 
         if 'location' in data:
             try:
@@ -1219,7 +1219,6 @@ class HxGrowlogEntryDeleteView(GrowlogEntryDeleteView, HxGrowlogEntriesView):
         return render(self.request, self.result_template_name, context=self.get_context_data())
 
     def form_invalid(self, form):
-        print("Form invalid")
         return render(self.request, self.result_template_name, context=self.get_context_data())
 
 
