@@ -61,7 +61,6 @@ if (BASE_DIR / '.env').is_file():
 if (LOCAL_SETTINGS_DIR / '.env').exists():
     env.read_env(LOCAL_SETTINGS_DIR / '.env')
 
-print("GROW_DEBUG", env('GROW_DEBUG'))
 DEBUG = env.bool('GROW_DEBUG')
 
 if DEBUG and (BASE_DIR / '.env-dev').is_file():

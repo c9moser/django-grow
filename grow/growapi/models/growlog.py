@@ -1095,7 +1095,7 @@ class GrowlogEntry(models.Model):
             if self.growlog.vegetative_at:
                 germinating_end = self.growlog.vegetative_at
 
-            germinating_days = (self.timestamp.date() - self.growlog.germinating_at).days
+            germinating_days = (germinating_end - self.growlog.germinating_at).days
             return gettext("Germinating (Day {n})").format(n=(germinating_days + 1))
 
         elif self.status == GrowlogStatus.ROOTING:
