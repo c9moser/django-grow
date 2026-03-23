@@ -314,8 +314,9 @@ class Growlog(models.Model):
         Calculate the number of days since germination started.
         Returns 0 if germination date is not set.
         """
-        if not self.is_germinating:
+        if not self.germinating_at:
             return 0
+
         if self.vegetative_at is not None:
             delta = self.vegetative_at - self.germinating_at
         elif self.flowering_at is not None:
@@ -334,7 +335,7 @@ class Growlog(models.Model):
         Calculate the number of weeks since germination started.
         Returns 0 if germination date is not set.
         """
-        if not self.is_germinating:
+        if not self.germinating_at:
             return 0
         if self.germinating_days % 7 > 3:
             return (self.germinating_days // 7) + 1
@@ -346,7 +347,7 @@ class Growlog(models.Model):
         Calculate the number of weeks and days since germination started.
         Returns (0, 0) if germination date is not set.
         """
-        if not self.is_germinating:
+        if not self.germinating_at:
             return None
 
         weeks = self.germinating_days // 7
@@ -354,8 +355,30 @@ class Growlog(models.Model):
         return (weeks, days)
 
     @property
+    def germinating_display(self):
+        """
+        Get a human-readable string representation of the germination duration.
+        """
+        weeks_days = self.germinating_weeks_days
+        if weeks_days is None:
+            return gettext("Not germinated")
+
+        weeks, days = weeks_days
+
+        parts = []
+        if weeks > 0:
+            parts.append(ngettext("{n} week", "{n} weeks", weeks).format(n=weeks))
+        if days > 0:
+            parts.append(ngettext("{n} day", "{n} days", days).format(n=days))
+
+        if parts:
+            return ", ".join(parts)
+
+        return gettext("0 days")
+
+    @property
     def rooting_days(self) -> int:
-        if not self.is_cutted:
+        if not self.cutted_at:
             return 0
 
         if self.vegetative_at is not None:
@@ -372,7 +395,7 @@ class Growlog(models.Model):
 
     @property
     def rooting_weeks(self) -> int:
-        if not self.is_cutted:
+        if not self.cutted_at:
             return 0
 
         if self.rooting_days % 7 > 3:
@@ -381,12 +404,31 @@ class Growlog(models.Model):
 
     @property
     def rooting_weeks_days(self) -> tuple[int, int] | None:
-        if not self.is_cutted:
+        if not self.cutted_at:
             return None
 
         weeks = self.rooting_days // 7
         days = self.rooting_days % 7
         return (weeks, days)
+
+    @property
+    def rooting_display(self):
+        weeks_days = self.rooting_weeks_days
+        if weeks_days is None:
+            return gettext("Not cutted")
+
+        weeks, days = weeks_days
+
+        parts = []
+        if weeks > 0:
+            parts.append(ngettext("{n} week", "{n} weeks", weeks).format(n=weeks))
+        if days > 0:
+            parts.append(ngettext("{n} day", "{n} days", days).format(n=days))
+
+        if parts:
+            return ", ".join(parts)
+
+        return gettext("0 days")
 
     @property
     def age_weeks(self) -> int:
@@ -413,6 +455,45 @@ class Growlog(models.Model):
         weeks = self.age_days // 7
         days = self.age_days % 7
         return (weeks, days)
+
+    @property
+    def age_years_weeks_days(self) -> tuple[int, int, int] | None:
+        """
+        Calculate the age of the grow log in years, weeks and days since germination.
+        Returns (0, 0, 0) if germination date is not set.
+        """
+        if not self.is_germinating and not self.is_cutted:
+            return None
+
+        years = self.age_days // 365
+        remaining_days = self.age_days % 365
+        weeks = remaining_days // 7
+        days = remaining_days % 7
+        return (years, weeks, days)
+
+    @property
+    def age_display(self) -> str:
+        """
+        Get a human-readable string representation of the grow log's age.
+        """
+        age = self.age_years_weeks_days
+        if age is None:
+            return gettext("Not germinated")
+
+        years, weeks, days = age
+
+        parts = []
+        if years > 0:
+            parts.append(ngettext("{n} year", "{n} years", years).format(n=years))
+        if weeks > 0:
+            parts.append(ngettext("{n} week", "{n} weeks", weeks).format(n=weeks))
+        if days > 0:
+            parts.append(ngettext("{n} day", "{n} days", days).format(n=days))
+
+        if parts:
+            return ", ".join(parts)
+
+        return gettext("0 days")
 
     @property
     def vegetative_days(self) -> int:
@@ -466,6 +547,30 @@ class Growlog(models.Model):
         return (years, weeks, days)
 
     @property
+    def vegetative_display(self) -> str:
+        """
+        Get a human-readable string representation of the vegetative stage duration.
+        """
+        vegetative = self.vegetative_years_weeks_days
+        if vegetative is None:
+            return gettext("Not in vegetative stage")
+
+        years, weeks, days = vegetative
+
+        parts = []
+        if years > 0:
+            parts.append(ngettext("{n} year", "{n} years", years).format(n=years))
+        if weeks > 0:
+            parts.append(ngettext("{n} week", "{n} weeks", weeks).format(n=weeks))
+        if days > 0:
+            parts.append(ngettext("{n} day", "{n} days", days).format(n=days))
+
+        if parts:
+            return ", ".join(parts)
+
+        return gettext("0 days")
+
+    @property
     def flowering_days(self) -> int:
         """
         Calculate the number of days since flowering started.
@@ -507,6 +612,28 @@ class Growlog(models.Model):
             days = total_days % 7
 
         return (weeks, days)
+
+    @property
+    def flowering_display(self) -> str:
+        """
+        Get a human-readable string representation of the flowering stage duration.
+        """
+        flowering = self.flowering_weeks_days
+        if flowering is None:
+            return gettext("Not in flowering stage")
+
+        weeks, days = flowering
+
+        parts = []
+        if weeks > 0:
+            parts.append(ngettext("{n} week", "{n} weeks", weeks).format(n=weeks))
+        if days > 0:
+            parts.append(ngettext("{n} day", "{n} days", days).format(n=days))
+
+        if parts:
+            return ", ".join(parts)
+
+        return gettext("0 days")
 
     @property
     def days_grown(self) -> int:
@@ -626,6 +753,7 @@ class Growlog(models.Model):
             delta = timezone.now() - self.started_at
         return delta
 
+    @property
     def duration_display(self) -> str:
         """
         Get a human-readable string representation of the grow log's duration.
