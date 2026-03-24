@@ -1530,12 +1530,27 @@ class GrowlogEntryImage(models.Model):
     )
 
     #: The description type
-    description_type = models.CharField(
+    description_type_data = models.CharField(
         _("description type"),
         max_length=50,
-        default="markdown",
-        choices=TEXT_CHOICES
+        default=TextType.MARKDOWN.value,
+        choices=TEXT_CHOICES,
+        db_column="description_type"
     )
+
+    @property
+    def description_type(self) -> TextType:
+        """
+        Get the TextType enum for the description type.
+        """
+        return TextType.from_string(self.description_type_data)
+
+    @description_type.setter
+    def description_type(self, text_type: TextType) -> None:
+        """
+        Set the description type using a TextType enum.
+        """
+        self.description_type_data = text_type.value
 
     #: `True` if it is a plant image
     is_plant_image = models.BooleanField(
@@ -1594,6 +1609,13 @@ class GrowlogEntryImage(models.Model):
         Returns None if flowering date is not set.
         """
         return self.growlog_entry.flowering_weeks_days
+
+    @property
+    def flowering_duration_display(self):
+        """
+        Get the display string for the flowering duration of this grow log entry image.
+        """
+        return self.growlog_entry.flowering_duration_display
 
     class Meta:
         db_table = "grow_growlogentry_image"

@@ -20,13 +20,14 @@ from grow.forms.growlog import (
     GrowlogQuantityForm,
     GrowlogSeedsFromStockForm,
     GrowlogStrainDeleteForm,
+    GrowlogEntryImageForm,
 )
 
 # from grow.growapi.models.strain import Strain
 from ..growapi.models import (
     Growlog,
     GrowlogEntry,
-    # GrowlogEntryImage,
+    GrowlogEntryImage,
     GrowlogStrain,
     Breeder,
 )
@@ -1227,6 +1228,97 @@ class HxGrowlogEntryDeleteView(GrowlogEntryDeleteView, HxGrowlogEntriesView):
 
     def form_valid(self, form):
         GrowlogEntryDeleteView.form_valid(self, form)
+        return render(self.request, self.result_template_name, context=self.get_context_data())
+
+    def form_invalid(self, form):
+        return render(self.request, self.result_template_name, context=self.get_context_data())
+
+
+class GrowlogEntryUploadImageView(LoginRequiredMixin, FormView):
+    template_name = GROW_TEMPLATES['grow/growlog/entry/image/upload']
+    form_class = GrowlogEntryImageForm
+
+    def get_context_data(self, **kwargs):
+        kwargs.setdefault('growlog_entry', self.entry)
+        kwargs.setdefault('growlog', self.growlog)
+
+        context = FormView.get_context_data(
+            self,
+            **HxGrowlogEntriesView.get_context_data(self, **kwargs)
+        )
+        return context
+
+    def get(self, request: HttpRequest, entry_pk: int) -> HttpResponse:
+        self.entry = get_object_or_404(GrowlogEntry, pk=entry_pk)
+        self.growlog = self.entry.growlog
+
+        if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
+            raise PermissionDenied(_("You do not have permission to edit this growlog."))
+
+        form = self.form_class()
+        return render(request, self.template_name, context=self.get_context_data(form=form))
+
+    def post(self, request: HttpRequest, entry_pk: int) -> HttpResponse:
+        self.entry = get_object_or_404(GrowlogEntry, pk=entry_pk)
+        self.growlog = self.entry.growlog
+
+        if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
+            raise PermissionDenied(_("You do not have permission to edit this growlog."))
+
+        form = self.form_class(request.POST, request.FILES)
+
+        if form.is_valid():
+            image = form.save(commit=False)
+            image.growlog_entry = self.entry
+            image.save()
+            return redirect(reverse('grow:growlog-detail', kwargs={'pk': self.growlog.pk}))
+        else:
+            return render(request, self.template_name, context=self.get_context_data(form=form))
+
+
+class HxGrowlogEntryUploadImageView(GrowlogEntryUploadImageView,
+                                    HxGrowlogEntriesView):
+    template_name = GROW_TEMPLATES['grow/growlog/entry/image/hx/upload']
+    result_template_name = GROW_TEMPLATES['grow/growlog/growlog/hx/entries']
+
+    def get_context_data(self, **kwargs):
+        kwargs.setdefault('growlog_entry', self.entry)
+        kwargs.setdefault('growlog', self.growlog)
+
+        context = FormView.get_context_data(
+            self,
+            **HxGrowlogEntriesView.get_context_data(self, **kwargs)
+        )
+        return context
+
+    def get(self, request: HttpRequest, entry_pk: int) -> HttpResponse:
+        self.entry = get_object_or_404(GrowlogEntry, pk=entry_pk)
+        self.growlog = self.entry.growlog
+
+        if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
+            raise PermissionDenied(_("You do not have permission to edit this growlog."))
+
+        form = self.form_class()
+        return render(request, self.template_name, context=self.get_context_data(form=form))
+
+    def post(self, request: HttpRequest, entry_pk: int) -> HttpResponse:
+        self.entry = get_object_or_404(GrowlogEntry, pk=entry_pk)
+        self.growlog = self.entry.growlog
+
+        if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
+            raise PermissionDenied(_("You do not have permission to edit this growlog."))
+
+        form = self.form_class(request.POST, request.FILES)
+
+        if form.is_valid():
+            image = form.save(commit=False)
+            image.entry = self.entry
+            image.save()
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
         return render(self.request, self.result_template_name, context=self.get_context_data())
 
     def form_invalid(self, form):

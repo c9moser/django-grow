@@ -68,7 +68,7 @@
                     <h5 class="text-muted mb-0 text-center" style="width:33%;">{{ entry.status_display }}</h5>
                     <div class="text-end" style="width:33%;">
                         {% if can_edit %}
-                        <a href="#{#{% url 'grow:growlog-entry-image-upload' entry_pk=entry.id %}#}"
+                        <a href="{% url 'grow:growlog-entry-image-upload' entry_pk=entry.id %}"
                            class="btn btn-outline-success btn-sm">
                             <span data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Upload images for this entry' %}">
                                 <i class="bi bi-card-image"></i>
@@ -134,13 +134,13 @@
                 </li>
             </ul>
 
-            {% if entry.images.exists %}
+            {% if entry.images.count > 0 %}
             <div class="card-footer">
                 <h3>{% translate "Images" %}</h3>
                 <div class="row">
                     {% for image in entry.images.all %}
                     <div class="col-4">
-                        <img src="{{ image.url }}" class="img-fluid" alt="{% translate "Entry Image" %}">
+                        <img src="{{ image.image.url }}" class="img-fluid" alt="{% translate "Entry Image" %}">
                     </div>
                     {% endfor %}
                 </div>

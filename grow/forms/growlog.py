@@ -163,3 +163,14 @@ class GrowlogDeleteForm(forms.Form):
         label=_("Confirm deletion"),
         required=True,
     )
+
+
+class GrowlogEntryImageForm(forms.ModelForm):
+
+    class Meta:
+        model = GrowlogEntryImage
+        fields = [
+            'image',
+            'description_type_data',
+            'description',
+        ]
