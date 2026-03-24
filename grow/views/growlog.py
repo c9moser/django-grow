@@ -27,7 +27,7 @@ from grow.forms.growlog import (
 from ..growapi.models import (
     Growlog,
     GrowlogEntry,
-    GrowlogEntryImage,
+    # GrowlogEntryImage,
     GrowlogStrain,
     Breeder,
 )

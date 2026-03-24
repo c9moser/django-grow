@@ -215,22 +215,28 @@ class GrowRoom(models.Model):
     # The width of the growroom
     width = models.PositiveIntegerField(
         _("width"),
-        default=120,
-        help_text=_("Width in centimeters.")
+        default=0,
+        help_text=_("Width in centimeters."),
+        null=True,
+        blank=True
     )
 
     # The height of the growroom
     height = models.PositiveIntegerField(
         _("height"),
-        default=120,
-        help_text=_("Height in centimeters.")
+        default=0,
+        help_text=_("Height in centimeters."),
+        null=True,
+        blank=True
     )
 
     # The depth of the growroom
     depth = models.PositiveIntegerField(
         _("depth"),
         default=200,
-        help_text=_("Depth in centimeters.")
+        help_text=_("Depth in centimeters."),
+        null=True,
+        blank=True
     )
 
     @property

@@ -1082,40 +1082,44 @@ class GrowlogEntry(models.Model):
         """
         Get the display value of the grow log entry's status.
         """
-        if self.status == GrowlogStatus.ACTIVE:
-            return gettext("Active (Day {n})").format(n=self.duration_days + 1)
-        elif self.status == GrowlogStatus.GERMINATING:
-            germinating_end = timezone.now().date()
-            if self.growlog.finished_at:
-                germinating_end = self.growlog.finished_at.date()
-            if self.growlog.harvested_at:
-                germinating_end = self.growlog.harvested_at
-            if self.growlog.flowering_at:
-                germinating_end = self.growlog.flowering_at
-            if self.growlog.vegetative_at:
-                germinating_end = self.growlog.vegetative_at
+        start_date = self.growlog.started_at.date()
+        ret_str = gettext("Active (Day {n})")
+        if self.growlog.germinating_at:
+            if self.timestamp.date() < self.growlog.germinating_at:
+                return ret_str.format(n=(self.timestamp.date() - start_date).days + 1)
+            start_date = self.growlog.germinating_at
+            ret_str = gettext("Germinating (Day {n})")
+        elif self.growlog.is_cutted:
+            if self.timestamp.date() < self.growlog.cutted_at:
+                return ret_str.format(n=(self.timestamp.date() - start_date).days + 1)
+            start_date = self.growlog.cutted_at
+            ret_str = gettext("Rooting (Days {n})")
 
-            germinating_days = (germinating_end - self.growlog.germinating_at).days
-            return gettext("Germinating (Day {n})").format(n=(germinating_days + 1))
+        if self.growlog.vegetative_at:
+            if self.timestamp.date() < self.growlog.vegetative_at:
+                return ret_str.format(n=(self.timestamp.date() - start_date).days + 1)
+            start_date = self.growlog.vegetative_at
+            ret_str = gettext("Vegetative (Day {n})")
 
-        elif self.status == GrowlogStatus.ROOTING:
-            rooting_days = (self.timestamp.date() - self.growlog.cutted_at).days
-            return gettext("Rooting (Day {n})").format(n=(rooting_days + 1))
-        elif self.status == GrowlogStatus.VEGETATIVE:
-            vegetative_days = (self.timestamp.date() - self.growlog.vegetative_at).days
-            return gettext("Vegetative (Day {n})").format(n=(vegetative_days + 1))
-        elif self.status == GrowlogStatus.FLOWERING:
-            flowering_days = (self.timestamp.date() - self.growlog.flowering_at).days
-            return gettext("Flowering (Day {n})").format(n=(flowering_days + 1))
-        elif self.status == GrowlogStatus.HARVESTED:
-            harvested_days = (self.timestamp.date() - self.growlog.harvested_at).days
-            return gettext("Harvested (Day {n})").format(n=(harvested_days + 1))
-        elif self.status == GrowlogStatus.FINISHED:
-            finished_days = (self.timestamp.date() - self.growlog.finished_at.date()).days
+        if self.growlog.flowering_at:
+            if self.timestamp.date() < self.growlog.flowering_at:
+                return ret_str.format(n=(self.timestamp.date() - start_date).days + 1)
+            start_date = self.growlog.flowering_at
+            ret_str = gettext("Flowering (Day {n})")
 
-            return gettext("Finished (Day {n})").format(n=(finished_days + 1))
+        if self.growlog.harvested_at:
+            if self.timestamp.date() < self.growlog.harvested_at:
+                return ret_str.format(n=(self.timestamp.date() - start_date).days + 1)
+            start_date = self.growlog.harvested_at
+            ret_str = gettext("Drying (Day {n})")
 
-        return gettext("Unknown Status")
+        if self.growlog.finished_at:
+            if self.timestamp.date() < self.growlog.finished_at.date():
+                return ret_str.format(n=(self.timestamp.date() - start_date).days + 1)
+            start_date = self.growlog.finished_at.date()
+            ret_str = gettext("Finished (Day {n})")
+
+        return ret_str.format(n=(self.timestamp.date() - start_date).days + 1)
 
     @property
     def content_type(self) -> TextType:
