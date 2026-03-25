@@ -964,8 +964,11 @@ class GrowlogStrain(models.Model):
 
     def save(self, *args, **kwargs):
         """
-        Override the save method to ensure that the grow log is saved after saving the strain association.
-        This is necessary to update the grow log's strain count and related properties.
+        Override the save method to ensure that the grow log is saved after
+        saving the strain association.
+
+        This is necessary to update the grow log's strain count and related
+        properties.
         """
         super().save(*args, **kwargs)
         self.growlog.save()
