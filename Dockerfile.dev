@@ -16,6 +16,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	libpq-dev \
 	gettext \
 	git \
+	firebird-dev \
 	&& apt-get clean \
     && pip install --upgrade pip setuptools wheel \
 	&& pip install poetry \
@@ -30,7 +31,7 @@ WORKDIR /app
 
 COPY . .
 RUN poetry config virtualenvs.in-project true \
-	&& poetry install --all-groups --no-interaction --no-ansi --no-root
+	&& poetry install --with=dev --no-interaction --no-ansi --no-root
 
 RUN chmod +x /app/runserver.sh
 

@@ -160,6 +160,11 @@ class Growlog(models.Model):
         choices=PERMISSION_CHOICES,
         db_column="permission")
 
+    updated_at = models.DateTimeField(
+        _("updated at"),
+        auto_now=True
+    )
+
     @property
     def description_type(self) -> TextType:
         """
@@ -946,6 +951,25 @@ class GrowlogStrain(models.Model):
             ('growlog', 'strain'),
         ]
 
+    def delete(self, *args, **kwargs):
+        """
+        Override the delete method to prevent deletion of the last strain in a grow log.
+        """
+        growlog = self.growlog
+        if growlog.growlog_strains.count() <= 1:
+            raise ValueError(_("Cannot delete the last strain from a grow log."))
+
+        super().delete(*args, **kwargs)
+        growlog.save()
+
+    def save(self, *args, **kwargs):
+        """
+        Override the save method to ensure that the grow log is saved after saving the strain association.
+        This is necessary to update the grow log's strain count and related properties.
+        """
+        super().save(*args, **kwargs)
+        self.growlog.save()
+
 
 class GrowlogEntry(models.Model):
     #: The growlog this entry belongs to
@@ -1504,6 +1528,32 @@ class GrowlogEntry(models.Model):
 
         return gettext("0 days")
 
+    def growlog_entry_image_count(self) -> int:
+        """
+        Get the number of images associated with this grow log entry.
+        """
+        return self.images.count()
+
+    def delete(self, *args, **kwargs):
+        """
+        Override the delete method to remove all associated images
+        when the grow log entry is deleted.
+        """
+        growlog = self.growlog
+
+        for image in self.images.all():
+            image.delete()
+
+        super().delete(*args, **kwargs)
+
+        growlog.save()
+
+    def save(self, *args, **kwargs):
+        result = super().save(*args, **kwargs)
+        self.growlog.save()
+
+        return result
+
     class Meta:
         db_table = "grow_growlogentry"
         ordering = ['-timestamp']
@@ -1620,6 +1670,31 @@ class GrowlogEntryImage(models.Model):
         Get the display string for the flowering duration of this grow log entry image.
         """
         return self.growlog_entry.flowering_duration_display
+
+    def delete(self, *args, **kwargs):
+        """
+        Override the delete method to remove the image file from storage when the model
+        instance is deleted.
+        """
+        image = self.image
+        storage = image.storage
+        growlog = self.growlog_entry.growlog
+
+        super().delete(*args, **kwargs)
+
+        if storage.exists(image.name):
+            storage.delete(image.name)
+
+        growlog.save()
+
+    def save(self, *args, **kwargs):
+        """
+        Override the save method to update the grow log's updated_at field when an image is
+        added or modified.
+        """
+        result = super().save(*args, **kwargs)
+        self.growlog_entry.growlog.save()
+        return result
 
     class Meta:
         db_table = "grow_growlogentry_image"

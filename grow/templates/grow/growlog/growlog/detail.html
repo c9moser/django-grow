@@ -163,6 +163,9 @@
                 {{ growlog.grower.username }}
             {% endif %}
         </li>
+        <li><strong>{% translate "Updated at:" %}</strong>
+            <time datetime="{{ growlog.updated_at|date:"c" }}">{{ growlog.updated_at|date:'SHORT_DATETIME_FORMAT' }}</time>
+        </li>
         <li><strong>{% translate "Started on:" %}</strong>
             <time datetime="{{ growlog.started_at|date:"c" }}">{{ growlog.started_at|date:'SHORT_DATE_FORMAT' }}</time>
         </li>
