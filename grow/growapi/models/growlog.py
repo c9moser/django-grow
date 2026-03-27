@@ -5,7 +5,7 @@ Growlog models
 from datetime import date
 
 from django.db import models
-# from django.utils.safestring import mark_safe
+from django.utils.safestring import SafeString
 from django.utils.translation import gettext_lazy as _, gettext, ngettext
 from django.utils import timezone
 from django.conf import settings
@@ -1608,6 +1608,22 @@ class GrowlogEntryImage(models.Model):
         Set the description type using a TextType enum.
         """
         self.description_type_data = text_type.value
+
+    @property
+    def description_html(self) -> SafeString | str:
+        """
+        Get the HTML representation of the description.
+        """
+        if self.description:
+            if self.description_type == TextType.MARKDOWN:
+                from grow.growapi.parser.markdown import render_description_markdown
+                return render_description_markdown(self.description)
+            elif self.description_type == TextType.BBCODE:
+                from grow.growapi.parser.bbcode import render_description_bbcode
+                return render_description_bbcode(self.description)
+            else:
+                return self.description
+        return ""
 
     #: `True` if it is a plant image
     is_plant_image = models.BooleanField(

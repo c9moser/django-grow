@@ -2,65 +2,47 @@
 <div class="card mb-3" id="growlog-entries-card">
     <div class="card-header">
         <div class="d-flex justify-content-between align-items-center">
-            <div class="d-flex align-items-center">
+            <div style="width:33%;" class="d-flex justify-content-start text-start">
+                <nav aria-label="{% translate 'Grow log entries pagination' %}">
+                    <ul class="pagination pagination-sm mb-0">
+                        {% for page_item in entries_paginator.pagination %}
+                            {% if page_item.current_page %}
+                                <li class="page-item active" aria-current="page">
+                                    <a class="page-link active"
+                                        hx-get="{% url 'grow:hx-growlog-entries' growlog_pk=growlog.pk %}?paginate_by={{ entries_paginator.paginate_by }}&entries_page={{ page_item.page }}"
+                                        hx-target="#growlog-entries"
+                                        hx-swap="innerHTML"
+                                    >{{ page_item.page }}</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item">
+                                    <a class="page-link"
+                                        hx-get="{% url 'grow:hx-growlog-entries' growlog_pk=growlog.pk %}?paginate_by={{ entries_paginator.paginate_by }}&entries_page={{ page_item.page }}"
+                                        hx-target="#growlog-entries"
+                                        hx-swap="innerHTML"
+                                    >{{ page_item.page }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                </nav>
+            </div>
+            <div style="width:33%;" class="d-flex align-items-center text-center justify-content-center">
                 <h5 class="card-title mb-0">{% translate "Grow log entries" %}</h5>
             </div>
-            <div class="d-flex justify-content-end text-end">
-                <nav aria-label="{% translate 'Grow log entries pagination' %}">
-                    <ul class="pagination mb-0">
-                    {% if not growlog_entries_n_pages or growlog_entries_n_pages <= 1 %}
-                        <li class="page-item active disabled" aria-current="page">
-                            <button type="button" class="btn btn-outline-secondary disabled">1</button>
-                        </li>
-                    {% else %}
-                        <li class="page-item {% if growlog_entries_current_page == 1 %}active disabled{% endif %}" aria-current="page">
-                            <button type="button" class="btn btn-outline-secondary disabled">{{ growlog_entries_current_page }}</button>
-                        </li>
-                        {% if growlog_entries_current_page < growlog_entries_n_pages %}
-                            {% if growlog_entries_current_page  > 2 %}
-                        <li>
-                            <button type="button"
-                                hx-get="{% url 'grow:hx-growlog-entries' pk=growlog.pk %}?page=1&paginate={{ growlog_entries_paginate}}"
-                                hx-target="#growlog-entries"
-                                hx-swap="innerHTML"
-                                class="btn btn-outline-primary page-link"
-                            ><i class="bi bi-chevron-double-left"></i></button>
-                        </li>
-                            {% endif %}
-                        {% endif %}
-                        <li>
-                            <button type="button"
-                                class="btn btn-outline-primary page-link bi-outline-primary page-link disabled"
-                            ><i class="bi bi-chevron-left"></i></button>
-                        </li>
-                        {% if growlog_entries_current_page < growlog_entries_n_pages %}
-                        <li>
-                            <button type="button"
-                                hx-get="{% url 'grow:hx-growlog-entries' pk=growlog.pk %}?page={{ growlog_entries_current_page|add:1 }}&paginate={{ growlog_entries_paginate}}"
-                                hx-target="#growlog-entries"
-                                hx-swap="innerHTML"
-                                class="btn btn-outline-primary page-link"
-                            ><i class="bi bi-chevron-right"></i></button>
-                        </li>
-                            {% if growlog_entries_current_page < growlog_entries_n_pages|add:-1 %}
-                        <li>
-                            <button type="button"
-                                hx-get="{% url 'grow:hx-growlog-entries' pk=growlog.pk %}?page={{ growlog_entries_n_pages }}&paginate={{ growlog_entries_paginate}}"
-                                hx-target="#growlog-entries"
-                                hx-swap="innerHTML"
-                                class="btn btn-outline-primary page-link"
-                            ><i class="bi bi-chevron-double-right"></i></button>
-                        </li>
-                            {% endif %}
-                        {% endif %}
-                    {% endif %}
-                    </ul>
-                </nav>
+            <div style="width:33%;">
+                {% if can_edit %}
+                <a
+                    href="{% url 'grow:growlog-entry-create' growlog_pk=growlog.pk %}"
+                    class="btn btn-outline-success btn-sm float-end"
+                >
+                    <i data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Add new entry' %}" class="bi bi-plus"></i>
+                </a>
+                {% endif %}
             </div>
         </div>
     </div>
     <div class="card-body">
-        {% for entry in growlog_entries %}
+        {% for entry in entries_paginator.page %}
         <div class="card mb-3 w-100 m-3-auto">
             <div class="card-header">
                 <div class="d-flex {% if can_edit %}justify-content-between{% endif %} align-items-center">
@@ -177,6 +159,9 @@
                             <div class="card-body p-0">
                                 <img src="{{ image.image.url }}" class="img-fluid" alt="{% translate "Entry Image" %}">
                             </div>
+                            <div class="card-footer p-1">
+                                <small class="text-muted">{{ image.description_html }}</small>
+                            </div>
                         </div>
                     </div>
                     {% endfor %}
@@ -188,5 +173,46 @@
         <div class="alert alert-warning">{% translate "No entries available." %}</div>
         {% endfor %}
     </div>
+
+    <div class="card-footer">
+        <div class="d-flex justify-content-between align-items-center">
+            <div style="width:33%;" class="d-flex justify-content-start text-start">
+                <nav aria-label="{% translate 'Grow log entries pagination' %}">
+                    <ul class="pagination pagination-sm mb-0">
+                        {% for page_item in entries_paginator.pagination %}
+                            {% if page_item.current_page %}
+                                <li class="page-item active" aria-current="page">
+                                    <a class="page-link active"
+                                        hx-get="{% url 'grow:hx-growlog-entries' growlog_pk=growlog.pk %}?paginate_by={{ entries_paginator.paginate_by }}&entries_page={{ page_item.page }}"
+                                        hx-target="#growlog-entries"
+                                        hx-swap="innerHTML"
+                                    >{{ page_item.page }}</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item">
+                                    <a class="page-link"
+                                        hx-get="{% url 'grow:hx-growlog-entries' growlog_pk=growlog.pk %}?paginate_by={{ entries_paginator.paginate_by }}&entries_page={{ page_item.page }}"
+                                        hx-target="#growlog-entries"
+                                        hx-swap="innerHTML"
+                                    >{{ page_item.page }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                </nav>
+            </div>
+            <div style="width:33%;" class="d-flex align-items-center text-center justify-content-center"></div>
+            <div style="width:33%;">
+                {% if can_edit %}
+                <a
+                    href="{% url 'grow:growlog-entry-create' growlog_pk=growlog.pk %}"
+                    class="btn btn-outline-success btn-sm float-end"
+                >
+                    <i data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Add new entry' %}" class="bi bi-plus"></i>
+                </a>
+                {% endif %}
+            </div>
+        </div>
+
+
 </div>
 <script>htmx.process(document.getElementById("growlog-entries-card"));</script>

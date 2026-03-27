@@ -10,6 +10,8 @@ from django.views import View
 from django.views.generic import CreateView, UpdateView, DeleteView, FormView
 from django.db.models import Count
 
+# from grow.growapi import settings
+
 from grow.forms.growlog import (
     GrowlogAddStrainForm,
     GrowlogDeleteForm,
@@ -34,11 +36,14 @@ from ..growapi.models import (
 # from django.urls import reverse
 
 from ..settings import GROW_TEMPLATES, GROW_USER_SETTINGS
+
 from ._base import BaseView
 from ..growapi.permission import (
     growlog_user_is_allowed_to_view,
     growlog_user_is_allowed_to_edit,
 )
+
+from ..paginator import QuerySetPaginator
 
 
 class GrowlogDetailView(BaseView):
@@ -48,6 +53,7 @@ class GrowlogDetailView(BaseView):
 
     def get(self, request: HttpRequest, pk: int) -> HttpResponse:
         growlog = get_object_or_404(Growlog, pk=pk)
+
         if not growlog_user_is_allowed_to_view(request.user, growlog):
             raise PermissionDenied(_("You do not have permission to view this growlog."))
 
@@ -58,6 +64,12 @@ class GrowlogDetailView(BaseView):
         else:
             entries = growlog.entries.filter().order_by('timestamp')
 
+        entries_paginator = QuerySetPaginator(
+            entries,
+            paginate_by=5,
+            page=request.GET.get('entries_page', 1)
+        )
+
         context = {
             'growlog': growlog,
             'growlog_strains': growlog_strains,
@@ -67,6 +79,7 @@ class GrowlogDetailView(BaseView):
             'entries_template': self.entries_template_name,
             'notes_template': GROW_TEMPLATES['grow/growlog/growlog/hx/notes'],
             'description_template': GROW_TEMPLATES['grow/growlog/growlog/hx/description'],
+            'entries_paginator': entries_paginator,
         }
         return render(request, self.template_name, context)
 
@@ -110,9 +123,29 @@ class HxGrowlogEntriesView(BaseView):
             if not self.growlog.is_finished:
                 entries = self.growlog.entries.all().order_by('-timestamp')
 
+        entries_page = int(self.request.GET.get(
+            'entries_page',
+            self.request.GET.get(
+                'page',
+                self.request.GET.get('p', 1)
+            )
+        ))
+        entries_paginate_by = int(self.request.GET.get(
+            'entries_paginate_by',
+            self.request.GET.get(
+                'paginate_by',
+                self.request.GET.get('pgn', 5)
+            )
+        ))
+        entries_paginator = QuerySetPaginator(
+            entries,
+            paginate_by=entries_paginate_by,
+            page=entries_page
+        )
+
         context = {
             'growlog': self.growlog,
-            'growlog_entries': entries,
+            'entries_paginator': entries_paginator,
             'can_edit': can_edit,
         }
         context.update(kwargs)
