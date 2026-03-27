@@ -1432,7 +1432,7 @@ class GrowlogEntry(models.Model):
                 delta = self.growlog.harvested_at - self.growlog.germinating_at
         elif self.growlog.finished_at is not None:
             if self.timestamp.date() >= self.growlog.finished_at.date():
-                delta = self.growlog.finished_at - self.growlog.germinating_at
+                delta = self.growlog.finished_at.date() - self.growlog.germinating_at
 
         return delta.days
 
@@ -1474,7 +1474,7 @@ class GrowlogEntry(models.Model):
             if self.timestamp.date() < self.growlog.finished_at:
                 delta = self.timestamp.date() - self.growlog.cutted_at
             else:
-                delta = self.growlog.finished_at - self.growlog.cutted_at
+                delta = self.growlog.finished_at.date() - self.growlog.cutted_at
         else:
             delta = self.timestamp.date() - self.growlog.cutted_at
         return delta.days
