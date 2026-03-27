@@ -304,12 +304,21 @@ class Growlog(models.Model):
         if not self.is_germintated and not self.is_cutted:
             return 0
 
-        if self.is_germintated:
-            return date.today() - self.germinated_at
-        elif self.is_cutted:
-            return date.today() - self.cutted_at
+        if self.germinating_at:
+            if self.finished_at:
+                return self.finished_at.date() - self.germinating_at
+            else:
+                return date.today() - self.germinating_at
+        elif self.cutted_at:
+            if self.finished_at:
+                return self.finished_at.date() - self.cutted_at
+            else:
+                return date.today() - self.cutted_at
 
-        delta = timezone.now().date() - self.germinated_at
+        if self.finished_at:
+            delta = self.finished_at.date() - self.germinating_at
+        else:
+            delta = timezone.now().date() - self.germinating_at
 
         return delta.days
 
@@ -329,7 +338,7 @@ class Growlog(models.Model):
         elif self.harvested_at is not None:
             delta = self.harvested_at - self.germinating_at
         elif self.finished_at is not None:
-            delta = self.finished_at - self.germinating_at
+            delta = self.finished_at.date() - self.germinating_at
         else:
             delta = timezone.now().date() - self.germinating_at
         return delta.days
