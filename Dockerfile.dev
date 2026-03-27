@@ -30,7 +30,7 @@ VOLUME /data/run
 WORKDIR /app
 
 COPY . .
-RUN poetry config virtualenvs.in-project true \
+RUN poetry config virtualenvs.in-project false \
 	&& poetry install --with=dev --no-interaction --no-ansi --no-root
 
 RUN chmod +x /app/runserver.sh
