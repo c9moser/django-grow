@@ -19,7 +19,8 @@ class QuerySetPaginator:
         if self.paginate_by <= 0:
             return 1
 
-        return (n_items + self.paginate_by - 1) // self.paginate_by
+        n_pages = (n_items + self.paginate_by - 1) // self.paginate_by
+        return max(n_pages, 1)
 
     @property
     def page_range(self):
@@ -30,10 +31,10 @@ class QuerySetPaginator:
         n_pages = self.n_pages
         if self.current_page == -1:
             self.current_page = n_pages
-        elif self.current_page > n_pages:
-            self.current_page = n_pages
         elif self.current_page < 1:
             self.current_page = 1
+        elif self.current_page > n_pages:
+            self.current_page = n_pages
 
         return self.queryset[(self.current_page - 1) * self.paginate_by:
                              self.current_page * self.paginate_by]
