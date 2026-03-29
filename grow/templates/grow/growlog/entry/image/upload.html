@@ -20,6 +20,11 @@
         </label>
     </div>
 
+    <div class="form-floating mb-3">
+        {% render_field form.caption class="form-control" %}
+        <label for="{{ form.caption.id_for_label }}">{% translate "Image Caption" %}</label>
+    </div>
+
     <div class="input-group mb-3">
         <span class="input-group-text" id="description-type-label">
             <i class="bi bi-card-text"></i>
@@ -28,7 +33,7 @@
         {% render_field form.description_type_data class="form-select" %}
     </div>
     <div class="form-floating mb-3">
-        {% render_field form.description class="form-control" %}
+        {% render_field form.description class="form-control" style="height: 25rem;" %}
         <label for="{{ form.description.id_for_label }}">
             {% translate "Image Description" %}
         </label>

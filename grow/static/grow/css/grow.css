@@ -11895,6 +11895,10 @@ footer {
   --bs-breadcrumb-divider: '\279C';
 }
 
+p {
+  text-align: justify;
+}
+
 td.fit-content,
 td.fit-content *,
 th.fit-content,

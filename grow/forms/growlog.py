@@ -159,10 +159,7 @@ class GrowlogEntryForm(forms.ModelForm):
 
 
 class GrowlogDeleteForm(forms.Form):
-    confirm = forms.BooleanField(
-        label=_("Confirm deletion"),
-        required=True,
-    )
+    pass
 
 
 class GrowlogEntryImageForm(forms.ModelForm):
@@ -171,6 +168,18 @@ class GrowlogEntryImageForm(forms.ModelForm):
         model = GrowlogEntryImage
         fields = [
             'image',
+            'caption',
+            'description_type_data',
+            'description',
+        ]
+
+
+class GrowlogEntryImageUpdateForm(forms.ModelForm):
+
+    class Meta:
+        model = GrowlogEntryImage
+        fields = [
+            'caption',
             'description_type_data',
             'description',
         ]

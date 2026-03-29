@@ -1,3 +1,5 @@
+{% load i18n widget_tweaks %}
+
 <div class="modal-dialog modal-dialog-lg">
     <div class="modal-content">
         <div class="modal-header">
@@ -9,22 +11,13 @@
                 {% csrf_token %}
                 <div class="input-group mb-3">
                     <span class="input-group-text" id="image-upload-label">
-                        <i class="bi bi-image"></i>
-                        {% translate "Select Image" %}
+
+                        {% render_field form.is_plant_image class="form-check-input mb-0 me-2" %}
+                        <label class="form-check-label" for="{{ form.is_plant_image.id_for_label }}">
+                            {% translate "This image is of the plant." %}
+                        </label>
                     </span>
-                    {% render_field form.image class="form-control" %}
-                </div>
-                <div class="mb-3">
-                    {% render_field form.is_plant_image class="form-check-input mb-0 me-2" %}
-                    <label class="form-check-label" for="{{ form.is_plant_image.id_for_label }}">
-                        {% translate "This image is of the plant." %}
-                    </label>
-                </div>
-                <div class="form-floating mb-3">
-                    {% render_field form.caption class="form-control" %}
-                    <label for="{{ form.caption.id_for_label }}">{% translate "Image Caption" %}</label>
-                </div>
-                <div class="input-group mb-3">
+
                     <span class="input-group-text" id="description-type-label">
                         <i class="bi bi-card-text"></i>
                         {% translate "Description Type" %}
@@ -32,19 +25,14 @@
                     {% render_field form.description_type_data class="form-select" %}
                 </div>
                 <div class="form-floating mb-3">
-                    {% render_field form.description class="form-control" style="height: 15rem;" %}
+                    {% render_field form.description class="form-control" style="height: 25rem;" %}
                     <label for="{{ form.description.id_for_label }}">
                         {% translate "Image Description" %}
                     </label>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="submit"
-                    class="btn btn-primary"
-                    hx-post="{% url 'growlog-entry-image-update' pk=image.pk %}"
-                    hx-target="#growlog-entries"
-                    hx-swap="innerHTML"
-                >
+                <button type="submit" class="btn btn-primary">
                     <i class="bi bi-upload"></i>
                     {% translate "Upload Image" %}
                 </button>

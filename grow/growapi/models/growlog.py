@@ -1589,10 +1589,12 @@ class GrowlogEntryImage(models.Model):
     )
 
     #: The description of the image
-    description = models.CharField(
+    description = models.TextField(
         _("description"),
-        max_length=255,
-        default=""
+        max_length=4096,
+        default="",
+        null=True,
+        blank=True
     )
 
     #: The description type
@@ -1633,6 +1635,14 @@ class GrowlogEntryImage(models.Model):
             else:
                 return self.description
         return ""
+
+    caption = models.TextField(
+        _("caption"),
+        max_length=1024,
+        default=_("Picture of my grow"),
+        null=True,
+        blank=True
+    )
 
     #: `True` if it is a plant image
     is_plant_image = models.BooleanField(

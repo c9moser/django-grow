@@ -2,6 +2,33 @@
 {% load i18n %}
 {% block subtitle %}{% translate "Grow Log" %}{% endblock subtitle %}
 
+{% block scripts %}
+<script>
+    let URL_VARS = {
+        "gle_pg": {{ entries_paginator.current_page }},
+        "gle_pgn": {{ entries_paginator.paginate_by }},
+        "gle_ord": "{{ entries_paginator.ordering }}",
+    };
+
+    function createURLWithParams(url, params) {
+        const baseURL = window.location.origin
+        const urlObj = new URL(url, baseURL);
+        Object.keys(params).forEach(key => urlObj.searchParams.append(key, params[key]));
+        return urlObj.href;
+    }
+
+    function createPageURL() {
+        const baseURL = "{% url 'grow:growlog-detail' pk=growlog.id %}";
+        return createURLWithParams(baseURL, URL_VARS);
+    }
+
+    function updateURL() {
+        const newURL = createPageURL();
+        window.history.pushState({}, '', newURL);
+    }
+</script>
+{% endblock scripts %}
+
 {% block content %}
 {% if use_bootstrap%}
 <!-- style="--bs-breadcrumb-divider:'&#10093;';" -->
@@ -145,6 +172,10 @@
     {% endif %}
 </p>
 <p>
+    <a href="#growlog-strains" class="link-success"><i class="bi bi-arrow-down"></i> {% translate "Go to Strains" %}</a><br>
+     {% if can_edit %}
+     <a href="#personal-notes" class="link-success"><i class="bi bi-arrow-down"></i> {% translate "Go to Personal Notes" %}</a><br>
+     {% endif %}
     {% if can_edit %}
     <a href="#personal-notes" class="link-success"><i class="bi bi-arrow-down"></i> {% translate "Go to Personal Notes" %}</a><br>
     {% endif %}
