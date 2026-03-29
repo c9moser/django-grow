@@ -10,7 +10,7 @@ from django.views.generic.edit import (
     CreateView,
     UpdateView,
 )
-from django.db.models import Count
+from django.db.models import Count, Sum
 from django.db.models.functions import Lower
 from django.utils.safestring import mark_safe
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -45,6 +45,8 @@ from ..forms import (
 )
 
 from ..growapi.permission import growlog_user_is_allowed_to_view
+
+from ..paginator import QuerySetPaginator
 
 
 class BreederIndexView(BaseView):
@@ -1581,55 +1583,92 @@ class HxSeedsInStockInfoView(LoginRequiredMixin, BaseView):
     template_name = settings.GROW_TEMPLATES['grow/seeds_in_stock/hx/info']
 
     def get_context_data(self, **kwargs):
+        seeds_in_stock = StrainsInStock.objects.filter(
+            user=self.request.user
+        ).order_by('strain__name', 'strain__breeder__name')
+
         render_table = self.request.GET.get('render_table', '1') == '1'
         render_text = self.request.GET.get('render_text', '0') == '1'
         render_user_text = self.request.GET.get('render_user_text', '0') == '1'
 
         sis = self.request.user.seeds_in_stock.filter(quantity__gt=0)
-        n_sis = sis.count()
-        n_seeds_in_stock = 0
-        n_feminized_seeds_in_stock = 0
-        n_regular_seeds_in_stock = 0
+        n_seeds_in_stock = sis.aggregate(total=Sum('quantity'))['total'] or 0
 
-        for in_stock in sis:
-            n_seeds_in_stock += in_stock.quantity
-            if in_stock.is_feminized:
-                n_feminized_seeds_in_stock += in_stock.quantity
-            else:
-                n_regular_seeds_in_stock += in_stock.quantity
+        n_feminized_seeds_in_stock = sis.filter(
+            is_feminized=True
+        ).aggregate(
+            total=Sum('quantity')
+        )['total'] or 0
+        n_regular_seeds_in_stock = sis.filter(
+            is_feminized=False
+        ).aggregate(
+            total=Sum('quantity')
+        )['total'] or 0
 
-        page = 1
-        paginate = settings.GROW_USER_SETTINGS(self.request).paginate
-        if 'page' in self.request.GET:
-            try:
-                page = int(self.request.GET.get('page', page))
-            except ValueError:
-                pass
-        if 'paginate' in self.request.GET:
-            paginate = int(self.request.GET.get('paginate', paginate))
-        if n_sis < 1:
+        n_autoflowering_seeds_in_stock = sis.filter(
+            strain__is_automatic=True
+        ).aggregate(total=Sum('quantity'))['total'] or 0
+
+        n_photoperiod_seeds_in_stock = sis.filter(
+            strain__is_automatic=False
+        ).aggregate(total=Sum('quantity'))['total'] or 0
+
+        try:
+            paginate_by = int(self.request.GET.get(
+                'seeds_in_stock_paginate_by',
+                self.request.GET.get(
+                    'sis_paginate_by',
+                    self.request.GET.get(
+                        'paginate_by',
+                        settings.GROW_USER_SETTINGS(self.request).paginate
+                    )
+                )
+            ))
+        except (TypeError, ValueError):
+            paginate_by = settings.GROW_USER_SETTINGS(self.request).paginate
+
+        if n_seeds_in_stock == 0:
             n_pages = 1
         else:
-            n_pages = (n_sis - 1) // paginate + 1
+            n_pages = (n_seeds_in_stock + paginate_by - 1) // paginate_by
 
+        try:
+            page = int(self.request.GET.get(
+                'seeds_in_stock_page',
+                self.request.GET.get(
+                    'sis_page',
+                    self.request.GET.get('page', 1)
+                )
+            ))
+        except (TypeError, ValueError) as ex:
+            print(f"Error parsing page number: {ex}")
+            page = 1
+
+        print(f"Page: {page}")
         page = max(1, min(page, n_pages))
-        page -= 1
+        print(f"Page: {page}")
+
+        paginator = QuerySetPaginator(seeds_in_stock, paginate_by=paginate_by, page=page)
 
         context = {
             'n_strains_in_stock': StrainsInStock.objects.filter(user=self.request.user).count(),
             'n_seeds_in_stock': n_seeds_in_stock,
             'n_feminized_seeds_in_stock': n_feminized_seeds_in_stock,
             'n_regular_seeds_in_stock': n_regular_seeds_in_stock,
+            'n_autoflowering_seeds_in_stock': n_autoflowering_seeds_in_stock,
+            'n_photoperiod_seeds_in_stock': n_photoperiod_seeds_in_stock,
             'seeds_in_stock_render_table': render_table,
             'seeds_in_stock_render_text': render_text,
             'seeds_in_stock_render_user_text': render_user_text,
-            'seeds_in_stock_current_page': page + 1,
+            'seeds_in_stock_current_page': page,
             'seeds_in_stock_n_pages': n_pages,
-            'seeds_in_stock_paginate': paginate,
+            'seeds_in_stock_paginate': paginate_by,
+            'seeds_in_stock_paginator': paginator,
             'seeds_in_stock': sis.order_by(
                 'strain__name',
-                'strain__breeder__name'
-            )[(page * paginate):((page + 1) * paginate)],
+                'strain__breeder__name',
+            )[(page - 1) * paginate_by:(page * paginate_by)],
+            'seeds_in_stock_scroll_to_card': True,
             'seeds_in_stock_user': kwargs.get('seeds_in_stock_user', self.request.user),
         }
         context.update(kwargs)

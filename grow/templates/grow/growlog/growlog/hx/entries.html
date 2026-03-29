@@ -126,7 +126,7 @@
                                 <div class="d-flex justify-content-end">
                                     {% if can_edit %}
                                     <button type="button"
-                                        {#hx-get="{% url 'grow:hx-growlog-entry-image-update' pk=image.id %}"#}
+                                        hx-get="{% url 'grow:hx-growlog-entry-image-update' pk=image.id %}"
                                         hx-target="#modals-here"
                                         hx-swap="innerHTML"
                                         data-bs-target="#modals-here"
@@ -140,7 +140,7 @@
                                         ></i>
                                     </button>
                                     <button type="button"
-                                        {#hx-get="{% url 'grow:hx-growlog-entry-image-delete' pk=image.id %}"#}
+                                        hx-get="{% url 'grow:hx-growlog-entry-image-delete' pk=image.id %}"
                                         hx-target="#modals-here"
                                         hx-swap="innerHTML"
                                         data-bs-target="#modals-here"

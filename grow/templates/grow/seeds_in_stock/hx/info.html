@@ -72,74 +72,31 @@
 {% endif %}
 
 {% if seeds_in_stock_render_table %}
-<div class="card mb-3">
+<div class="card mb-3" id="seeds-in-stock-card">
     <div class="card-header"><div class="row">
-        <div class="col-6 d-flex align-items-center">
-            <h5 class="card-title mb-0">{% translate "Seeds in stock" %}</h5>
+        <div class="col-4">
+            <nav aria-label="{% translate 'Seeds in stock pagination' %}" class="d-flex justify-content-start text-end mb-2">
+                <ul class="pagination mb-0">
+                    {% for page in seeds_in_stock_paginator.pagination %}
+                    <li class="page-item {% if page.current_page %}active{% endif %}">
+                        <button class="page-link page-link-sm"
+                            hx-get="{% url 'grow:hx-seeds-in-stock-info' %}?sis_paginate_by={{ seeds_in_stock_paginator.paginate_by }}&sis_page={{ page.page }}&render_text={% if seeds_in_stock_render_text %}1{% else %}0{% endif %}&render_user_text={% if seeds_in_stock_render_user_text %}1{% else %}0{% endif %}"
+                            hx-target="#seeds-in-stock-info"
+                            hx-swap="innerHTML"
+                        >
+                            {% if page.bs_icon %}<i class="bi bi-{{ page.bs_icon }}"></i>{% endif %}
+                            {% if not page.bs_icon %}{% if page.text %}{{ page.text }}{% else %}{{ page.number }}{% endif %}{% endif %}
+                        </button>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </nav>
         </div>
-        <div class="col-6">
-        <nav aria-label="{% translate 'Seeds in stock pagination' %}" class="d-flex justify-content-end text-end">
-            <ul class="pagination justify-content-start mb-0 ">
-            {% if not seeds_in_stock_n_pages or seeds_in_stock_n_pages == 1 %}
-                <li class="page-item active disabled" aria-current="page">
-                    <button
-                        class="btn btn-outline-primary page-link"
-                        hx-get="{% url 'grow:hx-seeds-in-stock-info' %}?page=1&paginate={{ seeds_in_stock_paginate }}&render_text={% if seeds_in_stock_render_text %}1{% else %}0{% endif %}"
-                        hx-target="#seeds-in-stock-info"
-                        hx-swap="innerHTML"
-                    >
-                        1
-                    </button>
-                </li>
-            {% else %}
-                {% if seeds_in_stock_current_page > 2 %}
-                <li class="page-item">
-                    <a href="#"
-                        hx-get="{% url 'grow:hx-seeds-in-stock-info' %}?page=1&paginate={{ seeds_in_stock_paginate }}&render_text={% if seeds_in_stock_render_text %}1{% else %}0{% endif %}&render_user_text={% if seeds_in_stock_render_user_text %}1{% else %}0{% endif %}&render_table=1"
-                        hx-target="#seeds-in-stock-info"
-                        hx-swap="innerHTML"
-                        class="btn btn-outline-primary page-link"
-                    ><i class="bi bi-chevron-double-left"></i></a>
-                </li>
-                {% endif %}
-                {% if seeds_in_stock_current_page > 1 %}
-                <li>
-                    <a href="#"
-                        hx-get="{% url 'grow:hx-seeds-in-stock-info' %}?page={{ seeds_in_stock_current_page|add:-1 }}&paginate={{ seeds_in_stock_paginate}}&render_text={% if seeds_in_stock_render_text %}1{% else %}0{% endif %}&render_user_text={% if seeds_in_stock_render_user_text %}1{% else %}0{% endif %}&render_table=1"
-                        hx-target="#seeds-in-stock-info"
-                        hx-swap="innerHTML"
-                        class="btn btn-outline-primary page-link"
-                    ><i class="bi bi-chevron-left"></i></a>
-                </li>
-                {% endif %}
-                <li class="page-item {% if seeds_in_stock_current_page == 1 %}active disabled{% endif %}" aria-current="page">
-                    <button type="button" class="btn btn-outline-secondary disabled">{{ seeds_in_stock_current_page }}</button>
-
-                {% if seeds_in_stock_current_page < seeds_in_stock_n_pages %}
-                <li>
-                    <button
-                        hx-get="{% url 'grow:hx-seeds-in-stock-info' %}?page={{ seeds_in_stock_current_page|add:1 }}&paginate={{ seeds_in_stock_paginate}}&render_text={% if seeds_in_stock_render_text %}1{% else %}0{% endif %}&render_user_text={% if seeds_in_stock_render_user_text %}1{% else %}0{% endif %}&render_table=1"
-                        hx-target="#seeds-in-stock-info"
-                        hx-swap="innerHTML"
-                        hx-trigger="click"
-                        class="btn btn-outline-primary page-link"
-                    ><i class="bi bi-chevron-right"></i></button>
-                </li>
-                    {% if seeds_in_stock_current_page < seeds_in_stock_n_pages|add:-1 %}
-                <li>
-                    <button
-                        hx-get="{% url 'grow:hx-seeds-in-stock-info' %}?page={{ seeds_in_stock_n_pages }}&paginate={{ seeds_in_stock_paginate }}&render_text={% if seeds_in_stock_render_text %}1{% else %}0{% endif %}&render_user_text={% if seeds_in_stock_render_user_text %}1{% else %}0{% endif %}&render_table=1"
-                        hx-target="#seeds-in-stock-info"
-                        hx-swap="innerHTML"
-                        hx-trigger="click"
-                        class="btn btn-outline-primary page-link"
-                    ><i class="bi bi-chevron-double-right"></i></button>
-                </li>
-                    {% endif %}
-                {% endif %}
-            {% endif %}
-            </ul></div>
-        </nav>
+        <div class="col-4 d-flex align-items-center justify-content-center text-center">
+            <h5 class="card-title mb-0 text-center">{% translate "Seeds in stock" %}</h5>
+        </div>
+        <div class="col-4">
+        </div>
     </div></div>
     <div class="card-body p-0">
         <table class="{% if use_bootstrap %}table table-hover mb-0{% endif %}">
@@ -237,9 +194,38 @@
             </tfoot>
         </table>
     </div>
+    <div class="card-footer pb-0"><div class="row mb-0">
+        <div class="col-4 my-0">
+            <nav aria-label="{% translate 'Seeds in stock pagination' %}" class="d-flex justify-content-start text-end mb-2">
+                <ul class="pagination mb-0">
+                    {% for page in seeds_in_stock_paginator.pagination %}
+                    <li class="page-item {% if page.current_page %}active{% endif %}">
+                        <button class="page-link page-link-sm"
+                            hx-get="{% url 'grow:hx-seeds-in-stock-info' %}?sis_paginate_by={{ seeds_in_stock_paginator.paginate_by }}&sis_page={{ page.page }}&render_text={% if seeds_in_stock_render_text %}1{% else %}0{% endif %}&render_user_text={% if seeds_in_stock_render_user_text %}1{% else %}0{% endif %}"
+                            hx-target="#seeds-in-stock-info"
+                            hx-swap="innerHTML"
+                        >
+                            {% if page.bs_icon %}<i class="bi bi-{{ page.bs_icon }}"></i>{% endif %}
+                            {% if not page.bs_icon %}{% if page.text %}{{ page.text }}{% else %}{{ page.number }}{% endif %}{% endif %}
+                        </button>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </nav>
+        </div>
+        <div class="col-4">
+        </div>
+        <div class="col-4">
+        </div>
+    </div></div>
 </div>
 <script>
     htmx.process(document.getElementById('seeds-in-stock-info'));
+    {% if seeds_in_stock_scroll_to_card %}
+        var element = document.getElementById('seeds-in-stock-card');
+        if (element) {
+            element.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    {% endif %}
 </script>
-
-{% endif %}
+{% endif %}{# seeds_in_stock_render_table #}

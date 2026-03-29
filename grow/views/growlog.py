@@ -29,7 +29,7 @@ from grow.forms.growlog import (
 from ..growapi.models import (
     Growlog,
     GrowlogEntry,
-    # GrowlogEntryImage,
+    GrowlogEntryImage,
     GrowlogStrain,
     Breeder,
 )
@@ -1352,6 +1352,77 @@ class HxGrowlogEntryUploadImageView(GrowlogEntryUploadImageView,
             return self.form_invalid(form)
 
     def form_valid(self, form):
+        return render(self.request, self.result_template_name, context=self.get_context_data())
+
+    def form_invalid(self, form):
+        return render(self.request, self.result_template_name, context=self.get_context_data())
+
+
+class GrowlogEntryDeleteImageView(LoginRequiredMixin, DeleteView):
+    model = GrowlogEntryImage
+    template_name = GROW_TEMPLATES['grow/growlog/entry/image/delete']
+    form_class = GrowlogDeleteForm
+
+    def get_success_url(self) -> str:
+        return reverse('grow:growlog-detail', kwargs={'pk': self.growlog.pk})
+
+    def get_context_data(self, **kwargs):
+        kwargs['image'] = self.image
+        kwargs['entry'] = self.entry
+        kwargs['growlog'] = self.growlog
+
+        return super().get_context_data(**kwargs)
+
+    def get(self, request: HttpRequest, pk: int):
+        self.image = get_object_or_404(GrowlogEntryImage, pk=pk)
+        self.entry = self.image.growlog_entry
+        self.growlog = self.entry.growlog
+        if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
+            raise PermissionDenied(_("You do not have permission to edit this growlog."))
+
+        return super().get(request, pk=pk)
+
+    def form_valid(self, form):
+        self.image.delete()
+        return redirect(self.get_success_url())
+
+    def form_invalid(self, form):
+        return redirect(reverse('grow:growlog-detail', kwargs={'pk': self.growlog.pk}))
+
+    def post(self, request: HttpRequest, pk, **kwargs) -> HttpResponse:
+        self.image = get_object_or_404(GrowlogEntryImage, pk=pk)
+        self.object = self.image
+        self.entry = self.image.growlog_entry
+        self.growlog = self.entry.growlog
+
+        if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
+            raise PermissionDenied(_("You do not have permission to edit this growlog."))
+
+        form = self.form_class(request.POST)
+
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def get_context_object_name(self, object):
+        return 'image'
+
+
+class HxGrowlogEntryDeleteImageView(GrowlogEntryDeleteImageView,
+                                    HxGrowlogEntriesView):
+    template_name = GROW_TEMPLATES['grow/growlog/entry/image/hx/delete']
+    result_template_name = GROW_TEMPLATES['grow/growlog/growlog/hx/entries']
+
+    def get_context_data(self, **kwargs):
+        context = GrowlogEntryDeleteImageView.get_context_data(
+            self,
+            **HxGrowlogEntriesView.get_context_data(self, **kwargs)
+        )
+        return context
+
+    def form_valid(self, form):
+        GrowlogEntryDeleteImageView.form_valid(self, form)
         return render(self.request, self.result_template_name, context=self.get_context_data())
 
     def form_invalid(self, form):

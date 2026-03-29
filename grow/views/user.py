@@ -12,6 +12,8 @@ from .strain import (   # noqa: F401
     HxSeedsInStockInfoView,
 )
 
+from ..paginator import QuerySetPaginator
+
 
 class UserInfoView(LoginRequiredMixin, BaseView):
     template_name = GROW_TEMPLATES['grow/user/info']
@@ -21,25 +23,20 @@ class UserInfoView(LoginRequiredMixin, BaseView):
 
     def get_context_data(self, **kwargs):
         user_settings = GROW_USER_SETTINGS(self.request)
-        seeds_in_stock: list[StrainsInStock] = StrainsInStock.objects.filter(
+        seeds_in_stock = StrainsInStock.objects.filter(
             user=self.request.user, quantity__gt=0).order_by(
             'strain__name', 'strain__breeder__name')
-        n_seeds_in_stock = 0
-        n_feminized_seeds_in_stock = 0
-        n_regular_seeds_in_stock = 0
-        n_autoflowering_seeds_in_stock = 0
-        n_photoperiod_seeds_in_stock = 0
+        n_seeds_in_stock = seeds_in_stock.count()
+        n_feminized_seeds_in_stock = seeds_in_stock.filter(is_feminized=True).count()
+        n_regular_seeds_in_stock = seeds_in_stock.filter(is_regular=True).count()
+        n_autoflowering_seeds_in_stock = seeds_in_stock.filter(strain__is_automatic=True).count()
+        n_photoperiod_seeds_in_stock = seeds_in_stock.filter(strain__is_automatic=False).count()
 
-        for seeds in seeds_in_stock:
-            n_seeds_in_stock += seeds.quantity
-            if seeds.is_feminized:
-                n_feminized_seeds_in_stock += seeds.quantity
-            elif seeds.is_regular:
-                n_regular_seeds_in_stock += seeds.quantity
-            if seeds.strain.is_automatic:
-                n_autoflowering_seeds_in_stock += seeds.quantity
-            else:
-                n_photoperiod_seeds_in_stock += seeds.quantity
+        seeds_in_stock_paginator = QuerySetPaginator(
+            seeds_in_stock,
+            user_settings.paginate,
+            self.request.GET.get('sis_page', 1)
+        )
 
         paginate = user_settings.paginate
         paginate = 10
@@ -94,9 +91,8 @@ class UserInfoView(LoginRequiredMixin, BaseView):
 
         ret = {
             'seeds_in_stock_template': self.seeds_in_stock_template_name,
-            'seeds_in_stock': seeds_in_stock[
-                (seeds_in_stock_current_page - 1) * paginate:
-                    (seeds_in_stock_current_page * paginate)],
+            'seeds_in_stock': seeds_in_stock,
+            'seeds_in_stock_paginator': seeds_in_stock_paginator,
             'seeds_in_stock_render_text': True,
             'seeds_in_stock_render_user_text': False,
             'seeds_in_stock_render_table': True,

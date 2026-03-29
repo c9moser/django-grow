@@ -44,6 +44,7 @@ class QuerySetPaginator:
         n_pages = self.n_pages
         pages = []
 
+        print(f"current_page: {self.current_page}, n_pages: {n_pages}")
         if n_pages < 6:
             for i in range(1, n_pages + 1):
                 pages.append({
@@ -56,14 +57,14 @@ class QuerySetPaginator:
                 pages.append({
                     'page': 1,
                     'current_page': False,
-                    'bs_icon': 'bi bi-chevron-bar-left',
+                    'bs_icon': 'chevron-bar-left',
                     'text': _('First') if not settings.USE_BOOTSTRAP else '',
                 })
             if self.current_page > 1:
                 pages.append({
                     'page': self.current_page - 1,
                     'current_page': False,
-                    'bs_icon': 'bi bi-chevron-left',
+                    'bs_icon': 'chevron-left',
                     'text': _('Previous') if not settings.USE_BOOTSTRAP else '',
                 })
 
@@ -77,14 +78,14 @@ class QuerySetPaginator:
                 pages.append({
                     'page': self.current_page + 1,
                     'current_page': False,
-                    'bs_icon': 'bi bi-chevron-right',
+                    'bs_icon': 'chevron-right',
                     'text': _('Next') if not settings.USE_BOOTSTRAP else '',
                 })
             if self.current_page < n_pages - 1:
                 pages.append({
                     'page': n_pages,
                     'current_page': False,
-                    'bs_icon': 'bi bi-chevron-bar-right',
+                    'bs_icon': 'chevron-bar-right',
                     'text': _('Last') if not settings.USE_BOOTSTRAP else '',
                 })
 
