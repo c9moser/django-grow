@@ -59,7 +59,12 @@ class GrowlogDetailView(BaseView):
         growlog = get_object_or_404(Growlog, pk=pk)
 
         if not growlog_user_is_allowed_to_view(request.user, growlog):
-            raise PermissionDenied(_("You do not have permission to view this growlog."))
+            if request.user.is_authenticated:
+                logger.warning(f"User {request.user.username} tried to access growlog {growlog.pk} without permission.")  # noqa: E501
+                raise PermissionDenied(_("You do not have permission to view this growlog."))
+            else:
+                redirect_url = reverse('account_login') + f"?next={request.path}"
+                return redirect(redirect_url)
 
         growlog_strains = GrowlogStrain.objects.filter(growlog=growlog).order_by(
             'strain__name', 'strain__breeder__name')
