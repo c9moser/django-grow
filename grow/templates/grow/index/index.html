@@ -101,7 +101,7 @@
         <tr class="{% if use_bootstrap %}table-success{% endif %}">
             <th>{% translate "Breeder" %}</th>
             <th>{% translate "Name" %}</th>
-            <th>{% translate "Genetics" %}</th>
+            <th>{% translate "Genotype" %}</th>
             <th>{% translate "Flowering time" %}</th>
         </tr>
     </thead>
@@ -110,7 +110,7 @@
         <tr>
             <td><a href="{% url 'grow:breeder-detail' slug=strain.breeder.slug %}">{{ strain.breeder.name }}</a></td>
             <td><a href="{% url 'grow:strain-detail' breeder_slug=strain.breeder.slug slug=strain.slug %}">{{ strain.name }}</a></td>
-            <td>{{ strain.genetics.name }}</td>
+            <td>{{ strain.genotype.name }}</td>
             <td>
                 {% if strain.flowering_time_days == 0 %}
                 {% translate "Unknown" %}
