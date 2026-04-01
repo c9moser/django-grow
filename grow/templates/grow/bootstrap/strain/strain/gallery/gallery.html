@@ -1,0 +1,51 @@
+{% extends base_template %}
+{% load i18n static %}
+
+{% block extra_css %}
+<link href="{% static 'grow/css/lightbox.min.css' %}" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+
+{% block body_scripts %}
+<script src="{% static 'grow/js/lightbox-plus-jquery.js' %}"></script>
+{% endblock %}
+
+<h1>{% trans "Strain Gallery" %}</h1>
+{% if strain_images %}
+<a href="#" type="button" class="btn btn-outline-primary mb-3">{% trans "View slideshow" %}</a>
+
+<div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4 mb-3">
+    {% for picture in strain_images %}
+    <div class="col">
+        <div class="{% if use_bootstrap %}card h-100 border-1{% endif %}">
+            <a href="{{ picture.image.url }}"
+                data-title="{{ picture.caption }}" data-lightbox="strain-{{ strain.id }}-{{ picture.id }}"
+                width="1024px"
+            >
+                <img src="{{ picture.image.url }}" alt="{{ picture.caption }}" class="card-img-top img-fluid">
+            </a>
+            <div class="card-body p-1 d-flex flex-column">
+                <div class="mt-auto">
+                {% if picture.description %}
+                    <p class="card-text mt-auto">{{ picture.description }}</p>
+                {% elif picture.caption %}
+                    <p class="card-text mt-auto">{{ picture.caption }}</p>
+                {% else %}
+                    <p class="card-text mt-auto">
+                        {{ strain.breeder.locale_name }} - {{ strain.locale_name }}
+                    </p>
+                {% endif %}
+                    <p>By <i>{{ picture.uploader.username }}</i>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<p>
+{% trans "No strain images available for strain <i>{{ strain.name }}</i> from <i>{{ strain.breeder.name }}</i>." %}
+</p>
+{% endif %}
+{% endblock %}

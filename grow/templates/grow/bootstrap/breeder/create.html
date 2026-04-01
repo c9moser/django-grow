@@ -1,0 +1,14 @@
+{% extends form_template %}
+{% load i18n %}
+
+{% block head_title %}{{ grow_head_title }}{% endblock %}
+{% block title %}{{ grow_site_title }}: {% translate "Create breeder" %}{% endblock %}
+
+{% block form_buttons %}
+<button class="btn btn-success" type="submit">
+    <i class="bi bi-person-fill-add me-2"></i>{% translate "Create Breeder" %}
+</button>
+<button class="btn btn-secondary" onclick="window.history.back()" type="button">
+    <i class="bi bi-x me-2"></i>{% translate "Back to breeder overview" %}
+</button>
+{% endblock form_buttons%}

@@ -1,0 +1,23 @@
+{% extends base_template %}
+{% load i18n %}
+{% block head_title %}{{ grow_head_title }}{% endblock %}
+{% block title %}{{ grow_site_title }}: {% translate "Unable to remove seeds from stock" %}{% endblock %}
+{% block content %}
+<h1>{% translate "Unable to remove seeds from stock" %}</h1>
+<p>
+{% if feminized %}
+{% translate "feiminized seeds" as seed_type %}
+{% else %}
+{% translate "regular seeds" as seed_type %}
+{% endif %}
+{% blocktranslate with breeder_name=strain.breeder.name strain_name=strain.name %}
+You have no {{ seed_type }} for strain <i>{{ strain_name }}</i> from <i>{{ breeder_name }}</i>
+in stock. You cannot remove any.
+{% endblocktranslate %}
+</p>
+<div>
+    <button type="button" onclick="location.href='{% url 'grow:strain-detail' breeder_slug=strain.breeder.slug slug=strain.slug %}'">
+        {% translate "OK" %}
+    </button>
+</div>
+{% endblock content %}

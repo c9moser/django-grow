@@ -20,7 +20,7 @@ msgstr ""
 
 #: templates/account/login.html:23
 msgid "Log in to your account"
-msgstr "Melde dich an deinem Ayyount an"
+msgstr "Melde dich an deinem Account an"
 
 #: templates/account/login.html:27
 msgid "Email address"

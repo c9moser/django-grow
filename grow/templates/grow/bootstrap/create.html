@@ -1,0 +1,13 @@
+{% extends form_template %}
+{% load i18n %}
+
+{% block head_title %}{{ grow_head_title }}{% endblock %}
+{% block title %}{{ grow_site_title }}: {% translate "Create breeder" %}{% endblock %}
+
+{% block form_buttons %}
+<button type="submit">{% translate "Create Breeder" %}</button>
+<button type="button"
+    onclick="location.href='{% url 'grow:breeder-overview' %}'">
+    {% translate "Back to breeder overview" %}
+</button>
+{% endblock %}

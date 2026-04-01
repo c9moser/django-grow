@@ -1,0 +1,16 @@
+{% extends parent_template %}
+{% load i18n %}
+
+{% block dialog_apply_button %}
+<button type="submit" class="btn btn-danger"
+    hx-trigger="click"
+    hx-target="#seeds-in-stock-info"
+    hx-swap="innerHTML"
+    {% if feminized %}
+    hx-post="{% url 'grow:hx-user-remove-seeds-from-stock' strain=strain.pk feminized=1 %}"
+    {% else %}
+    hx-post="{% url 'grow:hx-user-remove-seeds-from-stock' strain=strain.pk feminized=0 %}"
+    {% endif %}
+    data-bs-dismiss="modal"
+>{% translate "Remove from stock" %}</button>
+{% endblock dialog_apply_button %}

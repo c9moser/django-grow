@@ -1,0 +1,84 @@
+{% extends base_template %}
+{% load i18n grow %}
+
+{% block title %}{{ grow_site_title }}: <span class="{% if use_bootstrap %}fs-2{% endif %}">{% translate "User Information" %}</span>{% endblock title %}
+{% block head_title %}{{ grow_head_title }}{% endblock %}
+
+{% block content %}
+<main>
+
+{% if use_bootstrap %}
+<nav aria-label="breadcrumb">
+<ol class="breadcrumb" >
+{% if GROW_IS_MAIN_APP %}
+    <li class="breadcrumb-item"><a href="{% url 'grow:home' %}">{% translate "Home" %}</a></li>
+{% else %}
+    <li class="breadcrumb-item"><a href="/">{% translate "Home" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'grow:home' %}">{% translate "Grow" %}</a></li>
+{% endif %}
+    <li class="breadcrumb-item active">{% translate "My Grow" %}</li>
+</ol>
+</nav>
+{% endif %}{# use_bootstrap #}
+
+
+<h1>{% translate "My Grow" %}</h1>
+<h2>{% translate "User Information" %}</h2>
+<table class="{% if use_bootstrap %}table{% endif %}">
+    <tr>
+        <th class="{% if use_bootstrap %}table-success fit-content{% endif %}">{% translate "Username" %}</th>
+        <td>{{ request.user.username }}</td>
+    </tr>
+    <tr>
+        <th class="{% if use_bootstrap %}table-success fit-content{% endif %}">{% translate "Email" %}</th>
+        <td>{{ request.user.email }}</td>
+    </tr>
+    {% if request.user.first_name %}
+    <tr>
+        <th class="{% if use_bootstrap %}table-success fit-content{% endif %}">{% translate "First name" %}</th>
+        <td>{{ request.user.first_name }}</td>
+    </tr>
+    {% endif %}
+    {% if request.user.last_name %}
+    <tr>
+        <th class="{% if use_bootstrap %}table-success fit-content{% endif %}">{% translate "Last name" %}</th>
+        <td>{{ request.user.last_name }}</td>
+    </tr>
+    {% endif %}
+</table>
+
+<p>
+    <a href="#seeds-in-stock" class="link-success"><i class="bi bi-arrow-down"></i> {% translate "Jump to seeds in stock" %}</a><br>
+    <a href="#my-growlogs" class="link-success"><i class="bi bi-arrow-down"></i> {% translate "Jump to my grow logs" %}</a>
+</p>
+
+<h2 id="seeds-in-stock">{% translate "My seeds in stock" %}</h2>
+
+<div id="seeds-in-stock-info">
+{% with "grow/seeds_in_stock/hx/info"|grow_template as seeds_in_stock_template %}
+{% include seeds_in_stock_template %}
+{% endwith %}
+</div>
+
+<h2 id="my-growlogs">{% translate "My grow logs" %}</h2>
+<a class="btn btn-sm btn-outline-primary mb-3" href="{% url 'grow:growlog-create' %}"><i class="bi bi-journal-plus"></i> {% translate "Create new grow log" %}</a>
+<p>
+
+{% blocktranslate count n=n_growlogs %}You currently have one grow log.{% plural %}You currently have {{ n }} grow logs.{% endblocktranslate %}
+{% blocktranslate count n=n_finished_growlogs %}One of them is finished.{% plural %}{{ n }} of them are finished.{% endblocktranslate %}
+{% blocktranslate count n=n_active_growlogs %}One of them is still active.{% plural %}{{ n }} of them are still active.{% endblocktranslate %}
+</p>
+<div id="active-growlogs-info">
+{% with "grow/growlog/hx/active_info"|grow_template as active_growlogs_template %}
+    {% include active_growlogs_template %}
+{% endwith %}
+
+</div>
+<div id="finished-growlogs-info">
+{% with "grow/growlog/hx/finished_info"|grow_template as finished_growlogs_template %}
+    {% include finished_growlogs_template %}
+{% endwith %}
+</div>
+
+</main>
+{% endblock content%}

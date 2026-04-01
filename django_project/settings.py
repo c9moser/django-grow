@@ -24,7 +24,7 @@ env = Env(
     GROW_DEBUG=(bool, bool(os.environ.get('GROW_DEBUG', "0"))),
     GROW_SECRET_KEY=(str, 'django-insecure-#zp@r)@gr(f%o3y3*g1dup_z+@lt$o)mgq#8ne%llaz4vh82lf'),
     GROW_ALLOWED_HOSTS=(list, ['*']),
-    GROW_DATABASE=(str, f'sqlite:////{BASE_DIR / "db.sqlite3"}'),
+    GROW_DB=(str, f'sqlite:////{BASE_DIR / "db.sqlite3"}'),
     GROW_DEFAULT_FROM_EMAIL=(str, 'webmaster@localhost'),
     GROW_EMAIL_BACKEND=(str, 'django.core.mail.backends.console.EmailBackend'),
     GROW_EMAIL_HOST=(str, 'localhost'),
@@ -161,7 +161,7 @@ WSGI_APPLICATION = 'django_project.wsgi.application'
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 DATABASES = {
-    'default': env.db('GROW_DATABASE'),
+    'default': env.db('GROW_DB'),
 }
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

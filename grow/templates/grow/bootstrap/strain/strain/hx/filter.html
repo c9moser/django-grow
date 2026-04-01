@@ -1,0 +1,135 @@
+{% load i18n%}
+<table id="strain-table"
+    class="{% if use_bootstrap%}table table-hover{% endif %}"
+>
+    <thead>
+        <tr>
+            <th>{% translate "Strain" %}</th>
+            <th>{% translate "Genotype" %}</th>
+            <th>RFA</th>
+            <th>{% translate "Flowering time" %}</th>
+            <th>{% translate "Growlogs" %}</th>
+            <th>
+            {% if use_bootstrap%}
+            <div class="text-end me-2">
+                {% if allowed_to_add_strains %}
+                    <a href="{% url 'grow:strain-create' breeder_pk=breeder.pk %}"
+                        class="link-primary
+                            link-opacity-75
+                            link-opacity-100-hover
+                            link-underline-opacity-0
+                            tooltip-item"
+                        data-bs-toggle="tooltip"
+                        data-bs-html="true"
+                        data-bs-title="{% blocktranslate with name=breeder.name %}Add strain to breeder <i>{{ name }}</i>{% endblocktranslate %}"
+                    ><i class="bi bi-plus-square"></i></a>
+                    {% else %}
+                    <a href="#strain-table"
+                        class="link-body-emphasis
+                            link-opacity-50
+                            link-underline-opacity-0"
+                    ><i class="bi bi-plus-square"></i></a>
+                    {% endif %}
+                </div>
+            {% else %}
+                {% if allowed_to_add_strains %}
+                <a href="{% url 'grow:strain-create' breeder_pk=breeder.pk %}">Add</a>
+                {% else %}
+                Actions
+                {% endif %}
+            {% endif %}
+            </th>
+        </tr>
+    </thead>
+    <tbody class="{% if use_bootstrap %}table-group-divider{% endif %}">
+    {% for strain in strains %}
+        <tr id="{{ breeder.slug }}-{{ strain.slug }}">
+            <td>
+                <a href="{% url 'grow:strain-detail' breeder_slug=breeder.slug slug=strain.slug %}"
+                    class="{% if strain.is_discontinued %}text-decoration-line-through text-muted{% endif %}"
+                >{{ strain.locale_name }}</a>
+            </td>
+            <td>{{ strain.genotype.name }}</td>
+            <td>
+                {% if strain.is_regular %}R{% endif %}{% if strain.is_feminized %}F{% endif %}{% if strain.is_auto_flowering %}A{% endif %}
+            </td>
+            <td>
+                {% if strain.flowering_time_days %}
+                {% blocktranslate with days=strain.flowering_time_days count n=strain.flowering_time_days%}{{ days }} day{% plural %}{{ days }} days{% endblocktranslate %}
+                {% else %}
+                {% translate "Unknown" %}
+                {% endif %}
+            </td>
+            <td>
+                {% blocktranslate with n_growlogs=strain.growlog_count count n=strain.growlog_count %}{{ n_growlogs }} Growlog{% plural %}{{ n_growlogs }} Growlogs{% endblocktranslate %}
+            </td>
+            <td>
+            {% if use_bootstrap %}
+                <div class="text-end me-2">
+                {% if allowed_to_add_strains %}
+                    <a href="{% url 'grow:strain-update' pk=strain.pk %}"
+                        class="link-primary
+                            link-opacity-75
+                            link-opacity-100-hover
+                            link-underline-opacity-0
+                            tooltip-item"
+                        data-bs-toggle="tooltip"
+                        data-bs-html="true"
+                        data-bs-title="{% blocktranslate with name=strain.name %}Edit strain <i>{{ name }}</i>{% endblocktranslate %}"
+                    ><i class="bi bi-pencil-square"></i></a>
+                {% else %}
+                    <a href="#strain-table"
+                        class="link-body-emphasis
+                            link-opacity-50
+                            link-underline-opacity-0"
+                    ><i class="bi bi-pencil-square"></i></a>
+                {% endif %}
+                {% if strain.id in strains_allowed_to_delete %}
+                    <a href="#"
+                        class="link-danger
+                            link-opacity-50
+                            link-underline-opacity-0
+                            tooltip-item"
+                        hx-target="#modals-here"
+                        hx-trigger="click"
+                        hx-get="{% url 'grow:hx-strain-delete' pk=strain.pk %}"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modals-here"
+                    ><i class="bi bi-x-square"
+                        data-bs-toggle="tooltip"
+                        data-bs-html="true"
+                        data-bs-title="{% blocktranslate with name=strain.name %}Delete strain <i>{{ name }}</i>{% endblocktranslate %}"
+                        data-bs-placement="left"
+                    ></i>
+                </a>
+                {% else %}
+                <a href="#{{ breeder.slug}}-{{ strain.slug }}"
+                        class="link-body-emphasis
+                            link-opacity-50
+                            link-underline-opacity-0"
+                ><i class="bi bi-x-square"></i></a>
+                {% endif %}
+                </div>
+            {% else %}
+                {% if strain.id in strains_allowed_to_edit %}
+                <a href="{% url 'grow:strain-update' pk=strain.pk %}">
+                    {% translate "Edit" %}
+                </a>
+                {% endif %}
+                {% if strain.id in strains_allowed_to_delete %}
+                <a href="{% url 'grow:strain-delete' pk=strain.pk %}">
+                    {% translate "Delete" %}
+                </a>
+                {% endif %}
+            {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<script>
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('.tooltip-item'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl)
+    });
+</script>

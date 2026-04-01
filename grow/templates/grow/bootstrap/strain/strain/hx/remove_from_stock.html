@@ -1,0 +1,52 @@
+{% load i18n widget_tweaks %}
+<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">{% translate "Remove seeds from stock" %}</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <form method="post"
+            {% if feminized %}
+            action="{% url 'grow:hx-strain-remove-from-stock' strain=strain.pk feminized=1 %}"
+            {% else %}
+            action="{% url 'grow:hx-strain-remove-from-stock' strain=strain.pk feminized=0 %}"
+            {% endif %}
+    >
+        <div class="modal-body">
+            {% csrf_token %}
+            <p>{% blocktranslate with strain_name=strain.name breeder_name=strain.breeder.name%}Remove seeds from stock for <i>{{ strain_name }}</i> from <i>{{ breeder_name }}</i>.{% endblocktranslate %}</p>
+
+            <p>
+            {% if feminized %}
+            {% blocktranslate count n=n_seeds_in_stock %}You have one feminized seed in stock. How many do you want to remove?{% plural %}You have {{ n }} feminized seeds in stock. How many do you want to remove?{% endblocktranslate %}
+            {% else %}
+            {% blocktranslate count n=n_seeds_in_stock %}You have one regular seed in stock. How many do you want to remove?{% plural %}You have {{ n }} regular seeds in stock. How many do you want to remove?{% endblocktranslate %}
+            {% endif %}
+            </p>
+            <div class="form-floating mb-3">
+                {% translate "Quantity" as quantity_label %}
+                {% render_field form.quantity class="form-control" placeholder=quantity_label min="1" %}
+                <label for="{{ form.quantity.id_for_label }}">{{ quantity_label }}</label>
+            </div>
+        </div>
+        <div class="modal-footer text-end">
+            {% block dialog_apply_button %}
+            <button type="submit" class="btn btn-danger"
+                hx-trigger="click"
+                hx-target="#seeds-in-stock-div"
+                hx-swap="innerHTML"
+                {% if feminized %}
+                hx-post="{% url 'grow:hx-strain-remove-from-stock' strain=strain.pk feminized=1 %}"
+                {% else %}
+                hx-post="{% url 'grow:hx-strain-remove-from-stock' strain=strain.pk feminized=0 %}"
+                {% endif %}
+                data-bs-dismiss="modal"
+            >{% translate "Remove from stock" %}</button>
+            {% endblock dialog_apply_button %}
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                {% translate "Cancel" %}
+            </button>
+        </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,22 @@
+{% load i18n %}
+<div id="user-comments-div">
+    {% for comment in comments %}
+    <div class="card w-100 mb-3">
+        <div class="card-header">
+            <span class="fw-bold">{{ comment.user.username }}</span>
+            &nbsp;|&nbsp;
+            <span class="text-muted">
+                {{ comment.created_at|date:"SHORT_DATETIME_FORMAT" }}
+            </span>
+        </div>
+        <div class="card-body">
+            {{ comment.comment }}
+            <p class="card-text">{{ comment.comment_html }}</p>
+        </div>
+    </div>
+    {% empty %}
+    <p>
+    {% translate "There are currently no comments for this strain. Be the first to add one!" %}
+    </p>
+    {% endfor %}
+</div>

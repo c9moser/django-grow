@@ -1,0 +1,41 @@
+{% load i18n %}
+<div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">{% translate "Delete Location" %}</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+        </div>
+        {% translate "Delete Location" as delete_location_label %}
+        {% if error %}
+        <div class="modal-body">
+            <div class="alert alert-danger">
+                {{ error }}
+            </div>
+            <div class="modal-footer text-end">
+                <a href="{% url 'grow:location-index' %}" class="btn btn-secondary">{% translate "Back to Locations" %}</a>
+            </div>
+        {% else %}
+        <form method="post" action="{% url 'grow:hx-location-delete' pk=location.pk %}">
+            <div class="modal-body">
+                {% csrf_token %}
+                <p>
+                    {% blocktranslate with name=location.name %}Do you really want to delete location <i>{{ name }}</i>?{% endblocktranslate %}
+                </p>
+            </div>
+            <div class="modal-footer text-end">
+                <button type="submit" class="btn btn-danger">
+                    <i class="bi bi-person-fill-dash"></i>
+                    {{ delete_location_label }}
+                </button>
+                <button type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                >
+                    <i class="bi bi-x"></i>
+                    {% translate "Cancel" %}
+                </button>
+            </div>
+        </div>
+    </form>
+    {% endif %}
+</div>

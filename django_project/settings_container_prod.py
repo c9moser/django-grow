@@ -1,13 +1,20 @@
-from logging import DEBUG
 
+import environ
+from pathlib import Path
 
-STATIC_ROOT = '/var/www/grow/static'
-MEDIA_ROOT = '/var/www/grow/media'
+DEBUG = False
+ALLOWED_HOSTS = ['*']
+
+env = environ.Env(
+    GROW_STATIC_ROOT=(str, '/var/www/grow/static'),
+    GROW_MEDIA_ROOT=(str, '/var/www/grow/media'),
+    GROW_DB=(str, 'sqlite3:////data/db.sqlite3'),
+)
+STATIC_ROOT = Path(env('GROW_STATIC_ROOT')).resolve()
+MEDIA_ROOT = Path(env('GROW_MEDIA_ROOT')).resolve()
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': '/data/db.sqlite3',
-    }
+    'default': env.db('GROW_DB')
 }
 
 LOGGING = {
@@ -19,23 +26,37 @@ LOGGING = {
         }
     },
     'handlers': {
-        'file': {
-            'level': 'DEBUG',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename': '/var/log/apache2/grow.debug.log',
-            'maxBytes': 1024*1024*5,  # 5 MB
-            'backupCount': 5,
-        },
         'console': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
+            'filters': ['django_browser_reload'],
+            'formatter': 'console',
+        }
+    },
+    'formatters': {
+        'verbose': {
+            'format': '[{asctime}|{levelname}|{name}] {message}',
+            'style': '{',
+        },
+        'file': {
+            'format': '[{asctime}|{levelname}|{name}] {message}',
+            'style': '{',
+        },
+        'console': {
+            'format': '[{levelname}|{name}] {message}',
+            'style': '{',
         }
     },
     'loggers': {
         'django': {
-            'handlers': ['file'],
-            'level': 'DEBUG',
+            'handlers': ['console'],
+            'level': 'INFO',
             'propagate': True,
         },
+        'grow': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        }
     },
 }

@@ -309,6 +309,7 @@ class HxStrainFilterView(BaseView):
 
 class BreederCreateView(LoginRequiredMixin, CreateView):
     template_name = settings.GROW_TEMPLATES['grow/breeder/create']
+    form_template_name = settings.GROW_TEMPLATES['grow/breeder/form']
     model = Breeder
     fields = [
         "slug",
@@ -320,6 +321,12 @@ class BreederCreateView(LoginRequiredMixin, CreateView):
         "logo_url",
         "logo_image",
     ]
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if 'form_template' not in context:
+            context['form_template'] = self.form_template_name
+        return context
 
     def form_valid(self, form):
         breeder = form.save(commit=False)
@@ -336,6 +343,8 @@ class BreederCreateView(LoginRequiredMixin, CreateView):
 
 class BreederUpdateView(LoginRequiredMixin, UpdateView):
     template_name = settings.GROW_TEMPLATES["grow/breeder/update"]
+    form_template_name = settings.GROW_TEMPLATES['grow/breeder/form']
+
     model = Breeder
 
     fields = [
@@ -348,6 +357,12 @@ class BreederUpdateView(LoginRequiredMixin, UpdateView):
         "logo_url",
         "logo_image",
     ]
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if 'form_template' not in context:
+            context['form_template'] = self.form_template_name
+        return context
 
     def form_valid(self, form):
         ret = super().form_valid(form)

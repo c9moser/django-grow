@@ -1,0 +1,533 @@
+{% extends base_template %}
+{% load static i18n tz grow %}
+
+{% block subtitle %}{{ strain.breeder.name }} - {{ strain.name }}{% endblock %}
+{% block head_title %}{{ grow_head_title }}{% endblock %}
+
+{% block content %}
+{% if use_bootstrap %}
+<nav aria-label="breadcrumb">
+
+    <ol class="breadcrumb">
+    {% if GROW_IS_MAIN_APP %}
+        <li class="breadcrumb-item"><a href="{% url 'grow:home' %}">{% translate "Home" %}</a></li>
+    {% else %}
+        <li class="breadcrumb-item"><a href="/">{% translate "Home" %}</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'grow:home' %}">{% translate "Grow" %}</a></li>
+    {% endif %}
+        <li class="breadcrumb-item">
+            <a href="{% url 'grow:breeder-overview' %}">
+                {% translate "Strains" %}
+            </a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="{% url 'grow:breeder-detail' slug=strain.breeder.slug %}">
+                {{ strain.breeder.name }}
+            </a>
+        </li>
+        <li class="breadcrumb-item active">{{ strain.name }}</li>
+    </ol>
+</nav>
+{% endif %}
+
+
+<div class="{% if use_bootstrap %}fs-3{% endif %}">
+{% if use_bootstrap %}
+    {% if allowed_to_edit %}
+    <a href="{% url 'grow:strain-update' pk=strain.pk %}"
+        class="link-primary
+            link-opacity-75
+            link-opacity-100-hover
+            link-underline-opacity-0"
+        data-bs-toggle="tooltip"
+        data-bs-placement="bottom"
+        data-bs-title="{% translate 'Edit strain' %}"
+    >
+        <i class="bi bi-pencil-square"></i>
+    </a>
+    {% endif %}
+    {% if allowed_to_translate %}
+    <a href="{% url 'grow:strain-translate' pk=strain.pk %}"
+        class="link-success
+            link-opacity-75
+            link-opacity-100-hover
+            link-underline-opacity-0"
+        data-bs-toggle="tooltip"
+        data-bs-placement="bottom"
+        data-bs-title="{% translate 'Translate strain' %}"
+    ><i class="bi bi-translate"></i></a>
+    {% endif %}
+    {% if allowed_to_delete %}
+    <a href="#"
+        class="link-danger
+            link-opacity-75
+            link-opacity-100-hover
+            link-underline-opacity-0"
+            hx-get="{% url 'grow:hx-strain-delete' pk=strain.pk %}"
+            hx-swap="innerHTML"
+            hx-target="#modals-here"
+            data-bs-toggle="modal"
+            data-bs-target="#modals-here"
+    >
+        <i class="bi bi-x-square"
+            data-bs-toggle="tooltip"
+            data-bs-placement="bottom"
+            data-bs-title="{% translate 'Delete strain' %}"></i>
+    </a>
+    {% endif %}
+{% else %}
+    {% if allowed_to_edit %}<a href="{% url 'grow:strain-update' pk=strain.pk %}">[{% translate "Edit strain" %}]</a>{% endif %}
+    {% if allowed_to_translate %}<a href="{% url 'grow:strain-translate' pk=strain.pk %}">[{% translate "Translate strain" %}]</a>{% endif %}
+    {% if allowed_to_delete %}<a href="{% url 'grow:strain-delete' pk=strain.pk %}">[{% translate "Delete strain" %}]</a>{% endif %}
+{% endif %}
+</div>
+
+<h1>{{ strain.breeder.name }} - {{ strain.name }}</h1>
+
+<div class="row mb-3">
+    <div class="{% if use_bootstrap %}col-md-5 mb-3{% endif %}" {% if not use_bootstrap %}style="width:40%;float:left;"{% endif %}>
+{% if strain.has_logo %}
+    <img class="{% if use_bootstrap %}img-fluid rounded{% endif %}"
+        src="{{ strain.logo }}"
+        style="max-width:100%;"
+    >
+{% else %}
+    <img class="{% if use_bootstrap %}img-fluid rounded {% endif %}"
+        src="{% static 'grow/img/hemp-leaf.jpg' %}"
+        style="max-width:100%;"
+    >
+{% endif %}
+    </div>
+    <div class="{% if use_bootstrap %}col-md-7 mb-3{% endif %}" {% if not use_bootstrap %}style="width:60%;"{% endif %}>
+
+    <div class="alert alert-info p-2 mb-3" role="alert">
+    {% if strain.created_by %}
+        {% blocktranslate with username=strain.created_by.username date=strain.added_at|date:"SHORT_DATE_FORMAT" %}Strain added by {{ username }} on {{ date }}.{% endblocktranslate %}
+    {% elif strain.creator_name %}
+        {% blocktranslate with username=strain.creator_name date=strain.added_at|date:"SHORT_DATE_FORMAT" %}Strain added by {{ username }} on {{ date }}.{% endblocktranslate %}
+    {% else %}
+        {% blocktranslate with date=strain.created_at|date:"SHORT_DATE_FORMAT" %}Strain added on {{ date }}.{% endblocktranslate %}
+    {% endif %}
+    </div>
+    {% if translation %}
+    {% if translation.user %}
+    <div class="alert alert-info p-2 mb-3" role="alert">
+        {% blocktranslate with username=translation.user.username date=translation.created_at|date:"SHORT_DATE_FORMAT" %}This is a translation added by {{ username }} on {{ date }}.{% endblocktranslate %}
+    </div>
+    {% elif translation.translator_name %}
+    <div class="alert alert-info p-2 mb-3" role="alert">
+        {% blocktranslate with username=translation.translator_name date=translation.created_at|date:"SHORT_DATE_FORMAT" %}This is a translation added by {{ username }} on {{ date }}.{% endblocktranslate %}
+    </div>
+    {% else %}
+    <div class="alert alert-info p-2 mb-3" role="alert">
+        {% blocktranslate with date=translation.created_at|date:"SHORT_DATE_FORMAT" %}This is a translation added on {{ date }}.{% endblocktranslate %}
+    </div>
+    {% endif %}
+    {% endif %}
+    <p>
+        <ul>
+            <li>
+                <span class="fw-bold">{% translate "Flowering time:" %}</span>
+                {% if strain.flowering_time_days == 0 %}
+                {% translate "Unknown" %}
+                {% else %}
+                {% blocktranslate with ftd=strain.flowering_time_days count n=strain.flowering_time_days %}{{ ftd }} day{% plural %}{{ ftd }} days{% endblocktranslate %}
+                {% blocktranslate with ftw=strain.flowering_time_weeks count n=strain.flowering_time_weeks %}({{ ftw }} week){% plural %}({{ ftw }} weeks){% endblocktranslate %}
+                {% endif %}
+            </li>
+            <li>
+                <span class="fw-bold">{% translate "Genotype:"%}</span>
+                {{ strain.genotype.name }}
+            <li>
+                <span class="fw-bold">{% translate "Is this is a autoflowering strain?" %}</span>
+                {% if strain.is_automatic %}{% translate "Yes" %}{% else %}{% translate "No" %}{% endif %}
+            </li>
+            <li>
+                <span class="fw-bold">{% translate "Can one get regular seeds?" %}</span>
+                {% if strain.is_regular %}{% translate "Yes" %}{% else %}{% translate "No" %}{% endif %}
+            </li>
+            <li>
+                <span class="fw-bold">{% translate "Can one get feminized seeds?" %}</span>
+                {% if strain.is_feminized %}{% translate "Yes" %}{% else %}{% translate "No" %}{% endif %}
+            </li>
+            <li>
+                <span class="fw-bold">{% translate "Is this a clone-only strain?" %}</span>
+                {% if not strain.is_feminized and not strain.is_regular %}
+                    {% translate "Yes" %}
+                {% else %}
+                    {% translate "No" %}
+                {% endif %}
+            </li>
+            <li>
+                <span class="fw-bold">{% translate "Is this strain still available?" %}</span>
+                {% if strain.is_discontinued %}{% translate "No" %}{% else %}{% translate "Yes" %}{% endif %}
+            </li>
+        </ul>
+    </p>
+
+    <p>
+        {% if strain_url %}
+        <a  href="{{ strain_url }}" target="_blank" rel="noopener noreferrer">
+            <i class="bi bi-house-door-fill link-image"></i>
+            {% translate "Strain Homepage" %}
+        </a>
+        {% if seedfinder_url %}<br>{% endif %}
+        {% endif %}
+        {% if seedfinder_url %}
+        <a href="{{ seedfinder_url }}" target="_blank" rel="noopener noreferrer">
+            <i class="bi bi-bookmark-star link-image"></i>
+            {% translate "View on SeedFinder.eu" %}</a>
+        {% endif %}
+    </p>
+    <p>
+        <a href="#pictures" class="{% if use_bootstrap %}link-success{% endif %}">
+            <i class="bi bi-arrow-down-short link-image"></i>
+            {% translate "Jump to pictures" %}
+        </a><br>
+        {% if strain.is_regular or strain.is_feminized %}
+        <a href="#seeds-in-stock-table" class="{% if use_bootstrap %}link-success{% endif %}">
+            <i class="bi bi-arrow-down-short link-image"></i>
+            {% translate "Jump to seeds in stock" %}
+        </a><br>
+        {% endif %}
+        <a href="#growlogs" class="{% if use_bootstrap %}link-success{% endif %}">
+            <i class="bi bi-arrow-down-short link-image"></i>
+            {% translate "Jump to growlogs" %}
+        </a><br>
+        <a href="#comments" class="{% if use_bootstrap %}link-success{% endif %}">
+            <i class="bi bi-arrow-down-short link-image"></i>
+            {% translate "Jump to comments" %}
+        </a>
+    </p>
+</div> {# col-md-7 #}
+</div>
+
+{% if description_html %}
+<h2>{% translate "Strain description" %}</h2>
+{{ description_html }}
+{% endif %}
+
+
+<h2 id="pictures">{% translate "Pictures" %}</h2>
+<p>
+    <a href="{% url 'grow:strain-image-upload' strain_pk=strain.pk %}"
+        class="{% if use_bootstrap %}btn btn-outline-success mb-3{% endif %}"
+    >{% if use_bootstrap%}
+        <i class="bi bi-upload me-2 link-image"></i>{% translate "Upload picture" %}
+    {% else %}
+        {% translate "Upload picture" %}
+    {% endif %}
+    </a>
+    <a href="{% url 'grow:strain-gallery' strain_pk=strain.pk %}"
+        class="{% if use_bootstrap %}btn btn-outline-primary mb-3{% endif %}"
+    >{% if use_bootstrap %}
+        <i class="bi bi-images me-2 link-image"></i>{% translate "View gallery" %}
+    {% else %}
+        {% translate "View gallery" %}
+    {% endif %}
+    </a>
+</p>
+{% if strain_images %}
+<div class="row row-cols-1 row-cols-md-3 g-4 mb-3">
+    {% for picture in strain_images %}
+    <div class="col">
+        <div class="{% if use_bootstrap %}card h-100 border-1{% endif %}">
+            <img src="{{ picture.image.url }}" class="card-img-top {% if use_bootstrap %}img-fluid{% endif %}" alt="{{ picture.caption }}">
+            {% if picture.caption %}
+            <div class="card-body p-1 d-flex flex-column">
+                <div class="mt-auto">
+                {% if picture.description %}
+                    <p class="card-text mt-auto">{{ picture.description }}</p>
+                {% elif picture.caption %}
+                    <p class="card-text mt-auto">{{ picture.caption }}</p>
+                {% else %}
+                    <p class="card-text mt-auto">
+                        {{ strain.breeder.locale_name }} - {{ strain.locale_name }}
+                    </p>
+                {% endif %}
+                    <p>By <i>{{ picture.uploader.username }}</i>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div >
+    {% endfor %}
+</div>
+{% else %}
+<p>
+{% blocktranslate %}There are currently no pictures for this strain. You could upload pictures of your grow to show others how this strain looks like during growth and flowering.{% endblocktranslate %}
+</p>
+{% endif %}
+
+{% if request.user.is_authenticated %}
+{% if strain.is_regular or strain.is_feminized %}
+<h2>{% translate "Seeds in stock" %}</h2>
+<div id="seeds-in-stock-div">
+<table class="{% if use_bootstrap %}table{% endif %}" id="seeds-in-stock-table">
+    <thead>
+        <tr class="{% if use_bootstrap %}table-success{% endif %}">
+            <th>{% translate "Seed type"%}</th>
+            <th>{% translate "Quantity" %}</th>
+            <th>{% translate "Purchased on" %}</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody class="{% if use_bootstrap %}table-group-divider{% endif %}">
+    {% if strain.is_regular %}
+        <tr>
+            <td>{% translate "Regular seeds" %}</td>
+            <td>
+                {% blocktranslate count n=regular_seeds_in_stock %}{{ n }} seed{% plural %}{{ n }} seeds{% endblocktranslate %}
+            </td>
+            <td>
+                {% if regular_seeds_purchased_on %}
+                    {{ regular_seeds_purchased_on|localtime|date:"H:i" }}
+                {% else %}
+                    {% translate "Unknown" %}
+                {% endif %}
+            </td>
+            <td>
+                {% if use_bootstrap %}
+                <div class="text-end">
+                    <a href="#"
+                        {% if strain.regular_seeds_in_stock %}
+                        hx-get="{% url 'grow:hx-strain-stock-notes' strain.regular_seeds_in_stock.pk %}"
+                        {% else %}
+                        hx-get="{% url 'grow:hx-strain-stock-notes' 0 %}"
+                        {% endif %}
+                        hx-swap="innerHTML"
+                        hx-target="#modals-here"
+                        hx-trigger="click"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modals-here"
+                        class="link-body-emphasis
+                            link-opacity-50
+                            link-opacity-100-hover
+                            link-underline-opacity-0"
+                    ><i class="bi bi-journal-text"
+                        data-bs-toggle="tooltip"
+                        data-bs-title="{% translate 'Show notes.' %}"
+                        data-bs-placement="left"></i>
+                    </a>
+                    <a href="#"
+                        hx-get="{% url 'grow:hx-strain-add-to-stock' strain=strain.pk feminized=0 %}"
+                        hx-swap="innerHTML"
+                        hx-target="#modals-here"
+                        hx-trigger="click"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modals-here"
+                        class="link-body-emphasis
+                            link-opacity-50
+                            link-opacity-100-hover
+                            link-underline-opacity-0"
+                    ><i class="bi bi-plus-circle"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="left"
+                            data-bs-title="{% translate 'Add regular seeds to stock.' %}"></i>
+                    </a>
+                {% else %}
+                    <a href="{% url 'grow:strain-add-to-stock' strain=strain.pk feminized=0 %}">
+                        {% translate "add seeds" %}
+                    </a>
+                {% endif %}
+                {% if use_bootstrap %}
+                    <a href="#"
+                        hx-get="{% url 'grow:hx-strain-remove-from-stock' strain=strain.pk feminized=0 %}"
+                        hx-swap="innerHTML"
+                        hx-target="#modals-here"
+                        hx-trigger="click"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modals-here"
+                        class="link-body-emphasis
+                            link-opacity-50
+                            link-opacity-100-hover
+                            link-underline-opacity-0"
+                    ><i class="bi bi-dash-circle"
+                        data-bs-toggle="tooltip"
+                        data-bs-title="{% translate 'Remove regular seeds from stock.' %}"
+                        data-bs-placement="left"></i>
+                    </a>
+                {% else %}
+                <a href="{% url 'grow:strain-remove-from-stock' strain=strain.pk feminized=0 %}">
+                    {% translate "remove seeds" %}
+                </a>
+                {% endif %}
+            </td>
+        </tr>
+    {% endif %}
+    {% if strain.is_feminized %}
+        <tr>
+            <td>{% translate "Feminized seeds" %}</td>
+            <td>
+                {% blocktranslate count n=feminized_seeds_in_stock %}{{ n }} seed{% plural %}{{ n }} seeds{% endblocktranslate %}
+            </td>
+            <td>
+                {% if feminized_seeds_purchased_on %}
+                    {{ feminized_seeds_purchased_on|date }}
+                {% else %}
+                    {% translate "Unknown" %}
+                {% endif %}
+            </td>
+            <td>
+                {% if use_bootstrap %}
+                <div class="text-end">
+
+                    <a href="#"
+                        {% if strain.feminized_seeds_in_stock %}
+                        hx-get="{% url 'grow:hx-strain-stock-notes' strain.feminized_seeds_in_stock.pk %}"
+                        {% else %}
+                        hx-get="{% url 'grow:hx-strain-stock-notes' 0 %}"
+                        {% endif %}
+                        hx-swap="innerHTML"
+                        hx-target="#modals-here"
+                        hx-trigger="click"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modals-here"
+                        class="link-body-emphasis
+                            link-opacity-50
+                            link-opacity-100-hover
+                            link-underline-opacity-0"
+                    ><i class="bi bi-journal-text"
+                        data-bs-toggle="tooltip"
+                        data-bs-title="{% translate 'Show notes.' %}"
+                        data-bs-placement="left"></i>
+                    </a>
+                    <a href="#"
+                        hx-get="{% url 'grow:hx-strain-add-to-stock' strain=strain.pk feminized=1 %}"
+                        hx-swap="innerHTML"
+                        hx-target="#modals-here"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modals-here"
+                        class="link-body-emphasis
+                        link-opacity-50
+                        link-opacity-100-hover
+                        link-underline-opacity-0"
+                    ><i class="bi bi-plus-circle"
+                        data-bs-toggle="tooltip"
+                        data-bs-title="{% translate 'Add feminized seeds to stock.' %}"
+                        data-bs-placement="left"></i>
+                    </a>
+                {% else %}
+                    <a href="{% url 'grow:strain-add-to-stock' strain=strain.pk feminized=1 %}">
+                        {% translate "add seeds" %}
+                    </a>
+                {% endif %}
+                {% if use_bootstrap %}
+                    <a href="#"
+                        hx-get="{% url 'grow:hx-strain-remove-from-stock' strain=strain.pk feminized=1 %}"
+                        hx-swap="innerHTML"
+                        hx-target="#modals-here"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modals-here"
+                        class="link-body-emphasis
+                        link-opacity-50
+                        link-opacity-100-hover
+                        link-underline-opacity-0"
+                    ><i class="bi bi-dash-circle"
+                            data-bs-toggle="tooltip"
+                            data-bs-title="{% translate 'Remove feminized seeds from stock.' %}"
+                            data-bs-placement="left"></i>
+                    </a>
+                </div>
+                {% else %}
+                <a href="{% url 'grow:strain-remove-from-stock' strain=strain.pk feminized=1 %}">
+                    {% translate "remove seeds" %}
+                </a>
+                {% endif %}
+            </td>
+        </tr>
+    {% endif %}
+    </tbody>
+    <tfoot class="{% if use_bootstrap %}table-group-divider{% endif %}">
+        <tr>
+            <th>{% translate "Total seeds" %}</th>
+            <th colspan=3 class="{% if use_bootstrap %}text-end{% endif %}">
+                {% blocktranslate count n=total_seeds_in_stock%}{{ n }} seed{% plural %}{{ n }} seeds{% endblocktranslate %}
+            </th>
+        </tr>
+    </tfoot>
+</table>
+</div>
+{% endif %}{# strain has seeds #}
+{% endif %}{# request.user.is_authenticated #}
+
+<h2 id="growlogs">Growlogs</h2>
+<div id="growlogs-info">
+{% with 'grow/strain/strain/hx/growlogs'|grow_template as hx_growlogs_template %}
+    {% include  hx_growlogs_template %}
+{% endwith %}
+</div>
+
+<h2 id="comments">{% translate "Comments" %}</h2>
+{% if use_bootstrap %}
+    <a href="{% url 'grow:strain-comment-add' strain_pk=strain.pk %}" class="btn btn-outline-success mb-3">
+        <i class="bi bi-plus-circle me-2 link-image"></i>{% translate "Add comment" %}
+    </a>
+    <a href="#" class="btn btn-outline-success mb-3 ms-2">
+        <i class="bi bi-journal-text me-2 link-image"></i>
+        {% translate "View all comments" %}
+    </a>
+{% else %}
+    <button onclick="location.href='{% url 'grow:strain-comment-add' strain_pk=strain.pk %}';" class="mb-3">
+        {% translate "Add comment" %}
+    </button>
+{% endif %}
+
+<div id="user-comments-div">
+    {% for comment in comments %}
+    <div class="card w-100 mb-3">
+        <div class="card-header">
+            <span class="fw-bold">{{ comment.user.username }}</span>
+            &nbsp;|&nbsp;
+            <span class="text-muted">
+                {{ comment.created_at|date:"SHORT_DATETIME_FORMAT" }}
+            </span>
+            <div class="text-end">
+        {% if request.user.pk == comment.user.pk %}
+            {% if use_bootstrap %}
+                <a href="{% url 'grow:strain-comment-update' pk=comment.pk %}#}"
+                    class="link-primary
+                        link-opacity-75
+                        link-opacity-100-hover
+                        link-underline-opacity-0"
+                >
+                    <i class="bi bi-pencil-square"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="bottom"
+                        data-bs-title="{% translate 'Edit comment' %}"></i>
+                </a>
+                <a href="#"
+                    class="link-danger
+                        link-opacity-75
+                        link-opacity-100-hover
+                        link-underline-opacity-0"
+                    hx-get="{#{% url 'grow:hx-strain-comment-delete' pk=comment.pk %}#}"
+                    hx-swap="innerHTML"
+                    hx-target="#modals-here"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modals-here"
+                >
+                    <i class="bi bi-x-square"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="bottom"
+                        data-bs-title="{% translate 'Delete comment' %}"></i>
+                </a>
+
+            {% else %}
+                <a href="{% url 'grow:strain-comment-update' pk=comment.pk %}">{% translate "Edit comment" %}</a>
+                <a href="#{#{% url 'grow:strain-comment-delete' pk=comment.pk %}#}">{% translate "Delete comment" %}</a>
+            {% endif %} {# use_bootstrap #}
+        {% endif %} {# request.user.pk == comment.user.pk #}
+            </div>
+        </div>
+        <div class="card-body">
+            <p class="card-text">{{ comment.text_html }}</p>
+        </div>
+    </div>
+    {% empty %}
+    <p>
+    {% translate "There are currently no comments for this strain. Be the first to add one!" %}
+    </p>
+    {% endfor %}
+</div>
+{% endblock content %}

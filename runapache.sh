@@ -3,6 +3,7 @@
 runserver() {
     #apachectl configtest || { echo "Apache configuration test failed. Aborting."; exit 1; }
     . /etc/apache2/envvars
+    sudo -u www-data ./manage migrate --noinput || { echo "Database migration failed. Aborting."; exit 1; }
     apache2 -t || { echo "Apache configuration test failed. Aborting."; exit 1; }
     exec apache2 -D FOREGROUND -E /var/log/apache2/startup-errors.log -k start
     rc=$?

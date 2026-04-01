@@ -1,0 +1,22 @@
+{% extends base_template %}
+{% load i18n %}
+
+{% block head_title %}{{ grow_head_title }}{% endblock %}
+{% block title %}{{ grow_site_title }}: {% translate "Delete strain" %}{% endblock %}
+
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    {% translate "Delete strain" as delete_strain_label %}
+    <p>
+    {% blocktranslate with strain_name=strain.name breeder_name=strain.breeder.name slug=strain.slug %}If you really want to delete the strain {{ strain_name }} from breeder {{ breeder_name }} type <i>{{ slug }}</i> in the field below and hit the <i>{{ delete_strain_label }}</i> button below.{% endblocktranslate %}
+    </p>
+    {{ form.as_p }}
+    <div>
+        <button type="submit">{{ delete_strain_label}}</button>
+        <button type="button"
+            onclick="location.href='{% url 'grow:strain-detail' breeder_slug=strain.breeder.slug slug=strain.slug %}'"
+        >{% translate "Cancel" %}</button>
+    </div>
+</form>
+{% endblock content %}

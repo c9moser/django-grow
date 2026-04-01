@@ -1,0 +1,127 @@
+{% extends base_template %}
+{% load i18n %}
+{% block content %}
+{% if use_bootstrap %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+    {% if GROW_IS_MAIN_APP %}
+        <li class="breadcrumb-item active">{% translate "Home" %}</li>
+    {% else %}
+        <li class="breadcrumb-item"><a href="/">{% translate "Home" %}</a></li>
+        <li class="breadcrumb-item active">{% translate "Grow"%}</li>
+    {% endif %}
+    </ol>
+</nav>
+{% endif %}
+<h1>
+{% if request.user.is_authenticated %}
+{% with request.user.short_name as user_short_name %}
+{% blocktranslate %}Welcome to Grow, {{ user_short_name }}{% endblocktranslate %}
+{% endwith %}
+{% else %}
+{% translate "Welcome to Grow" %}
+{% endif %}
+</h1>
+
+{% if request.user.is_authenticated %}
+<h2>{% translate "My active Growlogs" %}</h2>
+    <a class="btn btn-outline-primary btn-sm mb-3"><i class="bi bi-journal-plus me-2"></i>{% translate "Create a new Growlog" %}</a>
+    {% if user_growlogs %}
+        <table {% if use_bootstrap %}class="table"{% endif %}>
+            <thead>
+                <tr class="{% if use_bootstrap %}table-success{% endif %}">
+                    <th>{% translate "Title" %}</th>
+                    <th>{% translate "Locations" %}</th>
+                    <th>{% translate "Plant age" %}</th>
+                    <th>{% translate "Flowering time" %}</th>
+                </tr>
+            </thead>
+            <tbody {% if use_bootstrap %}class="table-group-divider"{% endif %}>
+        {% for growlog in user_growlogs %}
+                <tr>
+                    <td><a href="{% url 'grow:growlog-detail' pk=growlog.pk %}">{{ growlog.name }}</a></td>
+                    <td>{{ growlog.locations_string }}</td>
+                    <td>{% blocktranslate count n=growlog.age_weeks %}{{ n }} week{% plural %}{{ n }} weeks{% endblocktranslate %}</td>
+                    <td>{% blocktranslate count n=growlog.flowering_weeks %}{{ n }} week{% plural %}{{ n }} weeks{% endblocktranslate%}</td>
+                </tr>
+        {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+    <p>
+    {% blocktranslate %}You have no Growlogs! How about creating one?{% endblocktranslate %}
+    </p>
+    {% endif %}
+{% endif %}
+
+<h2>{% translate "New growlogs" %}</h2>
+{% if new_growlogs %}
+    <table {% if use_bootstrap %}class="table"{% endif %}>
+        <thead>
+            <tr class="{% if use_bootstrap %}table-success{% endif %}">
+                <th>{% translate "Title" %}</th>
+                <th>{% translate "User" %}</th>
+                <th>{% translate "Locations" %}</th>
+                <th>{% translate "Plant age" %}</th>
+                <th>{% translate "Flowering time" %}</th>
+                <th>{% translate "Strains" %}</th>
+            </tr>
+        </thead>
+        <tbody {% if use_bootstrap %}class="table-group-divider"{% endif %}>
+    {% for growlog in new_growlogs %}
+            <tr>
+                <td><a href="{% url 'grow:growlog-detail' pk=growlog.pk %}">{{ growlog.name }}</a></td>
+                <td><a href="#">{{ growlog.grower.username }}</a></td>{# TODO: show public user profile #}
+                <td>{{ growlog.locations_string }}</td>
+                <td>{% blocktranslate count n=growlog.age_weeks %}{{ n }} week{% plural %}{{ n }} weeks{% endblocktranslate %}</td>
+                <td>{% blocktranslate count n=growlog.flowering_weeks %}{{ n }} week{% plural %}{{ n }} weeks{% endblocktranslate%}</td>
+                <td>
+                    <ul class="mx-0 my-0 px-0 py-0 list-unstyled">
+                    {% for growlog_strain in growlog.growlog_strains.all %}
+                        <li><a href="{% url 'grow:strain-detail' breeder_slug=growlog_strain.strain.breeder.slug slug=growlog_strain.strain.slug %}" class="link-success">{{ growlog_strain.strain.name }}</a></li>
+                    {% empty %}
+                        <li>{% translate "No strains added yet." %}</li>
+                    {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+    {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+<p>
+{% blocktranslate %}There are no new growlogs of other users you are allowed to view!{% endblocktranslate %}
+</p>
+{% endif %}
+
+{% if new_strains %}
+<h2>{% translate "New Strains" %}</h2>
+<table {% if use_bootstrap %}class="table"{% endif %}>
+    <thead>
+        <tr class="{% if use_bootstrap %}table-success{% endif %}">
+            <th>{% translate "Breeder" %}</th>
+            <th>{% translate "Name" %}</th>
+            <th>{% translate "Genotype" %}</th>
+            <th>{% translate "Flowering time" %}</th>
+        </tr>
+    </thead>
+    <tbody {% if use_bootstrap %}class="table-group-divider"{% endif %}>
+        {% for strain in new_strains %}
+        <tr>
+            <td><a href="{% url 'grow:breeder-detail' slug=strain.breeder.slug %}">{{ strain.breeder.name }}</a></td>
+            <td><a href="{% url 'grow:strain-detail' breeder_slug=strain.breeder.slug slug=strain.slug %}">{{ strain.name }}</a></td>
+            <td>{{ strain.genotype.name }}</td>
+            <td>
+                {% if strain.flowering_time_days == 0 %}
+                {% translate "Unknown" %}
+                {% else %}
+                {% blocktranslate with days=strain.flowering_time_days count n=strain.flowering_time_days %}{{ days }} day{% plural %}{{ days }} days{% endblocktranslate%}
+                {% endif%}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+{% endblock %}

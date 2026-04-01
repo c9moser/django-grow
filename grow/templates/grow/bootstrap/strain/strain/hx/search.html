@@ -1,0 +1,22 @@
+{% load i18n widget_tweaks %}
+<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">{% translate "Search for strains" %}</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <form method="post"
+            action="{% url 'grow:strain-search' %}"
+    >
+        <div class="modal-body">
+            {% csrf_token %}
+            <div class="input-group mb-3">
+                {% translate "Search term" as search_term_label %}
+                <label for="{{ form.search_query.id_for_label }}" class="input-group-text">{{ search_term_label }}</label>
+                {% render_field form.search_query class="form-control" placeholder=search_term_label %}
+                <button type="submit" class="btn btn-outline-primary"><span class="bi bi-search"></span></button>
+            </div>
+        </div>
+    </form>
+  </div>
+</div>

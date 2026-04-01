@@ -1,0 +1,55 @@
+{% extends base_template%}
+{% load i18n %}
+
+{% block title %}{{ grow_site_title }}: <span class="{% if use_bootstrap %}fs-2{% endif %}">{% translate "Strain search results" %}</span>{% endblock title %}
+{% block head_title %}{{ grow_head_title }}{% endblock %}
+
+{% block content %}
+<h1 class="{% if use_bootstrap %}fs-2{% endif %}">{% translate "Strain search results" %}</h1>
+
+{% if strains %}
+    <p>
+    {% blocktranslate count count=strains.count %}
+    Found {{ count }} strain matching your search.
+    {% plural %}
+    Found {{ count }} strains matching your search.
+    {% endblocktranslate %}
+    </p>
+
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>{% translate "Breeder" %}</th>
+                <th>{% translate "Strain name" %}</th>
+                <th>{% translate "Genotype" %}</th>
+                <th>{% translate "Flowering Time" %}</th>
+            </tr>
+        </thead>
+        <tbody class="table-group-divider">
+
+        {% for strain in strains %}
+            <tr>
+                <td>
+                    <a href="{% url 'grow:breeder-detail' slug=strain.breeder.slug %}">
+                        {{ strain.breeder.name }}
+                    </a>
+                </td>
+                <td>
+                    <a href="{% url 'grow:strain-detail' breeder_slug=strain.breeder.slug slug=strain.slug %}"
+                        class="{% if strain.is_discontinued %}text-decoration-line-through text-muted{% endif %}"
+                    >
+                        {{ strain.name }}
+                    </a>
+                </td>
+                <td>{{ strain.genotype.name }}</td>
+                <td>
+                    {% blocktranslate count n=strain.flowering_time_days %}{{ n }} day{% plural %}{{ n }} days{% endblocktranslate %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>{% translate "No strains found matching your search." %}</p>
+{% endif %}
+{% endblock %}

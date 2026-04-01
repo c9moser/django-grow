@@ -1,0 +1,25 @@
+{% extends "grow/strain/strain/form.html" %}
+{% load i18n %}
+
+{% block head_title %}{{ grow_head_title }}{% endblock %}
+{% block title %}{{ grow_site_title }}: {% translate "Create strain" %}{% endblock %}
+
+{% block form_buttons %}
+{% if use_bootstrap %}
+<button type="submit" class="btn btn-success">
+    <i class="bi bi-check me-1"></i>
+    {% translate "Create Strain" %}
+</button>
+<a type="button" class="btn btn-secondary" href="{% url 'grow:breeder-detail' slug=breeder.slug %}">
+    <i class="bi bi-x me-1"></i>
+    {% translate "Back to breeder" %}
+</a>
+{% else %}
+<button type="submit">
+    {% translate "Create Strain" %}
+</button>
+<button type="button" onclick="location.href='{% url 'grow:breeder-detail' slug=breeder.slug %}'">
+    {% translate "Back to breeder" %}
+</button>
+{% endif %}
+{% endblock form_buttons %}

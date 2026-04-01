@@ -1,0 +1,231 @@
+{% load i18n %}
+{% if seeds_in_stock_render_text %}
+{% if seeds_in_stock_render_user_text %}
+<p>
+    {% blocktranslate with user=seeds_in_stock_user.username count n=n_seeds_in_stock %}{{ user }} currently has one seed in stock.{% plural %}{{ user }} currently has {{ n }} seeds in stock.{% endblocktranslate %}
+
+    {% if n_feminized_seeds_in_stock > 0 and n_regular_seeds_in_stock > 0 %}
+    {% blocktranslate count n=n_feminized_seeds_in_stock %}Of them, one is feminized.{% plural %}Of them, {{ n }} are feminized.{% endblocktranslate %}
+    {% blocktranslate count n=n_regular_seeds_in_stock %}Of them, one is regular.{% plural %}Of them, {{ n }} are regular.{% endblocktranslate %}
+    {% elif n_feminized_seeds_in_stock == 0 %}
+    {% blocktranslate %}All of them are regular.{% endblocktranslate %}
+    {% elif n_regular_seeds_in_stock == 0 %}
+    {% blocktranslate %}All of them are feminized.{% endblocktranslate %}
+    {% endif %}
+
+    {% if n_autoflowering_seeds_in_stock > 0 %}
+        {% if n_autoflowering_seeds_in_stock == n_seeds_in_stock %}
+    {% blocktranslate %}All of your seeds are autoflowering.{% endblocktranslate %}
+        {% else %}
+    {% blocktranslate count n=n_autoflowering_seeds_in_stock %}One is an autoflowering seed.{% plural %}{{ n }} are autoflowering seeds.{% endblocktranslate %}
+        {% endif %}
+    {% else %}
+        {% blocktranslate %}You have no autoflowering seeds in stock.{% endblocktranslate %}
+    {% endif %}
+
+    {% if n_photoperiod_seeds_in_stock > 0 %}
+        {% if n_photoperiod_seeds_in_stock == n_seeds_in_stock %}
+    {% blocktranslate %}All of your seeds are photoperiod.{% endblocktranslate %}
+        {% else %}
+    {% blocktranslate count n=n_photoperiod_seeds_in_stock %}One is a photoperiod seed.{% plural %}{{ n }} are photoperiod seeds.{% endblocktranslate %}
+        {% endif %}
+    {% else %}
+    {% blocktranslate with user=seeds_in_stock_user.username %}{{ user }} has no photoperiod seeds in stock.{% endblocktranslate %}
+    {% endif %}
+</p>
+{% else %}
+<p>
+    {% blocktranslate count n=n_seeds_in_stock %}You currently have one seed in stock.{% plural %}You currently have {{ n }} seeds in stock.{% endblocktranslate %}
+    {% if n_seeds_in_stock > 0 %}
+        {% if n_feminized_seeds_in_stock > 0 and n_regular_seeds_in_stock > 0 %}
+    {% blocktranslate count n=n_feminized_seeds_in_stock %}Of them, one is feminized.{% plural %}Of them, {{ n }} are feminized.{% endblocktranslate %}
+    {% blocktranslate count n=n_regular_seeds_in_stock %}Of them, one is regular.{% plural %}Of them, {{ n }} are regular.{% endblocktranslate %}
+        {% elif n_feminized_seeds_in_stock == 0 %}
+    {% blocktranslate %}All of them are regular.{% endblocktranslate %}
+        {% elif n_regular_seeds_in_stock == 0 %}
+    {% blocktranslate %}All of them are feminized.{% endblocktranslate %}
+        {% endif %}
+        {% if n_autoflowering_seeds_in_stock > 0 %}
+            {% if n_photoperiod_seeds_in_stock == 0 %}
+    {% blocktranslate %}All of your seeds are autoflowering.{% endblocktranslate %}
+            {% else %}
+    {% blocktranslate count n=n_autoflowering_seeds_in_stock %}One is an autoflowering seed.{% plural %}{{ n }} are autoflowering seeds.{% endblocktranslate %}
+            {% endif %}
+        {% else %}
+    {% blocktranslate %}You have no autoflowering seeds in stock.{% endblocktranslate %}
+        {% endif %}
+        {% if n_photoperiod_seeds_in_stock > 0 %}
+            {% if n_autoflowering_seeds_in_stock == 0 %}
+    {% blocktranslate %}All of your seeds are photoperiod.{% endblocktranslate %}
+            {% else %}
+    {% blocktranslate count n=n_photoperiod_seeds_in_stock %}One is a photoperiod seed.{% plural %}{{ n }} are photoperiod seeds.{% endblocktranslate %}
+            {% endif %}
+        {% else %}
+    {% blocktranslate %}You have no photoperiod seeds in stock.{% endblocktranslate %}
+        {% endif %}
+    {% endif %}
+</p>
+<p>
+    {% blocktranslate %}You can add more seeds to your stock in the strain detail page.{% endblocktranslate %}
+</p>
+{% endif %}
+{% endif %}
+
+{% if seeds_in_stock_render_table %}
+<div class="card mb-3" id="seeds-in-stock-card">
+    <div class="card-header"><div class="row">
+        <div class="col-4">
+            <nav aria-label="{% translate 'Seeds in stock pagination' %}" class="d-flex justify-content-start text-end mb-2">
+                <ul class="pagination mb-0">
+                    {% for page in seeds_in_stock_paginator.pagination %}
+                    <li class="page-item {% if page.current_page %}active{% endif %}">
+                        <button class="page-link page-link-sm"
+                            hx-get="{% url 'grow:hx-seeds-in-stock-info' %}?sis_paginate_by={{ seeds_in_stock_paginator.paginate_by }}&sis_page={{ page.page }}&render_text={% if seeds_in_stock_render_text %}1{% else %}0{% endif %}&render_user_text={% if seeds_in_stock_render_user_text %}1{% else %}0{% endif %}"
+                            hx-target="#seeds-in-stock-info"
+                            hx-swap="innerHTML"
+                        >
+                            {% if page.bs_icon %}<i class="bi bi-{{ page.bs_icon }}"></i>{% endif %}
+                            {% if not page.bs_icon %}{% if page.text %}{{ page.text }}{% else %}{{ page.number }}{% endif %}{% endif %}
+                        </button>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </nav>
+        </div>
+        <div class="col-4 d-flex align-items-center justify-content-center text-center">
+            <h5 class="card-title mb-0 text-center">{% translate "Seeds in stock" %}</h5>
+        </div>
+        <div class="col-4">
+        </div>
+    </div></div>
+    <div class="card-body p-0">
+        <table class="{% if use_bootstrap %}table table-hover mb-0{% endif %}">
+            <thead>
+                <tr class="{% if use_bootstrap %}table-success{% endif %}">
+                    <th>{% translate "Strain" %}</th>
+                    <th>{% translate "Breeder"%}</th>
+                    <th>{% translate "Type" %}</th>
+                    <th>{% translate "Genotype" %}</th>
+                    <th>{% translate "Flowering time" %}</th>
+                    <th>{% translate "Quantity" %}</th>
+                    {% if seeds_in_stock_user == request.user %}
+                    <th class="text-end">
+                        <button
+                            hx-get="{% url 'grow:hx-seeds-in-stock-dialog' %}"
+                            hx-target="#modals-here"
+                            hx-swap="innerHTML"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modals-here"
+                            class="btn btn-link link-dark link-opacity-50 link-opacity-100-hover link-underline-opacity-0"
+                        >
+                           <i class="bi bi-plus-square"></i>
+                        </button>
+                    </th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody class="{% if use_bootstrap %}table-group-divider{% endif %}" id="seeds-in-stock-table-body">
+            {% for seed in seeds_in_stock %}
+                <tr>
+                    <td>
+                        <a href="{% url 'grow:strain-detail' breeder_slug=seed.strain.breeder.slug slug=seed.strain.slug %}">{{ seed.strain.name }}</a>
+                    </td>
+                    <td>
+                        <a href="{% url 'grow:breeder-detail' slug=seed.strain.breeder.slug %}">{{ seed.strain.breeder.name }}</a></td>
+                    </td>
+                    <td>
+                        {% if seed.strain.is_feminized %}{% translate "feminized" %}{% else %}{% translate "regular" %}{% endif %}{% if seed.strain.is_autoflowering %}, {% translate "autoflowering" %}{% endif %}
+                    </td>
+                    <td>{{ seed.strain.genotype.name }}</td>
+                    <td>{% blocktranslate count n=seed.strain.flowering_time_days %}One day{% plural %}{{ n }} days{% endblocktranslate %}</td>
+                    <td>{{ seed.quantity }}</td>
+                    {% if seeds_in_stock_user == request.user %}
+                    <td class="text-end">
+                        <a href="#"
+                            hx-get="{% url 'grow:hx-strain-stock-notes' pk=seed.pk %}"
+                            hx-target="#modals-here"
+                            hx-swap="innerHTML"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modals-here"
+                            class="link-body-emphasis link-opacity-50 link-opacity-100-hover link-underline-opacity-0"
+                        ><i class="bi bi-journal-text"
+                            data-bs-toggle="tooltip"
+                            data-bs-title="{% translate 'Show notes.' %}"
+                            data-bs-placement="left"></i>
+                        </a>
+                        <a href="#"
+                            hx-get="{% if seed.is_feminized %}{% url 'grow:hx-user-add-seeds-to-stock' strain=seed.strain.pk feminized=1 %}{% else %}{% url 'grow:hx-user-add-seeds-to-stock' strain=seed.strain.pk feminized=0 %}{% endif %}"
+                            hx-target="#modals-here"
+                            hx-swap="innerHTML"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modals-here"
+                            class="link-body-emphasis link-opacity-50 link-opacity-100-hover link-underline-opacity-0"
+                        ><i class="bi bi-plus-circle"
+                            data-bs-toggle="tooltip"
+                            data-bs-title="{% translate 'Add seeds to stock.' %}"
+                            data-bs-placement="left"></i>
+                        </a>
+                        <a href="#"
+                            hx-get="{% if seed.is_feminized %}{% url 'grow:hx-user-remove-seeds-from-stock' strain=seed.strain.pk feminized=1 %}{% else %}{% url 'grow:hx-user-remove-seeds-from-stock' strain=seed.strain.pk feminized=0 %}{% endif %}"
+                            hx-target="#modals-here"
+                            hx-swap="innerHTML"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modals-here"
+                            class="link-body-emphasis link-opacity-50 link-opacity-100-hover link-underline-opacity-0"
+                        ><i class="bi bi-dash-circle"
+                            data-bs-toggle="tooltip"
+                            data-bs-title="{% translate 'Remove seeds from stock.' %}"
+                            data-bs-placement="left"></i>
+                        </a>
+                    </td>
+                    {% endif %}
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="{% if seeds_in_stock_user == request.user %}6{% else %}5{% endif %}" class="table-warning">{% translate "You have no seeds in stock." %}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+            <tfoot class="{% if use_bootstrap %}table-group-divider{% endif %}">
+                <tr class="{% if use_bootstrap %}table-secondary{% endif %}">
+                    <th colspan="{% if seeds_in_stock_user == request.user %}5{% else %}4{% endif %}">{% translate "Total" %}</th>
+                    <th colspan="2" class="text-end">{{ n_seeds_in_stock }}</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    <div class="card-footer pb-0"><div class="row mb-0">
+        <div class="col-4 my-0">
+            <nav aria-label="{% translate 'Seeds in stock pagination' %}" class="d-flex justify-content-start text-end mb-2">
+                <ul class="pagination mb-0">
+                    {% for page in seeds_in_stock_paginator.pagination %}
+                    <li class="page-item {% if page.current_page %}active{% endif %}">
+                        <button class="page-link page-link-sm"
+                            hx-get="{% url 'grow:hx-seeds-in-stock-info' %}?sis_paginate_by={{ seeds_in_stock_paginator.paginate_by }}&sis_page={{ page.page }}&render_text={% if seeds_in_stock_render_text %}1{% else %}0{% endif %}&render_user_text={% if seeds_in_stock_render_user_text %}1{% else %}0{% endif %}"
+                            hx-target="#seeds-in-stock-info"
+                            hx-swap="innerHTML"
+                        >
+                            {% if page.bs_icon %}<i class="bi bi-{{ page.bs_icon }}"></i>{% endif %}
+                            {% if not page.bs_icon %}{% if page.text %}{{ page.text }}{% else %}{{ page.number }}{% endif %}{% endif %}
+                        </button>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </nav>
+        </div>
+        <div class="col-4">
+        </div>
+        <div class="col-4">
+        </div>
+    </div></div>
+</div>
+<script>
+    htmx.process(document.getElementById('seeds-in-stock-info'));
+    {% if seeds_in_stock_scroll_to_card %}
+        var element = document.getElementById('seeds-in-stock-card');
+        if (element) {
+            element.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    {% endif %}
+</script>
+{% endif %}{# seeds_in_stock_render_table #}
