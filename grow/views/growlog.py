@@ -45,6 +45,9 @@ from ..growapi.permission import (
 )
 
 from ..paginator import QuerySetPaginator
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class GrowlogDetailView(BaseView):
@@ -1384,12 +1387,14 @@ class GrowlogEntryDeleteImageView(LoginRequiredMixin, DeleteView):
         return super().get(request, pk=pk)
 
     def form_valid(self, form):
-        print("Deleting image with id", self.image.id)
+        logger.info("Deleting image with id", self.image.id)
+
+        self.image.image.delete(save=False)  # Delete the file from storage
         self.image.delete()
         return redirect(self.get_success_url())
 
     def form_invalid(self, form):
-        print("Form invalid with errors:", form.errors)
+        logger.error("Form invalid with errors: %s", form.errors)
         return redirect(reverse('grow:growlog-detail', kwargs={'pk': self.growlog.pk}))
 
     def post(self, request: HttpRequest, pk, **kwargs) -> HttpResponse:
@@ -1472,7 +1477,7 @@ class GrowlogEntryUpdateImageView(LoginRequiredMixin, FormView):
             self.image = form.save(commit=True)
             return redirect(reverse('grow:growlog-detail', kwargs={'pk': self.growlog.pk}))
         else:
-            print(form.errors)
+            logger.error("Form invalid with errors: %s", form.errors)
             return render(request, self.template_name, context=self.get_context_data(form=form))
 
 

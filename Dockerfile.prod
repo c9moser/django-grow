@@ -1,0 +1,67 @@
+FROM docker.io/library/python:3.13-slim-trixie
+
+ENV PYTHONDONTWRITEBYTECODE=0
+ENV PYTHONUNBUFFERED=1
+ENV POETRY_VIRTUALENVS_IN_PROJECT=1
+ENV POETRY_NO_INTERACTION=1
+ENV DJANGO_SETTINGS_MODULE=django_project.settings
+ENV GROW_DEBUG=0
+ENV GROW_DB=sqlite3:///var/www/grow/db.sqlite3
+ENV GROW_ALLOWED_HOSTS='*'
+ENV GROW_MEDIA_ROOT=/var/www/grow/media
+ENV GROW_STATIC_ROOT=/var/www/grow/static
+ENV GROW_DB=sqlite3:////data/db.sqlite3
+
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+	build-essential \
+	libpq-dev \
+	acl \
+	gettext \
+	git \
+	firebird-dev \
+    apache2 \
+    libapache2-mod-wsgi-py3 \
+	sudo \
+    && apt-get clean \
+    && pip install --upgrade pip setuptools wheel \
+	&& pip install poetry \
+    && rm -rf /var/lib/apt/lists/* \
+    && mkdir -p /app /var/www/grow/static /var/www/grow/media \
+	&& chown -R www-data:www-data /var/www/grow/static /var/www/grow/media \
+	&& rm /etc/apache2/sites-enabled/000-default.conf \
+	&& cp /etc/apache2/envvars /etc/apache2/envvars.orig \
+	&& echo "[ -z \"\$GROW_DB\" ] && export GROW_DB=\"$GROW_DB\"" >> /etc/apache2/envvars \
+	&& echo "[ -z \"\$GROW_DEBUG\" ] && export GROW_DEBUG=\"$GROW_DEBUG\"" >> /etc/apache2/envvars \
+	&& echo "[ -z \"\$GROW_ALLOWED_HOSTS\" ] && export GROW_ALLOWED_HOSTS=\"$GROW_ALLOWED_HOSTS\"" >> /etc/apache2/envvars \
+	&& echo "[ -z \"\$GROW_MEDIA_ROOT\" ] && export GROW_MEDIA_ROOT=\"$GROW_MEDIA_ROOT\"" >> /etc/apache2/envvars \
+	&& echo "[ -z \"\$GROW_STATIC_ROOT\" ] && export GROW_STATIC_ROOT=\"$GROW_STATIC_ROOT\"" >> /etc/apache2/envvars \
+	&& echo "[ -z \"\$DJANGO_SETTINGS_MODULE\" ] && export DJANGO_SETTINGS_MODULE=\"$DJANGO_SETTINGS_MODULE\"" >> /etc/apache2/envvars
+
+VOLUME /var/www/grow/media
+VOLUME /data/
+VOLUME /var/log/apache2
+
+WORKDIR /app
+
+
+COPY . .
+COPY apacheconf/000-grow.conf /etc/apache2/sites-available/000-grow.conf
+
+RUN poetry config virtualenvs.in-project $POETRY_VIRTUALENVS_IN_PROJECT \
+	&& poetry install --without=dev --no-interaction --no-ansi --no-root \
+	&& a2ensite 000-grow \
+	&& a2dissite 000-default \
+	&& a2enmod wsgi env ssl rewrite \
+	&& chmod +x /app/runapache.sh \
+	&& setfacl -m u:www-data:rw -m g:www-data:rw /var/log/apache2 \
+	&& (rm /var/log/apache2/* || true) \
+	&& (rm /app/django_project/local/settings.py || true) \
+	&& (rm /app/django_project/local/settings_dev.py || true) \
+	&& (rm /app/django_project/local/settings_prod.py || true) \
+	&& mv /app/django_project/settings_container_prod.py /app/django_project/local/settings.py \
+	&& ./manage collectstatic --noinput \
+	&& chown -R www-data:www-data /var/www/grow/static /var/www/grow/media /data
+
+
+ENTRYPOINT ["./runapache.sh"]

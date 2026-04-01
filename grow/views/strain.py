@@ -48,6 +48,9 @@ from ..growapi.permission import growlog_user_is_allowed_to_view
 
 from ..paginator import QuerySetPaginator
 
+import logging
+logger = logging.getLogger(__name__)
+
 
 class BreederIndexView(BaseView):
     template_name = settings.GROW_TEMPLATES['grow/strain']
@@ -421,7 +424,7 @@ class HxBreederDeleteView(LoginRequiredMixin, FormView):
                 self.breeder.delete()
                 return super(HxBreederDeleteView, self).form_valid(form)
             except Exception as ex:
-                print(f"Deleting breeder \"{self.breeder.name}\" failed! ({str(ex)})")
+                logger.error("Deleting breeder \"%s\" failed! (%s)", self.breeder.name, str(ex))
         return redirect(self.get_failed_url())
 
     def form_invalid(self, form):
@@ -591,7 +594,7 @@ class StrainDeleteView(LoginRequiredMixin, FormView):
             try:
                 self.strain.delete()
             except Exception as ex:
-                print(f"Unable to delete strain {self.strain.name}! ({ex})")
+                logger.error("Unable to delete strain %s! (%s)", self.strain.name, str(ex))
             return super(StrainDeleteView, self).form_valid(form)
         return self.get_failed_url()
 
@@ -630,7 +633,7 @@ class HxStrainDeleteView(LoginRequiredMixin, FormView):
             try:
                 self.strain.delete()
             except Exception as ex:
-                print(f"Unable to delete strain {self.strain.name}! ({ex})")
+                logger.error("Unable to delete strain %s! (%s)", self.strain.name, str(ex))
             return super(HxStrainDeleteView, self).form_valid(form)
         return self.get_failed_url()
 
@@ -1641,12 +1644,10 @@ class HxSeedsInStockInfoView(LoginRequiredMixin, BaseView):
                 )
             ))
         except (TypeError, ValueError) as ex:
-            print(f"Error parsing page number: {ex}")
+            logger.error(f"Error parsing page number: {ex}")
             page = 1
 
-        print(f"Page: {page}")
         page = max(1, min(page, n_pages))
-        print(f"Page: {page}")
 
         paginator = QuerySetPaginator(seeds_in_stock, paginate_by=paginate_by, page=page)
 
