@@ -13,9 +13,11 @@ from django.core.wsgi import get_wsgi_application
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'django_project.settings')
 
-application = get_wsgi_application()
+from django.conf import settings  # noqa: F401
 
 from django.contrib.auth.handlers.modwsgi import (  # noqa: F401
     check_password,
     groups_for_user
 )
+
+application = get_wsgi_application()
