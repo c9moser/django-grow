@@ -3,7 +3,7 @@ Growlog models
 """
 
 from datetime import date
-
+from pathlib import Path
 from django.db import models
 from django.utils.safestring import SafeString
 from django.utils.translation import gettext_lazy as _, gettext, ngettext
@@ -913,6 +913,40 @@ class Growlog(models.Model):
         else:
             return gettext("Unknown")
 
+    @property
+    def upload_path(self) -> Path:
+        """
+        Get the upload path for this growlog.
+
+        :return: Path to the upload directory for this growlog
+        :rtype: Path
+        """
+        return Path(settings.MEDIA_ROOT) / "grow" / "growlogs" / str(self.id)
+
+    def save(self, *args, **kwargs):
+        """
+        Override the save method to ensure that the grow log is saved after
+        saving the strain associations.
+
+        This is necessary to update the grow log's strain count and related
+        properties.
+        """
+        super().save(*args, **kwargs)
+        if not self.upload_path.exists():
+            self.upload_path.mkdir(parents=True, exist_ok=True)
+        htaccess_path = self.upload_path / ".htaccess"
+        with htaccess_path.open("w", encoding="utf-8") as htaccess_file:
+            htaccess_file.write("Options -Indexes\n")
+
+            if self.is_private and not htaccess_path.exists():
+                htaccess_file.write(f"Require user {self.grower.username}\n")
+            elif self.is_friends_only:
+                htaccess_file.write(f"Require group grow-u{self.grower.id}-friends\n")
+            elif self.permission == PermissionType.MEMBERS_ONLY:
+                htaccess_file.write("Require group grow-member\n")
+            elif self.is_public:
+                htaccess_file.write("Require all granted\n")
+
     class Meta:
         db_table = "grow_growlog"
         unique_together = [('grower', 'name')]
@@ -1730,6 +1764,12 @@ class GrowlogEntryImage(models.Model):
         Override the save method to update the grow log's updated_at field when an image is
         added or modified.
         """
+        if not self.pk:
+            img_path = self.growlog_entry.growlog.upload_path / 'images'
+            if not img_path.exists():
+                img_path.mkdir(parents=True, exist_ok=True)
+            self.image.field.upload_to = f"grow/growlogs/{self.growlog_entry.growlog.id}/images/"
+
         result = super().save(*args, **kwargs)
         self.growlog_entry.growlog.save()
         return result
