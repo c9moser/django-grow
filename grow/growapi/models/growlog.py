@@ -888,7 +888,7 @@ class Growlog(models.Model):
         """
         Get a list of anonymized locations associated with this grow log.
         """
-        return list(set(gll.location.location_type.name for gll in self.locations))
+        return list(set(gll.location_type for gll in self.locations))
 
     @property
     def last_location(self) -> Location | None:
