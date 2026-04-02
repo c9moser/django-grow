@@ -884,6 +884,13 @@ class Growlog(models.Model):
                         if entry.location is not None))
 
     @property
+    def anonymized_locations(self) -> list[Location]:
+        """
+        Get a list of anonymized locations associated with this grow log.
+        """
+        return list(set(gll.location.location_type.name for gll in self.locations))
+
+    @property
     def last_location(self) -> Location | None:
         """
         Get the most recent location associated with this grow log.
