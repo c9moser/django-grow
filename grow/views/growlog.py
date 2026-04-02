@@ -9,7 +9,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from django.views.generic import CreateView, UpdateView, DeleteView, FormView
 from django.db.models import Count
+from django.conf import settings
 
+from pathlib import Path
 # from grow.growapi import settings
 
 from grow.forms.growlog import (
@@ -37,6 +39,7 @@ from ..growapi.models import (
 # from django.urls import reverse
 
 from ..settings import GROW_TEMPLATES, GROW_USER_SETTINGS
+
 
 from ._base import BaseView
 from ..growapi.permission import (
@@ -1290,6 +1293,12 @@ class GrowlogEntryUploadImageView(LoginRequiredMixin, FormView):
         )
         return context
 
+    def form_valid(self, form):
+        image = form.save(commit=False)
+        image.growlog_entry = self.entry
+        image.save()
+        return redirect(reverse('grow:growlog-detail', kwargs={'pk': self.growlog.pk}))
+
     def get(self, request: HttpRequest, entry_pk: int) -> HttpResponse:
         self.entry = get_object_or_404(GrowlogEntry, pk=entry_pk)
         self.growlog = self.entry.growlog
@@ -1312,6 +1321,9 @@ class GrowlogEntryUploadImageView(LoginRequiredMixin, FormView):
         if form.is_valid():
             image = form.save(commit=False)
             image.growlog_entry = self.entry
+            image.image.path = str(
+                Path(settings.MEDIA_ROOT).resolve()
+                / 'grow' / 'growlogs' / str(self.growlog.id) / 'images' / image.image.name)
             image.save()
             return redirect(reverse('grow:growlog-detail', kwargs={'pk': self.growlog.pk}))
         else:

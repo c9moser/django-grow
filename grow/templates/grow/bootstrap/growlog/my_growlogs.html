@@ -23,6 +23,9 @@
 <h1>{% translate "My Grow Logs" %}</h1>
 
 <h2>{% translate "Active Grow Logs" %}</h2>
+<div>
+    <a href="{% url 'grow:growlog-create' %}" class="btn btn-sm btn-success mb-3">{% translate "Start New Grow Log" %}</a>
+</div>
 <table class="table table-hover">
     <thead>
         <tr class="table-success">

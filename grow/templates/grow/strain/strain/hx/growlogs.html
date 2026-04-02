@@ -69,6 +69,7 @@
                     <th scope="col">{% translate "Duration" %}</th>
                     <th scope="col">{% translate "End date" %}</th>
                     <th scope="col">{% translate "Current Stage" %}</th>
+                    <th scope="col">{% translate "Locations" %}</th>
                 </tr>
             </thead>
             <tbody>
@@ -83,14 +84,26 @@
                             {% blocktranslate count n=growlog.duration_days %}{{ n }} day{% plural %}{{ n }} days{% endblocktranslate %}
                         {% endif %}
                     </td>
-                    <td>{% if growlog.finsihed_at %}{{ growlog.finsihed_at|date }}{% else %}{% translate "In progress" %}{% endif %}</td>
+                    <td>{% if growlog.finished_at %}{{ growlog.finished_at|date }}{% else %}---{% endif %}</td>
                     <td>{{ growlog.current_stage }}</td>
+                    <td>
+                        {% with growlog.anonymized_locations as locations %}
+                        {% if locations %}
+                        <ul class="list-unstyled my-0 mx-0">
+                            {% for location in locations %}<li>{{ location.name }}</li>{% endfor %}
+                        </ul>
+                        {% else %}
+                        ---
+                        {% endif %}
+                        {% endwith %}
+                    </td>
                 </tr>
                 {% empty %}
                 <tr>
                     <td colspan="5" class="text-center">{% translate "No grow logs available." %}</td>
                 </tr>
                 {% endfor %}
+
             </tbody>
         </table>
     </div>

@@ -14,7 +14,16 @@ fi
 case "$1" in
    runserver|run)
         shift
-        exec poetry run python manage.py runserver "$@"
+        if [ $# -eq 0 ]; then
+            exec poetry run python manage.py runserver 0.0.0.0:8000
+        else
+            exec poetry run python manage.py runserver "$@"
+        fi
+        exit $?
+    ;;
+    manage=*)
+        shift
+        exec poetry run python manage.py "$@"
         exit $?
     ;;
     shell)
@@ -71,6 +80,7 @@ case "$1" in
         echo "Usage: ${0##*/} [command] [options]"
         echo "Commands:"
         echo "  runserver [addrport]       Run the development server"
+        echo "  run [addrport]             Alias for runserver"
         echo "  shell                      Open a Django shell"
         echo "  migrate                    Apply database migrations"
         echo "  makemigrations             Create new database migrations"

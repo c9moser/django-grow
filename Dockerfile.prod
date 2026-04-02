@@ -52,7 +52,7 @@ RUN poetry config virtualenvs.in-project $POETRY_VIRTUALENVS_IN_PROJECT \
 	&& poetry install --without=dev --no-interaction --no-ansi --no-root \
 	&& a2ensite 000-grow \
 	&& a2dissite 000-default \
-	&& a2enmod wsgi env ssl rewrite \
+	&& a2enmod wsgi env ssl rewrite auth_basic authz_user \
 	&& chmod +x /app/runapache.sh \
 	&& setfacl -m u:www-data:rw -m g:www-data:rw /var/log/apache2 \
 	&& (rm /var/log/apache2/* || true) \
