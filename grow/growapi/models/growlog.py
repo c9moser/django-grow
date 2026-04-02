@@ -515,7 +515,7 @@ class Growlog(models.Model):
         Calculate the number of days since vegetative stage started.
         Returns -1 if vegetative date is not set.
         """
-        if not self.is_vegetative:
+        if not self.vegetative_at:
             return -1
         delta = timezone.now().date() - self.vegetative_at
         return delta.days
@@ -919,6 +919,76 @@ class Growlog(models.Model):
             return gettext("Germinating")
         else:
             return gettext("Unknown")
+
+    @property
+    def estimated_harvest_date(self) -> date | None:
+        """
+        Estimate the harvest date based on the flowering date and average flowering duration.
+        Returns None if the flowering date is not set.
+        """
+        if self.flowering_at is None:
+            return None
+
+        if self.is_harvested:
+            return None
+
+        if self.is_finished:
+            return None
+
+        min_flowering_duration = 0
+        max_flowering_duration = 0
+
+        for i in self.strains:
+            for gl_strain in self.growlog_strains.all():
+                if gl_strain.strain.flowering_time_days <= 0:
+                    continue
+
+                if min_flowering_duration == 0:
+                    min_flowering_duration = gl_strain.strain.flowering_time_days
+                elif min_flowering_duration > gl_strain.strain.flowering_time_days:
+                    min_flowering_duration = gl_strain.strain.flowering_time_days
+
+                if max_flowering_duration == 0:
+                    max_flowering_duration = gl_strain.strain.flowering_time_days
+                elif max_flowering_duration < gl_strain.strain.flowering_time_days:
+                    max_flowering_duration = gl_strain.strain.flowering_time_days
+
+        if min_flowering_duration == 0 and max_flowering_duration == 0:
+            return None
+
+        estimated_min_date = self.flowering_at + timezone.timedelta(days=min_flowering_duration)
+        estimated_max_date = self.flowering_at + timezone.timedelta(days=max_flowering_duration)
+        return (estimated_min_date, estimated_max_date)
+
+    @property
+    def estimated_flowering_duration(self):
+        """
+        Estimate the flowering duration based on the average flowering duration of the strains.
+        Returns None if the flowering date is not set.
+        """
+
+        min_flowering_duration = 0
+        max_flowering_duration = 0
+
+        for i in self.strains:
+            for gl_strain in self.growlog_strains.all():
+                if gl_strain.strain.flowering_time_days <= 0:
+                    continue
+
+                if min_flowering_duration == 0:
+                    min_flowering_duration = gl_strain.strain.flowering_time_days
+                elif min_flowering_duration > gl_strain.strain.flowering_time_days:
+                    min_flowering_duration = gl_strain.strain.flowering_time_days
+
+                if max_flowering_duration == 0:
+                    max_flowering_duration = gl_strain.strain.flowering_time_days
+                elif max_flowering_duration < gl_strain.strain.flowering_time_days:
+                    max_flowering_duration = gl_strain.strain.flowering_time_days
+
+        if min_flowering_duration == 0 and max_flowering_duration == 0:
+            return None
+
+        return (min_flowering_duration, max_flowering_duration)
 
     @property
     def upload_path(self) -> Path:
@@ -1334,13 +1404,19 @@ class GrowlogEntry(models.Model):
 
         Returns None if vegetative date is not set.
         """
-        if not self.growlog.is_vegetative:
+        if not self.growlog.vegetative_at:
             return None
 
-        if not self.growlog.is_flowering:
+        if not self.growlog.flowering_at and not self.growlog.harvested_at and not self.growlog.finished_at:
             total_days = self.vegetative_days
-        else:
+        elif self.growlog.flowering_at:
             delta = self.growlog.flowering_at - self.growlog.vegetative_at
+            total_days = delta.days
+        elif self.growlog.harvested_at:
+            delta = self.growlog.harvested_at - self.growlog.vegetative_at
+            total_days = delta.days
+        elif self.growlog.finished_at:
+            delta = self.growlog.finished_at - self.growlog.vegetative_at
             total_days = delta.days
 
         years = total_days // 365

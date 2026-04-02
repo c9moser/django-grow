@@ -663,90 +663,6 @@ class Strain(models.Model):
         db_column="description_type"
     )
 
-    @property
-    def has_description(self) -> bool:
-        """
-        Checks if the strain has a description set.
-
-        :return: True if the strain has a description, False otherwise.
-        :rtype: bool
-        """
-        return bool(self.description)
-
-    @property
-    def description_html(self) -> SafeString | str:
-        """
-        The HTML rendered description of the strain.
-
-        :return: The HTML rendered description.
-        :rtype: SafeString | str
-        """
-        if self.description_type == TextType.BBCODE:
-            return render_description_bbcode(self.description)
-        elif self.description_type == TextType.MARKDOWN:
-            return render_description_markdown(self.description)
-        elif self.description_type == TextType.PLAIN:
-            return render_plaintext(self.description)
-        else:
-            return self.description
-
-    @property
-    def locale_description_html(self) -> SafeString | str:
-        """
-        The HTML rendered description of the strain.
-
-        This property checks for translations first and falls back to the default
-        description if no translation is found.
-
-        :return: The HTML rendered description.
-        :rtype: SafeString | str
-        """
-        translation = None
-        if self.translations:
-            try:
-                translation = self.translations.get(language_code=get_language())
-            except StrainTranslation.DoesNotExist:
-                pass
-            if not translation:
-                try:
-                    translation = self.translations.get(language_code=get_language().split('-')[0])
-                except StrainTranslation.DoesNotExist:
-                    pass
-        if translation:
-            description_type = translation.description_type
-            description = translation.description if translation.description else self.description
-            description_type = self.description_type
-            description = self.description
-
-        if description:
-            if description_type == TextType.BBCODE:
-                return render_description_bbcode(description)
-            elif description_type == TextType.MARKDOWN:
-                return render_description_markdown(description)
-            return description
-        return ""
-
-    @property
-    def description_type(self) -> TextType:
-        """
-        The type of the description text (Markdown, BBCode, etc.).
-
-        :return: The type of the description text.
-        :rtype: TextType
-        """
-        return TextType.from_string(self.description_type_data)
-
-    @description_type.setter
-    def description_type(self, text_type: TextType | str):
-        """
-        Sets the description text type.
-
-        :param text_type: The new description text type.
-        :type text_type: TextType | str
-        """
-        if not isinstance(text_type, TextType):
-            text_type = TextType.from_string(text_type)
-        self.description_type_data = text_type.value
 
     #: The logo URL of the strain
     #: :type: str
@@ -902,6 +818,91 @@ class Strain(models.Model):
     )
 
     @property
+    def has_description(self) -> bool:
+        """
+        Checks if the strain has a description set.
+
+        :return: True if the strain has a description, False otherwise.
+        :rtype: bool
+        """
+        return bool(self.description)
+
+    @property
+    def description_html(self) -> SafeString | str:
+        """
+        The HTML rendered description of the strain.
+
+        :return: The HTML rendered description.
+        :rtype: SafeString | str
+        """
+        if self.description_type == TextType.BBCODE:
+            return render_description_bbcode(self.description)
+        elif self.description_type == TextType.MARKDOWN:
+            return render_description_markdown(self.description)
+        elif self.description_type == TextType.PLAIN:
+            return render_plaintext(self.description)
+        else:
+            return self.description
+
+    @property
+    def locale_description_html(self) -> SafeString | str:
+        """
+        The HTML rendered description of the strain.
+
+        This property checks for translations first and falls back to the default
+        description if no translation is found.
+
+        :return: The HTML rendered description.
+        :rtype: SafeString | str
+        """
+        translation = None
+        if self.translations:
+            try:
+                translation = self.translations.get(language_code=get_language())
+            except StrainTranslation.DoesNotExist:
+                pass
+            if not translation:
+                try:
+                    translation = self.translations.get(language_code=get_language().split('-')[0])
+                except StrainTranslation.DoesNotExist:
+                    pass
+        if translation:
+            description_type = translation.description_type
+            description = translation.description if translation.description else self.description
+            description_type = self.description_type
+            description = self.description
+
+        if description:
+            if description_type == TextType.BBCODE:
+                return render_description_bbcode(description)
+            elif description_type == TextType.MARKDOWN:
+                return render_description_markdown(description)
+            return description
+        return ""
+
+    @property
+    def description_type(self) -> TextType:
+        """
+        The type of the description text (Markdown, BBCode, etc.).
+
+        :return: The type of the description text.
+        :rtype: TextType
+        """
+        return TextType.from_string(self.description_type_data)
+
+    @description_type.setter
+    def description_type(self, text_type: TextType | str):
+        """
+        Sets the description text type.
+
+        :param text_type: The new description text type.
+        :type text_type: TextType | str
+        """
+        if not isinstance(text_type, TextType):
+            text_type = TextType.from_string(text_type)
+        self.description_type_data = text_type.value
+
+    @property
     def genotype(self) -> StrainType:
         """
         Get the genotype of the strain.
@@ -916,8 +917,8 @@ class Strain(models.Model):
         """
         Set the genotype of the strain.
 
-        :param genetics: The genotype to set.
-        :type genetics: StrainType | str
+        :param genotype: The genotype to set.
+        :type genotype: StrainType | str
         """
         if not isinstance(genotype, StrainType):
             genotype = StrainType.from_string(genotype)

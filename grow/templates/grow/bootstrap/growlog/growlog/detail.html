@@ -253,6 +253,11 @@
         <li>
             <b>{% translate "Flowering stage started on:" %}</b> <time datetime="{{ growlog.flowering_at|date:"c" }}">{{ growlog.flowering_at }}</time>
         </li>
+        {% if not growlog.finished_at and not growlog.harvested_at %}
+        <li>
+             <b>{% translate "Estimated harvest:" %}</b> {{ growlog.estimated_harvest_display }}
+        </li>
+        {% endif %}
         <li>
             <b>{% translate "Flowering Period:" %}</b>
             {% if growlog.flowering_days > 14 %}

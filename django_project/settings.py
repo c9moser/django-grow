@@ -159,10 +159,6 @@ WSGI_APPLICATION = 'django_project.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
-print("=" * 80)
-print("GROW_DB:", env('GROW_DB'))
-print("GROW_DB_URL:", env.db_url('GROW_DB'))
-print("=" * 80)
 
 DATABASES = {
     'default': env.db_url('GROW_DB'),
@@ -311,6 +307,5 @@ else:
 if DEBUG:
     third_party_apps.insert(0, 'django_browser_reload')
     MIDDLEWARE.insert(0, "django_browser_reload.middleware.BrowserReloadMiddleware")
-    INSTALLED_APPS = list(set(django_apps + third_party_apps + project_apps))
-else:
-    INSTALLED_APPS = list(set(django_apps + third_party_apps + project_apps))
+
+INSTALLED_APPS = list(set(django_apps + third_party_apps + project_apps))

@@ -186,84 +186,155 @@
 {% endif %}
 <h2>{% translate "Overview" %}</h2>
 <div id="growlog-overview">
-    <ul>
-        <li><strong>{% translate "Grower:" %}</strong>
-            {% if request.user == growlog.grower %}
-                <a href="{% url 'grow:user-info' %}">{{ growlog.grower.username }}</a>
-            {% else %}
-                {{ growlog.grower.username }}
+    <table class="{% if use_bootstrap %}table{% endif %}">
+        <tbody>
+            <tr>
+                <th class="table-primary fit-content">{% translate "Grower" %}</th>
+                <td>
+                    {% if request.user == growlog.grower %}
+                        <a href="{% url 'grow:user-info' %}">{{ growlog.grower.username }}</a>
+                    {% else %}
+                        {{ growlog.grower.username }}
+                    {% endif %}
+                </td>
+                <th class="table-primary fit-content">{% translate "Permissions" %}</th>
+                <td>{{ growlog.permission.name }}</td>
+            </tr>
+            <tr>
+                <th class="table-primary fit-content">{% translate "Started on" %}</th>
+                <td>
+                    <time datetime="{{ growlog.started_at|date:"c" }}">{{ growlog.started_at|date:'DATETIME_FORMAT' }}</time>
+                </td>
+                <th class="table-primary fit-content">{% translate "Last update on" %}</th>
+                <td>
+                    <time datetime="{{ growlog.updated_at|date:"c" }}">{{ growlog.updated_at|date:'DATETIME_FORMAT' }}</time>
+                </td>
+            </tr>
+            <tr>
+                <th class="table-primary fit-content">{% translate "Current Stage" %}</th>
+                <td >{{ growlog.current_stage }}</td>
+                <th class="table-primary fit-content">{% translate "Duration" %}</th>
+                <td>
+                    {% if growlog.duration_days > 14 %}
+                        {{ growlog.duration_display }}
+                    {% else %}
+                        {% blocktranslate count n=growlog.duration_days %}{{ n }} day{% plural %}{{ n }} days{% endblocktranslate %}
+                    {% endif %}
+            </tr>
+            {% if growlog.germinating_at %}
+            <tr>
+                <th class="table-primary fit-content">{% translate "Germinating started on" %}</th>
+                <td><time datetime="{{ growlog.germinating_at|date:"c" }}">{{ growlog.germinating_at|date:'DATE_FORMAT' }}</time></td>
+                <th class="table-primary fit-content">{% translate "Germinating duration" %}</th>
+                <td>
+                    {% if growlog.germinating_days > 14 %}
+                        {{ growlog.germinating_display }}
+                    {% else %}
+                        {% blocktranslate count n=growlog.germinating_days %}{{ n }} day{% plural %}{{ n }} days{% endblocktranslate %}
+                    {% endif %}
+                </td>
+            </tr>
+            {% elif growlog.cutted_at %}
+            <tr>
+                <th class="table-primary fit-content">{% translate "Cutted on" %}</th>
+                <td><time datetime="{{ growlog.cutted_at|date:"c" }}">{{ growlog.cutted_at|date:'DATE_FORMAT' }}</time></td>
+                <th class="table-primary fit-content">{% translate "Rooting duration" %}</th>
+                <td>
+                    {% if growlog.rooting_days > 14 %}
+                        {{ growlog.rooting_display }}
+                    {% else %}
+                        {% blocktranslate count n=growlog.rooting_days %}{{ n }} day{% plural %}{{ n }} days{% endblocktranslate %}
+                    {% endif %}
+                </td>
+            </tr>
             {% endif %}
-        </li>
-        <li><strong>{% translate "Updated at:" %}</strong>
-            <time datetime="{{ growlog.updated_at|date:"c" }}">{{ growlog.updated_at|date:'SHORT_DATETIME_FORMAT' }}</time>
-        </li>
-        <li><strong>{% translate "Started on:" %}</strong>
-            <time datetime="{{ growlog.started_at|date:"c" }}">{{ growlog.started_at|date:'SHORT_DATE_FORMAT' }}</time>
-        </li>
-        <li>
-            <b>{% translate "Duration:" %}</b>
-            {% if growlog.duration_days > 14 %}
-                {{ growlog.duration_display }}
-            {% else %}
-                {% blocktranslate count n=growlog.duration_days %}{{ n }} day{% plural %}{{ n }} days{% endblocktranslate %}
+            {% if growlog.vegetative_at %}
+            <tr>
+                <th class="table-primary fit-content">{% translate "Vegetative stage started on" %}</th>
+                <td><time datetime="{{ growlog.vegetative_at|date:"c" }}">{{ growlog.vegetative_at|date:'DATE_FORMAT' }}</time></td>
+                <th class="table-primary fit-content">{% translate "Vegetative duration" %}</th>
+                <td>
+                    {% if growlog.vegetative_days > 14 %}
+                        {{ growlog.vegetative_display }} ({% blocktranslate count n=growlog.vegetative_days %}{{ n }} day{% plural %}{{ n }} days{% endblocktranslate %})
+                    {% else %}
+                        {% blocktranslate count n=growlog.vegetative_days %}{{ n }} day{% plural %}{{ n }} days{% endblocktranslate %}
+                    {% endif %}
+                </td>
+            </tr>
             {% endif %}
-        </li>
-        {% if growlog.germinating_at %}
-        <li>
-            <b>{% translate "Germinated on:" %}</b> <time datetime="{{ growlog.germinating_at|date:"c" }}">{{ growlog.germinating_at }}</time>
-        </li>
-        <li>
-            <b>{% translate "Germination Period:" %}</b>
-            {% if growlog.germinating_days > 14 %}
-                {{ growlog.germination_display }}
-                ({% blocktranslate count n=growlog.germinating_days %}{{ n }} day{% plural %}{{ n }} days{% endblocktranslate %})
-            {% else %}
-                {% blocktranslate count n=growlog.germinating_days %}{{ n }} day{% plural %}{{ n }} days{% endblocktranslate %}
+            {% if growlog.flowering_at %}
+            <tr>
+                <th class="table-primary fit-content">{% translate "Flowering stage started on" %}</th>
+                <td><time datetime="{{ growlog.flowering_at|date:"c" }}">{{ growlog.flowering_at|date:'DATE_FORMAT' }}</time></td>
+                <th class="table-primary fit-content">{% translate "Flowering duration" %}</th>
+                <td>
+                    {% if growlog.flowering_days > 14 %}
+                        {{ growlog.flowering_display }} ({% blocktranslate count n=growlog.flowering_days %}{{ n }} day{% plural %}{{ n }} days{% endblocktranslate %})
+                    {% else %}
+                        {% blocktranslate count n=growlog.flowering_days %}{{ n }} day{% plural %}{{ n }} days{% endblocktranslate %}
+                    {% endif %}
+                </td>
+            </tr>
+            {% with estimated_harvest=growlog.estimated_harvest_date %}
+            {% if estimated_harvest %}
+            <tr class="fit-content">
+                <th class="table-primary fit-content">{% translate "Estimated Harvest Date" %}</th>
+                <td>
+                {% if estimated_harvest.0 == estimated_harvest.1 %}
+                    {{ estimated_harvest.0|date:'DATE_FORMAT' }}
+                {% else %}
+                    {{ estimated_harvest.0|date:'DATE_FORMAT' }} - {{ estimated_harvest.1|date:'DATE_FORMAT' }}
+                {% endif %}
+                </td>
+                <th class="table-primary fit-content">{% translate "Estimated Flowering duration" %}</th>
+                <td>
+                {% with growlog.estimated_flowering_duration as flowering_duration %}
+                {% if flowering_duration %}
+                    {% if flowering_duration.0 == flowering_duration.1 %}
+                        {% blocktranslate count n=flowering_duration.0 %}{{ n }} day{% plural %}{{ n }} days{% endblocktranslate %}
+                    {% else %}
+                        {% blocktranslate count n=flowering_duration.0 %}{{ n }} day{% plural %}{{ n }} days{% endblocktranslate %} - {% blocktranslate count n=flowering_duration.1 %}{{ n }} day{% plural %}{{ n }} days{% endblocktranslate %}
+                    {% endif %}
+                {% else %}
+                    ---
+                {% endif %}
+                {% endwith %}
+                </td>
+            </tr>
             {% endif %}
-        </li>
-        {% elif growlog.cutted_at%}
-        <li>
-            <b>{% translate "Cutted on:" %}</b> <time datetime="{{ growlog.cutted_at|date:"c" }}">{{ growlog.cutted_at }}</time>
-        </li>
-        <li>
-            <b>{% translate "Rooting Period:" %}</b>
-            {% if growlog.rooting_days > 14 %}
-                {{ growlog.rooting_display }}
-                ({% blocktranslate count n=growlog.rooting_days %}{{ n }} day{% plural %}{{ n }} days{% endblocktranslate %})
-            {% else %}
-                {% blocktranslate count n=growlog.rooting_days %}{{ n }} day{% plural %}{{ n }} days{% endblocktranslate %}
+            <tr>
+                <th class="table-primary fit-content">{% translate "Flowering duration" %}</th>
+                <td>
+                    {% if  growlog.flowering_days < 14 %}
+                        {% blocktranslate count n=growlog.flowering_days %}{{ n }} day{% plural %}{{ n }} days{% endblocktranslate %}
+                    {% else %}
+                        {{ growlog.flowering_display }}
+                    {% endif %}
+                </td>
+                <th class="table-primary fit-content"></th>
+                <td></td>
+            </tr>
+            {% endwith %}
             {% endif %}
-        {% endif %}
-        {% if growlog.vegetative_at %}
-        <li>
-            <b>{% translate "Vegetative stage started on:" %}</b> <time datetime="{{ growlog.vegetative_at|date:"c" }}">{{ growlog.vegetative_at }}</time>
-        </li>
-        <li>
-            <b>{% translate "Vegetative Period:" %}</b>
-            {% if growlog.vegetative_days > 14 %}
-                {{ growlog.vegetative_display }}
-                ({% blocktranslate count n=growlog.vegetative_days %}{{ n }} day{% plural %}{{ n }} days{% endblocktranslate %})
-            {% else %}
-                {% blocktranslate count n=growlog.vegetative_days %}{{ n }} day{% plural %}{{ n }} days{% endblocktranslate %}
-            {% endif %}
-        </li>
-        {% endif %}
 
-        {% if growlog.flowering_at %}
-        <li>
-            <b>{% translate "Flowering stage started on:" %}</b> <time datetime="{{ growlog.flowering_at|date:"c" }}">{{ growlog.flowering_at }}</time>
-        </li>
-        <li>
-            <b>{% translate "Flowering Period:" %}</b>
-            {% if growlog.flowering_days > 14 %}
-                {{ growlog.flowering_display }}
-                ({% blocktranslate count n=growlog.flowering_days %}{{ n }} day{% plural %}{{ n }} days{% endblocktranslate %})
-            {% else %}
-                {% blocktranslate count n=growlog.flowering_days %}{{ n }} day{% plural %}{{ n }} days{% endblocktranslate %}
+            {% if growlog.harvested_at %}
+            <tr>
+                <th class="table-primary fit-content">{% translate "Harvested on" %}</th>
+                <td><time datetime="{{ growlog.harvested_at|date:"c" }}">{{ growlog.harvested_at|date:'DATE_FORMAT' }}</time></td>
+                <th class="table-primary fit-content"></th>
+                <td></td>
+            </tr>
             {% endif %}
-        </li>
-        {% endif %}
-    </ul>
+            {% if growlog.finished_at %}
+            <tr>
+                <th class="table-primary fit-content">{% translate "Finished on" %}</th>
+                <td><time datetime="{{ growlog.finished_at|date:"c" }}">{{ growlog.finished_at|date:'DATE_FORMAT' }}</time></td>
+                <th class="table-primary fit-content"></th>
+                <td></td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
 </div>
 
 <h2>{% translate "Strains" %}</h2>
