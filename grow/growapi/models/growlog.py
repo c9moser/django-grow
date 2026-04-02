@@ -934,18 +934,37 @@ class Growlog(models.Model):
         super().save(*args, **kwargs)
         if not self.upload_path.exists():
             self.upload_path.mkdir(parents=True, exist_ok=True)
-        htaccess_path = self.upload_path / ".htaccess"
-        with htaccess_path.open("w", encoding="utf-8") as htaccess_file:
-            htaccess_file.write("Options -Indexes\n")
+        permission = self.permission
+        permission_changed = False
+        permission_path = self.upload_path / ".htperm"
+        if permission_path.exists():
+            with permission_path.open("r", encoding="utf-8") as permission_file:
+                old_permission_value = permission_file.read().strip()
+                old_permission = PermissionType.from_string(old_permission_value)
+                if old_permission != permission:
+                    permission_changed = True
+        else:
+            permission_changed = True
 
-            if self.is_private and not htaccess_path.exists():
-                htaccess_file.write(f"Require user {self.grower.username}\n")
-            elif self.is_friends_only:
-                htaccess_file.write(f"Require group grow-u{self.grower.id}-friends\n")
-            elif self.permission == PermissionType.MEMBERS_ONLY:
-                htaccess_file.write("Require group grow-member\n")
-            elif self.is_public:
-                htaccess_file.write("Require all granted\n")
+        if permission_changed:
+            with permission_path.open("w", encoding="utf-8") as permission_file:
+                permission_file.write(permission.value)
+
+            htaccess_path = self.upload_path / ".htaccess"
+            with htaccess_path.open("w", encoding="utf-8") as htaccess_file:
+                htaccess_file.write("Options -Indexes\n")
+
+                if self.is_private:
+                    htaccess_file.write("Require valid user\n")
+                    htaccess_file.write(f"Require user {self.grower.username}\n")
+                elif self.is_friends_only:
+                    htaccess_file.write("Require valid user\n")
+                    htaccess_file.write(f"Require group grow-u{self.grower.id}-friends\n")
+                elif self.permission == PermissionType.MEMBERS_ONLY:
+                    htaccess_file.write("Require valid user\n")
+                    htaccess_file.write("Require group grow-member\n")
+                elif self.is_public:
+                    htaccess_file.write("Require all granted\n")
 
     class Meta:
         db_table = "grow_growlog"

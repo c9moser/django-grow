@@ -83,7 +83,7 @@
                             {% blocktranslate count n=growlog.duration_days %}{{ n }} day{% plural %}{{ n }} days{% endblocktranslate %}
                         {% endif %}
                     </td>
-                    <td>{% if growlog.finsihed_at %}{{ growlog.finsihed_at|date }}{% else %}{% translate "In progress" %}{% endif %}</td>
+                    <td>{% if growlog.finished_at %}{{ growlog.finished_at|date }}{% else %}{% translate "In progress" %}{% endif %}</td>
                     <td>{{ growlog.current_stage }}</td>
                 </tr>
                 {% empty %}

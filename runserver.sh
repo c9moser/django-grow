@@ -21,6 +21,11 @@ case "$1" in
         fi
         exit $?
     ;;
+    manage=*)
+        shift
+        exec poetry run python manage.py "$@"
+        exit $?
+    ;;
     shell)
         shift
         exec poetry run python manage.py shell
