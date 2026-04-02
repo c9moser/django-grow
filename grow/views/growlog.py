@@ -1321,9 +1321,6 @@ class GrowlogEntryUploadImageView(LoginRequiredMixin, FormView):
         if form.is_valid():
             image = form.save(commit=False)
             image.growlog_entry = self.entry
-            image.image.path = str(
-                Path(settings.MEDIA_ROOT).resolve()
-                / 'grow' / 'growlogs' / str(self.growlog.id) / 'images' / image.image.name)
             image.save()
             return redirect(reverse('grow:growlog-detail', kwargs={'pk': self.growlog.pk}))
         else:
