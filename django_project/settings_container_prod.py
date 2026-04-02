@@ -13,10 +13,6 @@ env = environ.Env(
 STATIC_ROOT = Path(env('GROW_STATIC_ROOT')).resolve()
 MEDIA_ROOT = Path(env('GROW_MEDIA_ROOT')).resolve()
 
-DATABASES = {
-    'default': env.db('GROW_DB')
-}
-
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,

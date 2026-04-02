@@ -159,9 +159,13 @@ WSGI_APPLICATION = 'django_project.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
+print("=" * 80)
+print("GROW_DB:", env('GROW_DB'))
+print("GROW_DB_URL:", env.db_url('GROW_DB'))
+print("=" * 80)
 
 DATABASES = {
-    'default': env.db('GROW_DB'),
+    'default': env.db_url('GROW_DB'),
 }
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
