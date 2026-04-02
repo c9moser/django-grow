@@ -961,16 +961,16 @@ class Growlog(models.Model):
             with htaccess_path.open("w", encoding="utf-8") as htaccess_file:
                 htaccess_file.write("Options -Indexes\n")
 
-                if self.is_private:
+                if self.permission == PermissionType.PRIVATE:
                     htaccess_file.write("Require valid user\n")
                     htaccess_file.write(f"Require user {self.grower.username}\n")
-                elif self.is_friends_only:
+                elif self.permission == PermissionType.FRIENDS_ONLY:
                     htaccess_file.write("Require valid user\n")
                     htaccess_file.write(f"Require group grow-u{self.grower.id}-friends\n")
                 elif self.permission == PermissionType.MEMBERS_ONLY:
                     htaccess_file.write("Require valid user\n")
                     htaccess_file.write("Require group grow-member\n")
-                elif self.is_public:
+                elif self.permission == PermissionType.PUBLIC:
                     htaccess_file.write("Require all granted\n")
 
     class Meta:
