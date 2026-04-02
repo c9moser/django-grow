@@ -663,7 +663,6 @@ class Strain(models.Model):
         db_column="description_type"
     )
 
-
     #: The logo URL of the strain
     #: :type: str
     logo_url = models.URLField(

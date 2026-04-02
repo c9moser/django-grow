@@ -1407,7 +1407,11 @@ class GrowlogEntry(models.Model):
         if not self.growlog.vegetative_at:
             return None
 
-        if not self.growlog.flowering_at and not self.growlog.harvested_at and not self.growlog.finished_at:
+        if (
+            not self.growlog.flowering_at
+            and not self.growlog.harvested_at
+            and not self.growlog.finished_at
+        ):
             total_days = self.vegetative_days
         elif self.growlog.flowering_at:
             delta = self.growlog.flowering_at - self.growlog.vegetative_at
