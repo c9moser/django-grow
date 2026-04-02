@@ -1,0 +1,38 @@
+{% extends "grow/breeder/form.html" %}
+{% load i18n %}
+
+{% block head_title %}{{ grow_head_title }}{% endblock %}
+{% block title %}{{ grow_site_title }}: {% translate "Update breeder" %}{% endblock %}
+
+{% block form_buttons %}
+{% if use_bootstrap %}
+    <button type="submit" class="btn btn-success">
+    <i class="bi bi-check"></i>
+    {% translate "Save changes "%}
+     </button>
+<a href="{% url 'grow:breeder-overview' %}"
+    class="btn btn-secondary"
+>
+    <i class="bi bi-x"></i>
+    {% translate "Back to breeder overview" %}
+</a>
+<a href="{% url 'grow:breeder-detail' slug=breeder.slug %}"
+    class="btn btn-secondary"
+>
+    <i class="bi bi-x"></i>
+    {% translate "Back to breeder detail" %}
+</a>
+{% else %}
+    <button type="submit">{% translate "Save changes" %}</button>
+    <button type="button"
+        onclick="location.href='{% url 'grow:breeder-overview' %}'"
+    >
+        {% translate "Back to breeder overview" %}
+    </button>
+    <button type="button"
+        onclick="location.href='{% url 'grow:breeder-detail' slug=breeder.slug %}'"
+    >
+        {% translate "Back to breeder detail" %}
+    </button>
+{% endif %}
+{% endblock %}

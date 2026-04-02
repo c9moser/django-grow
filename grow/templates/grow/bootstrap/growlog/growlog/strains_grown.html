@@ -1,0 +1,29 @@
+{% extends base_template %}
+{% load i18n %}
+
+{% block content %}
+<h1>My Strains Grown</h1>
+
+{% if strains_grown %}
+<table class="table">
+    <thead>
+        <tr>
+            <th>Strain</th>
+            <th>Breeder</th>
+            <th>Growlog</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for growlog_strain in strains_grown %}
+        <tr>
+            <td><a href="{% url 'grow:strain-detail' breeder_slug=growlog_strain.strain.breeder.slug slug=growlog_strain.strain.slug %}">{{ growlog_strain.strain.name }}</a></td>
+            <td><a href="{% url 'grow:breeder-detail' slug=growlog_strain.strain.breeder.slug %}">{{ growlog_strain.strain.breeder.name }}</a></td>
+            <td><a href="{% url 'grow:growlog-detail' growlog_id=growlog_strain.growlog.id %}">{{ growlog_strain.grow_count }}</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+{% else %}
+    <p>You haven't grown any strains yet.</p>
+{% endif %}
+
+{% endblock content %}

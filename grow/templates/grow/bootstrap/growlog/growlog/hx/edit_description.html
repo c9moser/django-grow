@@ -1,0 +1,33 @@
+{% load i18n widget_tweaks %}
+<div id="modal-dialog"class="modal-dialog modal-dialog-centered" style="min-width: 75vw; max-width: 1024px;">
+  <div class="modal-content">
+    <div class="modal-header bg-success text-white">
+      <h5 class="modal-title">{% translate "Edit grow log description" %}</h5>
+      <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <form method="post">
+        <div class="modal-body">
+            {% csrf_token %}
+
+            <div class="input-group mb-3">
+                <span class="input-group-text">{% translate "Description Type" %}</span>
+                <label
+                    for="{{ form.description_type_data.id_for_label }}"
+                    class="visually-hidden"
+                >{{ form.description_type_data.label }}</label>
+                {% render_field form.description_type_data class="form-control" %}
+            </div>
+            <div class="form-floating mb-3">
+                {% translate "Write your Description here" as description_here %}
+                <label for="{{ form.description.id_for_label }}" class="visually-hidden">{{ form.description.label }}</label>
+                {% render_field form.description class="form-control" placeholder=description_here style="min-height: 200px; max-height: 400px;" %}
+
+        </div>
+        <div class="modal-footer text-end">
+            <button class="btn btn-success" type="submit" hx-post="{% url 'grow:hx-growlog-edit-description' growlog.pk %}" hx-target="#growlog-description" hx-swap="innerHTML" data-bs-dismiss="modal">{% translate "Save description" %}</button>
+            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">{% translate "Cancel" %}</button>
+        </div>
+    </form>
+  </div>
+</div>
+<script>htmx.process(document.getElementById('modal-dialog'));</script>

@@ -1,0 +1,33 @@
+{% extends base_template %}
+{% load i18n widget_tweaks %}
+
+{% block subtitle %}{% translate "Update a Growlog entry's  Image data" %}{% endblock subtitle %}
+
+{% block content %}
+<main>
+<h1>{% translate "Update Image data for Grow Log Entry" %}</h1>
+
+<form method="post">
+    <img src="{{ image.image.url }}" alt="{% translate "Grow Log Entry Image" %}" class="img-fluid mb-3 w-50 float-left me-3">
+    {% csrf_token %}
+    <div class="form-floating mb-3">
+        {% render_field form.caption class="form-control" %}
+        <label for="{{ form.caption.id_for_label }}">{% translate "Image Caption" %}</label>
+    </div>
+    <div class="mb-3 input-group">
+        <span class="input-group-text">{% translate "Description Type:" %}</span>
+        {% render_field form.description_type_data class="form-control" %}
+    </div>
+
+    <div class="form-floating mb-3">
+        {% render_field form.description class="form-control" style="height: 25rem;"%}
+        <label class="form-label" for="{{ form.description.id_for_label }}" style="height: 25rem;">{% translate "Image Description" %}</label>
+    </div>
+
+    <div class="text-end">
+        <button type="submit" class="btn btn-success">{% translate "Update Image Data" %}</button>
+        <a href="{% url 'grow:growlog-detail' pk=growlog.id %}" class="btn btn-secondary">{% translate "Cancel" %}</a>
+    </div>
+</form>
+</main>
+{% endblock content %}

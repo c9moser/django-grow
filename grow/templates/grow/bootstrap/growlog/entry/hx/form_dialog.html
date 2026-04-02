@@ -1,0 +1,47 @@
+{% load i18n widget_tweaks%}
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header {% if form.instance.pk %}bg-success{% else %}bg-primary{% endif %}">
+            <h5 class="modal-title">{% if form.instance.pk %}{% translate "Edit Grow Log Entry" %}{% else %}{% translate "Create Grow Log Entry" %}{% endif %}</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="{% translate 'Close' %}"></button>
+        </div>
+        <form method="post"
+            id="growlog-entry-form"
+            action="{% if form.instance.pk %}{% url 'grow:hx-growlog-entry-update' pk=form.instance.pk %}{% else %}{% url 'grow:hx-growlog-entry-create' growlog_pk=growlog.id %}{% endif %}"
+            hx-target="#growlog-entries"
+            hx-swap="innerHTML"
+            hx-trigger="submit"
+            hx-post="{% if form.instance.pk %}{% url 'grow:hx-growlog-entry-update' pk=form.instance.pk %}{% else %}{% url 'grow:hx-growlog-entry-create' growlog_pk=growlog.id %}{% endif %}"
+        >
+            <div class="modal-body">
+
+                {% csrf_token %}
+                {% if form.location.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {% for error in form.location.errors %}<div>{{ error }}</div>{% endfor %}
+                </div>
+                {% endif %}
+                <div class="mb-3 input-group">
+                    <span class="input-group-text">{% translate "Location" %}</span>
+                    {% render_field form.location class="form-control" %}
+                </div>
+                <div class="mb-3 input-group">
+                    <span class="input-group-text">{% translate "Content Type:" %}</span>
+                    {% render_field form.content_type_data class="form-control" %}
+                </div>
+                <div class="form-floating mb-3">
+                    {% render_field form.content class="form-control" style="height: 400px;"%}
+                    <label class="form-label" for="{{ form.content.id_for_label }}">{% translate "Content" %}</label>
+                </div>
+            </div>
+            <div class="modal-footer text-end">
+                <button
+                    type="submit"
+                    class="btn btn-success"
+                    data-bs-dismiss="modal"
+                >{% if form.instance.pk %}{% translate "Update Entry" %}{% else %}{% translate "Create Entry" %}{% endif %}</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% translate "Cancel" %}</button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,9 @@
+{% extends parent_template %}
+{% load i18n %}
+
+{% block form_buttons %}
+<div class="d-flex justify-content-end">
+    <button type="submit" class="btn btn-success">{% translate "Create Growlog" %}</button>
+    <button type="button" class="btn btn-secondary ms-2" onclick="window.history.back()">{% translate "Cancel" %}</button>
+</div>
+{% endblock form_buttons %}

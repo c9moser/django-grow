@@ -1,0 +1,40 @@
+{% load i18n widget_tweaks %}
+<div class="modal-dialog modal-lg modal-dialog-centered" id="hx-growlog-add-strain-modal">
+    <div class="modal-content">
+        <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title">{% translate "Add strain to grow log" %}</h5>
+            <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form method="post" id="hx-growlog-add-strain-form">
+            {% csrf_token %}
+            <div class="modal-body">
+                <div class="input-group mb-3">
+                    <span class="input-group-text">{% translate "Breeder:" %}</span>
+                    <span class="input-group-text">{% translate "Filter" %}</span>
+                    {% url 'grow:hx-growlog-strain-add-update' growlog_pk=growlog.pk as growlog_strain_add_url%}
+                    {% render_field form.breeder_filter class="form-control" form="#hx-growlog-add-strain-form" hx-post=growlog_strain_add_url hx-target="#modals-here" hx-swap="innerHTML" hx-trigger="keyup changed delay:500ms" %}
+                    <label for="{{ form.breeder_filter.id_for_label }}" class="visually-hidden">{{ form.breeder_filter.label }}</label>
+                    {% render_field form.breeder class="form-control" form="#hx-growlog-add-strain-form" hx-post=growlog_strain_add_url hx-target="#modals-here" hx-swap="innerHTML" hx-trigger="change" %}
+                    <label for="{{ form.breeder.id_for_label }}" class="visually-hidden">{{ form.breeder.label }}</label>
+                </div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text">{% translate "Strain:" %}</span>
+                    {% render_field form.strain class="form-control" %}
+                    <label for="{{ form.strain.id_for_label }}" class="visually-hidden">{{ form.strain.label }}</label>
+                </div>
+
+                <div class="input-group mb-3">
+                    <span class="input-group-text">{% translate "Plant count" %}</span>
+                    <label for="{{ form.quantity.id_for_label }}" class="visually-hidden">{{ form.quantity.label }}</label>
+                    {% render_field form.quantity class="form-control" %}
+                    <span class="input-group-text">{% translate "From Seed?" %}{% render_field form.is_grown_from_seed class="form-check-input ms-2 my-0" %}</span>
+                </div>
+            </div>
+            <div class="modal-footer text-end">
+                <button class="btn btn-success" type="submit" hx-post="{% url 'grow:hx-growlog-strain-add' growlog_pk=growlog.pk %}" hx-target="#growlog-strains" hx-swap="innerHTML" data-bs-dismiss="modal">{% translate "Add strain" %}</button>
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">{% translate "Cancel" %}</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script>htmx.process(document.getElementById('hx-growlog-add-strain-modal'));</script>

@@ -1,0 +1,24 @@
+{% extends "grow/breeder/form.html" %}
+{% load i18n %}
+
+{% block head_title %}{{ grow_head_title }}{% endblock %}
+{% block title %}{{ grow_site_title }}: {% translate "Create breeder" %}{% endblock %}
+
+{% block form_buttons %}
+{% if use_bootstrap %}
+<button class="btn btn-success" type="submit">
+    <i class="bi bi-person-fill-add me-1"></i>
+    {% translate "Create Breeder" %}
+</button>
+<a class="btn btn-secondary" href="{% url 'grow:breeder-overview' %}">
+    <i class="bi bi-x"></i>
+    {% translate "Back to breeder overview" %}
+</a>
+{% else %}
+<button type="submit">{% translate "Create Breeder" %}</button>
+<button type="button"
+    onclick="location.href='{% url 'grow:breeder-overview' %}'">
+    {% translate "Back to breeder overview" %}
+</button>
+{% endif %}
+{% endblock %}

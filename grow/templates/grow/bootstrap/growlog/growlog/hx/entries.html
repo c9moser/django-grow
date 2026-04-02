@@ -1,0 +1,250 @@
+{% load i18n growlog %}
+<div class="card mb-3" id="growlog-entries-card">
+    <div class="card-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <div style="width:33%;" class="d-flex justify-content-start text-start">
+                <nav aria-label="{% translate 'Grow log entries pagination' %}">
+                    <ul class="pagination pagination-sm mb-0">
+                        {% for page_item in entries_paginator.pagination %}
+                            {% if page_item.current_page %}
+                                <li class="page-item active" aria-current="page">
+                                    <a class="page-link active"
+                                        hx-get="{% url 'grow:hx-growlog-entries' growlog_pk=growlog.pk %}?paginate_by={{ entries_paginator.paginate_by }}&entries_page={{ page_item.page }}"
+                                        hx-target="#growlog-entries"
+                                        hx-swap="innerHTML"
+                                    >{{ page_item.page }}</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item">
+                                    <a class="page-link"
+                                        hx-get="{% url 'grow:hx-growlog-entries' growlog_pk=growlog.pk %}?paginate_by={{ entries_paginator.paginate_by }}&entries_page={{ page_item.page }}"
+                                        hx-target="#growlog-entries"
+                                        hx-swap="innerHTML"
+                                    >{{ page_item.page }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                </nav>
+            </div>
+            <div style="width:33%;" class="d-flex align-items-center text-center justify-content-center">
+                <h5 class="card-title mb-0">{% translate "Grow log entries" %}</h5>
+            </div>
+            <div style="width:33%;">
+                {% if can_edit %}
+                <a
+                    href="{% url 'grow:growlog-entry-create' growlog_pk=growlog.pk %}"
+                    class="btn btn-outline-success btn-sm float-end"
+                >
+                    <i data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Add new entry' %}" class="bi bi-plus"></i>
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        {% for entry in entries_paginator.page %}
+        <div class="card mb-3 w-100 m-3-auto">
+            <div class="card-header">
+                <div class="d-flex {% if can_edit %}justify-content-between{% endif %} align-items-center">
+                    <h5 class="card-title mb-0" style="width:33%;">{{ entry|growlog_entry_timestamp:request }}</h5>
+                    <h5 class="text-muted mb-0 text-center" style="width:33%;">{{ entry.status_display }}</h5>
+                    <div class="text-end" style="width:33%;">
+                        {% if can_edit %}
+                        <a href="{% url 'grow:growlog-entry-image-upload' entry_pk=entry.id %}"
+                           class="btn btn-outline-success btn-sm">
+                            <span data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Upload images for this entry' %}">
+                                <i class="bi bi-card-image"></i>
+                            </span>
+                        </a>
+                        <button type="button"
+                            hx-get="{% url 'grow:hx-growlog-entry-update' pk=entry.id %}"
+                            hx-target="#modals-here"
+                            hx-swap="innerHTML"
+                            data-bs-target="#modals-here"
+                            data-bs-toggle="modal"
+                            class="btn btn-sm btn-outline-primary"
+                        >
+                            <i data-bs-toggle="tooltip"
+                                data-bs-placement="bottom"
+                                data-bs-title="{% translate 'Edit Entry' %}"
+                                class="bi bi-pencil-square"
+                            ></i>
+                        </button>
+                        <button type="button"
+                            hx-get="{% url 'grow:hx-growlog-entry-delete' pk=entry.id %}"
+                            hx-target="#modals-here"
+                            hx-swap="innerHTML"
+                            data-bs-target="#modals-here"
+                            data-bs-toggle="modal"
+                            class="btn btn-sm btn-outline-danger"
+
+                        >
+                            <i data-bs-toggle="tooltip"
+                                data-bs-placement="bottom"
+                                data-bs-title="{% translate 'Delete Entry' %}"
+                                class="bi bi-trash"
+                            ></i>
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <ul>
+                        <li><strong>{% translate "Location:" %}</strong> {% if entry.location %}{{ entry.location }}{% else %}-{% endif %}</li>
+                        <li><strong>{% translate "Duration:" %}</strong> {{ entry.duration_display }}</li>
+                        {% if entry.growlog.germinating_at %}
+                        <li><strong>{% translate "Germinating for:" %}</strong> {{ entry.germinating_duration_display }}</li>
+                        {% elif entry.growlog.cutted_at %}
+                        <li><strong>{% translate "Rooting for:" %}</strong> {{ entry.rooting_duration_display }}</li>
+                        {% endif %}
+                        {% if entry.growlog.vegetative_at and entry.growlog.vegetative_at >= entry.timestamp.date %}
+                        <li><strong>{% translate "Vegetative for:" %}</strong> {{ entry.vegetative_duration_display }}</li>
+                        {% endif %}
+                        {% if entry.growlog.flowering_at and entry.growlog.flowering_at >= entry.timestamp.date %}
+                        <li><strong>{% translate "Flowering for:" %}</strong> {{ entry.flowering_duration_display }}</li>
+                        {% endif %}
+                        {% if entry.growlog.harvesting_at and entry.growlog.harvesting_at >= entry.timestamp.date %}
+                        <li><strong>{% translate "Since harvest:" %}</strong> {{ entry.harvesting_duration_display }}</li>
+                        {% endif %}
+                    </ul>
+                </li>
+                <li class="list-group-item">
+                    {{ entry.content_html }}
+                </li>
+            </ul>
+
+            {% if entry.images.count > 0 %}
+            <div class="card-body">
+                <div class="row ">
+                    {% for image in entry.images.all %}
+                    <div class="col-6 col-lg-4 mb-3">
+                        <div class="card h-100">
+                            <div class="card-header p-1">
+                                <div class="d-flex justify-content-end">
+                                    {% if can_edit %}
+                                    <a href="{% url 'grow:growlog-entry-image-update' pk=image.id %}"
+                                        class="btn btn-sm btn-outline-primary me-1"
+                                    >
+                                        <i data-bs-toggle="tooltip"
+                                            data-bs-placement="bottom"
+                                            data-bs-title="{% translate 'Edit image data' %}"
+                                            class="bi bi-pencil-square"
+                                        ></i>
+                                    </a>
+                                    <!--
+                                    <button type="button"
+                                        hx-get="{% url 'grow:growlog-entry-image-update' pk=image.id %}"
+                                        hx-target="#modals-here"
+                                        hx-swap="innerHTML"
+                                        data-bs-target="#modals-here"
+                                        data-bs-toggle="modal"
+                                        class="btn btn-sm btn-outline-primary me-1"
+                                    >
+                                        <i data-bs-toggle="tooltip"
+                                            data-bs-placement="bottom"
+                                            data-bs-title="{% translate 'Edit image data' %}"
+                                            class="bi bi-pencil-square"
+                                        ></i>
+                                    </button>
+                                    -->
+                                    <a href="{% url 'grow:growlog-entry-image-delete' pk=image.id %}"
+                                        class="btn btn-sm btn-outline-danger"
+                                    >
+                                        <i data-bs-toggle="tooltip"
+                                            data-bs-placement="bottom"
+                                            data-bs-title="{% translate 'Delete Image' %}"
+                                            class="bi bi-trash"
+                                        ></i>
+                                    </a>
+                                    <!--
+                                    <button type="button"
+                                        hx-get="{% url 'grow:growlog-entry-image-delete' pk=image.id %}"
+                                        hx-target="#modals-here"
+                                        hx-swap="innerHTML"
+                                        data-bs-target="#modals-here"
+                                        data-bs-toggle="modal"
+                                        class="btn btn-sm btn-outline-danger"
+                                    >
+                                        <i data-bs-toggle="tooltip"
+                                            data-bs-placement="bottom"
+                                            data-bs-title="{% translate 'Delete Image' %}"
+                                            class="bi bi-trash"
+                                        ></i>
+                                    </button>
+                                    -->
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="card-body p-0">
+                                <img src="{{ image.image.url }}" class="img-fluid" alt="{% translate "Entry Image" %}">
+                            </div>
+                            <div class="card-footer p-1">
+                                <small class="text-muted">{{ image.description_html }}</small>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        {% empty %}
+        <div class="alert alert-warning">{% translate "No entries available." %}</div>
+        {% endfor %}
+    </div>
+
+    <div class="card-footer">
+        <div class="d-flex justify-content-between align-items-center">
+            <div style="width:33%;" class="d-flex justify-content-start text-start">
+                <nav aria-label="{% translate 'Grow log entries pagination' %}">
+                    <ul class="pagination pagination-sm mb-0">
+                        {% for page_item in entries_paginator.pagination %}
+                            {% if page_item.current_page %}
+                                <li class="page-item active" aria-current="page">
+                                    <a class="page-link active"
+                                        hx-get="{% url 'grow:hx-growlog-entries' growlog_pk=growlog.pk %}?paginate_by={{ entries_paginator.paginate_by }}&entries_page={{ page_item.page }}"
+                                        hx-target="#growlog-entries"
+                                        hx-swap="innerHTML"
+                                    >{{ page_item.page }}</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item">
+                                    <a class="page-link"
+                                        hx-get="{% url 'grow:hx-growlog-entries' growlog_pk=growlog.pk %}?paginate_by={{ entries_paginator.paginate_by }}&entries_page={{ page_item.page }}"
+                                        hx-target="#growlog-entries"
+                                        hx-swap="innerHTML"
+                                    >{{ page_item.page }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                </nav>
+            </div>
+            <div style="width:33%;" class="d-flex align-items-center text-center justify-content-center"></div>
+            <div style="width:33%;">
+                {% if can_edit %}
+                <a
+                    href="{% url 'grow:growlog-entry-create' growlog_pk=growlog.pk %}"
+                    class="btn btn-outline-success btn-sm float-end"
+                >
+                    <i data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Add new entry' %}" class="bi bi-plus"></i>
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function entriesUpdate() {
+        const growlogEntriesCard = document.getElementById("growlog-entries-card");
+        URL_VARS["gle_pg"] = "{{ entries_paginator.current_page }}";
+        URL_VARS["gle_pgn"] = "{{ entries_paginator.paginate_by }}";
+        htmx.process(growlogEntriesCard);
+        growlogEntriesCard.scroll({behavior: "smooth", top: 20});
+        updateURL();
+    }
+
+    entriesUpdate();
+</script>
