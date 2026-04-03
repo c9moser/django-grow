@@ -95,18 +95,18 @@
                     <ul>
                         <li><strong>{% translate "Location:" %}</strong> {% if entry.location %}{{ entry.location }}{% else %}-{% endif %}</li>
                         <li><strong>{% translate "Duration:" %}</strong> {{ entry.duration_display }}</li>
-                        {% if entry.growlog.germinating_at %}
+                        {% if entry.growlog.germinating_at and entry.growlog.germinating_at <= entry.timestamp.date %}
                         <li><strong>{% translate "Germinating for:" %}</strong> {{ entry.germinating_duration_display }}</li>
-                        {% elif entry.growlog.cutted_at %}
+                        {% elif entry.growlog.cutted_at and entry.growlog.cutted_at <= entry.timestamp.date %}
                         <li><strong>{% translate "Rooting for:" %}</strong> {{ entry.rooting_duration_display }}</li>
                         {% endif %}
-                        {% if entry.growlog.vegetative_at and entry.growlog.vegetative_at >= entry.timestamp.date %}
+                        {% if entry.growlog.vegetative_at and entry.growlog.vegetative_at <= entry.timestamp.date %}
                         <li><strong>{% translate "Vegetative for:" %}</strong> {{ entry.vegetative_duration_display }}</li>
                         {% endif %}
-                        {% if entry.growlog.flowering_at and entry.growlog.flowering_at >= entry.timestamp.date %}
+                        {% if entry.growlog.flowering_at and entry.growlog.flowering_at <= entry.timestamp.date %}
                         <li><strong>{% translate "Flowering for:" %}</strong> {{ entry.flowering_duration_display }}</li>
                         {% endif %}
-                        {% if entry.growlog.harvesting_at and entry.growlog.harvesting_at >= entry.timestamp.date %}
+                        {% if entry.growlog.harvesting_at and entry.growlog.harvesting_at <= entry.timestamp.date %}
                         <li><strong>{% translate "Since harvest:" %}</strong> {{ entry.harvesting_duration_display }}</li>
                         {% endif %}
                     </ul>
