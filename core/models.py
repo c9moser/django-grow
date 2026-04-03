@@ -8,6 +8,7 @@ from django.contrib.auth.models import (
 )
 from grow.growapi.utils.groups import make_user_groups
 
+
 class UserManager(BaseUserManager):
     def create_user(self, email: str, username: str, password=None, **extra_fields):
         if not email:
