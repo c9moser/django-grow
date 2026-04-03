@@ -105,7 +105,8 @@ def decode_session(environ, data):
             if pw_key not in session_data:
                 session_data[pw_key] = u"<fake>"
 
-    return {k.encode(u"utf-8"):v.encode(u"utf-8") for (k,v) in session_data.iteritems() if no$
+    return {k.encode(u"utf-8"): v.encode(u"utf-8") for (k, v) in session_data.iteritems()}
+
 
 def encode_session(environ, data):
     (user_key, pw_key) = __get_apache_keys_(environ)
@@ -122,6 +123,7 @@ def encode_session(environ, data):
 
     return __encode_data_(session_data)
 
+
 def save_session(environ, data):
     s = __get_session_(environ)
     if s is not None:
@@ -130,3 +132,6 @@ def save_session(environ, data):
         return True
 
     return False
+
+
+from django.contrib.auth.handlers.modwsgi import groups_for_user

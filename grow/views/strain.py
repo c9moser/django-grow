@@ -1,23 +1,17 @@
 from datetime import date
 import re
 
-from django.conf import settings as django_settings
+
 from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse, reverse_lazy
-from django.utils.translation import get_language, activate
-from django.views.generic.edit import (
-    CreateView,
-    UpdateView,
-)
+from django.urls import reverse
+from django.utils.translation import get_language
+from django.views.generic.edit import CreateView
 from django.db.models import Count, Sum
 from django.db.models.functions import Lower
-from django.utils.safestring import mark_safe
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from django.views.generic import FormView
-
-
 from grow.growapi.models.strain import StrainUserComment
 
 from ._base import BaseView
@@ -29,9 +23,8 @@ from ..growapi.models import (
 )
 from .. import settings
 
+
 from ..forms import (
-    BreederFilterForm,
-    BreederTranslationForm,
     DeleteWithSlugForm,
     StrainForm,
     StrainImageUploadForm,
@@ -39,7 +32,6 @@ from ..forms import (
     StrainAddToStock2Form,
     StrainRemoveFromStockForm,
     StrainSearchForm,
-    StrainFilterForm,
     StrainTranslationForm,
     StrainCommentForm,
 )
@@ -679,8 +671,6 @@ class StrainImageUploadView(LoginRequiredMixin, View):
             'strain': strain,
             'form': form,
         })
-
-
 
 
 class StrainTranslationView(LoginRequiredMixin, View):

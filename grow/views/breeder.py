@@ -270,6 +270,7 @@ class BreederCreateView(LoginRequiredMixin, CreateView):
     def success_url(self):
         return reverse("grow:breeder-detail", kwargs={'slug': self._slug})
 
+
 class BreederUpdateView(LoginRequiredMixin, UpdateView):
     template_name = settings.GROW_TEMPLATES["grow/breeder/update"]
     form_template_name = settings.GROW_TEMPLATES['grow/breeder/form']
@@ -373,6 +374,7 @@ class HxBreederDeleteView(LoginRequiredMixin, FormView):
 
     def form_invalid(self, form):
         return redirect(self.get_failed_url())
+
 
 class BreederTranslationView(LoginRequiredMixin, View):
     template_name = settings.GROW_TEMPLATES['grow/breeder/translation']
@@ -482,6 +484,7 @@ class HxBreederTranslationView(LoginRequiredMixin, View):
             'breeder': breeder,
             'form': form,
         })
+
 
 class HxStrainFilterView(BaseView):
     template_name = settings.GROW_TEMPLATES['grow/strain/strain/hx/filter']
