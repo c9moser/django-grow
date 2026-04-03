@@ -1,5 +1,8 @@
 from django.contrib.auth.models import Group
 
+import logging
+logger = logging.getLogger(__name__)
+
 
 def make_user_groups(user):
     """
@@ -20,7 +23,6 @@ def make_user_groups(user):
     for group_name in group_names:
         group, created = Group.objects.get_or_create(name=group_name)
         if created:
-            print(f"Group '{group_name}' created.")
-        else:
-            print(f"Group '{group_name}' already exists.")
+            logger.info(f"Group '{group_name}' created.")
         user.groups.add(group)
+        logger.info(f"Added user '{user.username}' to group '{group_name}'.")

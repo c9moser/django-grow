@@ -6,7 +6,7 @@ from django.contrib.auth.models import (
     AbstractBaseUser,
     PermissionsMixin
 )
-
+from grow.growapi.utils.groups import make_user_groups
 
 class UserManager(BaseUserManager):
     def create_user(self, email: str, username: str, password=None, **extra_fields):
@@ -19,6 +19,7 @@ class UserManager(BaseUserManager):
         user = self.model(email=email, username=username, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
+        make_user_groups(user)
         return user
 
     def create_superuser(self, email, username, password=None, **extra_fields):
