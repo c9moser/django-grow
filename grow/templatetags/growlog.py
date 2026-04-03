@@ -5,7 +5,7 @@ from django.utils.translation import ngettext, gettext as _
 from django.template.loader import render_to_string
 from grow.growapi.models import GrowlogEntry
 from grow.growapi.permission import growlog_user_is_allowed_to_edit
-
+from grow.settings import GROW_TEMPLATES
 
 register = template.Library()
 
@@ -16,7 +16,7 @@ def growlog_entry_timestamp(entry: GrowlogEntry, request: HttpRequest) -> SafeSt
 
         return mark_safe(
             render_to_string(
-                "grow/growlog/entry/timestamp.html",
+                GROW_TEMPLATES["grow/growlog/entry/timestamp"],
                 {"entry": entry}
             )
         )
