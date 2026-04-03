@@ -107,13 +107,13 @@ GROW_BUILTIN_BS_STRAIN_TEMPLATES = {
 
 GROW_BUILTIN_LOCATION_TEMPLATES = {
     # location templates
-    'grow/location/index': 'grow/html/location/index_bs.html',
-    'grow/location/create': 'grow/html/location/create_bs.html',
-    'grow/location/update': 'grow/html/location/update_bs.html',
-    'grow/location/delete': 'grow/html/location/delete_bs.html',
-    'grow/location/detail': 'grow/html/location/detail_bs.html',
-    'grow/location/hx-type-change': 'grow/html/location/hx_locationtype_change_bs.html',
-    'grow/location/hx-delete': 'grow/html/location/hx_delete_bs.html',
+    'grow/location/index': 'grow/html/location/index.html',
+    'grow/location/create': 'grow/html/location/create.html',
+    'grow/location/update': 'grow/html/location/update.html',
+    'grow/location/delete': 'grow/html/location/delete.html',
+    'grow/location/detail': 'grow/html/location/detail.html',
+    'grow/location/hx-type-change': 'grow/html/location/hx_locationtype_change.html',
+    'grow/location/hx-delete': 'grow/html/location/hx_delete.html',
 }
 
 GROW_BUILTIN_BS_LOCATION_TEMPLATES = {
