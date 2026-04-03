@@ -9,9 +9,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from django.views.generic import CreateView, UpdateView, DeleteView, FormView
 from django.db.models import Count
-from django.conf import settings
-
-from pathlib import Path
 # from grow.growapi import settings
 
 from grow.forms.growlog import (
