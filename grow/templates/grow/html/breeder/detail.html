@@ -159,7 +159,7 @@
 
 <h2 id="strains">{% translate "Strains" %}</h2>
 <form method="post"
-    hx-post="{% url 'grow:hx-strain-search' breeder_pk=breeder.pk %}"
+    hx-post="{% url 'grow:hx-strain-filter' breeder_pk=breeder.pk %}"
     hx-target="#strain-table-div"
     hx-swap="innerHTML"
     hx-trigger="keyup changed delay:500ms"

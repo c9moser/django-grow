@@ -52,14 +52,17 @@
     </div>
 
     {% if 'seedfinder_url' in form.errors %}
-    <div>
-        {% for error in form.errors.seedfinder_url %}
+    {% for error in form.errors.seedfinder_url %}
         <div class="alert alert-danger mb-3">
             {{ error }}
         </div>
-        {% endfor %}
-    <div>
+    {% endfor %}
     {% endif %}
+    <div class="form-floating mb-3">
+        {% render_field form.seedfinder_url class="form-control form-control-sm" placeholder=form.seedfinder_url.label %}
+        <label for="{{ form.seedfinder_url.id_for_label }}">{{ form.seedfinder_url.label }}</label>
+    </div>
+
     <div class="form-floating mb-3">
         {% render_field form.logo_url class="form-control form-cotrol-sm" placeholder=form.logo_url.label %}
         <label for="{{ form.logo_url.id_for_label }}">{{ form.logo_url.label }}</label>
@@ -103,7 +106,7 @@
     <div>
     {% endif %}
     <div class="form-floating mb-3">
-        {% render_field form.description class="form-control form-control-sm w-100" style="height:10rem;resize:none" placeholder=form.description.label %}
+        {% render_field form.description class="form-control form-control-sm w-100" style="height:20rem;resize:none" placeholder=form.description.label %}
         <label for="{{ form.description.label }}">{{ form.description.label }}</label>
     </div>
 

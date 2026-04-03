@@ -1,7 +1,8 @@
 from .index import (
     IndexView,
 )
-from .strain import (
+
+from .breeder import (
     BreederIndexView,
     BreederView,
     BreederCreateView,
@@ -11,9 +12,10 @@ from .strain import (
     HxBreederDeleteView,
     HxBreederFilterView,
     HxBreederTranslationView,
+)
+from .strain import (
     HxStrainAddToStockView,
     HxStrainDeleteView,
-    HxStrainFilterView,
     HxStrainRemoveFromStockView,
     HxStrainTranslationView,
     StrainAddToStockView,

@@ -284,6 +284,8 @@ AGE_GATE_REJECTED_URL = env('GROW_AGE_GATE_REJECTED_URL')
 COOKIES_CONSENT_REQUIRED = env.bool('GROW_COOKIES_CONSENT_REQUIRED')
 COOKIES_CONSENT_NAME = env('GROW_COOKIES_CONSENT_NAME')
 
+SESSION_COOKIE_NAME = 'grow_sessionid'
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
 # load local config
 _local_settings_path = BASE_DIR / 'django_project' / 'local'

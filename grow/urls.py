@@ -2,13 +2,22 @@ from django.urls import path
 
 from . import settings
 from .views.index import IndexView
-from .views.strain import (
+
+from .views.breeder import (
     BreederIndexView,
     BreederView,
     BreederCreateView,
     BreederDeleteView,
     BreederUpdateView,
     BreederTranslationView,
+    HxBreederDeleteView,
+    HxBreederFilterView,
+    HxBreederTranslationView,
+    HxStrainFilterView,
+)
+
+from .views.strain import (
+
     StrainAddToStockView,
     StrainAddToStock2View,
 
@@ -23,11 +32,7 @@ from .views.strain import (
     StrainTranslationView,
     StrainUpdateView,
     StrainView,
-    HxBreederDeleteView,
-    HxBreederFilterView,
-    HxBreederTranslationView,
     HxStrainDeleteView,
-    HxStrainFilterView,
     HxStrainAddToStockView,
     HxStrainAddToStock2View,
     HxStrainRemoveFromStockView,
@@ -103,6 +108,24 @@ from .views.utils import HxSelectDateDaysSanitizeView
 
 app_name = "grow"
 
+breeder_patterns = [
+     # Views for creating, updating, deleting Breeders
+    path("breeder/create/", BreederCreateView.as_view(), name="breeder-create"),
+    path("breeder/update/<int:pk>/", BreederUpdateView.as_view(), name="breeder-update"),
+    path("breeder/delete/<int:pk>/", BreederDeleteView.as_view(), name="breeder-delete"),
+    path("breeder/translate/<int:pk>/",
+         BreederTranslationView.as_view(),
+         name="breeder-translate"),
+    path("__hx__/breeder/delete/<int:pk>", HxBreederDeleteView.as_view(), name="hx-breeder-delete"),
+    path("__hx__/breeder/filter-strains/<int:breeder_pk>/",
+         HxStrainFilterView.as_view(),
+         name="hx-strain-filter"),
+    path("__hx__/breeder/translation/<int:pk>/",
+         HxBreederTranslationView.as_view(),
+         name="hx-breeder-translation"),
+
+]
+
 strain_patterns = [
     path("", IndexView.as_view(), name="home"),
     # Views for Breeders and Strains details
@@ -110,13 +133,6 @@ strain_patterns = [
     path("strains/<slug:slug>/", BreederView.as_view(), name="breeder-detail"),
     path("strains/<slug:breeder_slug>/<slug:slug>/", StrainView.as_view(), name="strain-detail"),
 
-    # Views for creating, updating, deleting Breeders
-    path("breeder/create/", BreederCreateView.as_view(), name="breeder-create"),
-    path("breeder/update/<int:pk>/", BreederUpdateView.as_view(), name="breeder-update"),
-    path("breeder/delete/<int:pk>/", BreederDeleteView.as_view(), name="breeder-delete"),
-    path("breeder/translate/<int:pk>/",
-         BreederTranslationView.as_view(),
-         name="breeder-translate"),
 
      # Views for creating, updating, deleting Strains
     path("strain/create/<int:breeder_pk>",
@@ -152,13 +168,6 @@ strain_patterns = [
     path("__hx__/sanitize_date_day/<int:year>/<int:month>/",
          HxSelectDateDaysSanitizeView.as_view(),
          name="hx-sanitize-date-day"),
-    path("__hx__/breeder/delete/<int:pk>", HxBreederDeleteView.as_view(), name="hx-breeder-delete"),
-    path("__hx__/breeder/filter-strains/<int:breeder_pk>/",
-         HxStrainFilterView.as_view(),
-         name="hx-strain-search"),
-    path("__hx__/breeder/translation/<int:pk>/",
-         HxBreederTranslationView.as_view(),
-         name="hx-breeder-translation"),
     path("__hx__/strain/delete/<int:pk>", HxStrainDeleteView.as_view(), name="hx-strain-delete"),
     path("__hx__/strain/add_to_stock/<int:strain>/<int:feminized>/",
          HxStrainAddToStockView.as_view(),
@@ -342,6 +351,7 @@ growlog_patterns = [
 ]
 
 urlpatterns = [
+     *breeder_patterns,
      *strain_patterns,
      *location_patterns,
      *growlog_patterns,

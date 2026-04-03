@@ -6,7 +6,6 @@
 {% block head_title %}{{ grow_head_title }}{% endblock %}
 
 {% block content %}
-{% if use_bootstrap %}
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
     {% if GROW_IS_MAIN_APP%}
@@ -18,7 +17,6 @@
         <li class="breadcrumb-item active">{% translate "Strains" %}</li>
     </ol>
 </nav>
-{% endif %}
 
 <h1>Breeders</h1>
 <p>
@@ -34,7 +32,6 @@
         method="post"
     >
         {% csrf_token %}
-        {% if use_bootstrap %}
         <div class="input-group">
             <label for="{{ strain_search_form.search_query.id_for_label }}" class="form-label visually-hidden">
                 {{ strain_search_form.search_query.label }}
@@ -46,12 +43,6 @@
                 <i class="bi bi-search"></i>
                 <span class="visually-hidden">{% translate "Search strains" %}</span>
         </div>
-        {% else %}
-        {% render_field strain_search_form.search_query placeholder=strain_search_form.search_query.label %}
-        <button type="submit">
-            <label for="{{ strain_search_form.search_query.id_for_label }}">{% translate "Search strains..." %}</label>
-        </button>
-        {% endif %}
     </form>
 </div>
 
@@ -66,25 +57,20 @@
         class="mb-3"
     >
         {% csrf_token %}
-        {% if use_bootstrap %}
         <label for="{{ breeder_filter_form.search_query.id_for_label }}" class="form-label visually-hidden">
             {{ breeder_filter_form.search_query.label }}
         </label>
         {% render_field breeder_filter_form.search_query placeholder=breeder_filter_form.search_query.label class="form-control" %}
-
-        {% else %}
-        {% render_field breeder_filter_form.search_query placeholder=breeder_filter_form.search_query.label %}
-        {% endif %}
     </form>
 </div>
 
 <div class="mb-3" id="breeder-overview-div">
     <p>{{ labels }}</p>
 
-<table {% if use_bootstrap %}class="table table-hover"{% endif %} id="breeder-overview-table">
+<table class="table table-hover" id="breeder-overview-table">
 
     <thead>
-        <tr class="{% if use_bootstrap %}table-success{% endif %}">
+        <tr class="table-success">
             <th>{% translate "Name" %}</th>
             <th>{% translate "Strains" %}</th>
             <th>{% translate "Growlogs" %}</th>
@@ -116,10 +102,10 @@
             </th>
         </tr>
     </thead>
-    <tbody {% if use_bootstrap %}class="table-group-divider"{% endif %}>
+    <tbody class="table-group-divider">
         {% for breeder, breeder_id, breeder_label in breeders_id %}
         {% if breeder_id and group_breeders %}
-            <tr class="{% if use_bootstrap %}table-secondary{% endif %}" id="{{ breeder_id }}">
+            <tr class="table-secondary" id="{{ breeder_id }}">
                 <th colspan=4>
                     {{ breeder_label }}
                 </th>
@@ -134,7 +120,7 @@
             <td>{{ breeder.strain_count }}</td>
             <td>{{ breeder.growlog_count }}</td>
             <td>
-            {% if use_bootstrap %}
+
                 <div class="text-end me-1">
                 {% if breeder.id in breeders_allowed_to_edit %}
                     <a href="{% url 'grow:breeder-update' pk=breeder.pk %}"
@@ -181,19 +167,7 @@
                     ><i class="bi bi-x-square"></i></a>
                 {% endif %}
 
-            </div>
-            {% else %}
-                {% if breeder.id in breeders_allowed_to_edit %}
-                <a href="{% url 'grow:breeder-update' pk=breeder.pk %}">
-                    {% translate "Edit" %}
-                </a>
-                {% endif %}
-                {% if breeder.id in breeders_allowed_to_delete %}
-                <a href="{% url 'grow:breeder-update' pk=breeder.pk %}">
-                    {% translate "Delete" %}
-                </a>
-                {% endif %}
-            {% endif %}
+                </div>
             </td>
         </tr>
         {% endfor %}
@@ -201,17 +175,3 @@
 </table>
 </div>
 {% endblock content %}
-
-{% block extra_body %}
-{% if use_bootstrap %}
-<div id="modal-here"
-    class="modal fade"
-    style="display: none"
-    aria-hidden="false"
-    tabindex=-1>
-    <div class="modal-dialog modal-lg modal<p>{{ labels }}</p>-dialog-centerd" role="document">
-        <div class="modal-content"></div>
-    </div>
-</div>
-{% endif %}
-{% endblock extra_body %}

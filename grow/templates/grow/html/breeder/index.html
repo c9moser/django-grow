@@ -1,0 +1,110 @@
+{% extends base_template %}
+{% load i18n widget_tweaks %}
+
+
+{% block title %}{{ grow_site_title }}: <span class="{% if use_bootstrap %}fs-2{% endif %}">{% translate "Breeder overview" %}</span>{% endblock title %}
+{% block head_title %}{{ grow_head_title }}{% endblock %}
+
+{% block content %}
+
+<h1>Breeders</h1>
+<p>
+{% blocktranslate %}This is an overview of all breeders in the system. You can filter the breeders by typing in the filter field below.{% endblocktranslate %}
+</p>
+<p>
+{% blocktranslate %}Currently there are {{ breeder_count }} breeders and {{ strain_count }} strains in the system.{% endblocktranslate %}
+</p>
+
+<div class="mb-2">
+    <form id="strain-search-form"
+        action="{% url 'grow:strain-search' %}"
+        method="post"
+    >
+        {% csrf_token %}
+        {% render_field strain_search_form.search_query placeholder=strain_search_form.search_query.label %}
+        <button type="submit">
+            <label for="{{ strain_search_form.search_query.id_for_label }}">{% translate "Search strains..." %}</label>
+        </button>
+    </form>
+</div>
+
+
+<div>
+    <form id="breeder-filter-form"
+        method="post"
+        hx-post="{% url 'grow:hx-breeder-filter' %}"
+        hx-trigger="keyup changed delay:500ms"
+        hx-target="#breeder-overview-div"
+        hx-swap="innerHTML"
+        class="mb-3"
+    >
+        {% csrf_token %}
+        {% render_field breeder_filter_form.search_query placeholder=breeder_filter_form.search_query.label %}
+    </form>
+</div>
+
+<div class="mb-3" id="breeder-overview-div">
+    <p>{{ labels }}</p>
+
+<table id="breeder-overview-table">
+    <thead>
+        <tr>
+            <th>{% translate "Name" %}</th>
+            <th>{% translate "Strains" %}</th>
+            <th>{% translate "Growlogs" %}</th>
+            <th>
+                {% if allowed_to_add_breeder %}
+                <a href="{% url 'grow:breeder-create' %}">{% translate "Add breeder" %}</a>
+                {% endif %}
+            </th>
+        </tr>
+    </thead>
+    <tbody {% if use_bootstrap %}class="table-group-divider"{% endif %}>
+        {% for breeder, breeder_id, breeder_label in breeders_id %}
+        {% if breeder_id and group_breeders %}
+            <tr id="breeder-{{ breeder_id }}">
+                <th colspan=4>
+                    {{ breeder_label }}
+                </th>
+            </tr>
+        {% endif %}
+        <tr>
+            <td>
+                <a href="{% url "grow:breeder-detail" slug=breeder.slug %}"
+                    {% if breeder_id and not group_breeders %}id="{{ breeder_id}}"{% endif %}
+                >{{ breeder.name }}</a>
+            </td>
+            <td>{{ breeder.strain_count }}</td>
+            <td>{{ breeder.growlog_count }}</td>
+            <td>
+                {% if breeder.id in breeders_allowed_to_edit %}
+                <a href="{% url 'grow:breeder-update' pk=breeder.pk %}">
+                    {% translate "Edit" %}
+                </a>
+                {% endif %}
+                {% if breeder.id in breeders_allowed_to_delete %}
+                <a href="{% url 'grow:breeder-update' pk=breeder.pk %}">
+                    {% translate "Delete" %}
+                </a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endblock content %}
+
+{% block extra_body %}
+{% if use_bootstrap %}
+<div id="modal-here"
+    class="modal fade"
+    style="display: none"
+    aria-hidden="false"
+    tabindex=-1>
+    <div class="modal-dialog modal-lg modal<p>{{ labels }}</p>-dialog-centerd" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div>
+{% endif %}
+{% endblock extra_body %}

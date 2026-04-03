@@ -9,18 +9,20 @@ GROW_HEAD_TITLE = getattr(settings, "GROW_HEAD_TITLE", getattr(settings, "HEAD_T
 GROW_IS_MAIN_APP = getattr(settings, "GROW_IS_MAIN_APP", False)
 
 GROW_BUILTIN_BREEDER_TEMPLATES = {
-    'grow/breeder/create': 'grow/breeder/create.html',
-    'grow/breeder/delete': 'grow/breeder/delete.html',
-    'grow/breeder/detail': 'grow/breeder/detail.html',
-    'grow/breeder/translation': 'grow/breeder/translation.html',
-    'grow/breeder/hx/delete': 'grow/breeder/hx/delete.html',
-    'grow/breeder/hx/filter': 'grow/breeder/hx/filter.html',
-    'grow/breeder/hx/translation': 'grow/breeder/hx/translation.html',
-    'grow/breeder/update': 'grow/breeder/update.html',
-    'grow/breeder/form': 'grow/breeder/form.html',
+    'grow/breeder': 'grow/html/breeder/index.html',
+    'grow/breeder/create': 'grow/html/breeder/create.html',
+    'grow/breeder/delete': 'grow/html/breeder/delete.html',
+    'grow/breeder/detail': 'grow/html/breeder/detail.html',
+    'grow/breeder/translation': 'grow/html/breeder/translation.html',
+    'grow/breeder/hx/delete': 'grow/html/breeder/hx/delete.html',
+    'grow/breeder/hx/filter': 'grow/html/breeder/hx/filter.html',
+    'grow/breeder/hx/translation': 'grow/html/breeder/hx/translation.html',
+    'grow/breeder/update': 'grow/html/breeder/update.html',
+    'grow/breeder/form': 'grow/html/breeder/form.html',
 }
 
 GROW_BUILTIN_BS_BREEDER_TEMPLATES = {
+    'grow/breeder': 'grow/bootstrap/breeder/index.html',
     'grow/breeder/create': 'grow/bootstrap/breeder/create.html',
     'grow/breeder/delete': GROW_BUILTIN_BREEDER_TEMPLATES['grow/breeder/delete'],
     'grow/breeder/detail': GROW_BUILTIN_BREEDER_TEMPLATES['grow/breeder/detail'],
@@ -28,43 +30,43 @@ GROW_BUILTIN_BS_BREEDER_TEMPLATES = {
     'grow/breeder/hx/delete': GROW_BUILTIN_BREEDER_TEMPLATES['grow/breeder/hx/delete'],
     'grow/breeder/hx/filter': GROW_BUILTIN_BREEDER_TEMPLATES['grow/breeder/hx/filter'],
     'grow/breeder/hx/translation': GROW_BUILTIN_BREEDER_TEMPLATES['grow/breeder/hx/translation'],
-    'grow/breeder/update': GROW_BUILTIN_BREEDER_TEMPLATES['grow/breeder/update'],
+    'grow/breeder/update': 'grow/bootstrap/breeder/update.html',
     'grow/breeder/form': 'grow/bootstrap/breeder/form.html',
 }
 
 GROW_BUILTIN_STRAIN_TEMPLATES = {
     # strain templates
-    'grow/strain': 'grow/strain/index.html',
-    'grow/strain/create': 'grow/strain/strain/create.html',
-    'grow/strain/delete': 'grow/strain/strain/delete.html',
-    'grow/strain/gallery': 'grow/strain/strain/gallery/gallery.html',
-    'grow/strain/gallery/slides': 'grow/strain/strain/gallery/slides.html',
-    'grow/strain/hx/delete': 'grow/strain/strain/hx/delete.html',
-    'grow/strain/hx/search': 'grow/strain/strain/hx/search.html',
-    'grow/strain/strain': 'grow/strain/strain/detail.html',
-    'grow/strain/strain/add_to_stock': 'grow/strain/strain/add_to_stock.html',
-    'grow/strain/strain/add_to_stock2': 'grow/strain/strain/add_to_stock2.html',
-    'grow/strain/strain/comment_create': 'grow/strain/strain/comment/create.html',
-    'grow/strain/strain/comment_update': 'grow/strain/strain/comment/update.html',
-    'grow/strain/strain/form': 'grow/strain/strain/form.html',
-    'grow/strain/strain/hx/add_to_stock': 'grow/strain/strain/hx/add_to_stock.html',
-    'grow/strain/strain/hx/add_to_stock2': 'grow/strain/strain/hx/add_to_stock2.html',
-    'grow/strain/strain/hx/add_to_stock_dialog': 'grow/strain/strain/hx/dialog.html',
-    'grow/strain/strain/hx/filter': 'grow/strain/strain/hx/filter.html',
-    'grow/strain/strain/hx/growlogs': 'grow/strain/strain/hx/growlogs.html',
-    'grow/strain/strain/hx/translation': 'grow/strain/strain/hx/translation.html',
-    'grow/strain/strain/in_stock/hx/add': 'grow/strain/strain/hx/add_to_stock.html',
-    'grow/strain/strain/in_stock/hx/remove': 'grow/strain/strain/hx/remove_from_stock.html',
-    'grow/strain/strain/in_stock/hx/remove_invalid': 'grow/strain/strain/hx/remove_from_stock_invalid.html',
-    'grow/strain/strain/in_stock/hx/notes': 'grow/strain/strain/hx/in_stock_notes.html',
-    'grow/strain/strain/in_stock/hx/update': 'grow/strain/strain/hx/in_stock_update.html',
+    'grow/strain': 'grow/html/strain/index.html',
+    'grow/strain/create': 'grow/html/strain/create.html',
+    'grow/strain/delete': 'grow/html/strain/delete.html',
+    'grow/strain/gallery': 'grow/html/strain/gallery/gallery.html',
+    'grow/strain/gallery/slides': 'grow/html/strain/gallery/slides.html',
+    'grow/strain/hx/delete': 'grow/html/strain/hx/delete.html',
+    'grow/strain/hx/search': 'grow/html/strain/hx/search.html',
+    'grow/strain/strain': 'grow/html/strain/strain/detail.html',
+    'grow/strain/strain/add_to_stock': 'grow/html/strain/strain/add_to_stock.html',
+    'grow/strain/strain/add_to_stock2': 'grow/html/strain/strain/add_to_stock2.html',
+    'grow/strain/strain/comment_create': 'grow/html/strain/strain/comment/create.html',
+    'grow/strain/strain/comment_update': 'grow/html/strain/strain/comment/update.html',
+    'grow/strain/strain/form': 'grow/html/strain/strain/form.html',
+    'grow/strain/strain/hx/add_to_stock': 'grow/html/strain/strain/hx/add_to_stock.html',
+    'grow/strain/strain/hx/add_to_stock2': 'grow/html/strain/strain/hx/add_to_stock2.html',
+    'grow/strain/strain/hx/add_to_stock_dialog': 'grow/html/strain/strain/hx/dialog.html',
+    'grow/strain/strain/hx/filter': 'grow/html/strain/strain/hx/filter.html',
+    'grow/strain/strain/hx/growlogs': 'grow/html/strain/strain/hx/growlogs.html',
+    'grow/strain/strain/hx/translation': 'grow/html/strain/strain/hx/translation.html',
+    'grow/strain/strain/in_stock/hx/add': 'grow/html/strain/strain/hx/add_to_stock.html',
+    'grow/strain/strain/in_stock/hx/remove': 'grow/html/strain/strain/hx/remove_from_stock.html',
+    'grow/strain/strain/in_stock/hx/remove_invalid': 'grow/html/strain/strain/hx/remove_from_stock_invalid.html',
+    'grow/strain/strain/in_stock/hx/notes': 'grow/html/strain/strain/hx/in_stock_notes.html',
+    'grow/strain/strain/in_stock/hx/update': 'grow/html/strain/strain/hx/in_stock_update.html',
 
-    'grow/strain/strain/image_upload': 'grow/strain/strain/image/upload.html',
-    'grow/strain/strain/remove_from_stock': 'grow/strain/strain/remove_from_stock.html',
-    'grow/strain/strain/remove_from_stock_invalid': 'grow/strain/strain/remove_from_stock_invalid.html',
-    'grow/strain/strain_search_results': 'grow/strain/strain/search_results.html',
-    'grow/strain/strain/translation': 'grow/strain/strain/translation.html',
-    'grow/strain/strain/update': 'grow/strain/strain/update.html',
+    'grow/strain/strain/image_upload': 'grow/html/strain/strain/image/upload.html',
+    'grow/strain/strain/remove_from_stock': 'grow/html/strain/strain/remove_from_stock.html',
+    'grow/strain/strain/remove_from_stock_invalid': 'grow/html/strain/strain/remove_from_stock_invalid.html',
+    'grow/strain/strain_search_results': 'grow/html/strain/strain/search_results.html',
+    'grow/strain/strain/translation': 'grow/html/strain/strain/translation.html',
+    'grow/strain/strain/update': 'grow/html/strain/strain/update.html',
 }
 
 GROW_BUILTIN_BS_STRAIN_TEMPLATES = {
@@ -105,13 +107,13 @@ GROW_BUILTIN_BS_STRAIN_TEMPLATES = {
 
 GROW_BUILTIN_LOCATION_TEMPLATES = {
     # location templates
-    'grow/location/index': 'grow/location/index_bs.html',
-    'grow/location/create': 'grow/location/create_bs.html',
-    'grow/location/update': 'grow/location/update_bs.html',
-    'grow/location/delete': 'grow/location/delete_bs.html',
-    'grow/location/detail': 'grow/location/detail_bs.html',
-    'grow/location/hx-type-change': 'grow/location/hx_locationtype_change_bs.html',
-    'grow/location/hx-delete': 'grow/location/hx_delete_bs.html',
+    'grow/location/index': 'grow/html/location/index_bs.html',
+    'grow/location/create': 'grow/html/location/create_bs.html',
+    'grow/location/update': 'grow/html/location/update_bs.html',
+    'grow/location/delete': 'grow/html/location/delete_bs.html',
+    'grow/location/detail': 'grow/html/location/detail_bs.html',
+    'grow/location/hx-type-change': 'grow/html/location/hx_locationtype_change_bs.html',
+    'grow/location/hx-delete': 'grow/html/location/hx_delete_bs.html',
 }
 
 GROW_BUILTIN_BS_LOCATION_TEMPLATES = {
@@ -126,16 +128,16 @@ GROW_BUILTIN_BS_LOCATION_TEMPLATES = {
 }
 
 GROW_BUILTIN_SIS_TEMPLATES = {
-    'grow/seeds_in_stock': 'grow/seeds_in_stock/my_seeds_in_stock.html',
-    'grow/seeds_in_stock/add': 'grow/seeds_in_stock/add.html',
-    'grow/seeds_in_stock/remove': 'grow/seeds_in_stock/remove.html',
-    'grow/seeds_in_stock/remove_invalid': 'grow/seeds_in_stock/remove_invalid.html',
-    'grow/seeds_in_stock/hx/add': 'grow/seeds_in_stock/hx/add.html',
-    'grow/seeds_in_stock/hx/remove': 'grow/seeds_in_stock/hx/remove.html',
-    'grow/seeds_in_stock/hx/remove_invalid': 'grow/seeds_in_stock/hx/remove_invalid.html',
-    'grow/seeds_in_stock/hx/info': 'grow/seeds_in_stock/hx/info.html',
-    'grow/seeds_in_stock/hx/dialog': 'grow/seeds_in_stock/hx/dialog.html',
-    'grow/seeds_in_stock/hx/info': 'grow/seeds_in_stock/hx/info.html',
+    'grow/seeds_in_stock': 'grow/html/seeds_in_stock/my_seeds_in_stock.html',
+    'grow/seeds_in_stock/add': 'grow/html/seeds_in_stock/add.html',
+    'grow/seeds_in_stock/remove': 'grow/html/seeds_in_stock/remove.html',
+    'grow/seeds_in_stock/remove_invalid': 'grow/html/seeds_in_stock/remove_invalid.html',
+    'grow/seeds_in_stock/hx/add': 'grow/html/seeds_in_stock/hx/add.html',
+    'grow/seeds_in_stock/hx/remove': 'grow/html/seeds_in_stock/hx/remove.html',
+    'grow/seeds_in_stock/hx/remove_invalid': 'grow/html/seeds_in_stock/hx/remove_invalid.html',
+    'grow/seeds_in_stock/hx/info': 'grow/html/seeds_in_stock/hx/info.html',
+    'grow/seeds_in_stock/hx/dialog': 'grow/html/seeds_in_stock/hx/dialog.html',
+    'grow/seeds_in_stock/hx/info': 'grow/html/seeds_in_stock/hx/info.html',
 }
 
 GROW_BUILTIN_BS_SIS_TEMPLATES = {
@@ -152,44 +154,44 @@ GROW_BUILTIN_BS_SIS_TEMPLATES = {
 }
 
 GROW_BUILTIN_GROWLOG_TEMPLATES = {
-    'grow/growlog/create': 'grow/growlog/growlog/create.html',
-    'grow/growlog/delete': 'grow/growlog/growlog/delete.html',
-    'grow/growlog/detail': 'grow/growlog/growlog/detail.html',
-    'grow/growlog/update': 'grow/growlog/growlog/update.html',
-    'grow/growlog/form': 'grow/growlog/growlog/form.html',
+    'grow/growlog/create': 'grow/html/growlog/growlog/create.html',
+    'grow/growlog/delete': 'grow/html/growlog/growlog/delete.html',
+    'grow/growlog/detail': 'grow/html/growlog/growlog/detail.html',
+    'grow/growlog/update': 'grow/html/growlog/growlog/update.html',
+    'grow/growlog/form': 'grow/html/growlog/growlog/form.html',
 
-    'grow/growlog/entry/image_delete': 'grow/growlog/entry/image_delete.html',
-    'grow/growlog/entry/image_upload': 'grow/growlog/entry/image_upload.html',
-    'grow/growlog/entry/create': 'grow/growlog/entry/form.html',
-    'grow/growlog/entry/update': 'grow/growlog/entry/form.html',
-    'grow/growlog/entry/delete': 'grow/growlog/entry/delete.html',
-    'grow/growlog/entry/form': 'grow/growlog/entry/form.html',
-    'grow/growlog/entry/image/upload': 'grow/growlog/entry/image/upload.html',
-    'grow/growlog/entry/image/delete': 'grow/growlog/entry/image/delete.html',
-    'grow/growlog/entry/image/update': 'grow/growlog/entry/image/update.html',
-    'grow/growlog/entry/image/hx/delete': 'grow/growlog/entry/image/hx/delete.html',
-    'grow/growlog/entry/image/hx/upload': 'grow/growlog/entry/image/hx/upload.html',
-    'grow/growlog/entry/image/hx/update': 'grow/growlog/entry/image/hx/update.html',
-    'grow/growlog/entry/hx/delete': 'grow/growlog/entry/hx/delete.html',
-    'grow/growlog/entry/hx/create': 'grow/growlog/entry/hx/form_dialog.html',
-    'grow/growlog/entry/hx/update': 'grow/growlog/entry/hx/form_dialog.html',
-    'grow/growlog/forbidden': 'grow/growlog/forbidden.html',
-    'grow/growlog/hx/active_info' : 'grow/growlog/hx/active_info.html',
-    'grow/growlog/hx/finished_info' : 'grow/growlog/hx/finished_info.html',
-    'grow/growlog/hx/strains_grown': 'grow/growlog/hx/strains_grown.html',
-    'grow/growlog/growlog/hx/entries': 'grow/growlog/growlog/hx/entries.html',
-    'grow/growlog/growlog/hx/seeds_add': 'grow/growlog/growlog/hx/add_seeds.html',
-    'grow/growlog/growlog/hx/description': 'grow/growlog/growlog/hx/description.html',
-    'grow/growlog/growlog/hx/edit_notes': 'grow/growlog/growlog/hx/edit_notes.html',
-    'grow/growlog/growlog/hx/notes': 'grow/growlog/growlog/hx/notes.html',
-    'grow/growlog/growlog/hx/edit_description': 'grow/growlog/growlog/hx/edit_description.html',
-    'grow/growlog/growlog/hx/strains':  'grow/growlog/growlog/hx/strains.html',
-    'grow/growlog/growlog/hx/add_plants':  'grow/growlog/growlog/hx/add_plants.html',
-    'grow/growlog/growlog/hx/remove_plants':  'grow/growlog/growlog/hx/remove_plants.html',
-    'grow/growlog/growlog/hx/add_strain':  'grow/growlog/growlog/hx/add_strain.html',
-    'grow/growlog/growlog/hx/delete_strain':  'grow/growlog/growlog/hx/delete_strain.html',
-    'grow/growlog/my_growlogs': 'grow/growlog/my_growlogs.html',
-    'grow/growlog/strains_grown': 'grow/growlog/strains_grown.html',
+    'grow/growlog/entry/image_delete': 'grow/html/growlog/entry/image_delete.html',
+    'grow/growlog/entry/image_upload': 'grow/html/growlog/entry/image_upload.html',
+    'grow/growlog/entry/create': 'grow/html/growlog/entry/form.html',
+    'grow/growlog/entry/update': 'grow/html/growlog/entry/form.html',
+    'grow/growlog/entry/delete': 'grow/html/growlog/entry/delete.html',
+    'grow/growlog/entry/form': 'grow/html/growlog/entry/form.html',
+    'grow/growlog/entry/image/upload': 'grow/html/growlog/entry/image/upload.html',
+    'grow/growlog/entry/image/delete': 'grow/html/growlog/entry/image/delete.html',
+    'grow/growlog/entry/image/update': 'grow/html/growlog/entry/image/update.html',
+    'grow/growlog/entry/image/hx/delete': 'grow/html/growlog/entry/image/hx/delete.html',
+    'grow/growlog/entry/image/hx/upload': 'grow/html/growlog/entry/image/hx/upload.html',
+    'grow/growlog/entry/image/hx/update': 'grow/html/growlog/entry/image/hx/update.html',
+    'grow/growlog/entry/hx/delete': 'grow/html/growlog/entry/hx/delete.html',
+    'grow/growlog/entry/hx/create': 'grow/html/growlog/entry/hx/form_dialog.html',
+    'grow/growlog/entry/hx/update': 'grow/html/growlog/entry/hx/form_dialog.html',
+    'grow/growlog/forbidden': 'grow/html/growlog/forbidden.html',
+    'grow/growlog/hx/active_info' : 'grow/html/growlog/hx/active_info.html',
+    'grow/growlog/hx/finished_info' : 'grow/html/growlog/hx/finished_info.html',
+    'grow/growlog/hx/strains_grown': 'grow/html/growlog/hx/strains_grown.html',
+    'grow/growlog/growlog/hx/entries': 'grow/html/growlog/growlog/hx/entries.html',
+    'grow/growlog/growlog/hx/seeds_add': 'grow/html/growlog/growlog/hx/add_seeds.html',
+    'grow/growlog/growlog/hx/description': 'grow/html/growlog/growlog/hx/description.html',
+    'grow/growlog/growlog/hx/edit_notes': 'grow/html/growlog/growlog/hx/edit_notes.html',
+    'grow/growlog/growlog/hx/notes': 'grow/html/growlog/growlog/hx/notes.html',
+    'grow/growlog/growlog/hx/edit_description': 'grow/html/growlog/growlog/hx/edit_description.html',
+    'grow/growlog/growlog/hx/strains':  'grow/html/growlog/growlog/hx/strains.html',
+    'grow/growlog/growlog/hx/add_plants':  'grow/html/growlog/growlog/hx/add_plants.html',
+    'grow/growlog/growlog/hx/remove_plants':  'grow/html/growlog/growlog/hx/remove_plants.html',
+    'grow/growlog/growlog/hx/add_strain':  'grow/html/growlog/growlog/hx/add_strain.html',
+    'grow/growlog/growlog/hx/delete_strain':  'grow/html/growlog/growlog/hx/delete_strain.html',
+    'grow/growlog/my_growlogs': 'grow/html/growlog/my_growlogs.html',
+    'grow/growlog/strains_grown': 'grow/html/growlog/strains_grown.html',
 }
 
 GROW_BUILTIN_BS_GROWLOG_TEMPLATES = {
@@ -234,9 +236,9 @@ GROW_BUILTIN_BS_GROWLOG_TEMPLATES = {
 }
 
 GROW_BUILTIN_USER_TEMPLATES = {
-    'grow/user/hx-add_seeds_to_stock': 'grow/user/hx_add_seeds_to_stock.html',
-    'grow/user/hx-remove_seeds_from_stock': 'grow/user/hx_remove_seeds_from_stock.html',
-    'grow/user/info': 'grow/user/info.html',
+    'grow/user/hx-add_seeds_to_stock': 'grow/html/user/hx_add_seeds_to_stock.html',
+    'grow/user/hx-remove_seeds_from_stock': 'grow/html/user/hx_remove_seeds_from_stock.html',
+    'grow/user/info': 'grow/html/user/info.html',
 }
 
 GROW_BUILTIN_BS_USER_TEMPLATES = {
@@ -246,7 +248,8 @@ GROW_BUILTIN_BS_USER_TEMPLATES = {
 }
 
 GROW_BUILTIN_UTILS_TEMPLATES = {
-    'grow/utils/hx_select_date_days_sanitize': 'grow/utils/hx_select_date_days_sanitize.html',
+    'grow/utils/hx_select_date_days_sanitize': 'grow/html/utils/hx_select_date_days_sanitize.html',
+    'grow/utils/paginator': 'grow/html/utils/paginator.html',
 }
 
 GROW_BUILTIN_BS_UTILS_TEMPLATES = {
@@ -255,7 +258,7 @@ GROW_BUILTIN_BS_UTILS_TEMPLATES = {
 
 GROW_BUILTIN_TEMPLATES = {
     # home
-    'grow/index': 'grow/index/index.html',
+    'grow/index': 'grow/html/index/index.html',
 
 
 }

@@ -1,0 +1,50 @@
+{% extends base_template %}
+
+{% load i18n %}
+
+{% block title %}{{ grow_site_title }} <span class="{% if use_bootstrap %}fs-2{% endif %}">{% translate "Breeder translation" %}</span>{% endblock title %}
+{% block head_title %}{{ grow_head_title }} - {% translate "Breeder translation" %}{% endblock head_title %}
+{% block head_description %}{% translate "Translate breeder information into another language." %}{% endblock head_description %}
+
+{% block content %}
+<h1>{% translate "Breeder translation" %}</h1>
+<p>
+{% blocktranslate with name=breeder.name %}Translate the breeder <i>{{ name }}</i> into another language.{% endblocktranslate %}
+</p>
+<form method="post" id="translation-form">
+    <div id="form-fields">
+        {% csrf_token %}
+        {{ form.as_p }}
+    </div>
+    <div class="form-buttons" id="form-buttons">
+        {% block form_buttons %}{% endblock %}
+    </div>
+</form>
+
+{% endblock content %}
+
+{% block body_scripts %}
+{% endblock body_scripts %}
+
+{% block scripts %}
+<script>
+    function setup() {
+        const langCode = document.getElementById("id_language_code");
+        langCode.addEventListener("change", translationLanguageChanged);
+        console.log("Setup complete");
+    }
+
+    function translationLanguageChanged() {
+        var langCode = document.getElementById("{{ form.language_code.id_for_label }}");
+        const hxUrl = "{% url 'grow:hx-breeder-translation' pk=breeder.pk %}?lang_code=" + encodeURIComponent(langCode.value);
+        langCode.setAttribute('hx-get', hxUrl);
+        langCode.setAttribute('hx-target', '#form-fields');
+        langCode.setAttribute('hx-swap', 'innerHTML');
+        langCode.setAttribute('hx-trigger', 'click');
+        htmx.process( langCode );
+        htmx.on(langCode, 'click', translationLanguageChanged);
+        langCode.click();
+        htmx.off(langCode, 'click', translationLanguageChanged);
+    }
+</script>
+{% endblock scripts%}
