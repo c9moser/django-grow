@@ -23,13 +23,17 @@ class LocationIndexView(LoginRequiredMixin, BaseView):
 
 class LocationCreateView(LoginRequiredMixin, BaseView):
     template_name = settings.GROW_TEMPLATES['grow/location/create']
+    form_template_name = settings.GROW_TEMPLATES['grow/location/form']
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['location_pk'] = 0
+        context.setdefault('form_template', self.form_template_name)
+        context.setdefault('form', LocationForm())
+        return context
 
     def get(self, request: HttpRequest) -> HttpResponse:
-        form = LocationForm()
-        return render(request, self.template_name, {
-            'form': form,
-            'location_pk': 0,
-        })
+        return render(request, self.template_name, self.get_context_data())
 
     def post(self, request: HttpRequest) -> HttpResponse:
         form = LocationForm(request.POST)
@@ -55,14 +59,12 @@ class LocationCreateView(LoginRequiredMixin, BaseView):
                                                latitude=form.cleaned_data.get('latitude', None))
             return redirect(reverse('grow:location-index'))
 
-        return render(request, self.template_name, {
-            'form': form,
-            'location_pk': 0,
-        })
+        return render(request, self.template_name, self.get_context_data(form=form))
 
 
 class LocationUpdateView(LoginRequiredMixin, BaseView):
     template_name = settings.GROW_TEMPLATES['grow/location/update']
+    form_template_name = settings.GROW_TEMPLATES['grow/location/form']
 
     def get(self, request: HttpRequest, pk: int) -> HttpResponse:
         location = Location.objects.get(pk=pk, owner=request.user)
@@ -90,6 +92,7 @@ class LocationUpdateView(LoginRequiredMixin, BaseView):
             'form': form,
             'location': location,
             'location_pk': location.pk,
+            'form_template': self.form_template_name,
         })
 
     def post(self, request: HttpRequest, pk: int) -> HttpResponse:
@@ -146,6 +149,7 @@ class LocationUpdateView(LoginRequiredMixin, BaseView):
             'form': form,
             'location': location,
             'location_pk': location.pk,
+            'form_template': self.form_template_name,
         })
 
 

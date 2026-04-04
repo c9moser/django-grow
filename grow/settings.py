@@ -114,6 +114,7 @@ GROW_BUILTIN_LOCATION_TEMPLATES = {
     'grow/location/update': 'grow/html/location/update.html',
     'grow/location/delete': 'grow/html/location/delete.html',
     'grow/location/detail': 'grow/html/location/detail.html',
+    'grow/location/form': 'grow/html/location/form.html',
     'grow/location/hx-type-change': 'grow/html/location/hx_locationtype_change.html',
     'grow/location/hx-delete': 'grow/html/location/hx_delete.html',
 }
@@ -125,6 +126,7 @@ GROW_BUILTIN_BS_LOCATION_TEMPLATES = {
     'grow/location/update': GROW_BUILTIN_LOCATION_TEMPLATES['grow/location/update'],
     'grow/location/delete': GROW_BUILTIN_LOCATION_TEMPLATES['grow/location/delete'],
     'grow/location/detail': GROW_BUILTIN_LOCATION_TEMPLATES['grow/location/detail'],
+    'grow/location/form': GROW_BUILTIN_LOCATION_TEMPLATES['grow/location/form'],
     'grow/location/hx-type-change': GROW_BUILTIN_LOCATION_TEMPLATES['grow/location/hx-type-change'],
     'grow/location/hx-delete': GROW_BUILTIN_LOCATION_TEMPLATES['grow/location/hx-delete'],
 }
