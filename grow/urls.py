@@ -14,7 +14,7 @@ from .views.breeder import (
     HxBreederFilterView,
     HxBreederTranslationView,
     HxBreederStrainsView,
-    HxStrainFilterView,
+    HxBreederStrainFilterView,
 )
 
 from .views.strain import (
@@ -118,8 +118,8 @@ breeder_patterns = [
          BreederTranslationView.as_view(),
          name="breeder-translate"),
     path("__hx__/breeder/delete/<int:pk>", HxBreederDeleteView.as_view(), name="hx-breeder-delete"),
-    path("__hx__/breeder/filter-strains/<int:breeder_pk>/",
-         HxStrainFilterView.as_view(),
+    path("__hx__/breeder/<int:breeder_pk>/filter-strains/",
+         HxBreederStrainFilterView.as_view(),
          name="hx-strain-filter"),
     path("__hx__/breeder/<int:pk>/strains", HxBreederStrainsView.as_view(), name="hx-breeder-strains"),
     path("__hx__/breeder/<int:pk>/translation/",
@@ -177,9 +177,6 @@ strain_patterns = [
     path("__hx__/strain/add_to_stock2/",
          HxStrainAddToStock2View.as_view(),
          name="hx-strain-add-to-stock2"),
-    path("__hx__/strain/filter/<int:breeder_pk>/",
-         HxStrainFilterView.as_view(),
-         name="hx-strain-filter"),
     path("__hx__/strain/remove_from_stock/<int:strain>/<int:feminized>/",
          HxStrainRemoveFromStockView.as_view(),
          name="hx-strain-remove-from-stock"),

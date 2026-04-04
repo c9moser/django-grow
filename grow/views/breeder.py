@@ -169,13 +169,17 @@ class HxBreederStrainsView(BaseView):
         else:
             strains = self.breeder.strains.all()
 
-        filter = self.request.GET.get(
-            'strains_filter',
+        filter = getattr(
+            self,
+            'filter',
             self.request.GET.get(
-                'filter',
-                self.request.GET.get('f', "")
+                'strains_filter',
+                self.request.GET.get(
+                    'filter',
+                    self.request.GET.get('f', "")
+                )
             )
-        )
+        ).strip()
 
         if filter:
             strains = strains.filter(name__icontains=filter)
@@ -599,40 +603,19 @@ class HxBreederTranslationView(LoginRequiredMixin, View):
         })
 
 
-class HxStrainFilterView(BaseView):
-    template_name = settings.GROW_TEMPLATES['grow/strain/strain/hx/filter']
+class HxBreederStrainFilterView(HxBreederStrainsView):
+    template_name = settings.GROW_TEMPLATES['grow/breeder/hx/strains']
 
     def post(self, request: HttpRequest, breeder_pk: int) -> HttpResponse:
         form = StrainFilterForm(request.POST)
         if form.is_valid():
-            search_query = form.cleaned_data['search_query']
+            self.filter = form.cleaned_data['search_query'].strip()
         else:
-            search_query = None
+            self.filter = None
 
-        breeder = get_object_or_404(Breeder, pk=breeder_pk)
+        if not self.filter:
+            delattr(self, 'filter')
 
-        if search_query:
-            strains = breeder.strains.filter(name__icontains=search_query).order_by(Lower("name"))
-        else:
-            strains = breeder.strains.all().order_by(Lower("name"))
+        self.breeder = get_object_or_404(Breeder, pk=breeder_pk)
 
-        if request.user.is_authenticated:
-            # TODO: add logic
-            strains_allowed_to_edit = [strain.id for strain in strains]
-            # TODO: add logic
-            strains_allowed_to_delete = [strain.id for strain in strains if strain.growlog_count == 0]  # noqa: E501
-            allowed_to_add_strains = True  # TODO: add logic
-            allowed_to_translate = True  # TODO: add logic
-        else:
-            strains_allowed_to_edit = []
-            strains_allowed_to_delete = []
-            allowed_to_add_strains = False
-
-        return render(request, self.template_name, context={
-            'breeder': breeder,
-            'strains': strains,
-            'strains_allowed_to_edit': strains_allowed_to_edit,
-            'strains_allowed_to_delete': strains_allowed_to_delete,
-            'allowed_to_add_strains': allowed_to_add_strains,
-            'allowed_to_translate': allowed_to_translate,
-        })
+        return render(request, self.template_name, context=self.get_context_data())
