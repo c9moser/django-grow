@@ -14,11 +14,7 @@
 {% if allowed_to_delete %}<a href="{% url 'grow:breeder-delete' pk=breeder.pk %}">{% translate "Delete breeder" %}</a>{% endif %}
 </div>
 
-
-
 <h1>{{ breeder.name }}</h1>
-
-
 <div>
     <div style="max-width:300px;float:left;margin-right:20px;" class="mb-3">
 {% if breeder.has_logo %}
@@ -103,62 +99,8 @@
 </form>
 
 <div id="strain-table-div">
-<table id="strain-table" style="width:100%;">
-    <thead>
-        <tr>
-            <th>{% translate "Strain" %}</th>
-            <th>{% translate "Genotype" %}</th>
-            <th>RFA</th>
-            <th>{% translate "Flowering time" %}</th>
-            <th>{% translate "Growlogs" %}</th>
-            <th>
-                {% if allowed_to_add_strains %}
-                <a href="{% url 'grow:strain-create' breeder_pk=breeder.pk %}">Add</a>
-                {% else %}
-                Actions
-                {% endif %}
-            </th>
-        </tr>
-    </thead>
-    <tbody class="{% if use_bootstrap %}table-group-divider{% endif %}">
-    {% for strain in breeder.strains_sorted %}
-        <tr id="strain_{{ breeder.slug }}_{{ strain.slug }}">
-            <td>
-                <a href="{% url 'grow:strain-detail' breeder_slug=breeder.slug slug=strain.slug %}"
-                    style="{% if strain.is_discontinued %}text-decoration: line-through;{% endif %}"
-                >
-                    {{ strain.name }}
-                </a>
-            </td>
-            <td>{{ strain.genotype.name }}</td>
-            <td>
-                {% if strain.is_regular %}R{% endif %}{% if strain.is_feminized %}F{% endif %}{% if strain.is_automatic %}A{% endif %}
-            </td>
-            <td>
-                {% if strain.flowering_time_days %}
-                {% blocktranslate with days=strain.flowering_time_days count n=strain.flowering_time_days%}{{ days }} day{% plural %}{{ days }} days{% endblocktranslate %}
-                {% else %}
-                {% translate "Unknown" %}
-                {% endif %}
-            </td>
-            <td>
-                {% blocktranslate with n_growlogs=strain.growlog_count count n=strain.growlog_count %}{{ n_growlogs }} Growlog{% plural %}{{ n_growlogs }} Growlogs{% endblocktranslate %}
-            </td>
-            <td>
-                {% if strain.id in strains_allowed_to_edit %}
-                <a href="{% url 'grow:strain-update' pk=strain.pk %}">
-                    Edit
-                </a>
-                {% endif %}
-                {% if strain.id in strains_allowed_to_delete %}
-                <a href="{% url 'grow:strain-delete' pk=strain.pk %}">
-                    Delete
-                </a>
-                {% endif %}
-            </td>
-        </tr>
-    {% endfor %}
-    </tbody>
-</table>
+    {% with 'grow/breeder/hx/strains' as strains_template %}
+        {% include strains_template %}
+    {% endwith %}
 </div>
 {% endblock content %}

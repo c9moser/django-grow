@@ -9,10 +9,10 @@ from django.utils.safestring import mark_safe
 from django.utils.translation import get_language, activate
 from grow.growapi.models import Breeder, Strain
 from grow.forms import BreederFilterForm, StrainSearchForm, StrainFilterForm, BreederTranslationForm
-from django.conf import settings as django_settings
 from django.db.models.functions import Lower
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView
+from django.db.models import Count
 from django.urls import reverse, reverse_lazy
 import logging
 import re
@@ -159,82 +159,179 @@ class HxBreederFilterView(BaseView):
         })
 
 
-class BreederView(BaseView):
+class HxBreederStrainsView(BaseView):
+    template_name = settings.GROW_TEMPLATES['grow/breeder/hx/strains']
+
+    def get_context_data(self, **kwargs):
+        context = kwargs
+        if hasattr(self, 'strains'):
+            strains = self.strains
+        else:
+            strains = self.breeder.strains.all()
+
+        filter = self.request.GET.get(
+            'strains_filter',
+            self.request.GET.get(
+                'filter',
+                self.request.GET.get('f', "")
+            )
+        )
+
+        if filter:
+            strains = strains.filter(name__icontains=filter)
+
+        sort = self.request.GET.get(
+            'strains_sort',
+            self.request.GET.get(
+                'sort',
+                self.request.GET.get('s', 'name')
+            )
+        )
+
+        ordering = self.request.GET.get(
+            'strains_order',
+            self.request.GET.get(
+                'order',
+                self.request.GET.get('o', 'asc')
+            )
+        )
+
+        if ordering in ['asc', 'ascending', 'a', '1']:
+            ordering = 'asc'
+        elif ordering in ['desc', 'descending', 'd', '0']:
+            ordering = 'desc'
+        else:
+            ordering = 'asc'
+
+        if sort == 'name':
+            if ordering == 'asc':
+                strains = strains.order_by(Lower("name"))
+            elif ordering == 'desc':
+                strains = strains.order_by(Lower("name").desc())
+        elif sort == 'genotype':
+            if ordering == 'asc':
+                strains = strains.order_by("genotype_data")
+            elif ordering == 'desc':
+                strains = strains.order_by("-genotype_data")
+        elif sort == 'flowering' or sort == 'flowering_time':
+            if ordering == 'asc':
+                strains = strains.order_by("flowering_time_days")
+            elif ordering == 'desc':
+                strains = strains.order_by("-flowering_time_days")
+        elif sort == 'growlogs' or sort == 'growlog_count':
+            if ordering == 'asc':
+                strains = strains.annotate(growlog_strains_count=Count('growlog_strains')).order_by("growlog_strains_count")
+            elif ordering == 'desc':
+                strains = strains.annotate(growlog_strains_count=Count('growlog_strains')).order_by("-growlog_strains_count")
+        else:
+            sort = 'name'
+            if ordering == 'asc':
+                strains = strains.order_by(Lower("name"))
+            elif ordering == 'desc':
+                strains = strains.order_by(Lower("name").desc())
+
+        strains_allowed_to_edit = []
+        for strain in strains:
+            strain.allowed_to_edit = False
+            strain.allowed_to_delete = False
+
+            if self.request.user.is_authenticated:
+                if self.request.user.is_staff or self.request.user.is_superuser:
+                    strains_allowed_to_edit.append(strain.id)
+                elif self.request.user.id == self.breeder.created_by.id:
+                    strains_allowed_to_edit.append(strain.id)
+                elif self.request.user.groups.filter(name='grow-breeder-editors').exists():
+                    strains_allowed_to_edit.append(strain.id)
+
+        strains_allowed_to_delete = []
+        for strain in strains:
+            if strain.growlog_count == 0 and self.request.user.is_authenticated:
+                if self.request.user.is_staff or self.request.user.is_superuser:
+                    strains_allowed_to_delete.append(strain.id)
+                elif self.request.user.id == self.breeder.created_by.id:
+                    strains_allowed_to_delete.append(strain.id)
+                elif self.request.user.groups.filter(name='grow-breeder-editors').exists():
+                    strains_allowed_to_delete.append(strain.id)
+
+        context.setdefault('breeder', self.breeder)
+        context.setdefault('strains_allowed_to_edit', strains_allowed_to_edit)
+        context.setdefault('strains_allowed_to_delete', strains_allowed_to_delete)
+        context.setdefault('strains', strains)
+        context.setdefault('strains_filter', filter)
+        context.setdefault('strains_sort', sort)
+        context.setdefault('strains_order', ordering)
+
+        return context
+
+    def get(self, request: HttpRequest, pk: int) -> HttpResponse:
+        self.breeder = get_object_or_404(Breeder, pk=pk)
+        return render(request, self.template_name, context=self.get_context_data())
+
+
+class BreederView(HxBreederStrainsView):
     template_name = settings.GROW_TEMPLATES['grow/breeder/detail']
 
+    def get_context_data(self, **kwargs):
+        context = HxBreederStrainsView.get_context_data(self, **kwargs)
+
+        language = get_language()
+
+        translation = self.breeder.get_translation(language)
+
+        allowed_to_edit = False
+        if self.request.user.is_authenticated:
+            if self.request.user.is_staff or self.request.user.is_superuser:
+                allowed_to_edit = True
+            elif self.request.user.id == self.breeder.created_by.id:
+                allowed_to_edit = True
+            elif self.request.user.groups.filter(name='grow-breeder-editors').exists():
+                allowed_to_edit = True
+
+        allowed_to_delete = False
+        if self.breeder.growlog_count == 0 and self.request.user.is_authenticated:
+            if self.request.user.is_staff or self.request.user.is_superuser:
+                allowed_to_delete = True
+            elif self.request.user.id == self.breeder.created_by.id:
+                allowed_to_delete = True
+            elif self.request.user.groups.filter(name='grow-breeder-editors').exists():
+                allowed_to_delete = True
+
+        allowed_to_translate = False
+        if self.request.user.is_authenticated:
+            if self.request.user.is_staff or self.request.user.is_superuser:
+                allowed_to_translate = True
+            elif self.request.user.id == self.breeder.created_by.id:
+                allowed_to_translate = True
+            elif self.request.user.groups.filter(name='grow-breeder-editors').exists():
+                allowed_to_translate = True
+            elif self.request.user.groups.filter(name='grow-translators').exists():
+                allowed_to_translate = True
+
+        allowed_to_add_strains = False
+        if self.request.user.is_authenticated:
+            if self.request.user.is_staff or self.request.user.is_superuser:
+                allowed_to_add_strains = True
+            elif self.request.user.id == self.breeder.created_by.id:
+                allowed_to_add_strains = True
+            elif self.request.user.groups.filter(name='grow-breeder-editors').exists():
+                allowed_to_add_strains = True
+            elif self.request.user.groups.filter(name='grow-strain-creators').exists():
+                allowed_to_add_strains = True
+
+        filter_strains_form = StrainFilterForm()
+
+        context.setdefault('allowed_to_edit', allowed_to_edit)
+        context.setdefault('allowed_to_delete', allowed_to_delete)
+        context.setdefault('allowed_to_translate', allowed_to_translate)
+        context.setdefault('allowed_to_add_strains', allowed_to_add_strains)
+        context.setdefault('translation', translation)
+        context.setdefault('filter_strains_form', filter_strains_form)
+
+        return context
+
     def get(self, request: HttpRequest, slug: str) -> HttpResponse:
-        breeder = get_object_or_404(Breeder, slug=slug)
-
-        language_code = get_language()
-
-        if 'language_code' in request.GET:
-            language_code = request.GET['language_code']
-        elif 'lang_code' in request.GET:
-            language_code = request.GET['lang_code']
-        elif 'lang' in request.GET:
-            language_code = request.GET['lang']
-
-        if language_code == 'en':
-            language_code = 'en-us'
-
-        supported_languages = [
-            i[0] for i in getattr(
-                django_settings,
-                'LANGUAGES',
-                [
-                    ('en-us',),
-                    ('de',)
-                ])
-        ]
-
-        if language_code in supported_languages:
-            activate(language_code)
-
-        translation = breeder.get_translation(language_code)
-
-        allowed_to_edit = request.user.is_authenticated  # TODO: add logic
-        allowed_to_delete = request.user.is_authenticated  # TODO: allowed_to_delete
-        allowed_to_add_strains = request.user.is_authenticated  # TODO: add logic
-
-        if request.user.is_authenticated:
-            strains_allowed_to_edit = [
-                strain.id for strain in breeder.strains.all()
-            ]  # TODO: add logic
-        else:
-            strains_allowed_to_edit = []
-
-        if request.user.is_authenticated:
-            strains_allowed_to_delete = [
-                strain.id for strain in breeder.strains.all()
-                if strain.growlog_count == 0
-            ]
-        else:
-            strains_allowed_to_delete = []
-
-        allowed_to_translate = request.user.is_authenticated  # TODO: add logic
-        strains = breeder.strains.all().order_by('name')
-        return render(request, self.template_name, context={
-            'breeder': breeder,
-            'allowed_to_edit': allowed_to_edit,
-            'allowed_to_delete': allowed_to_delete,
-            'allowed_to_add_strains': allowed_to_add_strains,
-            'strains': strains,
-            'strains_allowed_to_edit': strains_allowed_to_edit,
-            'strains_allowed_to_delete': strains_allowed_to_delete,
-            'filter_strains_form': StrainFilterForm(),
-            'allowed_to_translate': allowed_to_translate,
-            'breeder_translation': translation,
-            'breeder_url': (translation.breeder_url
-                            if translation and translation.breeder_url
-                            else breeder.breeder_url),
-            'seedfinder_url': (translation.seedfinder_url
-                               if translation and translation.seedfinder_url
-                               else breeder.seedfinder_url),
-            'breeder_description_html': (translation.description_html
-                                         if translation and translation.description
-                                         else breeder.description_html),
-            'translation': translation,
-        })
+        self.breeder = get_object_or_404(Breeder, slug=slug)
+        return render(request, self.template_name, context=self.get_context_data())
 
 
 class BreederCreateView(LoginRequiredMixin, CreateView):

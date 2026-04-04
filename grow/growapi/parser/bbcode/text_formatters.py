@@ -23,25 +23,41 @@ def render_url(tag_name: str, value, options, parent, context) -> str:
 
 
 def render_breeder_link(tag_name: str, value, options, parent, context) -> str:
+    from grow.growapi.models import Breeder
+    if tag_name not in options:
+        return "[breeder]"
+
+    print("breeder_slug:", options[tag_name])
     try:
+        breeder = Breeder.objects.get(slug=options[tag_name])
         url = reverse('grow:breeder-detail', kwargs={'slug': options[tag_name]})
-        return f"<a href=\"{url}\">{value}</a>"
-    except Exception:
+        return f"<a href=\"{url}\">{breeder.name}</a>"
+    except Breeder.DoesNotExist:
         if tag_name in options:
-            return f"[breeder={options[tag_name]}]{value}"
-        return f"[breeder]{value}"
+            return f"[breeder={options[tag_name]}]"
+        return "[breeder]"
 
 
 def render_strain_link(tag_name: str, value, options, parent, context) -> str:
+    from grow.growapi.models import Strain
+
+    print(f"rendering strain link with options: {options}")
+
     try:
         breeder_slug, strain_slug = options[tag_name].split(':')
+        strain = Strain.objects.get(slug=strain_slug, breeder__slug=breeder_slug)
 
-        url = reverse('grow:straiaddn-detail', kwargs={
-            'breeder_slug': breeder_slug,
-            'slug': strain_slug
-        })
-        return f"<a href=\"{url}\">{value}</a>"
-    except Exception:
+        return _("{strain} by {breeder}").format(
+            strain="<a href=\"{url}\">{strain}</a>".format(
+                url=reverse('grow:strain-detail', kwargs={
+                    'breeder_slug': breeder_slug,
+                    'slug': strain_slug}),
+                strain=strain.name),
+            breeder="<a href=\"{url}\">{breeder}</a>".format(
+                url=reverse('grow:breeder-detail', kwargs={'slug': breeder_slug}),
+                breeder=strain.breeder.name)
+        )
+    except (Strain.DoesNotExist, ValueError):
         if tag_name in options:
             return f"[strain={options[tag_name]}]{value}"
         return f"[strain]{value}"

@@ -122,6 +122,7 @@
     </tbody>
 </table>
 
+{% if not NO_SCRIPTS %}
 <script>
     htmx.process(document.getElementById('breeder-overview-table'));
     /* Initialize Bootstrap tooltips for newly added elements */
@@ -132,3 +133,4 @@
         })
     });
 </script>
+{% endif %}

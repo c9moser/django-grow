@@ -92,6 +92,8 @@ DESCRIPTION_FORMATTERS = [
             'render_embedded': False
         }
     ),
+    (('breeder', render_breeder_link), {'standalone': True}),
+    (('strain', render_strain_link), {'standalone': True}),
     (('ol', render_ordered_list), {}),
     (('ul', render_unordered_list), {}),
     (('li', render_list_item), {}),

@@ -1,0 +1,161 @@
+{% load i18n%}
+<table id="strain-table" class="table table-hover">
+    <thead>
+        <tr class="table-success">
+            <th>
+                <button type="button"
+                    hx-get="{% url 'grow:hx-breeder-strains' pk=breeder.id %}{% querystring filter=strains_filter sort="name" %}{% if strains_sort == 'name' %}{% if strains_order == 'asc' %}&order=desc{% else %}&order=asc{% endif %}{% else %}&order=asc{% endif %}"
+                    hx-swap="outerHTML"
+                    hx-target="#strain-table"
+                    class="btn btn-link {% if strains_sort == 'name' %}link-success{% else %}link-dark{% endif %} text-decoration-none p-0 m-0"
+                ><b>
+                    {% translate "Strain" %}
+                    {% if strains_sort == 'name' %}
+                        {% if strains_order == 'asc' %}▲{% else %}▼{% endif %}
+                    {% else %}
+                        <span style="color:gray-50;">▲▼</span>
+                    {% endif %}
+                </b></button>
+            </th>
+            <th>
+                <button type="button"
+                    hx-get="{% url 'grow:hx-breeder-strains' pk=breeder.id %}{% querystring filter=strains_filter sort="genotype" %}{% if strains_sort == 'genotype' %}{% if strains_order == 'asc' %}&order=desc{% else %}&order=asc{% endif %}{% else %}&order=asc{% endif %}"
+                    hx-swap="outerHTML"
+                    hx-target="#strain-table"
+                    class="btn btn-link {% if strains_sort == 'genotype' %}link-success{% else %}link-dark{% endif %} text-decoration-none p-0 m-0"
+                ><b>
+                    {% translate "Genotype" %}
+                    {% if strains_sort == 'genotype' %}
+                        {% if strains_order == 'asc' %}▲{% else %}▼{% endif %}
+                    {% else %}
+                        <span style="color:gray-50;">▲▼</span>
+                    {% endif %}
+                </b></button>
+            </th>
+            <th>RFA</th>
+            <th>
+                <button type="button"
+                    hx-get="{% url 'grow:hx-breeder-strains' pk=breeder.id %}{% querystring filter=strains_filter sort="flowering" %}{% if strains_sort == 'flowering' %}{% if strains_order == 'asc' %}&order=desc{% else %}&order=asc{% endif %}{% else %}&order=asc{% endif %}"
+                    hx-swap="outerHTML"
+                    hx-target="#strain-table"
+                    class="btn btn-link {% if strains_sort == 'flowering' %}link-success{% else %}link-dark{% endif %} text-decoration-none p-0 m-0"
+                ><b>
+                    {% translate "Flowering time" %}
+                    {% if strains_sort == 'flowering' %}
+                        {% if strains_order == 'asc' %}▲{% else %}▼{% endif %}
+                    {% else %}
+                        <span style="color:gray-50;">▲▼</span>
+                    {% endif %}
+                </b></button>
+            </th>
+            <th>
+                <button type="button"
+                    hx-get="{% url 'grow:hx-breeder-strains' pk=breeder.id %}{% querystring filter=strains_filter sort="growlogs" %}{% if strains_sort == 'growlogs' %}{% if strains_order == 'asc' %}&order=desc{% else %}&order=asc{% endif %}{% else %}&order=asc{% endif %}"
+                    hx-swap="outerHTML"
+                    hx-target="#strain-table"
+                    class="btn btn-link {% if strains_sort == 'growlogs' %}link-success{% else %}link-dark{% endif %} text-decoration-none p-0 m-0"
+                ><b>
+                {% translate "Growlogs" %}
+                {% if strains_sort == 'growlogs' %}
+                    {% if strains_order == 'asc' %}▲{% else %}▼{% endif %}
+                {% else %}
+                    <span style="color:gray-50;">▲▼</span>
+                {% endif %}
+                </b></button>
+            </th>
+            <th>
+                <div class="text-end me-2">
+                {% if allowed_to_add_strains %}
+                    <a href="{% url 'grow:strain-create' breeder_pk=breeder.pk %}"
+                        class="link-primary
+                            link-opacity-75
+                            link-opacity-100-hover
+                            link-underline-opacity-0"
+                        data-bs-toggle="tooltip"
+                        data-bs-html="true"
+                        data-bs-title="{% blocktranslate with name=breeder.name %}Add strain to breeder <i>{{ name }}</i>{% endblocktranslate %}"
+                    ><i class="bi bi-plus-square"></i></a>
+                    {% else %}
+                    <a href="#strain-table"
+                        class="link-body-emphasis
+                            link-opacity-50
+                            link-underline-opacity-0"
+                    ><i class="bi bi-plus-square"></i></a>
+                    {% endif %}
+                </div>
+            </th>
+        </tr>
+    </thead>
+    <tbody class="table-group-divider">
+    {% for strain in strains %}
+        <tr id="{{ breeder.slug }}-{{ strain.slug }}">
+            <td>
+                <a href="{% url 'grow:strain-detail' breeder_slug=breeder.slug slug=strain.slug %}"
+                    class="{% if strain.is_discontinued %}text-decoration-line-through text-muted{% endif %}"
+                >
+                    {{ strain.name }}
+                </a>
+            </td>
+            <td>{{ strain.genotype.name }}</td>
+            <td>
+                {% if strain.is_regular %}R{% endif %}{% if strain.is_feminized %}F{% endif %}{% if strain.is_automatic %}A{% endif %}
+            </td>
+            <td>
+                {% if strain.flowering_time_days %}
+                {% blocktranslate with days=strain.flowering_time_days count n=strain.flowering_time_days%}{{ days }} day{% plural %}{{ days }} days{% endblocktranslate %}
+                {% else %}
+                {% translate "Unknown" %}
+                {% endif %}
+            </td>
+            <td>
+                {% blocktranslate with n_growlogs=strain.growlog_count count n=strain.growlog_count %}{{ n_growlogs }} Growlog{% plural %}{{ n_growlogs }} Growlogs{% endblocktranslate %}
+            </td>
+            <td>
+                <div class="text-end me-2">
+                {% if allowed_to_add_strains %}
+                    <a href="{% url 'grow:strain-update' pk=strain.pk %}"
+                        class="link-primary
+                            link-opacity-75
+                            link-opacity-100-hover
+                            link-underline-opacity-0"
+                        data-bs-toggle="tooltip"
+                        data-bs-html="true"
+                        data-bs-title="{% blocktranslate with name=strain.name %}Edit strain <i>{{ name }}</i>{% endblocktranslate %}"
+                    ><i class="bi bi-pencil-square"></i></a>
+                {% else %}
+                    <a href="#strain-table"
+                        class="link-body-emphasis
+                            link-opacity-50
+                            link-underline-opacity-0"
+                    ><i class="bi bi-pencil-square"></i></a>
+                {% endif %}
+                {% if strain.id in strains_allowed_to_delete %}
+                    <a href="#"
+                        class="link-danger
+                            link-opacity-50
+                            link-underline-opacity-0"
+                        hx-target="#modals-here"
+                        hx-trigger="click"
+                        hx-get="{% url 'grow:hx-strain-delete' pk=strain.pk %}"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modals-here"
+                    ><i class="bi bi-x-square"
+                        data-bs-toggle="tooltip"
+                        data-bs-html="true"
+                        data-bs-title="{% blocktranslate with name=strain.name %}Delete strain <i>{{ name }}</i>{% endblocktranslate %}"
+                        data-bs-placement="left"
+                    ></i>
+                </a>
+                {% else %}
+                <a href="#{{ breeder.slug}}-{{ strain.slug }}"
+                        class="link-body-emphasis
+                            link-opacity-50
+                            link-underline-opacity-0"
+                ><i class="bi bi-x-square"></i></a>
+                {% endif %}
+                </div>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

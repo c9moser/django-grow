@@ -1,6 +1,6 @@
 from django.urls import path
 
-from . import settings
+#from . import settings
 from .views.index import IndexView
 
 from .views.breeder import (
@@ -13,6 +13,7 @@ from .views.breeder import (
     HxBreederDeleteView,
     HxBreederFilterView,
     HxBreederTranslationView,
+    HxBreederStrainsView,
     HxStrainFilterView,
 )
 
@@ -111,16 +112,17 @@ app_name = "grow"
 breeder_patterns = [
      # Views for creating, updating, deleting Breeders
     path("breeder/create/", BreederCreateView.as_view(), name="breeder-create"),
-    path("breeder/update/<int:pk>/", BreederUpdateView.as_view(), name="breeder-update"),
-    path("breeder/delete/<int:pk>/", BreederDeleteView.as_view(), name="breeder-delete"),
-    path("breeder/translate/<int:pk>/",
+    path("breeder/<int:pk>/update/", BreederUpdateView.as_view(), name="breeder-update"),
+    path("breeder/<int:pk>/delete/", BreederDeleteView.as_view(), name="breeder-delete"),
+    path("breeder/<int:pk>/translate/",
          BreederTranslationView.as_view(),
          name="breeder-translate"),
     path("__hx__/breeder/delete/<int:pk>", HxBreederDeleteView.as_view(), name="hx-breeder-delete"),
     path("__hx__/breeder/filter-strains/<int:breeder_pk>/",
          HxStrainFilterView.as_view(),
          name="hx-strain-filter"),
-    path("__hx__/breeder/translation/<int:pk>/",
+    path("__hx__/breeder/<int:pk>/strains", HxBreederStrainsView.as_view(), name="hx-breeder-strains"),
+    path("__hx__/breeder/<int:pk>/translation/",
          HxBreederTranslationView.as_view(),
          name="hx-breeder-translation"),
 
