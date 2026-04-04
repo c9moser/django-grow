@@ -309,15 +309,15 @@ class BreederDeleteView(LoginRequiredMixin, View):
     form_class = DeleteWithSlugForm
     success_url = reverse_lazy("grow:breeder-overview")
 
-    def get(self, request: HttpRequest, slug: str) -> HttpResponse:
-        breeder = get_object_or_404(Breeder, slug=slug)
+    def get(self, request: HttpRequest, pk: int) -> HttpResponse:
+        breeder = get_object_or_404(Breeder, pk=pk)
         return render(request, self.template_name, context={
             'form': self.form_class(),
             'breeder': breeder,
         })
 
-    def post(self, request: HttpRequest, slug: str) -> HttpResponse:
-        breeder = get_object_or_404(Breeder, slug=slug)
+    def post(self, request: HttpRequest, pk: int) -> HttpResponse:
+        breeder = get_object_or_404(Breeder, pk=pk)
         form = self.form_class(request.POST)
         delete_error = None
 

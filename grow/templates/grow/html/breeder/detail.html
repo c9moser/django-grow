@@ -6,155 +6,89 @@
 {% block subtitle %}{{ breeder.name }}{% endblock %}
 
 {% block content %}
-{% if use_bootstrap%}
-<!-- style="--bs-breadcrumb-divider:'&#10093;';" -->
 
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb" >
 
-    {% if GROW_IS_MAIN_APP %}
-        <li class="breadcrumb-item"><a href="{% url 'grow:home' %}">{% translate "Home" %}</a></li>
-    {% else %}
-        <li class="breadcrumb-item"><a href="/">{% translate "Home" %}</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'grow:home' %}">{% translate "Grow" %}</a></li>
-    {% endif %}
-        <li class="breadcrumb-item">
-            <a href="{% url "grow:breeder-overview" %}">
-                {% translate "Strains" %}
-            </a>
-        </li>
-        <li class="breadcrumb-item active">{{ breeder.locale_name }}</li>
-    </ol>
-</nav>
-{% endif %}
-
-{% if use_bootstrap %}
-<div class="h3">
-    {% if allowed_to_edit %}
-    <a href="{% url 'grow:breeder-update' pk=breeder.pk %}"
-        class="link-primary
-            link-opacity-75
-            link-opacity-100-hover
-            link-underline-opacity-0"
-        data-bs-toggle="tooltip"
-        data-bs-placement="bottom"
-        data-bs-title="{% translate 'Edit breeder' %}"
-    ><i class="bi bi-pencil-square"></i></a>
-    {% endif %}
-    {% if allowed_to_translate %}
-    <a href="{% url 'grow:breeder-translate' pk=breeder.pk %}"
-        class="link-success
-            link-opacity-75
-            link-opacity-100-hover
-            link-underline-opacity-0"
-        data-bs-toggle="tooltip"
-        data-bs-placement="bottom"
-        data-bs-title="{% translate 'Translate breeder' %}"
-    ><i class="bi bi-translate"></i></a>
-    {% endif %}
-    {% if allowed_to_delete %}
-    <a href="#"
-        class="link-danger
-            link-opacity-75
-            link-opacity-100-hover
-            link-underline-opacity-0"
-        hx-get="{% url 'grow:hx-breeder-delete' pk=breeder.pk %}"
-        hx-target="#modals-here"
-        hx-swap="innerHTML"
-        hx-trigger="click"
-        data-bs-toggle="modal"
-        data-bs-target="#modals-here"
-    >
-        <span data-bs-toggle="tooltip"
-            data-bs-placement="bottom"
-            data-bs-title="{% translate 'Delete breeder' %}">
-            <i class="bi bi-x-square"></i>
-        </span>
-    </a>
-    {% endif %}
-</div>
-{% else %}
+<div>
 {% if allowed_to_edit %}<a href="{% url 'grow:breeder-create' %}">{% translate "Edit breeder" %}</a>{% endif %}
 {% if allowed_to_translate %}<a href="{% url 'grow:breeder-translate' pk=breeder.pk %}">{% translate "Translate breeder" %}</a>{% endif %}
 {% if allowed_to_delete %}<a href="{% url 'grow:breeder-delete' pk=breeder.pk %}">{% translate "Delete breeder" %}</a>{% endif %}
-{% endif %}
+</div>
+
 
 
 <h1>{{ breeder.name }}</h1>
 
-<div class="row mb-3">
-    <div class="col-md-4 mb-3 d-flex align-items-center justify-content-center">
+
+<div>
+    <div style="max-width:300px;float:left;margin-right:20px;" class="mb-3">
 {% if breeder.has_logo %}
-        <img class="{% if use_bootstrap %}rounded img-fluid {% endif %}" style="max-width:100%;"
+        <img style="max-width:100%;"
             alt="{% translate 'Breeder logo' %}" src="{{ breeder.logo }}"
         >
 {% else %}
-        <img class="{% if use_bootstrap %}rounded img-fluid {% endif %}" style="max-width:100%;"
+        <img style="max-width:100%;"
             alt="{% translate 'No breeder logo available' %}" src="{% static 'grow/img/hemp-leaf.jpg' %}"
         >
 {% endif %}
-    </div>
-    <div class="col-md-8 mb-3">
+</div>
+
+<div>
+    <p>
+        <b>{% translate "Breeder Slug:" %}</b> {{ breeder.slug }}
         {% if breeder.created_by %}
-        <div class="alert alert-info" role="alert">
-        {% blocktranslate with username=breeder.created_by.username date=breeder.created_at|date:"SHORT_DATE_FORMAT" %}Added by {{ username }} on {{ date }}.{% endblocktranslate %}
+        <div role="alert">
+            {% blocktranslate with username=breeder.created_by.username date=breeder.created_at|date:"SHORT_DATE_FORMAT" %}Added by {{ username }} on {{ date }}.{% endblocktranslate %}
         </div>
         {% elif breeder.creator_name %}
-        <div class="alert alert-info" role="alert">
-        {% blocktranslate with username=breeder.creator_name date=breeder.added_at|date:"SHORT_DATE_FORMAT" %}Added by {{ username }} on {{ date }}.{% endblocktranslate %}
+        <div role="alert">
+            {% blocktranslate with username=breeder.creator_name date=breeder.added_at|date:"SHORT_DATE_FORMAT" %}Added by {{ username }} on {{ date }}.{% endblocktranslate %}
         </div>
         {% else %}
-        <div class="alert alert-info" role="alert">
-        {% blocktranslate with date=breeder.added_at|date:"SHORT_DATE_FORMAT" %}Added on {{ date }}.{% endblocktranslate %}
+        <div role="alert">
+            {% blocktranslate with date=breeder.added_at|date:"SHORT_DATE_FORMAT" %}Added on {{ date }}.{% endblocktranslate %}
         </div>
         {% endif %}
         {% if translation and translation.user %}
-        <div class="alert alert-info" role="alert">
-        {% blocktranslate with username=translation.user.username date=translation.updated_at|date:"SHORT_DATE_FORMAT" %}Translated by {{ username }} on {{ date }}.{% endblocktranslate %}
+        <div role="alert">
+            {% blocktranslate with username=translation.user.username date=translation.updated_at|date:"SHORT_DATE_FORMAT" %}Translated by {{ username }} on {{ date }}.{% endblocktranslate %}
         </div>
         {% endif %}
-    <p>
-{% blocktranslate with name=breeder.name count n_strains=breeder.strains.count %}There is one strain in the database for the breeder <i>{{ name }}</i>.{% plural %}There are {{ n_strains }} strains in the database for breeder <i>{{ name }}</i>.{% endblocktranslate%}
-{% blocktranslate with n_strains=breeder.strains_with_growlogs_count count n=breeder.strains_with_growlogs_count %}One strain appears in growlogs.{% plural %}{{ n_strains }} strains appear in growlogs.{% endblocktranslate %}
-{% blocktranslate with name=breeder.name count n=breeder.growlog_count %}A total of one growlog has been created for the strains of <i>{{ name }}</i>.{% plural %}A total of {{ n }} growlogs have been created for the strains of <i>{{ name }}</i>.{% endblocktranslate %}
     </p>
-    <p>
+</div>
 
-{% if breeder_url %}
+<p>
+    {% blocktranslate with name=breeder.name count n_strains=breeder.strains.count %}There is one strain in the database for the breeder <i>{{ name }}</i>.{% plural %}There are {{ n_strains }} strains in the database for breeder <i>{{ name }}</i>.{% endblocktranslate%}
+    {% blocktranslate with n_strains=breeder.strains_with_growlogs_count count n=breeder.strains_with_growlogs_count %}One strain appears in growlogs.{% plural %}{{ n_strains }} strains appear in growlogs.{% endblocktranslate %}
+    {% blocktranslate with name=breeder.name count n=breeder.growlog_count %}A total of one growlog has been created for the strains of <i>{{ name }}</i>.{% plural %}A total of {{ n }} growlogs have been created for the strains of <i>{{ name }}</i>.{% endblocktranslate %}
+</p>
+
+
+    <p>
+    {% if breeder_url %}
         <a href="{{ breeder_url }}" target="_blank">
-            {% if use_bootstrap %}
-            <i class="bi bi-house-door-fill link-image"></i>
-            {% endif %}
             {% translate "Breeder's homepage" %}
         </a>
-
-        {% if seedfinder_url %}<br>{% endif %}
-{% endif %}
-{% if seedfinder_url %}
-        <a href="{{ seedfinder_url }}" target="_blank">
-            {% if use_bootstrap %}
-            <i class="bi bi-bookmark-star link-image"></i>
-            {% endif %}
+        {% if seedfinder_url %}
+        <br>
+        {% endif %}
+        {% endif %}
+    {% if seedfinder_url %}
+         <a href="{{ seedfinder_url }}" target="_blank">
             {% translate "Breeder on SeedFinder.eu" %}
         </a>
-{% endif %}
+    {% endif %}
 
     </p>
     <p>
-    <a href="#strains" class="{% if use_bootstrap %}link-success{% endif %}">
-        {% if use_bootstrap%}
-        <i class="bi bi-arrow-down-short link-image"></i>
-        {% endif %}
+    <a href="#strains" >
         {% translate "Jump to strains" %}
     </a>
     </p>
-    </div>
 </div>
 
 {% if breeder.has_description %}
 <h2>{% translate  "Breeder information" %}</h2>
 {{ breeder_description_html }}
-
 {% endif %}
 
 <h2 id="strains">{% translate "Strains" %}</h2>
@@ -165,60 +99,33 @@
     hx-trigger="keyup changed delay:500ms"
 >
     {% csrf_token %}
-    {% if use_bootstrap %}
-    {% render_field filter_strains_form.search_query class="form-control mb-3" placeholder=filter_strains_form.search_query.label %}
-    {% else %}
-    {% render_field filter_strains_form.search_query placeholder=filter_strains_form.search_query.label %}
-    {% endif %}
+    {% render_field filter_strains_form.search_query placeholder=filter_strains_form.search_query.label style="margin-bottom: 1rem;" %}
 </form>
+
 <div id="strain-table-div">
-<table id="strain-table"
-    class="{% if use_bootstrap%}table table-hover{% endif %}"
->
+<table id="strain-table" style="width:100%;">
     <thead>
-        <tr class="{% if use_bootstrap %}table-success{% endif %}">
+        <tr>
             <th>{% translate "Strain" %}</th>
             <th>{% translate "Genotype" %}</th>
             <th>RFA</th>
             <th>{% translate "Flowering time" %}</th>
             <th>{% translate "Growlogs" %}</th>
             <th>
-            {% if use_bootstrap%}
-            <div class="text-end me-2">
-                {% if allowed_to_add_strains %}
-                    <a href="{% url 'grow:strain-create' breeder_pk=breeder.pk %}"
-                        class="link-primary
-                            link-opacity-75
-                            link-opacity-100-hover
-                            link-underline-opacity-0"
-                        data-bs-toggle="tooltip"
-                        data-bs-html="true"
-                        data-bs-title="{% blocktranslate with name=breeder.name %}Add strain to breeder <i>{{ name }}</i>{% endblocktranslate %}"
-                    ><i class="bi bi-plus-square"></i></a>
-                    {% else %}
-                    <a href="#strain-table"
-                        class="link-body-emphasis
-                            link-opacity-50
-                            link-underline-opacity-0"
-                    ><i class="bi bi-plus-square"></i></a>
-                    {% endif %}
-                </div>
-            {% else %}
                 {% if allowed_to_add_strains %}
                 <a href="{% url 'grow:strain-create' breeder_pk=breeder.pk %}">Add</a>
                 {% else %}
                 Actions
                 {% endif %}
-            {% endif %}
             </th>
         </tr>
     </thead>
     <tbody class="{% if use_bootstrap %}table-group-divider{% endif %}">
     {% for strain in breeder.strains_sorted %}
-        <tr id="{{ breeder.slug }}-{{ strain.slug }}">
+        <tr id="strain_{{ breeder.slug }}_{{ strain.slug }}">
             <td>
                 <a href="{% url 'grow:strain-detail' breeder_slug=breeder.slug slug=strain.slug %}"
-                    class="{% if strain.is_discontinued %}text-decoration-line-through text-muted{% endif %}"
+                    style="{% if strain.is_discontinued %}text-decoration: line-through;{% endif %}"
                 >
                     {{ strain.name }}
                 </a>
@@ -238,51 +145,6 @@
                 {% blocktranslate with n_growlogs=strain.growlog_count count n=strain.growlog_count %}{{ n_growlogs }} Growlog{% plural %}{{ n_growlogs }} Growlogs{% endblocktranslate %}
             </td>
             <td>
-            {% if use_bootstrap %}
-                <div class="text-end me-2">
-                {% if allowed_to_add_strains %}
-                    <a href="{% url 'grow:strain-update' pk=strain.pk %}"
-                        class="link-primary
-                            link-opacity-75
-                            link-opacity-100-hover
-                            link-underline-opacity-0"
-                        data-bs-toggle="tooltip"
-                        data-bs-html="true"
-                        data-bs-title="{% blocktranslate with name=strain.name %}Edit strain <i>{{ name }}</i>{% endblocktranslate %}"
-                    ><i class="bi bi-pencil-square"></i></a>
-                {% else %}
-                    <a href="#strain-table"
-                        class="link-body-emphasis
-                            link-opacity-50
-                            link-underline-opacity-0"
-                    ><i class="bi bi-pencil-square"></i></a>
-                {% endif %}
-                {% if strain.id in strains_allowed_to_delete %}
-                    <a href="#"
-                        class="link-danger
-                            link-opacity-50
-                            link-underline-opacity-0"
-                        hx-target="#modals-here"
-                        hx-trigger="click"
-                        hx-get="{% url 'grow:hx-strain-delete' pk=strain.pk %}"
-                        data-bs-toggle="modal"
-                        data-bs-target="#modals-here"
-                    ><i class="bi bi-x-square"
-                        data-bs-toggle="tooltip"
-                        data-bs-html="true"
-                        data-bs-title="{% blocktranslate with name=strain.name %}Delete strain <i>{{ name }}</i>{% endblocktranslate %}"
-                        data-bs-placement="left"
-                    ></i>
-                </a>
-                {% else %}
-                <a href="#{{ breeder.slug}}-{{ strain.slug }}"
-                        class="link-body-emphasis
-                            link-opacity-50
-                            link-underline-opacity-0"
-                ><i class="bi bi-x-square"></i></a>
-                {% endif %}
-                </div>
-            {% else %}
                 {% if strain.id in strains_allowed_to_edit %}
                 <a href="{% url 'grow:strain-update' pk=strain.pk %}">
                     Edit
@@ -293,7 +155,6 @@
                     Delete
                 </a>
                 {% endif %}
-            {% endif %}
             </td>
         </tr>
     {% endfor %}
