@@ -11,9 +11,9 @@
                 ><b>
                     {% translate "Strain" %}
                     {% if strains_sort == 'name' %}
-                        {% if strains_order == 'asc' %}▲{% else %}▼{% endif %}
+                        {% if strains_order == 'asc' %}<i class="bi bi-caret-up-fill"></i>{% else %}<i class="bi bi-caret-down-fill"></i>{% endif %}
                     {% else %}
-                        <span style="color:gray-50;">▲▼</span>
+                        <span style="color:gray-50;"><i class="bi bi-caret-up"></i><i class="bi bi-caret-down"></i></span>
                     {% endif %}
                 </b></button>
             </th>
@@ -26,9 +26,9 @@
                 ><b>
                     {% translate "Genotype" %}
                     {% if strains_sort == 'genotype' %}
-                        {% if strains_order == 'asc' %}▲{% else %}▼{% endif %}
+                        {% if strains_order == 'asc' %}<i class="bi bi-caret-up-fill"></i>{% else %}<i class="bi bi-caret-down-fill"></i>{% endif %}
                     {% else %}
-                        <span style="color:gray-50;">▲▼</span>
+                        <span style="color:gray-50;"><i class="bi bi-caret-up"></i><i class="bi bi-caret-down"></i></span>
                     {% endif %}
                 </b></button>
             </th>
@@ -42,9 +42,9 @@
                 ><b>
                     {% translate "Flowering time" %}
                     {% if strains_sort == 'flowering' %}
-                        {% if strains_order == 'asc' %}▲{% else %}▼{% endif %}
+                        {% if strains_order == 'asc' %}<i class="bi bi-caret-up-fill"></i>{% else %}<i class="bi bi-caret-down-fill"></i>{% endif %}
                     {% else %}
-                        <span style="color:gray-50;">▲▼</span>
+                        <span style="color:gray-50;"><i class="bi bi-caret-up"></i><i class="bi bi-caret-down"></i></span>
                     {% endif %}
                 </b></button>
             </th>
@@ -57,9 +57,9 @@
                 ><b>
                 {% translate "Growlogs" %}
                 {% if strains_sort == 'growlogs' %}
-                    {% if strains_order == 'asc' %}▲{% else %}▼{% endif %}
+                    {% if strains_order == 'asc' %}<i class="bi bi-caret-up-fill"></i>{% else %}<i class="bi bi-caret-down-fill"></i>{% endif %}
                 {% else %}
-                    <span style="color:gray-50;">▲▼</span>
+                    <span style="color:gray-50;"><i class="bi bi-caret-up"></i><i class="bi bi-caret-down"></i></span>
                 {% endif %}
                 </b></button>
             </th>
@@ -67,7 +67,7 @@
                 <div class="text-end me-2">
                 {% if allowed_to_add_strains %}
                     <a href="{% url 'grow:strain-create' breeder_pk=breeder.pk %}"
-                        class="link-primary
+                        class="link-success
                             link-opacity-75
                             link-opacity-100-hover
                             link-underline-opacity-0"
@@ -77,7 +77,7 @@
                     ><i class="bi bi-plus-square"></i></a>
                     {% else %}
                     <a href="#strain-table"
-                        class="link-body-emphasis
+                        class="link-secondary
                             link-opacity-50
                             link-underline-opacity-0"
                     ><i class="bi bi-plus-square"></i></a>

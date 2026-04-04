@@ -6,7 +6,7 @@ from django.views.generic import FormView, UpdateView
 from grow.forms import DeleteWithSlugForm
 from django.http import Http404, HttpRequest, HttpResponse
 from django.utils.safestring import mark_safe
-from django.utils.translation import get_language, activate
+from django.utils.translation import get_language
 from grow.growapi.models import Breeder, Strain
 from grow.forms import BreederFilterForm, StrainSearchForm, StrainFilterForm, BreederTranslationForm
 from django.db.models.functions import Lower
@@ -220,9 +220,13 @@ class HxBreederStrainsView(BaseView):
                 strains = strains.order_by("-flowering_time_days")
         elif sort == 'growlogs' or sort == 'growlog_count':
             if ordering == 'asc':
-                strains = strains.annotate(growlog_strains_count=Count('growlog_strains')).order_by("growlog_strains_count")
+                strains = strains.annotate(
+                    growlog_strains_count=Count('growlog_strains')
+                ).order_by("growlog_strains_count")
             elif ordering == 'desc':
-                strains = strains.annotate(growlog_strains_count=Count('growlog_strains')).order_by("-growlog_strains_count")
+                strains = strains.annotate(
+                    growlog_strains_count=Count('growlog_strains')
+                ).order_by("-growlog_strains_count")
         else:
             sort = 'name'
             if ordering == 'asc':
@@ -253,6 +257,17 @@ class HxBreederStrainsView(BaseView):
                 elif self.request.user.groups.filter(name='grow-breeder-editors').exists():
                     strains_allowed_to_delete.append(strain.id)
 
+        allowed_to_add_strains = False
+        if self.request.user.is_authenticated:
+            if self.request.user.is_staff or self.request.user.is_superuser:
+                allowed_to_add_strains = True
+            elif self.request.user.id == self.breeder.created_by.id:
+                allowed_to_add_strains = True
+            elif self.request.user.groups.filter(name='grow-breeder-editors').exists():
+                allowed_to_add_strains = True
+            elif self.request.user.groups.filter(name='grow-strain-creators').exists():
+                allowed_to_add_strains = True
+
         context.setdefault('breeder', self.breeder)
         context.setdefault('strains_allowed_to_edit', strains_allowed_to_edit)
         context.setdefault('strains_allowed_to_delete', strains_allowed_to_delete)
@@ -260,6 +275,7 @@ class HxBreederStrainsView(BaseView):
         context.setdefault('strains_filter', filter)
         context.setdefault('strains_sort', sort)
         context.setdefault('strains_order', ordering)
+        context.setdefault('allowed_to_add_strains', allowed_to_add_strains)
 
         return context
 
