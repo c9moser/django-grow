@@ -1,4 +1,5 @@
 from datetime import date
+from pathlib import Path
 import re
 
 
@@ -134,11 +135,10 @@ class StrainCreateView(LoginRequiredMixin, View):
 
         return render(request, self.template_name, self.get_context_data())
 
-
     def post(self, request: HttpRequest, breeder_pk: int) -> HttpResponse:
         self.breeder = get_object_or_404(Breeder, pk=breeder_pk)
         self.strain = None
-        form = StrainForm(request.POST)
+        form = StrainForm(request.POST, request.FILES)
 
         if form.is_valid():
             self.strain = form.save(commit=False)
@@ -178,7 +178,7 @@ class StrainUpdateView(LoginRequiredMixin, View):
     def post(self, request: HttpRequest, pk: int) -> HttpResponse:
         self.strain = get_object_or_404(Strain, pk=pk)
 
-        form = StrainForm(request.POST, instance=self.strain)
+        form = StrainForm(request.POST, request.FILES, instance=self.strain)
 
         if form.is_valid():
             strain = form.save(commit=False)
