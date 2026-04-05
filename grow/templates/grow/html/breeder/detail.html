@@ -52,6 +52,24 @@
     </p>
 </div>
 
+{% if seedfinder_url or breeder_url %}
+<p>
+    {% if breeder_url %}
+        <a href="{{ breeder_url }}" target="_blank">
+            {% translate "Breeder's homepage" %}
+        </a>
+        {% if seedfinder_url %}
+        <br>
+        {% endif %}
+    {% endif %}
+    {% if seedfinder_url %}
+         <a href="{{ seedfinder_url }}" target="_blank">
+            {% translate "Breeder on SeedFinder.eu" %}
+        </a>
+    {% endif %}
+</p>
+{% endif %}
+
 <p>
     {% blocktranslate with name=breeder.name count n_strains=breeder.strains.count %}There is one strain in the database for the breeder <i>{{ name }}</i>.{% plural %}There are {{ n_strains }} strains in the database for breeder <i>{{ name }}</i>.{% endblocktranslate%}
     {% blocktranslate with n_strains=breeder.strains_with_growlogs_count count n=breeder.strains_with_growlogs_count %}One strain appears in growlogs.{% plural %}{{ n_strains }} strains appear in growlogs.{% endblocktranslate %}
@@ -60,16 +78,16 @@
 
 
     <p>
-    {% if breeder_url %}
-        <a href="{{ breeder_url }}" target="_blank">
+    {% if breeder.locale_breeder_url %}
+        <a href="{{ breeder.locale_breeder_url }}" target="_blank">
             {% translate "Breeder's homepage" %}
         </a>
-        {% if seedfinder_url %}
+        {% if breeder.locale_seedfinder_url %}
         <br>
         {% endif %}
         {% endif %}
-    {% if seedfinder_url %}
-         <a href="{{ seedfinder_url }}" target="_blank">
+    {% if breeder.locale_seedfinder_url %}
+         <a href="{{ breeder.locale_seedfinder_url }}" target="_blank">
             {% translate "Breeder on SeedFinder.eu" %}
         </a>
     {% endif %}
@@ -84,7 +102,7 @@
 
 {% if breeder.has_description %}
 <h2>{% translate  "Breeder information" %}</h2>
-{{ breeder_description_html }}
+{{ breeder.locale_description_html }}
 {% endif %}
 
 <h2 id="strains">{% translate "Strains" %}</h2>

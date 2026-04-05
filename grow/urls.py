@@ -122,7 +122,7 @@ breeder_patterns = [
          HxBreederStrainFilterView.as_view(),
          name="hx-strain-filter"),
     path("__hx__/breeder/<int:pk>/strains", HxBreederStrainsView.as_view(), name="hx-breeder-strains"),
-    path("__hx__/breeder/<int:pk>/translation/",
+    path("__hx__/breeder/<int:pk>/translation/<str:language_code>/",
          HxBreederTranslationView.as_view(),
          name="hx-breeder-translation"),
 

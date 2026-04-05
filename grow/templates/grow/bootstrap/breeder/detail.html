@@ -114,16 +114,16 @@
 {% blocktranslate with name=breeder.name count n=breeder.growlog_count %}A total of one growlog has been created for the strains of <i>{{ name }}</i>.{% plural %}A total of {{ n }} growlogs have been created for the strains of <i>{{ name }}</i>.{% endblocktranslate %}
     </p>
     <p>
-    {% if breeder_url %}
-        <a href="{{ breeder_url }}" target="_blank">
+    {% if breeder.locale_breeder_url %}
+        <a href="{{ breeder.locale_breeder_url }}" target="_blank">
             <i class="bi bi-house-door-fill link-image"></i>
             {% translate "Breeder's homepage" %}
         </a>
 
-        {% if seedfinder_url %}<br>{% endif %}
+        {% if breeder.locale_seedfinder_url %}<br>{% endif %}
     {% endif %}
-    {% if seedfinder_url %}
-        <a href="{{ seedfinder_url }}" target="_blank">
+    {% if breeder.locale_seedfinder_url %}
+        <a href="{{ breeder.locale_seedfinder_url }}" target="_blank">
             {% if use_bootstrap %}
             <i class="bi bi-bookmark-star link-image"></i>
             {% endif %}
@@ -144,7 +144,7 @@
 
 {% if breeder.has_description %}
 <h2>{% translate  "Breeder information" %}</h2>
-{{ breeder_description_html }}
+{{ breeder.locale_description_html }}
 {% endif %}
 
 <h2 id="strains">{% translate "Strains" %}</h2>

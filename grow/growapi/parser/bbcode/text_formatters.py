@@ -26,7 +26,6 @@ def render_breeder_link(tag_name: str, value, options, parent, context) -> str:
     from grow.growapi.models import Breeder
     if tag_name not in options:
         return "[breeder]"
-
     print("breeder_slug:", options[tag_name])
     try:
         breeder = Breeder.objects.get(slug=options[tag_name])

@@ -340,12 +340,24 @@ class BreederView(HxBreederStrainsView):
 
         filter_strains_form = StrainFilterForm()
 
+        if translation and translation.seedfinder_url:
+            seedfinder_url = translation.seedfinder_url
+        else:
+            seedfinder_url = self.breeder.seedfinder_url
+
+        if translation and translation.breeder_url:
+            breeder_url = translation.breeder_url
+        else:
+            breeder_url = self.breeder.breeder_url
+
         context.setdefault('allowed_to_edit', allowed_to_edit)
         context.setdefault('allowed_to_delete', allowed_to_delete)
         context.setdefault('allowed_to_translate', allowed_to_translate)
         context.setdefault('allowed_to_add_strains', allowed_to_add_strains)
         context.setdefault('translation', translation)
         context.setdefault('filter_strains_form', filter_strains_form)
+        context.setdefault('seedfinder_url', seedfinder_url)
+        context.setdefault('breeder_url', breeder_url)
 
         return context
 

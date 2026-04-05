@@ -27,11 +27,11 @@ GROW_BUILTIN_BS_BREEDER_TEMPLATES = {
     'grow/breeder/create': 'grow/bootstrap/breeder/create.html',
     'grow/breeder/delete': 'grow/bootstrap/breeder/delete.html',
     'grow/breeder/detail': 'grow/bootstrap/breeder/detail.html',
-    'grow/breeder/translation': GROW_BUILTIN_BREEDER_TEMPLATES['grow/breeder/translation'],
+    'grow/breeder/translation': 'grow/bootstrap/breeder/translation.html',
     'grow/breeder/hx/delete': GROW_BUILTIN_BREEDER_TEMPLATES['grow/breeder/hx/delete'],
     'grow/breeder/hx/filter': GROW_BUILTIN_BREEDER_TEMPLATES['grow/breeder/hx/filter'],
     'grow/breeder/hx/strains': 'grow/bootstrap/breeder/hx/strains.html',
-    'grow/breeder/hx/translation': GROW_BUILTIN_BREEDER_TEMPLATES['grow/breeder/hx/translation'],
+    'grow/breeder/hx/translation': 'grow/bootstrap/breeder/hx/translation.html',
     'grow/breeder/update': 'grow/bootstrap/breeder/update.html',
     'grow/breeder/form': 'grow/bootstrap/breeder/form.html',
 }

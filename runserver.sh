@@ -5,12 +5,13 @@ basedir="$(dirname "$self")"
 export DJANGO_SETTINGS_MODULE="django_project.settings"
 export PYTHONPATH="$basedir/grow:$PYTHONPATH"
 
-
-
 if [ -z "$1" ]; then
     echo "No command provided. Use 'help' for usage information."
 	exit 0
 fi
+
+echo $1
+
 case "$1" in
    runserver|run)
         shift
@@ -21,7 +22,7 @@ case "$1" in
         fi
         exit $?
     ;;
-    manage=*)
+    manage)
         shift
         exec poetry run python manage.py "$@"
         exit $?
@@ -75,6 +76,11 @@ case "$1" in
         shift
         exec poetry run python manage.py compilemessages "$@"
         exit $?
+    ;;
+    poetry)
+	shift
+	exec poetry "$@"
+	exit $?
     ;;
     help)
         echo "Usage: ${0##*/} [command] [options]"
