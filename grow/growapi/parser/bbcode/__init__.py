@@ -27,8 +27,6 @@ def create_formatters(parser, simple_formatters, text_formatters):
         else:
             kwargs = i[1]
 
-        print(f"Adding formatter: {i[0][0]} with kwargs: {kwargs}")
-
         parser.add_formatter(*i[0], **kwargs)
 
 

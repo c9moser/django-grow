@@ -11,16 +11,20 @@
         {% blocktranslate with slug=breeder.slug name=breeder.name %}If you really want to delete breeder {{ name }} type <i>{{ slug }}</i> in the field below and hit the {{ delete_breeder_label }} button.{% endblocktranslate %}
     </p>
 
-    {{ form.as_p }}
+    <div class="form-floating">
+        {% translate "Enter {{ breeder.slug }} here" as enter_slug_placeholder %}
+        {% render_field form.slug class="form-control" placeholder=enter_slug_placeholder %}
+        <label for="{{ form.slug.id_for_label }}">{{ form.slug.label }}</label>
+    </div>
 
-    <div>
-        <button type="submit">
+    <div class="text-end" id="form-buttons">
+        <button type="submit" class="btn btn-danger">
             {{ delete_breeder_label }}
         </button>
-        <button type="button" onclick="location.href='{% url 'grow:breeder-overview' %}'">
+        <button type="button" class="btn btn-secondary" onclick="location.href='{% url 'grow:breeder-overview' %}'">
             {% translate "Back to breeder overview" %}
         </button>
-        <button type="button" onclick="location.href='{% url 'grow:breeder-detail' slug=breeder.slug %}'">
+        <button type="button" class="btn btn-secondary" onclick="location.href='{% url 'grow:breeder-detail' slug=breeder.slug %}'">
             {% translate "Back to breeder" %}
         </button>
     </div>

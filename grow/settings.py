@@ -25,7 +25,7 @@ GROW_BUILTIN_BREEDER_TEMPLATES = {
 GROW_BUILTIN_BS_BREEDER_TEMPLATES = {
     'grow/breeder': 'grow/bootstrap/breeder/index.html',
     'grow/breeder/create': 'grow/bootstrap/breeder/create.html',
-    'grow/breeder/delete': GROW_BUILTIN_BREEDER_TEMPLATES['grow/breeder/delete'],
+    'grow/breeder/delete': 'grow/bootstrap/breeder/delete.html',
     'grow/breeder/detail': 'grow/bootstrap/breeder/detail.html',
     'grow/breeder/translation': GROW_BUILTIN_BREEDER_TEMPLATES['grow/breeder/translation'],
     'grow/breeder/hx/delete': GROW_BUILTIN_BREEDER_TEMPLATES['grow/breeder/hx/delete'],
