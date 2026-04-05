@@ -118,47 +118,62 @@ class StrainView(BaseView):
 
 class StrainCreateView(LoginRequiredMixin, View):
     template_name = settings.GROW_TEMPLATES["grow/strain/create"]
+    form_template = settings.GROW_TEMPLATES["grow/strain/form"]
+
+    def get_context_data(self, **kwargs):
+        context = kwargs
+        context.setdefault('breeder', self.breeder)
+        context.setdefault('form', StrainForm())
+        context.setdefault('strain', None)
+        context.setdefault('form_template', self.form_template)
+        return context
 
     def get(self, request: HttpRequest, breeder_pk: int) -> HttpResponse:
-        breeder = get_object_or_404(Breeder, pk=breeder_pk)
+        self.breeder = get_object_or_404(Breeder, pk=breeder_pk)
+        self.strain = None
 
-        return render(request, self.template_name, context={
-            'breeder': breeder,
-            'form': StrainForm(),
-        })
+        return render(request, self.template_name, self.get_context_data())
+
 
     def post(self, request: HttpRequest, breeder_pk: int) -> HttpResponse:
-        breeder = get_object_or_404(Breeder, pk=breeder_pk)
+        self.breeder = get_object_or_404(Breeder, pk=breeder_pk)
+        self.strain = None
         form = StrainForm(request.POST)
 
         if form.is_valid():
-            strain = form.save(commit=False)
+            self.strain = form.save(commit=False)
             if form.cleaned_data['flowering_time_unit'] == 'w':
-                strain.flowering_time_days = strain.flowering_time_days * 7
-            strain.created_by = self.request.user
-            strain.breeder = breeder
-            strain.save()
+                self.strain.flowering_time_days = self.strain.flowering_time_days * 7
+            self.strain.created_by = self.request.user
+            self.strain.breeder = self.breeder
+            self.strain.save()
 
             return redirect(reverse("grow:strain-detail", kwargs={
-                'breeder_slug': breeder.slug,
-                'slug': strain.slug,
+                'breeder_slug': self.strain.breeder.slug,
+                'slug': self.strain.slug,
             }))
 
-        return render(request, self.template_name, context={
-            'breeder': breeder,
-            'form': form,
-        })
+        return render(request, self.template_name,
+                      context=self.get_context_data(form=form,
+                                                    strain=self.strain))
 
 
 class StrainUpdateView(LoginRequiredMixin, View):
     template_name = settings.GROW_TEMPLATES["grow/strain/strain/update"]
+    form_template_name = settings.GROW_TEMPLATES["grow/strain/form"]
+
+    def get_context_data(self, **kwargs):
+        context = kwargs
+        context.setdefault('breeder', self.breeder)
+        context.setdefault('form', StrainForm(instance=self.strain))
+        context.setdefault('strain', self.strain)
+        context.setdefault('form_template', self.form_template_name)
+        return context
 
     def get(self, request: HttpRequest, pk: int) -> HttpResponse:
         self.strain = get_object_or_404(Strain, pk=pk)
-        return render(request, self.template_name, context={
-            'breeder': self.strain.breeder,
-            'form': StrainForm(instance=self.strain)
-        })
+        self.breeder = self.strain.breeder
+        return render(request, self.template_name, context=self.get_context_data())
 
     def post(self, request: HttpRequest, pk: int) -> HttpResponse:
         self.strain = get_object_or_404(Strain, pk=pk)
@@ -178,10 +193,7 @@ class StrainUpdateView(LoginRequiredMixin, View):
 
         form.fields['name'] = self.strain.name
 
-        return render(request, self.template_name, context={
-            'breeder': self.strain.breeder,
-            'form': form,
-        })
+        return render(request, self.template_name, self.get_context_data(form=form))
 
 
 class StrainDeleteView(LoginRequiredMixin, FormView):
