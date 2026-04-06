@@ -25,7 +25,7 @@
     </ol>
 </nav>
 
-<div class="h3">
+<div>
     {% if allowed_to_edit %}
     <a href="{% url 'grow:breeder-update' pk=breeder.pk %}"
         class="link-primary
@@ -140,6 +140,7 @@
         {% translate "Jump to strains" %}
     </a>
     </p>
+    </div>
 </div>
 
 {% if breeder.locale_description_html %}

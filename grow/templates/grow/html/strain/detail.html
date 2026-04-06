@@ -99,6 +99,10 @@
 {% endif %}
     </div>
     <div class="{% if use_bootstrap %}col-md-7 mb-3{% endif %}" {% if not use_bootstrap %}style="width:60%;"{% endif %}>
+        <div class="alert alert-success mb-3" role="alert">
+        <b>{% translate "Breeder Slug:" %}</b> {{ strain.breeder.slug }}<br>
+        <b>{% translate "Strain Slug:" %}</b> {{ strain.slug }}
+        </div>
 
     <div class="alert alert-info p-2 mb-3" role="alert">
     {% if strain.created_by %}

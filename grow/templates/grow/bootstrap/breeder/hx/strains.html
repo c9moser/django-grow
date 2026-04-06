@@ -8,14 +8,16 @@
                     hx-swap="outerHTML"
                     hx-target="#strain-table"
                     class="btn btn-link {% if strains_sort == 'name' %}link-success{% else %}link-dark{% endif %} text-decoration-none p-0 m-0"
-                ><b>
-                    {% translate "Strain" %}
-                    {% if strains_sort == 'name' %}
-                        {% if strains_order == 'asc' %}<i class="bi bi-caret-up-fill"></i>{% else %}<i class="bi bi-caret-down-fill"></i>{% endif %}
-                    {% else %}
-                        <span style="color:gray-50;"><i class="bi bi-caret-up"></i><i class="bi bi-caret-down"></i></span>
-                    {% endif %}
-                </b></button>
+                >
+                    <b>
+                        {% translate "Strain" %}
+                        {% if strains_sort == 'name' %}
+                            {% if strains_order == 'asc' %}<i class="bi bi-caret-up-fill"></i>{% else %}<i class="bi bi-caret-down-fill"></i>{% endif %}
+                        {% else %}
+                            <span style="color:gray-50;"><i class="bi bi-caret-up"></i><i class="bi bi-caret-down"></i></span>
+                        {% endif %}
+                    </b>
+                </button>
             </th>
             <th>
                 <button type="button"
@@ -23,14 +25,16 @@
                     hx-swap="outerHTML"
                     hx-target="#strain-table"
                     class="btn btn-link {% if strains_sort == 'genotype' %}link-success{% else %}link-dark{% endif %} text-decoration-none p-0 m-0"
-                ><b>
+                >
+                    <b>
                     {% translate "Genotype" %}
                     {% if strains_sort == 'genotype' %}
                         {% if strains_order == 'asc' %}<i class="bi bi-caret-up-fill"></i>{% else %}<i class="bi bi-caret-down-fill"></i>{% endif %}
                     {% else %}
                         <span style="color:gray-50;"><i class="bi bi-caret-up"></i><i class="bi bi-caret-down"></i></span>
                     {% endif %}
-                </b></button>
+                    </b>
+                </button>
             </th>
             <th>RFA</th>
             <th>
@@ -39,14 +43,16 @@
                     hx-swap="outerHTML"
                     hx-target="#strain-table"
                     class="btn btn-link {% if strains_sort == 'flowering' %}link-success{% else %}link-dark{% endif %} text-decoration-none p-0 m-0"
-                ><b>
+                >
+                    <b>
                     {% translate "Flowering time" %}
                     {% if strains_sort == 'flowering' %}
                         {% if strains_order == 'asc' %}<i class="bi bi-caret-up-fill"></i>{% else %}<i class="bi bi-caret-down-fill"></i>{% endif %}
                     {% else %}
                         <span style="color:gray-50;"><i class="bi bi-caret-up"></i><i class="bi bi-caret-down"></i></span>
                     {% endif %}
-                </b></button>
+                    </b>
+                </button>
             </th>
             <th>
                 <button type="button"
@@ -54,14 +60,16 @@
                     hx-swap="outerHTML"
                     hx-target="#strain-table"
                     class="btn btn-link {% if strains_sort == 'growlogs' %}link-success{% else %}link-dark{% endif %} text-decoration-none p-0 m-0"
-                ><b>
-                {% translate "Growlogs" %}
-                {% if strains_sort == 'growlogs' %}
-                    {% if strains_order == 'asc' %}<i class="bi bi-caret-up-fill"></i>{% else %}<i class="bi bi-caret-down-fill"></i>{% endif %}
-                {% else %}
-                    <span style="color:gray-50;"><i class="bi bi-caret-up"></i><i class="bi bi-caret-down"></i></span>
-                {% endif %}
-                </b></button>
+                >
+                    <b>
+                    {% translate "Growlogs" %}
+                    {% if strains_sort == 'growlogs' %}
+                        {% if strains_order == 'asc' %}<i class="bi bi-caret-up-fill"></i>{% else %}<i class="bi bi-caret-down-fill"></i>{% endif %}
+                    {% else %}
+                        <span style="color:gray-50;"><i class="bi bi-caret-up"></i><i class="bi bi-caret-down"></i></span>
+                    {% endif %}
+                    </b>
+                </button>
             </th>
             <th>
                 <div class="text-end me-2">
