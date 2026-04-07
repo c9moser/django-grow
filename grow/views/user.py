@@ -30,14 +30,13 @@ class UserInfoView(HxSeedsInStockInfoView, BaseView):
         n_regular_seeds_in_stock = seeds_in_stock.filter(is_regular=True).count()
         n_autoflowering_seeds_in_stock = seeds_in_stock.filter(strain__is_automatic=True).count()
         n_photoperiod_seeds_in_stock = seeds_in_stock.filter(strain__is_automatic=False).count()
-
-        seeds_in_stock_paginator = QuerySetPaginator(
-            seeds_in_stock,
-            page=self.request.GET.get('sis_page', 1)
-        )
-
         settings = GROW_USER_SETTINGS(self.request)
         paginate = settings.paginate
+        seeds_in_stock_paginator = QuerySetPaginator(
+            seeds_in_stock,
+            paginate_by=paginate,
+            page=self.request.GET.get('sis_page', 1)
+        )
 
         n_growlogs = Growlog.objects.filter(grower=self.request.user).count()
         active_growlogs = Growlog.objects.filter(
