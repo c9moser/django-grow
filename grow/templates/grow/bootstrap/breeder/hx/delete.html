@@ -13,7 +13,7 @@
                     {% blocktranslate with slug=breeder.slug name=breeder.name %}If you really want to delete breeder {{ name }} type <mark>{{ slug }}</mark> in the field below and hit the {{ delete_breeder_label }} button.{% endblocktranslate %}
                 </p>
                 <p>
-                    <label for="form.slug.id_for_label" class="visually-hidden">{{ from.slug.label }}</label>
+                    <label for="form.slug.id_for_label" class="visually-hidden">{{ form.slug.label }}</label>
                     {% render_field form.slug class="form-control" placeholder=breeder.slug %}
                 </p>
             </div>

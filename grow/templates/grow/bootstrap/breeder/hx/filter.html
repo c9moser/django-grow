@@ -1,13 +1,12 @@
 {% load i18n %}
 <p>{{ labels }}</p>
-<table {% if use_bootstrap %}class="table table-hover"{% endif %} id="breeder-overview-table">
+<table class="table table-hover" id="breeder-overview-table">
     <thead>
-        <tr>
+        <tr class="table-success">
             <th>{% translate "Name" %}</th>
             <th>{% translate "Strains" %}</th>
             <th>{% translate "Growlogs" %}</th>
             <th>
-            {% if use_bootstrap %}
                 <div class="text-end me-2">
                 {% if allowed_to_add_breeder %}
                     <a href="{% url 'grow:breeder-create' %}"
@@ -27,18 +26,13 @@
                     ></i>
                 {% endif %}
                 </div>
-            {% else %}
-                {% if allowed_to_add_breeder %}
-                <a href="{% url 'grow:breeder-create' %}">{% translate "Add breeder" %}</a>
-                {% endif %}
-            {% endif %}
             </th>
         </tr>
     </thead>
-    <tbody {% if use_bootstrap %}class="table-group-divider"{% endif %}>
+    <tbody class="table-group-divider">
         {% for breeder, breeder_id, breeder_label in breeders_id %}
         {% if breeder_id and group_breeders %}
-            <tr class="{% if use_bootstrap %}table-secondary{% endif %}" id="{{ breeder_id }}">
+            <tr class="table-secondary" id="{{ breeder_id }}">
                 <th colspan=4>
                     {{ breeder_label }}
                 </th>
@@ -53,7 +47,6 @@
             <td>{{ breeder.strain_count }}</td>
             <td>{{ breeder.growlog_count }}</td>
             <td>
-            {% if use_bootstrap %}
                 <div class="text-end me-1">
                 {% if breeder.id in breeders_allowed_to_edit %}
                     <a href="{% url 'grow:breeder-update' pk=breeder.pk %}"
@@ -104,18 +97,6 @@
                 {% endif %}
 
             </div>
-            {% else %}
-                {% if breeder.id in breeders_allowed_to_edit %}
-                <a href="{% url 'grow:breeder-update' pk=breeder.pk %}">
-                    {% translate "Edit" %}
-                </a>
-                {% endif %}
-                {% if breeder.id in breeders_allowed_to_delete %}
-                <a href="{% url 'grow:breeder-update' pk=breeder.pk %}">
-                    {% translate "Delete" %}
-                </a>
-                {% endif %}
-            {% endif %}
             </td>
         </tr>
         {% endfor %}

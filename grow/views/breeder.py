@@ -138,8 +138,7 @@ class HxBreederFilterView(BaseView):
                     labels_id.append((breeder.name[0].upper(), id))
                     breeders_id.append((breeder, id, breeder.name[0].upper()))
 
-        group_breeders = (breeders.count() > 30)
-
+        group_breeders = (breeders.count() > 10 or not search_query)
         if settings.USE_BOOTSTRAP:
             label_format = "<a class=\"link-body-emphasis link-opacity-50 link-opacity-100-hover link-underline-opacity-50 link-underline-opacity-75-hover\" href=\"#{id}\">{label}</a>"  # noqa: E501
         else:
@@ -292,7 +291,7 @@ class BreederView(HxBreederStrainsView):
     template_name = settings.GROW_TEMPLATES['grow/breeder/detail']
 
     def get_context_data(self, **kwargs):
-        context = HxBreederStrainsView.get_context_data(self, **kwargs)
+        context: dict = HxBreederStrainsView.get_context_data(self, **kwargs)
 
         language = get_language()
 

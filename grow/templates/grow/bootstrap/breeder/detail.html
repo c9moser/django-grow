@@ -28,10 +28,7 @@
 <div>
     {% if allowed_to_edit %}
     <a href="{% url 'grow:breeder-update' pk=breeder.pk %}"
-        class="link-primary
-            link-opacity-75
-            link-opacity-100-hover
-            link-underline-opacity-0"
+        class="btn btn-primary"
         data-bs-toggle="tooltip"
         data-bs-placement="bottom"
         data-bs-title="{% translate 'Edit breeder' %}"
@@ -39,21 +36,15 @@
     {% endif %}
     {% if allowed_to_translate %}
     <a href="{% url 'grow:breeder-translate' pk=breeder.pk %}"
-        class="link-success
-            link-opacity-75
-            link-opacity-100-hover
-            link-underline-opacity-0"
+        class="btn btn-success"
         data-bs-toggle="tooltip"
         data-bs-placement="bottom"
         data-bs-title="{% translate 'Translate breeder' %}"
     ><i class="bi bi-translate"></i></a>
     {% endif %}
     {% if allowed_to_delete %}
-    <a href="#"
-        class="link-danger
-            link-opacity-75
-            link-opacity-100-hover
-            link-underline-opacity-0"
+    <button type="button"
+        class="btn btn-danger"
         hx-get="{% url 'grow:hx-breeder-delete' pk=breeder.pk %}"
         hx-target="#modals-here"
         hx-swap="innerHTML"
@@ -66,7 +57,7 @@
             data-bs-title="{% translate 'Delete breeder' %}">
             <i class="bi bi-x-square"></i>
         </span>
-    </a>
+    </button>
     {% endif %}
 </div>
 
@@ -108,38 +99,39 @@
         {% blocktranslate with username=translation.user.username date=translation.updated_at|date:"SHORT_DATE_FORMAT" %}Translated by {{ username }} on {{ date }}.{% endblocktranslate %}
         </div>
         {% endif %}
-    <p>
-{% blocktranslate with name=breeder.name count n_strains=breeder.strains.count %}There is one strain in the database for the breeder <i>{{ name }}</i>.{% plural %}There are {{ n_strains }} strains in the database for breeder <i>{{ name }}</i>.{% endblocktranslate%}
-{% blocktranslate with n_strains=breeder.strains_with_growlogs_count count n=breeder.strains_with_growlogs_count %}One strain appears in growlogs.{% plural %}{{ n_strains }} strains appear in growlogs.{% endblocktranslate %}
-{% blocktranslate with name=breeder.name count n=breeder.growlog_count %}A total of one growlog has been created for the strains of <i>{{ name }}</i>.{% plural %}A total of {{ n }} growlogs have been created for the strains of <i>{{ name }}</i>.{% endblocktranslate %}
-    </p>
-    <p>
-    {% if breeder.locale_breeder_url %}
-        <a href="{{ breeder.locale_breeder_url }}" target="_blank">
-            <i class="bi bi-house-door-fill link-image"></i>
-            {% translate "Breeder's homepage" %}
-        </a>
+        <p>
+    {% blocktranslate with name=breeder.name count n_strains=breeder.strains.count %}There is one strain in the database for the breeder <i>{{ name }}</i>.{% plural %}There are {{ n_strains }} strains in the database for breeder <i>{{ name }}</i>.{% endblocktranslate%}
+    {% blocktranslate with name=breeder.name count n_strains=breeder.strains.count %}There is one strain in the database for the breeder <i>{{ name }}</i>.{% plural %}There are {{ n_strains }} strains in the database for breeder <i>{{ name }}</i>.{% endblocktranslate%}
+    {% blocktranslate count n_strains=breeder.strains_with_growlogs_count %}One strain appears in growlogs.{% plural %}{{ n_strains }} strains appear in growlogs.{% endblocktranslate %}
+    {% blocktranslate with name=breeder.name count n=breeder.growlog_count %}A total of one growlog has been created for the strains of <i>{{ name }}</i>.{% plural %}A total of {{ n }} growlogs have been created for the strains of <i>{{ name }}</i>.{% endblocktranslate %}
+        </p>
+        <p>
+        {% if breeder.locale_breeder_url %}
+            <a href="{{ breeder.locale_breeder_url }}" target="_blank">
+                <i class="bi bi-house-door-fill link-image"></i>
+                {% translate "Breeder's homepage" %}
+            </a>
 
-        {% if breeder.locale_seedfinder_url %}<br>{% endif %}
-    {% endif %}
-    {% if breeder.locale_seedfinder_url %}
-        <a href="{{ breeder.locale_seedfinder_url }}" target="_blank">
-            {% if use_bootstrap %}
-            <i class="bi bi-bookmark-star link-image"></i>
-            {% endif %}
-            {% translate "Breeder on SeedFinder.eu" %}
-        </a>
-    {% endif %}
-    </p>
-
-    <p>
-    <a href="#strains" class="{% if use_bootstrap %}link-success{% endif %}">
-        {% if use_bootstrap%}
-        <i class="bi bi-arrow-down-short link-image"></i>
+            {% if breeder.locale_seedfinder_url %}<br>{% endif %}
         {% endif %}
-        {% translate "Jump to strains" %}
-    </a>
-    </p>
+        {% if breeder.locale_seedfinder_url %}
+            <a href="{{ breeder.locale_seedfinder_url }}" target="_blank">
+                {% if use_bootstrap %}
+                <i class="bi bi-bookmark-star link-image"></i>
+                {% endif %}
+                {% translate "Breeder on SeedFinder.eu" %}
+            </a>
+        {% endif %}
+        </p>
+
+        <p>
+        <a href="#strains" class="{% if use_bootstrap %}link-success{% endif %}">
+            {% if use_bootstrap%}
+            <i class="bi bi-arrow-down-short link-image"></i>
+            {% endif %}
+            {% translate "Jump to strains" %}
+        </a>
+        </p>
     </div>
 </div>
 
