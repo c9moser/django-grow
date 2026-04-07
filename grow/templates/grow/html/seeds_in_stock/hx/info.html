@@ -125,7 +125,7 @@
                 </tr>
             </thead>
             <tbody class="{% if use_bootstrap %}table-group-divider{% endif %}" id="seeds-in-stock-table-body">
-            {% for seed in seeds_in_stock %}
+            {% for seed in seeds_in_stock_paginator.page %}
                 <tr>
                     <td>
                         <a href="{% url 'grow:strain-detail' breeder_slug=seed.strain.breeder.slug slug=seed.strain.slug %}">{{ seed.strain.name }}</a>

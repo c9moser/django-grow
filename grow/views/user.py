@@ -13,16 +13,18 @@ from .strain import (   # noqa: F401
 )
 
 from ..paginator import QuerySetPaginator
+from .strain import HxSeedsInStockInfoView
+from grow import settings
+from grow import settings
 
-
-class UserInfoView(LoginRequiredMixin, BaseView):
+class UserInfoView(HxSeedsInStockInfoView, BaseView):
     template_name = GROW_TEMPLATES['grow/user/info']
     seeds_in_stock_template_name = GROW_TEMPLATES['grow/seeds_in_stock/hx/info']
     active_growlogs_template_name = GROW_TEMPLATES['grow/growlog/hx/active_info']
     finished_growlogs_template_name = GROW_TEMPLATES['grow/growlog/hx/finished_info']
 
+
     def get_context_data(self, **kwargs):
-        user_settings = GROW_USER_SETTINGS(self.request)
         seeds_in_stock = StrainsInStock.objects.filter(
             user=self.request.user, quantity__gt=0).order_by(
             'strain__name', 'strain__breeder__name')
@@ -34,28 +36,10 @@ class UserInfoView(LoginRequiredMixin, BaseView):
 
         seeds_in_stock_paginator = QuerySetPaginator(
             seeds_in_stock,
-            user_settings.paginate,
-            self.request.GET.get('sis_page', 1)
+            page=self.request.GET.get('sis_page', 1)
         )
 
-        paginate = user_settings.paginate
         paginate = 10
-        n = seeds_in_stock.count()
-        if n == 0:
-            seeds_in_stock_n_pages = 1
-        else:
-            seeds_in_stock_n_pages = (n - 1) // paginate + 1
-
-        seeds_in_stock_current_page = 1
-        if 'seeds_in_stock_page' in self.request.GET:
-            try:
-                seeds_in_stock_current_page = int(self.request.GET['seeds_in_stock_page'])
-            except ValueError:
-                pass
-        if seeds_in_stock_current_page < 1:
-            seeds_in_stock_current_page = 1
-        elif seeds_in_stock_current_page > seeds_in_stock_n_pages:
-            seeds_in_stock_current_page = seeds_in_stock_n_pages
 
         n_growlogs = Growlog.objects.filter(grower=self.request.user).count()
         active_growlogs = Growlog.objects.filter(
@@ -89,16 +73,20 @@ class UserInfoView(LoginRequiredMixin, BaseView):
         elif finished_growlogs_current_page > finished_growlogs_n_pages:
             finished_growlogs_current_page = finished_growlogs_n_pages
 
-        ret = {
+        kwargs.setdefault('seeds_in_stock', seeds_in_stock)
+        kwargs.setdefault('seeds_in_stock_paginator', seeds_in_stock_paginator)
+
+        ret = HxSeedsInStockInfoView.get_context_data(self, **kwargs)
+        ret.update({
             'seeds_in_stock_template': self.seeds_in_stock_template_name,
-            'seeds_in_stock': seeds_in_stock,
+            'seeds_in_stock': seeds_in_stock[
+                seeds_in_stock_paginator.current_page * seeds_in_stock_paginator.paginate_by:
+                (seeds_in_stock_paginator.current_page + 1) * seeds_in_stock_paginator.paginate_by
+            ],
             'seeds_in_stock_paginator': seeds_in_stock_paginator,
             'seeds_in_stock_render_text': True,
             'seeds_in_stock_render_user_text': False,
             'seeds_in_stock_render_table': True,
-            'seeds_in_stock_current_page': seeds_in_stock_current_page,
-            'seeds_in_stock_n_pages': seeds_in_stock_n_pages,
-            'seeds_in_stock_paginate': paginate,
             'seeds_in_stock_user': self.request.user,
             'n_seeds_in_stock': n_seeds_in_stock,
             'n_feminized_seeds_in_stock': n_feminized_seeds_in_stock,
@@ -118,7 +106,7 @@ class UserInfoView(LoginRequiredMixin, BaseView):
             'finished_growlogs_n_pages': finished_growlogs_n_pages,
             'finished_growlogs_current_page': finished_growlogs_current_page,
             'finished_growlogs_paginate': paginate,
-        }
+        })
         ret.update(kwargs)
         return ret
 
