@@ -1,5 +1,5 @@
 from django.http import HttpRequest, HttpResponse
-from django.contrib.auth.mixins import LoginRequiredMixin
+# from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 from ..settings import GROW_TEMPLATES, GROW_USER_SETTINGS
 from ..growapi.models import StrainsInStock, Growlog
@@ -13,16 +13,13 @@ from .strain import (   # noqa: F401
 )
 
 from ..paginator import QuerySetPaginator
-from .strain import HxSeedsInStockInfoView
-from grow import settings
-from grow import settings
+
 
 class UserInfoView(HxSeedsInStockInfoView, BaseView):
     template_name = GROW_TEMPLATES['grow/user/info']
     seeds_in_stock_template_name = GROW_TEMPLATES['grow/seeds_in_stock/hx/info']
     active_growlogs_template_name = GROW_TEMPLATES['grow/growlog/hx/active_info']
     finished_growlogs_template_name = GROW_TEMPLATES['grow/growlog/hx/finished_info']
-
 
     def get_context_data(self, **kwargs):
         seeds_in_stock = StrainsInStock.objects.filter(
@@ -39,7 +36,8 @@ class UserInfoView(HxSeedsInStockInfoView, BaseView):
             page=self.request.GET.get('sis_page', 1)
         )
 
-        paginate = 10
+        settings = GROW_USER_SETTINGS(self.request)
+        paginate = settings.paginate
 
         n_growlogs = Growlog.objects.filter(grower=self.request.user).count()
         active_growlogs = Growlog.objects.filter(
