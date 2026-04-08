@@ -1153,7 +1153,11 @@ class HxSeedsInStockInfoView(LoginRequiredMixin, BaseView):
 
         page = max(1, min(page, n_pages))
 
-        paginator = QuerySetPaginator(seeds_in_stock, paginate_by=paginate_by, page=page)
+        paginator = QuerySetPaginator(
+            reverse('grow:hx-seeds-in-stock-info'),
+            seeds_in_stock,
+            paginate_by=paginate_by,
+            page=page)
 
         context = {
             'n_strains_in_stock': StrainsInStock.objects.filter(user=self.request.user).count(),

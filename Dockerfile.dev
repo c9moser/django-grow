@@ -12,11 +12,12 @@ ENV GROW_STATIC_ROOT=/data/static
 
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-	build-essential \
-	libpq-dev \
-	gettext \
-	git \
-	firebird-dev \
+		build-essential \
+		libpq-dev \
+		gettext \
+		git \
+		npm \
+		firebird-dev \
 	&& apt-get clean \
     && pip install --upgrade pip setuptools wheel \
 	&& pip install poetry \
@@ -31,7 +32,8 @@ WORKDIR /app
 
 COPY . .
 RUN poetry config virtualenvs.in-project false \
-	&& poetry install --with=dev --no-interaction --no-ansi --no-root
+	&& poetry install --with=dev --no-interaction --no-ansi --no-root \
+	&& npm install
 
 RUN chmod +x /app/runserver.sh
 

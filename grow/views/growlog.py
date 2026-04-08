@@ -74,6 +74,7 @@ class GrowlogDetailView(BaseView):
             entries = growlog.entries.filter().order_by('timestamp')
 
         entries_paginator = QuerySetPaginator(
+            reverse('grow:hx-growlog-entries', kwargs={'growlog_pk': growlog.pk}),
             entries,
             paginate_by=5,
             page=request.GET.get('entries_page', 1)
@@ -127,18 +128,48 @@ class HxGrowlogEntriesView(BaseView):
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         entries = self.growlog.entries.filter().order_by('timestamp')
         can_edit = False
+
+        user_settings = GROW_USER_SETTINGS(self.request)
+
         if growlog_user_is_allowed_to_edit(self.request.user, self.growlog):
             can_edit = True
             if not self.growlog.is_finished:
                 entries = self.growlog.entries.all().order_by('-timestamp')
 
-        entries_page = int(self.request.GET.get(
-            'entries_page',
-            self.request.GET.get(
-                'page',
-                self.request.GET.get('p', 1)
-            )
-        ))
+        try:
+            entries_page = int(self.request.GET.get(
+                'entries_page',
+                self.request.GET.get(
+                    'gle_page',
+                    self.request.GET.get(
+                        'gle_p',
+                        self.request.GET.get(
+                            'page',
+                            self.request.GET.get('p', 1)
+                        )
+                    )
+                )
+            ))
+        except ValueError:
+            entries_page = 1
+
+        try:
+            entries_paginate_by = int(self.request.GET.get(
+                'entries_paginate_by',
+                self.request.GET.get(
+                    'gle_paginate_by',
+                    self.request.GET.get(
+                        'gle_pgn',
+                        self.request.GET.get(
+                            'paginate_by',
+                            self.request.GET.get('pgn', user_settings.growlog_paginate)
+                        )
+                    )
+                )
+            ))
+        except ValueError:
+            entries_paginate_by = user_settings.growlog_paginate
+
         entries_paginate_by = int(self.request.GET.get(
             'entries_paginate_by',
             self.request.GET.get(
@@ -147,6 +178,7 @@ class HxGrowlogEntriesView(BaseView):
             )
         ))
         entries_paginator = QuerySetPaginator(
+            reverse('grow:hx-growlog-entries', kwargs={'growlog_pk': self.growlog.pk}),
             entries,
             paginate_by=entries_paginate_by,
             page=entries_page
@@ -953,41 +985,49 @@ class HxGrowlogActiveInfoView(LoginRequiredMixin, BaseView):
 
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = dict(kwargs)
-
-        page = kwargs.get('active_growlogs_page', 1)
-        if 'active_growlogs_page' in self.request.GET:
-            try:
-                page = int(self.request.GET['active_growlogs_page'])
-            except ValueError:
-                pass
-        paginate = GROW_USER_SETTINGS['paginate']
-        if 'active_growlogs_paginate' in self.request.GET:
-            try:
-                paginate = int(self.request.GET['active_growlogs_paginate'])
-            except ValueError:
-                pass
+        user_settings = GROW_USER_SETTINGS(self.request)
 
         active_growlogs = self.request.user.growlogs.filter(
             finished_at__isnull=True
         ).order_by('-started_at')
 
-        n_active_growlogs = active_growlogs.count()
+        paginate_by = self.request.GET.get(
+            'active_growlogs_paginate_by',
+            self.request.GET.get(
+                'agl_paginate_by',
+                self.request.GET.get(
+                    'agl_pgn',
+                    self.request.get(
+                        'paginate_by',
+                        self.request.get('pgn', user_settings.paginate)
+                    )
+                )
+            )
+        )
+        page = self.request.GET.get(
+            'active_growlogs_page',
+            self.request.GET.get(
+                'agl_page',
+                self.request.GET.get(
+                    self.request.GET.get(
+                        'agl_p',
+                        self.request.GET.get(
+                            'page',
+                            self.request.GET.get('p', 1)
+                        )
+                    )
+                )
+            )
+        )
 
-        if not n_active_growlogs:
-            active_growlogs_n_pages = 1
-        else:
-            active_growlogs_n_pages = (n_active_growlogs - 1) // paginate + 1
+        paginator = QuerySetPaginator(
+            reverse('grow:hx-growlog-active-info'),
+            active_growlogs,
+            paginate_by=paginate_by,
+            page=page
+        )
 
-        if page < 1:
-            page = 1
-        elif page > active_growlogs_n_pages:
-            page = active_growlogs_n_pages
-
-        context['active_growlogs_paginate'] = paginate
-        context['active_growlogs_current_page'] = page
-        context['active_growlogs_n_pages'] = active_growlogs_n_pages
-        context['n_active_growlogs'] = n_active_growlogs
-        context['active_growlogs'] = active_growlogs[(page - 1) * paginate: page * paginate]
+        context['active_growlogs_pagintor'] = paginator
 
         return context
 
@@ -1001,40 +1041,46 @@ class HxGrowlogFinishedInfoView(BaseView):
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = dict(kwargs)
 
-        page = kwargs.get('finished_growlogs_page', 1)
-        if 'finished_growlogs_page' in self.request.GET:
-            try:
-                page = int(self.request.GET['finished_growlogs_page'])
-            except ValueError:
-                pass
-        paginate = GROW_USER_SETTINGS['paginate']
-        if 'finished_growlogs_paginate' in self.request.GET:
-            try:
-                paginate = int(self.request.GET['finished_growlogs_paginate'])
-            except ValueError:
-                pass
-
+        user_settings = GROW_USER_SETTINGS(self.request)
         finished_growlogs = self.request.user.growlogs.filter(
             finished_at__isnull=False
-        ).order_by('title')
+        ).order_by('-finished_at')
 
-        n_finished_growlogs = finished_growlogs.count()
+        paginate_by = self.request.GET.get(
+            'finished_growlogs_paginate_by',
+            self.request.GET.get(
+                'fgl_paginate_by',
+                self.request.GET.get(
+                    'fgl_pgn',
+                    self.request.get(
+                        'paginate_by',
+                        self.request.get('pgn', user_settings.paginate)
+                    )
+                )
+            )
+        )
+        page = self.request.GET.get(
+            'finished_growlogs_page',
+            self.request.GET.get(
+                'fgl_page',
+                self.request.GET.get(
+                    'fgl_p',
+                    self.request.GET.get(
+                        'page',
+                        1
+                    )
+                )
+            )
+        )
 
-        if not n_finished_growlogs:
-            finished_growlogs_n_pages = 1
-        else:
-            finished_growlogs_n_pages = (n_finished_growlogs - 1) // paginate + 1
+        paginator = QuerySetPaginator(
+            reverse('grow:hx-growlog-finished-info'),
+            finished_growlogs,
+            paginate_by=paginate_by,
+            page=page
+        )
 
-        if page < 1:
-            page = 1
-        elif page > finished_growlogs_n_pages:
-            page = finished_growlogs_n_pages
-
-        context['finished_growlogs_paginate'] = paginate
-        context['finished_growlogs_current_page'] = page
-        context['finished_growlogs_n_pages'] = finished_growlogs_n_pages
-        context['n_finished_growlogs'] = n_finished_growlogs
-        context['finished_growlogs'] = finished_growlogs[(page - 1) * paginate: page * paginate]
+        context['finished_paginator'] = paginator
 
         return context
 

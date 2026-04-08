@@ -1,61 +1,15 @@
-{% load i18n %}
+{% load i18n grow %}
 <div class="card mb-3">
     <div class="card-header"><div class="row">
-        <div class="col-6 d-flex align-items-center">
-            <h5 class="card-title mb-0">{% translate "Active grow logs" %}</h5>
+        <div class="col-4">
+                {% with "grow/utils/paginator"|grow_template as paginator_template %}
+                {% include paginator_template with paginator=active_growlogs_paginator %}
+                {% endwith %}
+            </div>
+        <div class="col-4 d-flex align-items-center">
+            <h5 class="card-title mb-0 mx-auto">{% translate "Active grow logs" %}</h5>
         </div>
-        <div class="col-6 d-flex justify-content-end text-end">
-        <nav aria-label="{% translate 'Active grow logs pagination' %}">
-            <ul class="pagination justify-content-start mb-0">
-            {% if not active_growlogs_n_pages or active_growlogs_n_pages <= 1 %}
-                <li class="page-item active disabled" aria-current="page">
-                    <button type="button" class="btn btn-outline-secondary disabled">1</button>
-                </li>
-            {% else %}
-                <li class="page-item {% if active_growlogs_current_page == 1 %}active disabled{% endif %}" aria-current="page">
-                    <button type="button" class="btn btn-outline-secondary disabled">{{ active_growlogs_current_page }}</button>
-                </li>
-                {% if active_growlogs_current_page < active_growlogs_n_pages %}
-                    {% if active_growlogs_current_page  > 2 %}
-                <li>
-                    <button type="button"
-                        hx-get="{% url 'grow:hx-growlog-active-info' %}?page=1&paginate={{ active_growlogs_paginate}}"
-                        hx-target="#active-growlogs-info"
-                        hx-swap="innerHTML"
-                        class="btn btn-outline-primary page-link"
-                    ><i class="bi bi-chevron-double-left"></i></button>
-                </li>
-                    {% endif %}
-                {% endif %}
-                <li>
-                    <button type="button"
-                        class="btn btn-outline-primary page-link bi-outline-primary page-link disabled"
-                    ><i class="bi bi-chevron-left"></i></button>
-                </li>
-                {% if active_growlogs_current_page < active_growlogs_n_pages %}
-                <li>
-                    <button type="button"
-                        hx-get="{% url 'grow:hx-growlog-active-info' %}?page={{ active_growlogs_current_page|add:1 }}&paginate={{ active_growlogs_paginate}}"
-                        hx-target="#active-growlogs-info"
-                        hx-swap="innerHTML"
-                        class="btn btn-outline-primary page-link"
-                    ><i class="bi bi-chevron-right"></i></button>
-                </li>
-                    {% if active_growlogs_current_page < active_growlogs_n_pages|add:-1 %}
-                <li>
-                    <button type="button"
-                        hx-get="{% url 'grow:hx-growlog-active-info' %}?page={{ active_growlogs_n_pages }}&paginate={{ active_growlogs_paginate}}"
-                        hx-target="#active-growlogs-info"
-                        hx-swap="innerHTML"
-                        class="btn btn-outline-primary page-link"
-                    ><i class="bi bi-chevron-double-right"></i></button>
-                </li>
-                    {% endif %}
-                {% endif %}
-            {% endif %}
-            </ul>
-        </nav>
-        </div>
+        <div class="col-4 d-flex justify-content-end text-end"></div>
     </div></div>
     <div class="card-body p-0">
         <table class="{% if use_bootstrap %}table table-hover mb-0{% endif %}">
@@ -70,7 +24,7 @@
                 </tr>
             </thead>
             <tbody class="{% if use_bootstrap %}table-group-divider{% endif %}">
-            {% for growlog in active_growlogs %}
+            {% for growlog in active_growlogs_paginator.page %}
                 <tr>
                     <td>
                         <a href="{% url 'grow:growlog-detail' pk=growlog.id %}">{{ growlog.name }}</a>
@@ -90,8 +44,10 @@
                         {% blocktranslate count n=growlog.days_grown %}{{ n}} day{% plural %}{{ n}} days{% endblocktranslate %}
                         {% endif %}
                     </td>
-                    <td>{% if growlog.flowering_days > 28 %}
-                        {% blocktranslate count n=growlog.flowering_weeks %}{{ n}} week{% plural %}{{ n}} weeks{% endblocktranslate %}
+                    <td>{% if growlog.flowering_days < 0 %}
+                        ---
+                        {% elif growlog.flowering_days > 28 %}
+                        {% blocktranslate count n=growlog.flowering_weeks %}{{ n }} week{% plural %}{{ n }} weeks{% endblocktranslate %}
                         {% else %}
                         {% blocktranslate count n=growlog.flowering_days %}{{ n}} day{% plural %}{{ n}} days{% endblocktranslate %}
                         {% endif %}

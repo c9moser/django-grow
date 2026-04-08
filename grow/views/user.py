@@ -1,6 +1,8 @@
 from django.http import HttpRequest, HttpResponse
 # from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
+from django.urls import reverse
+# from django.utils.translation import gettext_lazy as _
 from ..settings import GROW_TEMPLATES, GROW_USER_SETTINGS
 from ..growapi.models import StrainsInStock, Growlog
 from ._base import BaseView
@@ -33,15 +35,75 @@ class UserInfoView(HxSeedsInStockInfoView, BaseView):
         settings = GROW_USER_SETTINGS(self.request)
         paginate = settings.paginate
         seeds_in_stock_paginator = QuerySetPaginator(
+            reverse('grow:hx-seeds-in-stock-info'),
             seeds_in_stock,
             paginate_by=paginate,
             page=self.request.GET.get('sis_page', 1)
         )
 
         n_growlogs = Growlog.objects.filter(grower=self.request.user).count()
+        active_growlogs_page = self.request.GET.get(
+            'active_growlogs_page',
+            self.request.GET.get(
+                'agl_page',
+                self.request.GET.get('agl_p', 1),
+            )
+        )
+        active_growlogs_paginate_by = self.request.GET.get(
+            'active_growlogs_paginate_by',
+            self.request.GET.get(
+                'agl_paginate_by',
+                self.request.GET.get(
+                    'agl_pgn',
+                    self.request.GET.get(
+                        'paginate_by',
+                        self.request.GET.get('pgn', paginate)
+                    )
+                )
+            )
+        )
         active_growlogs = Growlog.objects.filter(
             grower=self.request.user,
             finished_at__isnull=True).order_by('-started_at')
+        active_growlogs_paginator = QuerySetPaginator(
+            reverse('grow:hx-growlog-active-info'),
+            active_growlogs,
+            paginate_by=active_growlogs_paginate_by,
+            page=active_growlogs_page
+        )
+
+        finished_growlogs = Growlog.objects.filter(
+            grower=self.request.user,
+            finished_at__isnull=False).order_by('name')
+
+        finished_growlogs_page = self.request.GET.get(
+            'finished_growlogs_page',
+            self.request.GET.get(
+                'fgl_page',
+                self.request.GET.get('fgl_p', 1),
+            )
+        )
+        finished_growlogs_paginate_by = self.request.GET.get(
+            'finished_growlogs_paginate_by',
+            self.request.GET.get(
+                'fgl_paginate_by',
+                self.request.GET.get(
+                    'fgl_pgn',
+                    self.request.GET.get(
+                        'paginate_by',
+                        self.request.GET.get('pgn', paginate)
+                    )
+                )
+            )
+        )
+
+        finished_growlogs_paginator = QuerySetPaginator(
+            reverse('grow:hx-growlog-finished-info'),
+            finished_growlogs,
+            paginate_by=finished_growlogs_paginate_by,
+            page=finished_growlogs_page
+        )
+
         active_growlogs_n_pages = (active_growlogs.count() - 1) // paginate + 1
         active_growlogs_current_page = 1
         if 'active_growlogs_page' in self.request.GET:
@@ -91,6 +153,8 @@ class UserInfoView(HxSeedsInStockInfoView, BaseView):
             'n_autoflowering_seeds_in_stock': n_autoflowering_seeds_in_stock,
             'n_photoperiod_seeds_in_stock': n_photoperiod_seeds_in_stock,
             'n_growlogs': n_growlogs,
+            'active_growlogs_paginator': active_growlogs_paginator,
+            'finished_growlogs_paginator': finished_growlogs_paginator,
             'n_active_growlogs': n_active_growlogs,
             'n_finished_growlogs': n_finished_growlogs,
             'active_growlogs': active_growlogs,
