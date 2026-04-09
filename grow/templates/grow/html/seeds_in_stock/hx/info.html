@@ -182,10 +182,10 @@
 
                     <th>
                         <button class="btn btn-link {% if seeds_in_stock_sort == 'flowering_time' %}active link-success{% else %}link-dark{% endif %} text-decoration-none p-0 m-0"
-                            {% if seeds_in_stock_sort == 'flowering_time_days' %}
-                            hx-get="{% url 'grow:hx-seeds-in-stock-info' %}?sort=flowering_time&ord={% if seeds_in_stock_ordering == 'asc' %}desc{% else %}asc{% endif %}&pgn={{ seeds_in_stock_paginator.paginate_by }}&p={{ seeds_in_stock_paginator.current_page }}&render_text={% if seeds_in_stock_render_text %}1{% else %}0{% endif %}&render_user_text={% if seeds_in_stock_render_user_text %}1{% else %}0{% endif %}"
+                            {% if seeds_in_stock_sort == 'flowering_time' %}
+                            hx-get="{% url 'grow:hx-seeds-in-stock-info' %}?sort=flt&ord={% if seeds_in_stock_ordering == 'asc' %}desc{% else %}asc{% endif %}&pgn={{ seeds_in_stock_paginator.paginate_by }}&p={{ seeds_in_stock_paginator.current_page }}&render_text={% if seeds_in_stock_render_text %}1{% else %}0{% endif %}&render_user_text={% if seeds_in_stock_render_user_text %}1{% else %}0{% endif %}"
                             {% else %}
-                            hx-get="{% url 'grow:hx-seeds-in-stock-info' %}?sort=flowering_time&ord=asc&pgn={{ seeds_in_stock_paginator.paginate_by }}&p={{ seeds_in_stock_paginator.current_page }}&render_text={% if seeds_in_stock_render_text %}1{% else %}0{% endif %}&render_user_text={% if seeds_in_stock_render_user_text %}1{% else %}0{% endif %}"
+                            hx-get="{% url 'grow:hx-seeds-in-stock-info' %}?sort=flt&ord=asc&pgn={{ seeds_in_stock_paginator.paginate_by }}&p={{ seeds_in_stock_paginator.current_page }}&render_text={% if seeds_in_stock_render_text %}1{% else %}0{% endif %}&render_user_text={% if seeds_in_stock_render_user_text %}1{% else %}0{% endif %}"
                             {% endif %}
                             hx-target="#seeds-in-stock-info"
                             hx-swap="innerHTML"

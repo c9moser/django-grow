@@ -1448,7 +1448,7 @@ class HxSeedsInStockInfoView(LoginRequiredMixin, BaseView):
                     '-strain__flowering_time_days',
                     'strain__name',
                     'strain__breeder__name',
-                    'is_feminized')  # noqa: E501
+                    'is_feminized')
         else:
             self.logger.warning(f"Invalid sort value: {sort}. Defaulting to 'strain'.")
             sort = 'strain'
