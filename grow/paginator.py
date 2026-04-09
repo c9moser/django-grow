@@ -57,7 +57,7 @@ class QuerySetPaginator:
                     'page': i,
                     'current_page': i == self.current_page,
                     'text': str(i),
-                    'url': f"{self.base_url}?{self.urlvars['page']}={i}&{self.urlvars['paginate_by']}={self.paginate_by}"
+                    'url': f"{self.base_url}?{self.urlvars['page']}={i}&{self.urlvars['paginate_by']}={self.paginate_by}"  # noqa E501
                 })
         else:
             if self.current_page > 2:
@@ -66,7 +66,7 @@ class QuerySetPaginator:
                     'current_page': False,
                     'bs_icon': 'chevron-bar-left',
                     'text': _('First') if not settings.USE_BOOTSTRAP else '',
-                    'url': f"{self.base_url}?{self.urlvars['page']}=1&{self.urlvars['paginate_by']}={self.paginate_by}"
+                    'url': f"{self.base_url}?{self.urlvars['page']}=1&{self.urlvars['paginate_by']}={self.paginate_by}"  # noqa E501
                 })
             if self.current_page > 1:
                 pages.append({
@@ -74,14 +74,14 @@ class QuerySetPaginator:
                     'current_page': False,
                     'bs_icon': 'chevron-left',
                     'text': _('Previous') if not settings.USE_BOOTSTRAP else '',
-                    'url': f"{self.base_url}?{self.urlvars['page']}={self.current_page - 1}&{self.urlvars['paginate_by']}={self.paginate_by}"
+                    'url': f"{self.base_url}?{self.urlvars['page']}={self.current_page - 1}&{self.urlvars['paginate_by']}={self.paginate_by}",  # noqa E501
                 })
 
             pages.append({
                 'page': self.current_page,
                 'current_page': True,
                 'text': str(self.current_page),
-                'url': f"{self.base_url}?{self.urlvars['page']}={self.current_page}&{self.urlvars['paginate_by']}={self.paginate_by}"
+                'url': f"{self.base_url}?{self.urlvars['page']}={self.current_page}&{self.urlvars['paginate_by']}={self.paginate_by}"  # noqa E501
             })
 
             if self.current_page < n_pages:
@@ -90,7 +90,7 @@ class QuerySetPaginator:
                     'current_page': False,
                     'bs_icon': 'chevron-right',
                     'text': _('Next') if not settings.USE_BOOTSTRAP else '',
-                    'url': f"{self.base_url}?{self.urlvars['page']}={self.current_page + 1}&{self.urlvars['paginate_by']}={self.paginate_by}"
+                    'url': f"{self.base_url}?{self.urlvars['page']}={self.current_page + 1}&{self.urlvars['paginate_by']}={self.paginate_by}"  # noqa E501
                 })
             if self.current_page < n_pages - 1:
                 pages.append({
@@ -98,7 +98,7 @@ class QuerySetPaginator:
                     'current_page': False,
                     'bs_icon': 'chevron-bar-right',
                     'text': _('Last') if not settings.USE_BOOTSTRAP else '',
-                    'url': f"{self.base_url}?{self.urlvars['page']}={n_pages}&{self.urlvars['paginate_by']}={self.paginate_by}"
+                    'url': f"{self.base_url}?{self.urlvars['page']}={n_pages}&{self.urlvars['paginate_by']}={self.paginate_by}"  # noqa E501
                 })
 
         return pages

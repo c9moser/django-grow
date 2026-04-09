@@ -44,76 +44,233 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class StrainView(BaseView):
+class HxStrainMyGrowlogsView(View):
+    template_name = settings.GROW_TEMPLATES["grow/strain/strain/hx/my_growlogs"]
+
+    def get_context_data(self, **kwargs):
+        url = reverse("grow:hx-strain-my-growlogs", kwargs={"strain_pk": self.strain.pk})
+        user_settings = settings.GROW_USER_SETTINGS(self.request)
+
+        try:
+            paginate_by = int(self.request.GET.get(
+                'my_growlogs_paginate_by',
+                self.request.GET.get(
+                    'mygl_paginate_by',
+                    self.request.GET.get(
+                        'mygl_pgn',
+                        self.request.GET.get(
+                            'paginate_by',
+                            self.request.GET.get(
+                                'pgn',
+                                user_settings.paginate
+                            )
+                        )
+                    )
+                )
+            ))
+        except (ValueError, TypeError):
+            paginate_by = user_settings.paginate
+
+        try:
+            page = int(self.request.GET.get(
+                self.request.GET.get(
+                    'my_growlogs_page',
+                    self.request.GET.get(
+                        'mygl_page',
+                        self.request.GET.get(
+                            'mygl_p',
+                            self.request.GET.get(
+                                'page',
+                                self.request.GET.get('p', 1)
+                            )
+                        )
+                    )
+                )
+            ))
+        except (ValueError, TypeError):
+            page = 1
+
+        if not self.request.user.is_authenticated:
+            queryset = self.strain.growlog_strains.filter(grower__isnull=True)
+        else:
+            queryset = self.strain.growlog_strains.filter(
+                growlog__grower=self.request.user.id
+            )
+
+        paginator = QuerySetPaginator(url, queryset, page=page, paginate_by=paginate_by)
+
+        context = kwargs
+        context.setdefault('breeder', self.breeder)
+        context.setdefault('strain', self.strain)
+        context.setdefault('my_growlogs_paginator', paginator)
+
+        return context
+
+    def get(self, request: HttpRequest, strain_pk: int) -> HttpResponse:
+        self.strain = get_object_or_404(Strain, pk=strain_pk)
+        self.breeder = self.strain.breeder
+
+        return render(request, self.template_name, context=self.get_context_data())
+
+
+class HxStrainGrowlogsView(View):
+    template_name = settings.GROW_TEMPLATES["grow/strain/strain/hx/growlogs"]
+
+    def get_context_data(self, **kwargs):
+        user_settings = settings.GROW_USER_SETTINGS(self.request)
+        url = reverse("grow:hx-strain-growlogs", kwargs={"strain_pk": self.strain.pk})
+        try:
+            paginate_by = int(self.request.GET.get(
+                'growlogs_paginate_by',
+                self.request.GET.get(
+                    'gl_paginate_by',
+                    self.request.GET.get(
+                        'gl_pgn',
+                        self.request.GET.get(
+                            'paginate_by',
+                            self.request.GET.get(
+                                'pgn',
+                                user_settings.paginate
+                            )
+                        )
+                    )
+                )
+            ))
+        except (ValueError, TypeError):
+            paginate_by = user_settings.paginate
+
+        try:
+            page = int(self.request.GET.get(
+                self.request.GET.get(
+                    'growlogs_page',
+                    self.request.GET.get(
+                        'gl_page',
+                        self.request.GET.get(
+                            'gl_p',
+                            self.request.GET.get(
+                                'page',
+                                self.request.GET.get('p', 1)
+                            )
+                        )
+                    )
+                )
+            ))
+        except (ValueError, TypeError):
+            page = 1
+
+        growlog_ids = set()
+
+        for growlog_strain in self.strain.growlog_strains.all():
+            if (
+                self.request.user.is_authenticated
+                and growlog_strain.growlog.grower == self.request.user
+            ):
+                continue
+
+            growlog = growlog_strain.growlog
+            if growlog_user_is_allowed_to_view(self.request.user, growlog):
+                growlog_ids.add(growlog.pk)
+
+        strain_growlogs = self.strain.growlog_strains.filter(
+            growlog__id__in=growlog_ids
+        ).order_by('-growlog__started_at')
+        paginator = QuerySetPaginator(url, strain_growlogs, page=page, paginate_by=paginate_by)
+
+        context = kwargs
+        context.setdefault('breeder', self.breeder)
+        context.setdefault('strain', self.strain)
+        context.setdefault('growlogs_paginator', paginator)
+
+        return context
+
+    def get(self, request: HttpRequest, strain_pk: int) -> HttpResponse:
+        self.strain = get_object_or_404(Strain, pk=strain_pk)
+        self.breeder = self.strain.breeder
+
+        return render(request, self.template_name, self.get_context_data())
+
+
+class StrainView(HxStrainGrowlogsView, HxStrainMyGrowlogsView, BaseView):
     template_name = settings.GROW_TEMPLATES["grow/strain/strain"]
 
+    def get_context_data(self, **kwargs):
+        if self.request.user.is_authenticated:
+            return HxStrainMyGrowlogsView.get_context_data(
+                self,
+                **HxStrainGrowlogsView.get_context_data(self, **kwargs)
+            )
+        return HxStrainGrowlogsView.get_context_data(self, **kwargs)
+
     def get(self, request: HttpRequest, breeder_slug: str, slug: str) -> HttpResponse:
-        breeder = get_object_or_404(Breeder, slug=breeder_slug)
-        strain = get_object_or_404(breeder.strains, slug=slug)
+        self.breeder = get_object_or_404(Breeder, slug=breeder_slug)
+        self.strain = get_object_or_404(self.breeder.strains, slug=slug)
 
         language_code = get_language()
 
-        translation = strain.get_translation(language_code)
-        breeder_translation = breeder.get_translation(language_code)
-        comments = strain.comments.filter(language_code=language_code).order_by('-created_at')[:10]
+        translation = self.strain.get_translation(language_code)
+        breeder_translation = self.breeder.get_translation(language_code)
+        comments = self.strain.comments.filter(
+            language_code=language_code
+        ).order_by('-created_at')[:10]
 
-        growlogs = [
-            growlog_strain.growlog
-            for growlog_strain in strain.growlog_strains.all().order_by(Lower('growlog__name'))
-            if growlog_user_is_allowed_to_view(self.request.user, growlog_strain.growlog)
-        ]
         allowed_to_edit = request.user.is_authenticated
-        allowed_to_delete = request.user.is_authenticated and strain.growlog_count == 0
+        allowed_to_delete = request.user.is_authenticated and self.strain.growlog_count == 0
         allowed_to_translate = request.user.is_authenticated  # TODO: add logic
 
-        return render(request, self.template_name, context={
-            'strain': strain,
-            'growlogs': growlogs,
+        return render(request, self.template_name, self.get_context_data(**{
             'allowed_to_delete': allowed_to_delete,
             'allowed_to_edit': allowed_to_edit,
             'allowed_to_translate': allowed_to_translate,
             'regular_seeds_in_stock': (
-                strain.get_regular_seeds_in_stock(self.request.user)
+                self.strain.get_regular_seeds_in_stock(self.request.user)
                 if self.request.user.is_authenticated else 0
             ),
             'regular_seeds_purchased_on': (
-                strain.get_regular_seeds_purchased_on(self.request.user)
+                self.strain.get_regular_seeds_purchased_on(self.request.user)
                 if self.request.user.is_authenticated else None
             ),
             'feminized_seeds_in_stock': (
-                strain.get_feminized_seeds_in_stock(self.request.user)
+                self.strain.get_feminized_seeds_in_stock(self.request.user)
                 if self.request.user.is_authenticated else 0
             ),
             'feminized_seeds_purchased_on': (
-                strain.get_feminized_seeds_purchased_on(self.request.user)
+                self.strain.get_feminized_seeds_purchased_on(self.request.user)
                 if self.request.user.is_authenticated else None
             ),
-            'total_seeds_in_stock': strain.get_total_seeds_in_stock(self.request.user) if self.request.user.is_authenticated else 0,  # noqa: E501
-            'strain_images': strain.images.all().order_by('-uploaded_at')[:3],
+            'total_seeds_in_stock': (
+                self.strain.get_total_seeds_in_stock(self.request.user)
+                if self.request.user.is_authenticated
+                else 0
+            ),
+            'strain_images': self.strain.images.all().order_by('-uploaded_at')[:3],
             'strain_translation': translation,
             'strain_url': (translation.strain_url
                            if translation and translation.strain_url
-                           else strain.strain_url),
+                           else self.strain.strain_url),
             'seedfinder_url': (translation.seedfinder_url
                                if translation and translation.seedfinder_url
-                               else strain.seedfinder_url),
+                               else self.strain.seedfinder_url),
             'description_html': (translation.description_html
                                  if translation and translation.description
-                                 else strain.description_html),
-            'strain_name': translation.name if translation and translation.name else strain.name,
+                                 else self.strain.description_html),
+            'strain_name': (
+                translation.name
+                if translation and translation.name
+                else self.strain.name
+            ),
             'breeder_translation': breeder_translation,
             'breeder_url': (breeder_translation.breeder_url
                             if breeder_translation and breeder_translation.breeder_url
-                            else breeder.breeder_url),
+                            else self.breeder.breeder_url),
             'seedfinder_breeder_url': (breeder_translation.seedfinder_url
                                        if breeder_translation and breeder_translation.seedfinder_url
-                                       else breeder.seedfinder_url),
+                                       else self.breeder.seedfinder_url),
             'breeder_name': (breeder_translation.name
                              if breeder_translation and breeder_translation.name
-                             else breeder.name),
+                             else self.breeder.name),
             'comments': comments,
             'translation': translation,
-        })
+        }))
 
 
 class StrainCreateView(LoginRequiredMixin, View):
@@ -1088,11 +1245,13 @@ class StrainUpdateStockView(LoginRequiredMixin, CreateView):
 
 class HxSeedsInStockInfoView(LoginRequiredMixin, BaseView):
     template_name = settings.GROW_TEMPLATES['grow/seeds_in_stock/hx/info']
+    logger = logging.getLogger(f"{__name__}.HxSeedsInStockInfoView")
 
     def get_context_data(self, **kwargs):
         seeds_in_stock = StrainsInStock.objects.filter(
-            user=self.request.user
-        ).order_by('strain__name', 'strain__breeder__name')
+            user=self.request.user,
+            quantity__gt=0
+        )
 
         render_table = self.request.GET.get('render_table', '1') == '1'
         render_text = self.request.GET.get('render_text', '0') == '1'
@@ -1126,8 +1285,14 @@ class HxSeedsInStockInfoView(LoginRequiredMixin, BaseView):
                 self.request.GET.get(
                     'sis_paginate_by',
                     self.request.GET.get(
-                        'paginate_by',
-                        settings.GROW_USER_SETTINGS(self.request).paginate
+                        'sis_pgn',
+                        self.request.GET.get(
+                            'paginate_by',
+                            self.request.GET.get(
+                                'pgn',
+                                settings.GROW_USER_SETTINGS(self.request).paginate
+                            )
+                        )
                     )
                 )
             ))
@@ -1144,7 +1309,13 @@ class HxSeedsInStockInfoView(LoginRequiredMixin, BaseView):
                 'seeds_in_stock_page',
                 self.request.GET.get(
                     'sis_page',
-                    self.request.GET.get('page', 1)
+                    self.request.GET.get(
+                        'sis_p',
+                        self.request.GET.get(
+                            'page',
+                            self.request.GET.get('p', 1)
+                        )
+                    )
                 )
             ))
         except (TypeError, ValueError) as ex:
@@ -1152,6 +1323,140 @@ class HxSeedsInStockInfoView(LoginRequiredMixin, BaseView):
             page = 1
 
         page = max(1, min(page, n_pages))
+
+        sort = self.request.GET.get(
+            'sis_sort',
+            self.request.GET.get(
+                'sis_s',
+                self.request.GET.get(
+                    'sort',
+                    self.request.GET.get('s', 'strain')
+                )
+            )
+        )
+        ordering = self.request.GET.get(
+            'sis_ordering',
+            self.request.GET.get(
+                'sis_ord',
+                self.request.GET.get(
+                    'sis_o',
+                    self.request.GET.get(
+                        'ordering',
+                        self.request.GET.get(
+                            'ord',
+                            self.request.GET.get('o', 'asc')
+                        )
+                    )
+                )
+            )
+        )
+        if ordering in ['asc', 'a', 'ascending', 'up', '1']:
+            ordering = 'asc'
+        elif ordering in ['desc', 'd', 'descending', 'down', '-1']:
+            ordering = 'desc'
+        else:
+            self.logger.warning(f"Invalid ordering value: {ordering}. Defaulting to 'asc'.")
+            ordering = 'asc'
+
+        if sort == 'strain':
+            if ordering == 'asc':
+                seeds_in_stock = seeds_in_stock.order_by(
+                    'strain__name', 'strain__breeder__name', 'is_feminized')
+            else:
+                seeds_in_stock = seeds_in_stock.order_by(
+                    '-strain__name', '-strain__breeder__name', '-is_feminized')
+        elif sort == 'breeder':
+            if ordering == 'asc':
+                seeds_in_stock = seeds_in_stock.order_by(
+                    'strain__breeder__name', 'strain__name', 'is_feminized')
+            else:
+                seeds_in_stock = seeds_in_stock.order_by(
+                    '-strain__breeder__name', '-strain__name', '-is_feminized')
+        elif sort == 'genotype':
+            if ordering == 'asc':
+                seeds_in_stock = seeds_in_stock.order_by(
+                    'strain__genotype_data',
+                    'strain__name',
+                    'strain__breeder__name',
+                    'is_feminized')  # noqa: E501
+            else:
+                seeds_in_stock = seeds_in_stock.order_by(
+                    '-strain__genotype_data',
+                    'strain__name',
+                    'strain__breeder__name',
+                    'is_feminized')  # noqa: E501
+        elif sort == 'purchased_on':
+            if ordering == 'asc':
+                seeds_in_stock = seeds_in_stock.order_by(
+                    'purchased_on',
+                    'strain__name',
+                    'strain__breeder__name',
+                    'is_feminized')  # noqa: E501
+            else:
+                seeds_in_stock = seeds_in_stock.order_by(
+                    '-purchased_on',
+                    'strain__name',
+                    'strain__breeder__name',
+                    'is_feminized')  # noqa: E501
+        elif sort == 'quantity':
+            if ordering == 'asc':
+                seeds_in_stock = seeds_in_stock.order_by(
+                    'quantity',
+                    'strain__name',
+                    'strain__breeder__name',
+                    'is_feminized')
+            else:
+                seeds_in_stock = seeds_in_stock.order_by(
+                    '-quantity',
+                    'strain__name',
+                    'strain__breeder__name',
+                    'is_feminized')
+        elif sort == 'type':
+            if ordering == 'asc':
+                seeds_in_stock = seeds_in_stock.order_by(
+                    'is_feminized',
+                    'strain__name',
+                    'strain__breeder__name')
+            else:
+                seeds_in_stock = seeds_in_stock.order_by(
+                    '-is_feminized',
+                    'strain__name',
+                    'strain__breeder__name')
+        elif sort == 'genotype':
+            if ordering == 'asc':
+                seeds_in_stock = seeds_in_stock.order_by(
+                    'strain__genotype',
+                    'strain__name',
+                    'strain__breeder__name',
+                    'is_feminized')  # noqa: E501
+            else:
+                seeds_in_stock = seeds_in_stock.order_by(
+                    '-strain__genotype',
+                    'strain__name',
+                    'strain__breeder__name',
+                    'is_feminized')  # noqa: E501
+        elif sort in ['flt', 'flowering', 'flowering_time']:
+            sort = 'flowering_time'
+            if ordering == 'asc':
+                seeds_in_stock = seeds_in_stock.order_by(
+                    'strain__flowering_time_days',
+                    'strain__name',
+                    'strain__breeder__name',
+                    'is_feminized')  # noqa: E501
+            else:
+                seeds_in_stock = seeds_in_stock.order_by(
+                    '-strain__flowering_time_days',
+                    'strain__name',
+                    'strain__breeder__name',
+                    'is_feminized')  # noqa: E501
+        else:
+            self.logger.warning(f"Invalid sort value: {sort}. Defaulting to 'strain'.")
+            sort = 'strain'
+            ordering = 'asc'
+            seeds_in_stock = seeds_in_stock.order_by(
+                'strain__name',
+                'strain__breeder__name',
+                'is_feminized')
 
         paginator = QuerySetPaginator(
             reverse('grow:hx-seeds-in-stock-info'),
@@ -1173,12 +1478,10 @@ class HxSeedsInStockInfoView(LoginRequiredMixin, BaseView):
             'seeds_in_stock_n_pages': n_pages,
             'seeds_in_stock_paginate': paginate_by,
             'seeds_in_stock_paginator': paginator,
-            'seeds_in_stock': sis.order_by(
-                'strain__name',
-                'strain__breeder__name',
-            )[(page - 1) * paginate_by:(page * paginate_by)],
             'seeds_in_stock_scroll_to_card': True,
             'seeds_in_stock_user': kwargs.get('seeds_in_stock_user', self.request.user),
+            'seeds_in_stock_sort': sort,
+            'seeds_in_stock_ordering': ordering,
         }
         context.update(kwargs)
         return context

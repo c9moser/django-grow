@@ -3,7 +3,7 @@
     <ul class="pagination pgination-sm mb-0">
         {% for page in paginator.pagination %}
         <li class="page-item {% if page.current_page %}active{% endif %}">
-            <button class="page-link page-link-sm btn-sm"
+            <button class="btn btn-sm page-link page-link-sm btn-sm {% if page.current_page %}active disabled{% endif %}"
                 hx-get="{{ page.url }}"
                 hx-target="#seeds-in-stock-info"
                 hx-swap="innerHTML"

@@ -102,12 +102,134 @@
         <table class="{% if use_bootstrap %}table table-hover mb-0{% endif %}">
             <thead>
                 <tr class="{% if use_bootstrap %}table-success{% endif %}">
-                    <th>{% translate "Strain" %}</th>
-                    <th>{% translate "Breeder"%}</th>
+                    <th>
+                        <button type="button"
+                            class="btn btn-link {% if seeds_in_stock_sort == 'strain' %}active link-success{% else %}link-dark{% endif %} text-decoration-none p-0 m-0"
+                            {% if seeds_in_stock_sort == 'strain' %}
+                            hx-get="{% url 'grow:hx-seeds-in-stock-info' %}?sort=strain&ord={% if seeds_in_stock_ordering == 'asc' %}desc{% else %}asc{% endif %}&pgn={{ seeds_in_stock_paginator.paginate_by }}&p={{ seeds_in_stock_paginator.current_page }}&render_text={% if seeds_in_stock_render_text %}1{% else %}0{% endif %}&render_user_text={% if seeds_in_stock_render_user_text %}1{% else %}0{% endif %}"
+                            {% else %}
+                            hx-get="{% url 'grow:hx-seeds-in-stock-info' %}?sort=strain&ord=asc&pgn={{ seeds_in_stock_paginator.paginate_by }}&p={{ seeds_in_stock_paginator.current_page }}&render_text={% if seeds_in_stock_render_text %}1{% else %}0{% endif %}&render_user_text={% if seeds_in_stock_render_user_text %}1{% else %}0{% endif %}"
+                            {% endif %}
+                            hx-target="#seeds-in-stock-info"
+                            hx-swap="innerHTML"
+                            hx-trigger="click"
+                        >
+                            <span class="fw-bold" data-bs-toggle="tooltip" data-bs-title="{% translate 'Sort by strain name' %}" data-bs-placement="top">
+                                {% translate "Strain" %}
+                                {% if seeds_in_stock_sort == 'strain' %}
+                                    {% if seeds_in_stock_ordering == 'asc' %}
+                                        <i class="bi bi-caret-up-fill"></i>
+                                    {% else %}
+                                        <i class="bi bi-caret-down-fill"></i>
+                                    {% endif %}
+                                {% else %}
+                                <i class="bi bi-caret-up"></i>
+                                {% endif %}
+                            </span>
+                        </button>
+                    </th>
+                    <th>
+                        <button class="btn btn-link {% if seeds_in_stock_sort == 'breeder' %}active link-success{% else %}link-dark{% endif %} text-decoration-none p-0 m-0"
+                            {% if seeds_in_stock_sort == 'breeder' %}
+                            hx-get="{% url 'grow:hx-seeds-in-stock-info' %}?sort=breeder&ord={% if seeds_in_stock_ordering == 'asc' %}desc{% else %}asc{% endif %}&pgn={{ seeds_in_stock_paginator.paginate_by }}&p={{ seeds_in_stock_paginator.current_page }}&render_text={% if seeds_in_stock_render_text %}1{% else %}0{% endif %}&render_user_text={% if seeds_in_stock_render_user_text %}1{% else %}0{% endif %}"
+                            {% else %}
+                            hx-get="{% url 'grow:hx-seeds-in-stock-info' %}?sort=breeder&ord=asc&pgn={{ seeds_in_stock_paginator.paginate_by }}&p={{ seeds_in_stock_paginator.current_page }}&render_text={% if seeds_in_stock_render_text %}1{% else %}0{% endif %}&render_user_text={% if seeds_in_stock_render_user_text %}1{% else %}0{% endif %}"
+                            {% endif %}
+                            hx-target="#seeds-in-stock-info"
+                            hx-swap="innerHTML"
+                            hx-trigger="click"
+                        >
+                            <span class="fw-bold" data-bs-toggle="tooltip" data-bs-title="{% translate 'Sort by breeder name' %}" data-bs-placement="top">
+                                {% translate "Breeder"%}
+                                {% if seeds_in_stock_sort == 'breeder' %}
+                                    {% if seeds_in_stock_ordering == 'asc' %}
+                                        <i class="bi bi-caret-up-fill"></i>
+                                    {% else %}
+                                        <i class="bi bi-caret-down-fill"></i>
+                                    {% endif %}
+                                {% else %}
+                                <i class="bi bi-caret-up"></i>
+                                {% endif %}
+                            </span>
+                        </button>
+                    </th>
                     <th>{% translate "Type" %}</th>
-                    <th>{% translate "Genotype" %}</th>
-                    <th>{% translate "Flowering time" %}</th>
-                    <th>{% translate "Quantity" %}</th>
+                    <th>
+                        <button class="btn btn-link {% if seeds_in_stock_sort == 'genotype' %}active link-success{% else %}link-dark{% endif %} text-decoration-none p-0 m-0"
+                            {% if seeds_in_stock_sort == 'genotype' %}
+                            hx-get="{% url 'grow:hx-seeds-in-stock-info' %}?sort=genotype&ord={% if seeds_in_stock_ordering == 'asc' %}desc{% else %}asc{% endif %}&pgn={{ seeds_in_stock_paginator.paginate_by }}&p={{ seeds_in_stock_paginator.current_page }}&render_text={% if seeds_in_stock_render_text %}1{% else %}0{% endif %}&render_user_text={% if seeds_in_stock_render_user_text %}1{% else %}0{% endif %}"
+                            {% else %}
+                            hx-get="{% url 'grow:hx-seeds-in-stock-info' %}?sort=genotype&ord=asc&pgn={{ seeds_in_stock_paginator.paginate_by }}&p={{ seeds_in_stock_paginator.current_page }}&render_text={% if seeds_in_stock_render_text %}1{% else %}0{% endif %}&render_user_text={% if seeds_in_stock_render_user_text %}1{% else %}0{% endif %}"
+                            {% endif %}
+                            hx-target="#seeds-in-stock-info"
+                            hx-swap="innerHTML"
+                            hx-trigger="click"
+                        >
+                            <span class="fw-bold" data-bs-toggle="tooltip" data-bs-title="{% translate 'Sort by genotype name' %}" data-bs-placement="top">
+                                {% translate "Genotype" %}
+                                {% if seeds_in_stock_sort == 'genotype' %}
+                                    {% if seeds_in_stock_ordering == 'asc' %}
+                                        <i class="bi bi-caret-up-fill"></i>
+                                    {% else %}
+                                        <i class="bi bi-caret-down-fill"></i>
+                                    {% endif %}
+                                {% else %}
+                                <i class="bi bi-caret-up"></i>
+                                {% endif %}
+                            </span>
+                        </button>
+                    </th>
+
+                    <th>
+                        <button class="btn btn-link {% if seeds_in_stock_sort == 'flowering_time' %}active link-success{% else %}link-dark{% endif %} text-decoration-none p-0 m-0"
+                            {% if seeds_in_stock_sort == 'flowering_time_days' %}
+                            hx-get="{% url 'grow:hx-seeds-in-stock-info' %}?sort=flowering_time&ord={% if seeds_in_stock_ordering == 'asc' %}desc{% else %}asc{% endif %}&pgn={{ seeds_in_stock_paginator.paginate_by }}&p={{ seeds_in_stock_paginator.current_page }}&render_text={% if seeds_in_stock_render_text %}1{% else %}0{% endif %}&render_user_text={% if seeds_in_stock_render_user_text %}1{% else %}0{% endif %}"
+                            {% else %}
+                            hx-get="{% url 'grow:hx-seeds-in-stock-info' %}?sort=flowering_time&ord=asc&pgn={{ seeds_in_stock_paginator.paginate_by }}&p={{ seeds_in_stock_paginator.current_page }}&render_text={% if seeds_in_stock_render_text %}1{% else %}0{% endif %}&render_user_text={% if seeds_in_stock_render_user_text %}1{% else %}0{% endif %}"
+                            {% endif %}
+                            hx-target="#seeds-in-stock-info"
+                            hx-swap="innerHTML"
+                            hx-trigger="click"
+                        >
+                            <span class="fw-bold" data-bs-toggle="tooltip" data-bs-title="{% translate 'Sort by flowering time' %}" data-bs-placement="top">
+                                {% translate "Flowering time" %}
+                                {% if seeds_in_stock_sort == 'flowering_time' %}
+                                    {% if seeds_in_stock_ordering == 'asc' %}
+                                        <i class="bi bi-caret-up-fill"></i>
+                                    {% else %}
+                                        <i class="bi bi-caret-down-fill"></i>
+                                    {% endif %}
+                                {% else %}
+                                <i class="bi bi-caret-up"></i>
+                                {% endif %}
+                            </span>
+                        </button>
+                    </th>
+                    <th>
+                        <button class="btn btn-link {% if seeds_in_stock_sort == 'quantity' %}active link-success{% else %}link-dark{% endif %} text-decoration-none p-0 m-0"
+                            {% if seeds_in_stock_sort == 'quantity' %}
+                            hx-get="{% url 'grow:hx-seeds-in-stock-info' %}?sort=quantity&ord={% if seeds_in_stock_ordering == 'asc' %}desc{% else %}asc{% endif %}&pgn={{ seeds_in_stock_paginator.paginate_by }}&p={{ seeds_in_stock_paginator.current_page }}&render_text={% if seeds_in_stock_render_text %}1{% else %}0{% endif %}&render_user_text={% if seeds_in_stock_render_user_text %}1{% else %}0{% endif %}"
+                            {% else %}
+                            hx-get="{% url 'grow:hx-seeds-in-stock-info' %}?sort=quantity&ord=asc&pgn={{ seeds_in_stock_paginator.paginate_by }}&p={{ seeds_in_stock_paginator.current_page }}&render_text={% if seeds_in_stock_render_text %}1{% else %}0{% endif %}&render_user_text={% if seeds_in_stock_render_user_text %}1{% else %}0{% endif %}"
+                            {% endif %}
+                            hx-target="#seeds-in-stock-info"
+                            hx-swap="innerHTML"
+                            hx-trigger="click"
+                        >
+                            <span class="fw-bold" data-bs-toggle="tooltip" data-bs-title="{% translate 'Sort by quantity' %}" data-bs-placement="top">
+                                {% translate "Quantity" %}
+                                {% if seeds_in_stock_sort == 'quantity' %}
+                                    {% if seeds_in_stock_ordering == 'asc' %}
+                                        <i class="bi bi-caret-up-fill"></i>
+                                    {% else %}
+                                        <i class="bi bi-caret-down-fill"></i>
+                                    {% endif %}
+                                {% else %}
+                                <i class="bi bi-caret-up"></i>
+                                {% endif %}
+                            </span>
+                        </button>
+                    </th>
                     {% if seeds_in_stock_user == request.user %}
                     <th class="text-end">
                         <button
@@ -194,30 +316,32 @@
             </tfoot>
         </table>
     </div>
+    {% if seeds_in_stock_paginator.paginate_by >= 20 %}
     <div class="card-footer pb-0"><div class="row mb-0">
-        <div class="col-4 my-0">
-            <nav aria-label="{% translate 'Seeds in stock pagination' %}" class="d-flex justify-content-start text-end mb-2">
-                <ul class="pagination mb-0">
-                    {% for page in seeds_in_stock_paginator.pagination %}
-                    <li class="page-item {% if page.current_page %}active{% endif %}">
-                        <button class="page-link page-link-sm"
-                            hx-get="{% url 'grow:hx-seeds-in-stock-info' %}?sis_paginate_by={{ seeds_in_stock_paginator.paginate_by }}&sis_page={{ page.page }}&render_text={% if seeds_in_stock_render_text %}1{% else %}0{% endif %}&render_user_text={% if seeds_in_stock_render_user_text %}1{% else %}0{% endif %}"
-                            hx-target="#seeds-in-stock-info"
-                            hx-swap="innerHTML"
-                        >
-                            {% if page.bs_icon %}<i class="bi bi-{{ page.bs_icon }}"></i>{% endif %}
-                            {% if not page.bs_icon %}{% if page.text %}{{ page.text }}{% else %}{{ page.number }}{% endif %}{% endif %}
-                        </button>
-                    </li>
-                    {% endfor %}
-                </ul>
-            </nav>
+            <div class="col-4 my-0">
+                <nav aria-label="{% translate 'Seeds in stock pagination' %}" class="d-flex justify-content-start text-end mb-2">
+                    <ul class="pagination mb-0">
+                        {% for page in seeds_in_stock_paginator.pagination %}
+                        <li class="page-item {% if page.current_page %}active{% endif %}">
+                            <button class="page-link page-link-sm"
+                                hx-get="{% url 'grow:hx-seeds-in-stock-info' %}?sis_paginate_by={{ seeds_in_stock_paginator.paginate_by }}&sis_page={{ page.page }}&render_text={% if seeds_in_stock_render_text %}1{% else %}0{% endif %}&render_user_text={% if seeds_in_stock_render_user_text %}1{% else %}0{% endif %}"
+                                hx-target="#seeds-in-stock-info"
+                                hx-swap="innerHTML"
+                            >
+                                {% if page.bs_icon %}<i class="bi bi-{{ page.bs_icon }}"></i>{% endif %}
+                                {% if not page.bs_icon %}{% if page.text %}{{ page.text }}{% else %}{{ page.number }}{% endif %}{% endif %}
+                            </button>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </nav>
+            </div>
+
+            <div class="col-4"></div>
+            <div class="col-4"></div>
         </div>
-        <div class="col-4">
-        </div>
-        <div class="col-4">
-        </div>
-    </div></div>
+    </div>
+    {% endif %}
 </div>
 <script>
     htmx.process(document.getElementById('seeds-in-stock-info'));

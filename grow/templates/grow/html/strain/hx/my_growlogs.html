@@ -4,7 +4,7 @@
         <div class="row">
             <div class="col-4">
                 {% with "grow/utils/paginator"|grow_template as paginator_template %}
-                {% include paginator_template with paginator=growlogs_paginator %}
+                {% include paginator_template with paginator=my_growlogs_paginator %}
                 {% endwith %}
             </div>
             <div class="col-4 d-flex align-items-center">
@@ -15,11 +15,10 @@
         </div>
     </div>
     <div class="card-body p-0">
-        <table class="{% if use_bootstrap %}table table-hover mb-0{% endif %}">
+        <table class="{% if use_bootstrap %}table table-hover mb-0{% endif %} mb-0">
             <thead>
                 <tr class="{% if use_bootstrap %}table-success{% endif %}">
                     <th scope="col">{% translate "Name" %}</th>
-                    <th scope="col">{% translate "Grower" %}</th>
                     <th scope="col">{% translate "Start date" %}</th>
                     <th scope="col">{% translate "Duration" %}</th>
                     <th scope="col">{% translate "End date" %}</th>
@@ -28,10 +27,9 @@
                 </tr>
             </thead>
             <tbody>
-                {% for growlog_strain in growlogs_paginator.page %}
+                {% for growlog_strain in my_growlogs_paginator.page %}
                 <tr>
                     <td><a href="{% url 'grow:growlog-detail' growlog_strain.growlog.pk %}">{{ growlog_strain.growlog.name }}</a></td>
-                    <td>{{ growlog_strain.growlog.grower.username }}</td>
                     <td>{{ growlog_strain.growlog.started_at|date }}</td>
                     <td>{% if growlog_strain.growlog.duration_days > 30 %}
                             {% blocktranslate count n=growlog_strain.growlog.duration_weeks %}{{ n }} week{% plural %}{{ n }} weeks{% endblocktranslate %}
@@ -45,7 +43,7 @@
                         {% with growlog_strain.growlog.anonymized_locations as locations %}
                         {% if locations %}
                         <ul class="list-unstyled my-0 mx-0">
-                            {% for location in locations %}<li>{{ location.location_type.name }}</li>{% endfor %}
+                            {% for location in locations %}<li>{{ location.name }}</li>{% endfor %}
                         </ul>
                         {% else %}
                         ---
@@ -54,12 +52,18 @@
                     </td>
                 </tr>
                 {% empty %}
-                <tr>
-                    <td colspan="7" class="text-center"><div class="alert alert-warning">{% translate "No grow logs available." %}</div></td>
+                <tr class="mb-0">
+                    <td colspan="6" class="mb-0"><div class="alert alert-warning mb-0 text-center">{% translate "It seems like you have not grown this strain yet." %}</div></td>
                 </tr>
                 {% endfor %}
-
             </tbody>
+            <tfoot class="{% if use_bootstrap %}table-group-divider{% endif %}">
+                <tr>
+                    <td colspan="6" class="text-center">
+                        <div class="alert alert-info mb-0">{% translate "This table shows your grow logs for this strain and is only visible to you." %}</div>
+                    </td>
+                </tr>
+            </tfoot>
         </table>
     </div>
 </div>

@@ -211,58 +211,6 @@
 {{ description_html }}
 {% endif %}
 
-
-<h2 id="pictures">{% translate "Pictures" %}</h2>
-<p>
-    <a href="{% url 'grow:strain-image-upload' strain_pk=strain.pk %}"
-        class="{% if use_bootstrap %}btn btn-outline-success mb-3{% endif %}"
-    >{% if use_bootstrap%}
-        <i class="bi bi-upload me-2 link-image"></i>{% translate "Upload picture" %}
-    {% else %}
-        {% translate "Upload picture" %}
-    {% endif %}
-    </a>
-    <a href="{% url 'grow:strain-gallery' strain_pk=strain.pk %}"
-        class="{% if use_bootstrap %}btn btn-outline-primary mb-3{% endif %}"
-    >{% if use_bootstrap %}
-        <i class="bi bi-images me-2 link-image"></i>{% translate "View gallery" %}
-    {% else %}
-        {% translate "View gallery" %}
-    {% endif %}
-    </a>
-</p>
-{% if strain_images %}
-<div class="row row-cols-1 row-cols-md-3 g-4 mb-3">
-    {% for picture in strain_images %}
-    <div class="col">
-        <div class="{% if use_bootstrap %}card h-100 border-1{% endif %}">
-            <img src="{{ picture.image.url }}" class="card-img-top {% if use_bootstrap %}img-fluid{% endif %}" alt="{{ picture.caption }}">
-            {% if picture.caption %}
-            <div class="card-body p-1 d-flex flex-column">
-                <div class="mt-auto">
-                {% if picture.description %}
-                    <p class="card-text mt-auto">{{ picture.description }}</p>
-                {% elif picture.caption %}
-                    <p class="card-text mt-auto">{{ picture.caption }}</p>
-                {% else %}
-                    <p class="card-text mt-auto">
-                        {{ strain.breeder.locale_name }} - {{ strain.locale_name }}
-                    </p>
-                {% endif %}
-                    <p>By <i>{{ picture.uploader.username }}</i>
-                </div>
-            </div>
-            {% endif %}
-        </div>
-    </div >
-    {% endfor %}
-</div>
-{% else %}
-<p>
-{% blocktranslate %}There are currently no pictures for this strain. You could upload pictures of your grow to show others how this strain looks like during growth and flowering.{% endblocktranslate %}
-</p>
-{% endif %}
-
 {% if request.user.is_authenticated %}
 {% if strain.is_regular or strain.is_feminized %}
 <h2>{% translate "Seeds in stock" %}</h2>
@@ -455,10 +403,70 @@
 {% endif %}{# strain has seeds #}
 {% endif %}{# request.user.is_authenticated #}
 
+<h2 id="pictures">{% translate "Pictures" %}</h2>
+<p>
+    <a href="{% url 'grow:strain-image-upload' strain_pk=strain.pk %}"
+        class="{% if use_bootstrap %}btn btn-outline-success mb-3{% endif %}"
+    >{% if use_bootstrap%}
+        <i class="bi bi-upload me-2 link-image"></i>{% translate "Upload picture" %}
+    {% else %}
+        {% translate "Upload picture" %}
+    {% endif %}
+    </a>
+    <a href="{% url 'grow:strain-gallery' strain_pk=strain.pk %}"
+        class="{% if use_bootstrap %}btn btn-outline-primary mb-3{% endif %}"
+    >{% if use_bootstrap %}
+        <i class="bi bi-images me-2 link-image"></i>{% translate "View gallery" %}
+    {% else %}
+        {% translate "View gallery" %}
+    {% endif %}
+    </a>
+</p>
+{% if strain_images %}
+<div class="row row-cols-1 row-cols-md-3 g-4 mb-3">
+    {% for picture in strain_images %}
+    <div class="col">
+        <div class="{% if use_bootstrap %}card h-100 border-1{% endif %}">
+            <img src="{{ picture.image.url }}" class="card-img-top {% if use_bootstrap %}img-fluid{% endif %}" alt="{{ picture.caption }}">
+            {% if picture.caption %}
+            <div class="card-body p-1 d-flex flex-column">
+                <div class="mt-auto">
+                {% if picture.description %}
+                    <p class="card-text mt-auto">{{ picture.description }}</p>
+                {% elif picture.caption %}
+                    <p class="card-text mt-auto">{{ picture.caption }}</p>
+                {% else %}
+                    <p class="card-text mt-auto">
+                        {{ strain.breeder.locale_name }} - {{ strain.locale_name }}
+                    </p>
+                {% endif %}
+                    <p>By <i>{{ picture.uploader.username }}</i>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div >
+    {% endfor %}
+</div>
+{% else %}
+<p>
+{% blocktranslate %}There are currently no pictures for this strain. You could upload pictures of your grow to show others how this strain looks like during growth and flowering.{% endblocktranslate %}
+</p>
+{% endif %}
+
+{% if request.user.is_authenticated %}
+<h2 id="my-growlogs">{% translate "My Growlogs" %}</h2>
+{% with 'grow/strain/strain/hx/my_growlogs'|grow_template as hx_my_growlogs_template %}
+    {% include hx_my_growlogs_template with paginator=my_growlogs_paginator %}
+{% endwith %}
+
+{% endif %}
+
+
 <h2 id="growlogs">Growlogs</h2>
 <div id="growlogs-info">
 {% with 'grow/strain/strain/hx/growlogs'|grow_template as hx_growlogs_template %}
-    {% include  hx_growlogs_template %}
+    {% include  hx_growlogs_template with paginator=growlogs_paginator %}
 {% endwith %}
 </div>
 
