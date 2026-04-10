@@ -83,7 +83,7 @@ GROW_BUILTIN_BS_STRAIN_TEMPLATES = {
     'grow/strain/gallery/slides': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain/gallery/slides'],
     'grow/strain/hx/delete': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain/hx/delete'],
     'grow/strain/hx/search': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain/hx/search'],
-    'grow/strain/strain': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain/strain'],
+    'grow/strain/strain': 'grow/bootstrap/strain/strain/detail.html',
     'grow/strain/strain/add_to_stock': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain/strain/add_to_stock'],
     'grow/strain/strain/add_to_stock2': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain/strain/add_to_stock2'],
     'grow/strain/strain/comment_create': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain/strain/comment_create'],

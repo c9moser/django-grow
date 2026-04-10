@@ -5,7 +5,7 @@
 {% block head_title %}{{ grow_head_title }}{% endblock %}
 
 {% block content %}
-{% if use_bootstrap %}
+
 <nav aria-label="breadcrumb">
 
     <ol class="breadcrumb">
@@ -28,11 +28,8 @@
         <li class="breadcrumb-item active">{{ strain.name }}</li>
     </ol>
 </nav>
-{% endif %}
-
 
 <div class="{% if use_bootstrap %}fs-3{% endif %}">
-{% if use_bootstrap %}
     {% if allowed_to_edit %}
     <a href="{% url 'grow:strain-update' pk=strain.pk %}"
         class="link-primary
@@ -75,30 +72,25 @@
             data-bs-title="{% translate 'Delete strain' %}"></i>
     </a>
     {% endif %}
-{% else %}
-    {% if allowed_to_edit %}<a href="{% url 'grow:strain-update' pk=strain.pk %}">[{% translate "Edit strain" %}]</a>{% endif %}
-    {% if allowed_to_translate %}<a href="{% url 'grow:strain-translate' pk=strain.pk %}">[{% translate "Translate strain" %}]</a>{% endif %}
-    {% if allowed_to_delete %}<a href="{% url 'grow:strain-delete' pk=strain.pk %}">[{% translate "Delete strain" %}]</a>{% endif %}
-{% endif %}
 </div>
 
 <h1>{{ strain.breeder.name }} - {{ strain.name }}</h1>
 
 <div class="row mb-3">
-    <div class="{% if use_bootstrap %}col-md-5 mb-3{% endif %}" {% if not use_bootstrap %}style="width:40%;float:left;"{% endif %}>
+    <div class="col-md-5 mb-3">
 {% if strain.has_logo %}
-    <img class="{% if use_bootstrap %}img-fluid rounded{% endif %}"
-        src="{{ strain.logo }}"
-        style="max-width:100%;"
-    >
+    <img class="img-fluid rounded" alt="{% translate 'Strain logo' %}" src="{{ strain.logo }}" style="max-width:100%;">
+{% elif strain.breeder.has_logo %}
+    <img class="img-fluid rounded" alt="{% translate 'Breeder logo' %}" src="{{ strain.breeder.logo }}" style="max-width:100%;">
 {% else %}
-    <img class="{% if use_bootstrap %}img-fluid rounded {% endif %}"
-        src="{% static 'grow/img/hemp-leaf.jpg' %}"
-        style="max-width:100%;"
-    >
+    <img class="img-fluid rounded" alt="{% translate 'Default strain logo' %}" src="{% static 'grow/img/hemp-leaf.jpg' %}" style="max-width:100%;">
 {% endif %}
     </div>
-    <div class="{% if use_bootstrap %}col-md-7 mb-3{% endif %}" {% if not use_bootstrap %}style="width:60%;"{% endif %}>
+    <div class="col-md-7 mb-3">
+        <div class="alert alert-success mb-3" role="alert">
+        <b>{% translate "Breeder Slug:" %}</b> {{ strain.breeder.slug }}<br>
+        <b>{% translate "Strain Slug:" %}</b> {{ strain.slug }}
+        </div>
 
     <div class="alert alert-info p-2 mb-3" role="alert">
     {% if strain.created_by %}
@@ -138,6 +130,7 @@
             <li>
                 <span class="fw-bold">{% translate "Genotype:"%}</span>
                 {{ strain.genotype.name }}
+            </li>
             <li>
                 <span class="fw-bold">{% translate "Is this is a autoflowering strain?" %}</span>
                 {% if strain.is_automatic %}{% translate "Yes" %}{% else %}{% translate "No" %}{% endif %}
@@ -180,21 +173,21 @@
         {% endif %}
     </p>
     <p>
-        <a href="#pictures" class="{% if use_bootstrap %}link-success{% endif %}">
+        <a href="#pictures" class="link-success">
             <i class="bi bi-arrow-down-short link-image"></i>
             {% translate "Jump to pictures" %}
         </a><br>
         {% if strain.is_regular or strain.is_feminized %}
-        <a href="#seeds-in-stock-table" class="{% if use_bootstrap %}link-success{% endif %}">
+        <a href="#seeds-in-stock-table" class="link-success">
             <i class="bi bi-arrow-down-short link-image"></i>
             {% translate "Jump to seeds in stock" %}
         </a><br>
         {% endif %}
-        <a href="#growlogs" class="{% if use_bootstrap %}link-success{% endif %}">
+        <a href="#growlogs" class="link-success">
             <i class="bi bi-arrow-down-short link-image"></i>
             {% translate "Jump to growlogs" %}
         </a><br>
-        <a href="#comments" class="{% if use_bootstrap %}link-success{% endif %}">
+        <a href="#comments" class="link-success">
             <i class="bi bi-arrow-down-short link-image"></i>
             {% translate "Jump to comments" %}
         </a>
@@ -205,58 +198,6 @@
 {% if description_html %}
 <h2>{% translate "Strain description" %}</h2>
 {{ description_html }}
-{% endif %}
-
-
-<h2 id="pictures">{% translate "Pictures" %}</h2>
-<p>
-    <a href="{% url 'grow:strain-image-upload' strain_pk=strain.pk %}"
-        class="{% if use_bootstrap %}btn btn-outline-success mb-3{% endif %}"
-    >{% if use_bootstrap%}
-        <i class="bi bi-upload me-2 link-image"></i>{% translate "Upload picture" %}
-    {% else %}
-        {% translate "Upload picture" %}
-    {% endif %}
-    </a>
-    <a href="{% url 'grow:strain-gallery' strain_pk=strain.pk %}"
-        class="{% if use_bootstrap %}btn btn-outline-primary mb-3{% endif %}"
-    >{% if use_bootstrap %}
-        <i class="bi bi-images me-2 link-image"></i>{% translate "View gallery" %}
-    {% else %}
-        {% translate "View gallery" %}
-    {% endif %}
-    </a>
-</p>
-{% if strain_images %}
-<div class="row row-cols-1 row-cols-md-3 g-4 mb-3">
-    {% for picture in strain_images %}
-    <div class="col">
-        <div class="{% if use_bootstrap %}card h-100 border-1{% endif %}">
-            <img src="{{ picture.image.url }}" class="card-img-top {% if use_bootstrap %}img-fluid{% endif %}" alt="{{ picture.caption }}">
-            {% if picture.caption %}
-            <div class="card-body p-1 d-flex flex-column">
-                <div class="mt-auto">
-                {% if picture.description %}
-                    <p class="card-text mt-auto">{{ picture.description }}</p>
-                {% elif picture.caption %}
-                    <p class="card-text mt-auto">{{ picture.caption }}</p>
-                {% else %}
-                    <p class="card-text mt-auto">
-                        {{ strain.breeder.locale_name }} - {{ strain.locale_name }}
-                    </p>
-                {% endif %}
-                    <p>By <i>{{ picture.uploader.username }}</i>
-                </div>
-            </div>
-            {% endif %}
-        </div>
-    </div >
-    {% endfor %}
-</div>
-{% else %}
-<p>
-{% blocktranslate %}There are currently no pictures for this strain. You could upload pictures of your grow to show others how this strain looks like during growth and flowering.{% endblocktranslate %}
-</p>
 {% endif %}
 
 {% if request.user.is_authenticated %}
@@ -287,7 +228,6 @@
                 {% endif %}
             </td>
             <td>
-                {% if use_bootstrap %}
                 <div class="text-end">
                     <a href="#"
                         {% if strain.regular_seeds_in_stock %}
@@ -325,12 +265,7 @@
                             data-bs-placement="left"
                             data-bs-title="{% translate 'Add regular seeds to stock.' %}"></i>
                     </a>
-                {% else %}
-                    <a href="{% url 'grow:strain-add-to-stock' strain=strain.pk feminized=0 %}">
-                        {% translate "add seeds" %}
-                    </a>
-                {% endif %}
-                {% if use_bootstrap %}
+
                     <a href="#"
                         hx-get="{% url 'grow:hx-strain-remove-from-stock' strain=strain.pk feminized=0 %}"
                         hx-swap="innerHTML"
@@ -347,11 +282,7 @@
                         data-bs-title="{% translate 'Remove regular seeds from stock.' %}"
                         data-bs-placement="left"></i>
                     </a>
-                {% else %}
-                <a href="{% url 'grow:strain-remove-from-stock' strain=strain.pk feminized=0 %}">
-                    {% translate "remove seeds" %}
-                </a>
-                {% endif %}
+                </div>
             </td>
         </tr>
     {% endif %}
@@ -438,10 +369,10 @@
         </tr>
     {% endif %}
     </tbody>
-    <tfoot class="{% if use_bootstrap %}table-group-divider{% endif %}">
+    <tfoot class="table-group-divider">
         <tr>
             <th>{% translate "Total seeds" %}</th>
-            <th colspan=3 class="{% if use_bootstrap %}text-end{% endif %}">
+            <th colspan=3 class="text-end">
                 {% blocktranslate count n=total_seeds_in_stock%}{{ n }} seed{% plural %}{{ n }} seeds{% endblocktranslate %}
             </th>
         </tr>
@@ -451,27 +382,75 @@
 {% endif %}{# strain has seeds #}
 {% endif %}{# request.user.is_authenticated #}
 
+<h2 id="pictures">{% translate "Pictures" %}</h2>
+<p>
+    <a href="{% url 'grow:strain-image-upload' strain_pk=strain.pk %}"
+        class="btn btn-outline-success mb-3"
+    >
+        <i class="bi bi-upload me-2 link-image"></i>{% translate "Upload picture" %}
+    </a>
+    <a href="{% url 'grow:strain-gallery' strain_pk=strain.pk %}"
+        class="btn btn-outline-primary mb-3"
+    >
+        <i class="bi bi-images me-2 link-image"></i>{% translate "View gallery" %}
+    </a>
+</p>
+{% if strain_images %}
+<div class="row row-cols-1 row-cols-md-3 g-4 mb-3">
+    {% for picture in strain_images %}
+    <div class="col">
+        <div class="card h-100 border-1">
+            <img src="{{ picture.image.url }}" class="card-img-top img-fluid" alt="{{ picture.caption }}">
+            {% if picture.caption %}
+            <div class="card-body p-1 d-flex flex-column">
+                <div class="mt-auto">
+                {% if picture.description %}
+                    <p class="card-text mt-auto">{{ picture.description }}</p>
+                {% elif picture.caption %}
+                    <p class="card-text mt-auto">{{ picture.caption }}</p>
+                {% else %}
+                    <p class="card-text mt-auto">
+                        {{ strain.breeder.locale_name }} - {{ strain.locale_name }}
+                    </p>
+                {% endif %}
+                    <p>By <i>{{ picture.uploader.username }}</i>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div >
+    {% endfor %}
+</div>
+{% else %}
+<p>
+{% blocktranslate %}There are currently no pictures for this strain. You could upload pictures of your grow to show others how this strain looks like during growth and flowering.{% endblocktranslate %}
+</p>
+{% endif %}
+
+{% if request.user.is_authenticated %}
+<h2 id="my-growlogs">{% translate "My Growlogs" %}</h2>
+{% with 'grow/strain/strain/hx/my_growlogs'|grow_template as hx_my_growlogs_template %}
+    {% include hx_my_growlogs_template with paginator=my_growlogs_paginator %}
+{% endwith %}
+
+{% endif %}
+
+
 <h2 id="growlogs">Growlogs</h2>
 <div id="growlogs-info">
 {% with 'grow/strain/strain/hx/growlogs'|grow_template as hx_growlogs_template %}
-    {% include  hx_growlogs_template %}
+    {% include  hx_growlogs_template with paginator=growlogs_paginator %}
 {% endwith %}
 </div>
 
 <h2 id="comments">{% translate "Comments" %}</h2>
-{% if use_bootstrap %}
-    <a href="{% url 'grow:strain-comment-add' strain_pk=strain.pk %}" class="btn btn-outline-success mb-3">
-        <i class="bi bi-plus-circle me-2 link-image"></i>{% translate "Add comment" %}
-    </a>
-    <a href="#" class="btn btn-outline-success mb-3 ms-2">
-        <i class="bi bi-journal-text me-2 link-image"></i>
-        {% translate "View all comments" %}
-    </a>
-{% else %}
-    <button onclick="location.href='{% url 'grow:strain-comment-add' strain_pk=strain.pk %}';" class="mb-3">
-        {% translate "Add comment" %}
-    </button>
-{% endif %}
+<a href="{% url 'grow:strain-comment-add' strain_pk=strain.pk %}" class="btn btn-outline-success mb-3">
+    <i class="bi bi-plus-circle me-2 link-image"></i>{% translate "Add comment" %}
+</a>
+<a href="#" class="btn btn-outline-success mb-3 ms-2">
+    <i class="bi bi-journal-text me-2 link-image"></i>
+    {% translate "View all comments" %}
+</a>
 
 <div id="user-comments-div">
     {% for comment in comments %}
@@ -484,7 +463,6 @@
             </span>
             <div class="text-end">
         {% if request.user.pk == comment.user.pk %}
-            {% if use_bootstrap %}
                 <a href="{% url 'grow:strain-comment-update' pk=comment.pk %}#}"
                     class="link-primary
                         link-opacity-75
@@ -512,11 +490,6 @@
                         data-bs-placement="bottom"
                         data-bs-title="{% translate 'Delete comment' %}"></i>
                 </a>
-
-            {% else %}
-                <a href="{% url 'grow:strain-comment-update' pk=comment.pk %}">{% translate "Edit comment" %}</a>
-                <a href="#{#{% url 'grow:strain-comment-delete' pk=comment.pk %}#}">{% translate "Delete comment" %}</a>
-            {% endif %} {# use_bootstrap #}
         {% endif %} {# request.user.pk == comment.user.pk #}
             </div>
         </div>
