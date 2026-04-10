@@ -5,36 +5,15 @@
 {% block title %}{{ grow_site_title }}: {% translate "Update strain" %}{% endblock %}
 
 {% block form_buttons %}
-{% if use_bootstrap %}
-<button type="submit" class="btn btn-success">
-    <i class="bi bi-check"></i>
-    {% translate "Update Strain" %}
-</button>
-<a href="{% url 'grow:breeder-detail' slug=form.instance.breeder.slug %}"
-    class="btn btn-secondary"
->
-    <i class="bi bi-x"></i>
-    {% translate "Back to breeder" %}
-</a>
-<a href="{% url 'grow:strain-detail' breeder_slug=form.instance.breeder.slug slug=form.instance.slug %}"
-    class="btn btn-secondary"
->
-    <i class="bi bi-x"></i>
-    {% translate "Back to strain" %}
-</a>
-{% else %}
 <button type="submit">
     {% translate "Update Strain" %}
 </button>
 <button
-    onclick="location.href='{% url 'grow:breeder-detail' slug=form.instance.breeder.slug %}'"
-    class="btn btn-secondary">
+    onclick="location.href='{% url 'grow:breeder-detail' slug=form.instance.breeder.slug %}'">
     {% translate "Back to breeder" %}
 </button>
 <button
-    onclick="location.href='{% url 'grow:strain-detail' breeder_slug=form.instance.breeder.slug slug=form.instance.slug %}'"
-    class="btn btn-secondary">
+    onclick="location.href='{% url 'grow:strain-detail' breeder_slug=form.instance.breeder.slug slug=form.instance.slug %}'">
     {% translate "Back to strain" %}
 </button>
-{% endif %}
 {% endblock %}

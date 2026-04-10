@@ -228,7 +228,7 @@ location_patterns = [
 ]
 
 user_patterns = [
-    path("grow/my-info/", UserInfoView.as_view(), name="user-info"),
+    path("grow/my-grow/", UserInfoView.as_view(), name="user-info"),
     path("__hx__/grow/user/add_seeds_to_stock/<int:strain>/<int:feminized>/",
          HxUserInfoAddSeedsToStockView.as_view(),
          name="hx-user-add-seeds-to-stock"),

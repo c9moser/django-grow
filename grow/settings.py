@@ -76,9 +76,9 @@ GROW_BUILTIN_STRAIN_TEMPLATES = {
 GROW_BUILTIN_BS_STRAIN_TEMPLATES = {
     # strain templates
     'grow/strain': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain'],
-    'grow/strain/create': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain/create'],
+    'grow/strain/create': 'grow/bootstrap/strain/strain/create.html',
     'grow/strain/delete': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain/delete'],
-    'grow/strain/form': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain/form'],
+    'grow/strain/form': 'grow/bootstrap/strain/strain/form.html',
     'grow/strain/gallery': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain/gallery'],
     'grow/strain/gallery/slides': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain/gallery/slides'],
     'grow/strain/hx/delete': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain/hx/delete'],
@@ -107,7 +107,7 @@ GROW_BUILTIN_BS_STRAIN_TEMPLATES = {
     'grow/strain/strain/remove_from_stock_invalid': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain/strain/remove_from_stock_invalid'],
     'grow/strain/strain_search_results': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain/strain_search_results'],
     'grow/strain/strain/translation': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain/strain/translation'],
-    'grow/strain/strain/update': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain/strain/update'],
+    'grow/strain/strain/update': 'grow/bootstrap/strain/strain/update.html',
 }
 
 

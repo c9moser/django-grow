@@ -5,7 +5,7 @@
 
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-{% if use_bootstrap %}
+
     <div class="form-floating mb-3">
         <input type="text" id="breeder_name" class="form-control" value="{{ breeder.name }}" readonly disabled>
         <label for="breeder_name">{% translate "Breeder" %}</label>
@@ -205,18 +205,9 @@
         <label for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
     </div>
 
-    <div class="text-end">
-{% else %}
-    <p>
-        <label for="breeder_name">{% translate "Breeder" %}</label>
-        <input type="text" id="breeder_name" class="form-control" value="{{ breeder.name }}" readonly disabled>
-    </p>
-    {{ form.as_p }}
-{% endif %}
-    {% block form_buttons %}{% endblock form_buttons %}
-{% if use_bootstrap %}
+    <div class="text-end" id="form-buttons">
+        {% block form_buttons %}{% endblock form_buttons %}
     </div>
-{% endif %}
 </form>
 {% endblock %}
 

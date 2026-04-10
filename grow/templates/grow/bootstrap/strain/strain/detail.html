@@ -428,9 +428,9 @@
 {% endif %}
 
 {% if request.user.is_authenticated %}
-<h2 id="my-growlogs">{% translate "My Growlogs" %}</h2>
+<h2 id="my-growlogs-info">{% translate "My Growlogs" %}</h2>
 {% with 'grow/strain/strain/hx/my_growlogs'|grow_template as hx_my_growlogs_template %}
-    {% include hx_my_growlogs_template with paginator=my_growlogs_paginator %}
+    {% include hx_my_growlogs_template with paginator=my_growlogs_paginator hx_target="#my-growlogs-info"%}
 {% endwith %}
 
 {% endif %}
@@ -439,7 +439,7 @@
 <h2 id="growlogs">Growlogs</h2>
 <div id="growlogs-info">
 {% with 'grow/strain/strain/hx/growlogs'|grow_template as hx_growlogs_template %}
-    {% include  hx_growlogs_template with paginator=growlogs_paginator %}
+    {% include  hx_growlogs_template with paginator=growlogs_paginator hx_target="#growlogs-info"%}
 {% endwith %}
 </div>
 
