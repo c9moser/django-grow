@@ -96,7 +96,6 @@ class HxStrainMyGrowlogsView(View):
                 growlog__grower=self.request.user.id
             )
 
-
         paginator = QuerySetPaginator(queryset,
                                       page=page,
                                       paginate_by=paginate_by,
@@ -122,7 +121,6 @@ class HxStrainGrowlogsView(View):
 
     def get_context_data(self, **kwargs):
         user_settings = settings.GROW_USER_SETTINGS(self.request)
-        url = reverse("grow:hx-strain-growlogs", kwargs={"strain_pk": self.strain.pk})
         try:
             paginate_by = int(self.request.GET.get(
                 'growlogs_paginate_by',

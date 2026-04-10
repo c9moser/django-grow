@@ -189,7 +189,7 @@ class QuerySetPaginator:
         if self.url_path:
             url = reverse(self.url_path, kwargs=self.url_path_kwargs, query=vars)
         else:
-            url_vars= '&'.join([f"{key}={value}" for key, value in vars.items()])
+            url_vars = '&'.join([f"{key}={value}" for key, value in vars.items()])
             url = f"{self.base_url}?{url_vars}"
 
         return url

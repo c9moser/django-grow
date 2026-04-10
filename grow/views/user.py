@@ -1,10 +1,9 @@
 from django.http import HttpRequest, HttpResponse
 # from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
-from django.urls import reverse
 # from django.utils.translation import gettext_lazy as _
 from ..settings import GROW_TEMPLATES, GROW_USER_SETTINGS
-from ..growapi.models import StrainsInStock, Growlog
+from ..growapi.models import Growlog
 from ._base import BaseView
 
 from .strain import (   # noqa: F401
