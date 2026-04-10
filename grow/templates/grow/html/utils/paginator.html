@@ -1,17 +1,14 @@
 {% load i18n %}
-<nav aria-label="{% translate 'Pagination' %}" class="d-flex justify-content-start text-end mb-2">
-    <ul class="pagination pgination-sm mb-0">
-        {% for page in paginator.pagination %}
-        <li class="page-item {% if page.current_page %}active{% endif %}">
-            <button class="btn btn-sm page-link page-link-sm btn-sm {% if page.current_page %}active disabled{% endif %}"
-                hx-get="{{ page.url }}"
-                hx-target="#seeds-in-stock-info"
-                hx-swap="innerHTML"
-            >
-                {% if page.bs_icon %}<i class="bi bi-{{ page.bs_icon }}"></i>{% endif %}
-                {% if not page.bs_icon %}{% if page.text %}{{ page.text }}{% else %}{{ page.number }}{% endif %}{% endif %}
-            </button>
-        </li>
-        {% endfor %}
-    </ul>
-</nav>
+{% for page in paginator.pagination %}
+    <a href="#"
+        {% if not page.current_page %}
+         hx-get="{{ page.url }}"
+         hx-target="{{ hx_target }}"
+         hx-swap="innerHTML"
+        {% endif %}
+    >
+        {% if page.text %}{{ page.text }}{% else %}{{ page.number }}{% endif %}
+    </a>
+</li>
+{% if not forloop.last %}|{% endif %}
+{% endfor %}

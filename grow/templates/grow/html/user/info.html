@@ -1,9 +1,24 @@
 {% extends base_template %}
-{% load i18n grow %}
+{% load static i18n grow %}
 
 {% block title %}{{ grow_site_title }}: <span class="{% if use_bootstrap %}fs-2{% endif %}">{% translate "User Information" %}</span>{% endblock title %}
 {% block head_title %}{{ grow_head_title }}{% endblock %}
 
+{% block scripts %}
+<script src="{% static 'grow/js/page-url.js' %}"></script>
+<script>
+    let PAGE_URL = new PageUrl({
+        'sis_p': '{{ seeds_in_stock_paginator.current_page }}',
+        'sis_pgn': '{{ seeds_ins_stock_paginator.paginate_by }}',
+        'sis_sort': '{{ seeds_in_stock_sort }}',
+        'sis_ord': '{{ seeds_in_stock_ordering }}',
+        'agl_p': '{{ active_growlogs_paginator.current_page }}',
+        'agl_pgn': '{{ active_growlogs_paginator.paginate_by }}',
+        'fgl_p': '{{ finished_growlogs_paginator.current_page }}',
+        'fgl_pgn': '{{ finished_growlogs_paginator.paginate_by }}',
+    })
+</script>
+{% endblock scripts%}
 {% block content %}
 <main>
 
@@ -56,7 +71,7 @@
 
 <div id="seeds-in-stock-info">
 {% with "grow/seeds_in_stock/hx/info"|grow_template as seeds_in_stock_template %}
-{% include seeds_in_stock_template %}
+{% include seeds_in_stock_template with seeds_in_stock_update_page_url=False %}
 {% endwith %}
 </div>
 

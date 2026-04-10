@@ -74,8 +74,9 @@ class GrowlogDetailView(BaseView):
             entries = growlog.entries.filter().order_by('timestamp')
 
         entries_paginator = QuerySetPaginator(
-            reverse('grow:hx-growlog-entries', kwargs={'growlog_pk': growlog.pk}),
             entries,
+            url_path='grow:hx-growlog-entries',
+            url_path_kwargs={'growlog_pk': growlog.pk},
             paginate_by=5,
             page=request.GET.get('entries_page', 1)
         )
@@ -178,8 +179,13 @@ class HxGrowlogEntriesView(BaseView):
             )
         ))
         entries_paginator = QuerySetPaginator(
-            reverse('grow:hx-growlog-entries', kwargs={'growlog_pk': self.growlog.pk}),
             entries,
+            url_path='grow:hx-growlog-entries',
+            url_path_kwargs={'growlog_pk': self.growlog.pk},
+            url_variables={
+                'entries_paginate_by': entries_paginate_by,
+                'entries_page': entries_page,
+            },
             paginate_by=entries_paginate_by,
             page=entries_page
         )

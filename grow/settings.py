@@ -264,7 +264,7 @@ GROW_BUILTIN_UTILS_TEMPLATES = {
 
 GROW_BUILTIN_BS_UTILS_TEMPLATES = {
     'grow/utils/hx_select_date_days_sanitize': GROW_BUILTIN_UTILS_TEMPLATES['grow/utils/hx_select_date_days_sanitize'],
-    'grow/utils/paginator': GROW_BUILTIN_UTILS_TEMPLATES['grow/utils/paginator'],
+    'grow/utils/paginator': 'grow/bootstrap/utils/paginator.html',
 }
 
 GROW_BUILTIN_TEMPLATES = {

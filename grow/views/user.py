@@ -24,21 +24,9 @@ class UserInfoView(HxSeedsInStockInfoView, BaseView):
     finished_growlogs_template_name = GROW_TEMPLATES['grow/growlog/hx/finished_info']
 
     def get_context_data(self, **kwargs):
-        seeds_in_stock = StrainsInStock.objects.filter(
-            user=self.request.user, quantity__gt=0)
 
-        n_feminized_seeds_in_stock = seeds_in_stock.filter(is_feminized=True).count()
-        n_regular_seeds_in_stock = seeds_in_stock.filter(is_regular=True).count()
-        n_autoflowering_seeds_in_stock = seeds_in_stock.filter(strain__is_automatic=True).count()
-        n_photoperiod_seeds_in_stock = seeds_in_stock.filter(strain__is_automatic=False).count()
         settings = GROW_USER_SETTINGS(self.request)
         paginate = settings.paginate
-        seeds_in_stock_paginator = QuerySetPaginator(
-            reverse('grow:hx-seeds-in-stock-info'),
-            seeds_in_stock,
-            paginate_by=paginate,
-            page=self.request.GET.get('sis_page', 1)
-        )
 
         n_growlogs = Growlog.objects.filter(grower=self.request.user).count()
         active_growlogs_page = self.request.GET.get(
@@ -65,8 +53,8 @@ class UserInfoView(HxSeedsInStockInfoView, BaseView):
             grower=self.request.user,
             finished_at__isnull=True).order_by('-started_at')
         active_growlogs_paginator = QuerySetPaginator(
-            reverse('grow:hx-growlog-active-info'),
             active_growlogs,
+            url_path='grow:hx-growlog-active-info',
             paginate_by=active_growlogs_paginate_by,
             page=active_growlogs_page
         )
@@ -99,32 +87,21 @@ class UserInfoView(HxSeedsInStockInfoView, BaseView):
         )
 
         finished_growlogs_paginator = QuerySetPaginator(
-            reverse('grow:hx-growlog-finished-info'),
             finished_growlogs,
+            url_path='grow:hx-growlog-finished-info',
             paginate_by=finished_growlogs_paginate_by,
             page=finished_growlogs_page
         )
         n_finished_growlogs = finished_growlogs.count()
 
-        kwargs.setdefault('seeds_in_stock', seeds_in_stock)
-        kwargs.setdefault('seeds_in_stock_paginator', seeds_in_stock_paginator)
-
-        ret = HxSeedsInStockInfoView.get_context_data(self, **kwargs)
+        ret = HxSeedsInStockInfoView.get_context_data(self,
+                                                      seeds_in_stock_render_text=True,
+                                                      seeds_in_stock_render_user_text=False,
+                                                      seeds_in_stock_render_table=True,
+                                                      **kwargs)
         ret.update({
             'seeds_in_stock_template': self.seeds_in_stock_template_name,
-            'seeds_in_stock': seeds_in_stock[
-                seeds_in_stock_paginator.current_page * seeds_in_stock_paginator.paginate_by:
-                (seeds_in_stock_paginator.current_page + 1) * seeds_in_stock_paginator.paginate_by
-            ],
-            'seeds_in_stock_paginator': seeds_in_stock_paginator,
-            'seeds_in_stock_render_text': True,
-            'seeds_in_stock_render_user_text': False,
-            'seeds_in_stock_render_table': True,
             'seeds_in_stock_user': self.request.user,
-            'n_feminized_seeds_in_stock': n_feminized_seeds_in_stock,
-            'n_regular_seeds_in_stock': n_regular_seeds_in_stock,
-            'n_autoflowering_seeds_in_stock': n_autoflowering_seeds_in_stock,
-            'n_photoperiod_seeds_in_stock': n_photoperiod_seeds_in_stock,
             'n_growlogs': n_growlogs,
             'active_growlogs_paginator': active_growlogs_paginator,
             'finished_growlogs_paginator': finished_growlogs_paginator,

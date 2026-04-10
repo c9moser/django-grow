@@ -1,0 +1,3 @@
+{% for day in days%}
+    <option value="{{ day }}" {% if day == selected_day %}selected{% endif %}>{{ day }}</option>
+{% endfor %}

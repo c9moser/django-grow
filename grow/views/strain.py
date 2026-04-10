@@ -48,7 +48,6 @@ class HxStrainMyGrowlogsView(View):
     template_name = settings.GROW_TEMPLATES["grow/strain/strain/hx/my_growlogs"]
 
     def get_context_data(self, **kwargs):
-        url = reverse("grow:hx-strain-my-growlogs", kwargs={"strain_pk": self.strain.pk})
         user_settings = settings.GROW_USER_SETTINGS(self.request)
 
         try:
@@ -97,7 +96,12 @@ class HxStrainMyGrowlogsView(View):
                 growlog__grower=self.request.user.id
             )
 
-        paginator = QuerySetPaginator(url, queryset, page=page, paginate_by=paginate_by)
+
+        paginator = QuerySetPaginator(queryset,
+                                      page=page,
+                                      paginate_by=paginate_by,
+                                      url_path="grow:hx-strain-growlogs",
+                                      url_path_kwargs={"strain_pk": self.strain.pk})
 
         context = kwargs
         context.setdefault('breeder', self.breeder)
@@ -174,7 +178,12 @@ class HxStrainGrowlogsView(View):
         strain_growlogs = self.strain.growlog_strains.filter(
             growlog__id__in=growlog_ids
         ).order_by('-growlog__started_at')
-        paginator = QuerySetPaginator(url, strain_growlogs, page=page, paginate_by=paginate_by)
+
+        paginator = QuerySetPaginator(strain_growlogs,
+                                      page=page,
+                                      paginate_by=paginate_by,
+                                      url_path="grow:hx-strain-my-growlogs",
+                                      url_path_kwargs={"strain_pk": self.strain.pk})
 
         context = kwargs
         context.setdefault('breeder', self.breeder)
@@ -1243,6 +1252,10 @@ class StrainUpdateStockView(LoginRequiredMixin, CreateView):
                       context=self.get_context_data(form=form))
 
 
+class SeedsInStockInfoPaginator(QuerySetPaginator):
+    urlvars = {'page': 'sis_p', 'paginate_by': 'sis_pgn'}
+
+
 class HxSeedsInStockInfoView(LoginRequiredMixin, BaseView):
     template_name = settings.GROW_TEMPLATES['grow/seeds_in_stock/hx/info']
     logger = logging.getLogger(f"{__name__}.HxSeedsInStockInfoView")
@@ -1458,9 +1471,16 @@ class HxSeedsInStockInfoView(LoginRequiredMixin, BaseView):
                 'strain__breeder__name',
                 'is_feminized')
 
-        paginator = QuerySetPaginator(
-            reverse('grow:hx-seeds-in-stock-info'),
+        paginator = SeedsInStockInfoPaginator(
             seeds_in_stock,
+            url_path='grow:hx-seeds-in-stock-info',
+            url_variables={
+                'render_table': '1' if render_table else '0',
+                'render_text': '1' if render_text else '0',
+                'render_user_text': '1' if render_user_text else '0',
+                'sis_sort': sort,
+                'sis_ord': ordering,
+            },
             paginate_by=paginate_by,
             page=page)
 
@@ -1475,13 +1495,12 @@ class HxSeedsInStockInfoView(LoginRequiredMixin, BaseView):
             'seeds_in_stock_render_text': render_text,
             'seeds_in_stock_render_user_text': render_user_text,
             'seeds_in_stock_current_page': page,
-            'seeds_in_stock_n_pages': n_pages,
-            'seeds_in_stock_paginate': paginate_by,
             'seeds_in_stock_paginator': paginator,
             'seeds_in_stock_scroll_to_card': True,
             'seeds_in_stock_user': kwargs.get('seeds_in_stock_user', self.request.user),
             'seeds_in_stock_sort': sort,
             'seeds_in_stock_ordering': ordering,
+            'seeds_in_stock_update_page_url': True,
         }
         context.update(kwargs)
         return context

@@ -1,4 +1,4 @@
-{% load i18n %}
+{% load i18n grow %}
 {% if seeds_in_stock_render_text %}
 {% if seeds_in_stock_render_user_text %}
 <p>
@@ -75,22 +75,9 @@
 <div class="card mb-3" id="seeds-in-stock-card">
     <div class="card-header"><div class="row">
         <div class="col-4">
-            <nav aria-label="{% translate 'Seeds in stock pagination' %}" class="d-flex justify-content-start text-end mb-2">
-                <ul class="pagination mb-0">
-                    {% for page in seeds_in_stock_paginator.pagination %}
-                    <li class="page-item {% if page.current_page %}active{% endif %}">
-                        <button class="page-link page-link-sm"
-                            hx-get="{% url 'grow:hx-seeds-in-stock-info' %}?sis_paginate_by={{ seeds_in_stock_paginator.paginate_by }}&sis_page={{ page.page }}&render_text={% if seeds_in_stock_render_text %}1{% else %}0{% endif %}&render_user_text={% if seeds_in_stock_render_user_text %}1{% else %}0{% endif %}"
-                            hx-target="#seeds-in-stock-info"
-                            hx-swap="innerHTML"
-                        >
-                            {% if page.bs_icon %}<i class="bi bi-{{ page.bs_icon }}"></i>{% endif %}
-                            {% if not page.bs_icon %}{% if page.text %}{{ page.text }}{% else %}{{ page.number }}{% endif %}{% endif %}
-                        </button>
-                    </li>
-                    {% endfor %}
-                </ul>
-            </nav>
+            {% with "grow/utils/paginator"|grow_template as paginator_template %}
+                {% include paginator_template with paginator=seeds_in_stock_paginator hx_target="#seeds-in-stock-info" %}
+            {% endwith %}
         </div>
         <div class="col-4 d-flex align-items-center justify-content-center text-center">
             <h5 class="card-title mb-0 text-center">{% translate "Seeds in stock" %}</h5>
@@ -230,6 +217,31 @@
                             </span>
                         </button>
                     </th>
+                    <th>
+                        <button class="btn btn-link {% if seeds_in_stock_sort == 'purchased_on' %}active link-success{% else %}link-dark{% endif %} text-decoration-none p-0 m-0"
+                            {% if seeds_in_stock_sort == 'purchased_on' %}
+                            hx-get="{% url 'grow:hx-seeds-in-stock-info' %}?sort=purchased_on&ord={% if seeds_in_stock_ordering == 'asc' %}desc{% else %}asc{% endif %}&pgn={{ seeds_in_stock_paginator.paginate_by }}&p={{ seeds_in_stock_paginator.current_page }}&render_text={% if seeds_in_stock_render_text %}1{% else %}0{% endif %}&render_user_text={% if seeds_in_stock_render_user_text %}1{% else %}0{% endif %}"
+                            {% else %}
+                            hx-get="{% url 'grow:hx-seeds-in-stock-info' %}?sort=purchased_on&ord=asc&pgn={{ seeds_in_stock_paginator.paginate_by }}&p={{ seeds_in_stock_paginator.current_page }}&render_text={% if seeds_in_stock_render_text %}1{% else %}0{% endif %}&render_user_text={% if seeds_in_stock_render_user_text %}1{% else %}0{% endif %}"
+                            {% endif %}
+                            hx-target="#seeds-in-stock-info"
+                            hx-swap="innerHTML"
+                            hx-trigger="click"
+                        >
+                            <span class="fw-bold" data-bs-toggle="tooltip" data-bs-title="{% translate 'Sort by purchased on date' %}" data-bs-placement="top">
+                                {% translate "Purchased on" %}
+                                {% if seeds_in_stock_sort == 'purchased_on' %}
+                                    {% if seeds_in_stock_ordering == 'asc' %}
+                                        <i class="bi bi-caret-up-fill"></i>
+                                    {% else %}
+                                        <i class="bi bi-caret-down-fill"></i>
+                                    {% endif %}
+                                {% else %}
+                                    <i class="bi bi-caret-up"></i>
+                                {% endif %}
+                            </span>
+                        </button>
+                    </th>
                     {% if seeds_in_stock_user == request.user %}
                     <th class="text-end">
                         <button
@@ -261,6 +273,7 @@
                     <td>{{ seed.strain.genotype.name }}</td>
                     <td>{% blocktranslate count n=seed.strain.flowering_time_days %}One day{% plural %}{{ n }} days{% endblocktranslate %}</td>
                     <td>{{ seed.quantity }}</td>
+                    <td>{{ seed.purchased_on|date:"SHORT_DATE_FORMAT" }}</td>
                     {% if seeds_in_stock_user == request.user %}
                     <td class="text-end">
                         <a href="#"
@@ -304,14 +317,14 @@
                 </tr>
             {% empty %}
                 <tr>
-                    <td colspan="{% if seeds_in_stock_user == request.user %}6{% else %}5{% endif %}" class="table-warning">{% translate "You have no seeds in stock." %}</td>
+                    <td colspan="{% if seeds_in_stock_user == request.user %}7{% else %}6{% endif %}" class="table-warning">{% translate "You have no seeds in stock." %}</td>
                 </tr>
             {% endfor %}
             </tbody>
             <tfoot class="{% if use_bootstrap %}table-group-divider{% endif %}">
                 <tr class="{% if use_bootstrap %}table-secondary{% endif %}">
-                    <th colspan="{% if seeds_in_stock_user == request.user %}5{% else %}4{% endif %}">{% translate "Total" %}</th>
-                    <th colspan="2" class="text-end">{{ n_seeds_in_stock }}</th>
+                    <th colspan="{% if seeds_in_stock_user == request.user %}6{% else %}4{% endif %}">{% translate "Total" %}</th>
+                    <th colspan="3" class="text-end">{{ n_seeds_in_stock }}</th>
                 </tr>
             </tfoot>
         </table>
@@ -319,22 +332,9 @@
     {% if seeds_in_stock_paginator.paginate_by >= 20 %}
     <div class="card-footer pb-0"><div class="row mb-0">
             <div class="col-4 my-0">
-                <nav aria-label="{% translate 'Seeds in stock pagination' %}" class="d-flex justify-content-start text-end mb-2">
-                    <ul class="pagination mb-0">
-                        {% for page in seeds_in_stock_paginator.pagination %}
-                        <li class="page-item {% if page.current_page %}active{% endif %}">
-                            <button class="page-link page-link-sm"
-                                hx-get="{% url 'grow:hx-seeds-in-stock-info' %}?sis_paginate_by={{ seeds_in_stock_paginator.paginate_by }}&sis_page={{ page.page }}&render_text={% if seeds_in_stock_render_text %}1{% else %}0{% endif %}&render_user_text={% if seeds_in_stock_render_user_text %}1{% else %}0{% endif %}"
-                                hx-target="#seeds-in-stock-info"
-                                hx-swap="innerHTML"
-                            >
-                                {% if page.bs_icon %}<i class="bi bi-{{ page.bs_icon }}"></i>{% endif %}
-                                {% if not page.bs_icon %}{% if page.text %}{{ page.text }}{% else %}{{ page.number }}{% endif %}{% endif %}
-                            </button>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </nav>
+                {% with "grow/utils/paginator"|grow_template as paginator_template %}
+                    {% include paginator_template with paginator=seeds_in_stock_paginator %}
+                {% endwith %}
             </div>
 
             <div class="col-4"></div>
@@ -352,4 +352,16 @@
         }
     {% endif %}
 </script>
+{% if seeds_in_stock_update_page_url %}
+<script>
+    PAGE_URL.setVariables({
+        {% for key, value in seeds_in_stock_paginator.url_variables.items %}
+            '{{ key }}': '{{ value }}'{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    })
+    PAGE_URL.updateUrl();
+    console.log("Updated page URL with seeds in stock pagination variables.");
+</script>
+{% endif %}
+
 {% endif %}{# seeds_in_stock_render_table #}
