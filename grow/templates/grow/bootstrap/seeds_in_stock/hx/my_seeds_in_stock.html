@@ -1,115 +1,136 @@
 {% load i18n %}
-<table style="width:100%;">
+<table class="table table-striped table-hover">
     <thead>
-        <tr>
+        <tr class="table-success">
             <th>
-                <a hx-get="{% url 'grow:hx-my-seeds-in-stock' %}?sort=strain{% if sis_sort == 'strain' %}{% if sis_ordering == 'asc' %}&ord=desc{% else %}&ord=asc{% endif %}{% else %}&ord=asc{% endif %}"
-                   hx-swap="innerHTML"
-                   hx-target="{{ hx_target }}"
+                <button class="btn btn-link {% if sis_sort == 'strain' %}link-success{% else %}link-dark{% endif %} text-decoration-none p-0 m-0 fw-bold"
+                    hx-get="{% url 'grow:hx-my-seeds-in-stock' %}?sort=strain{% if sis_sort == 'strain' %}{% if sis_ordering == 'asc' %}&ord=desc{% else %}&ord=asc{% endif %}{% else %}&ord=asc{% endif %}"
+                    hx-swap="innerHTML"
+                    hx-target="{{ hx_target }}"
                 >
                     {% translate "Strain" %}
                     {% if sis_sort == 'strain' %}
                         {% if sis_ordering == 'asc' %}
-                            [ASC]
+                            <i class="bi bi-caret-up-fill"></i>
                         {% else %}
-                            [DESC]
+                            <i class="bi bi-caret-down-fill"></i>
                         {% endif %}
+                    {% else %}
+                        <span style="color:gray-50;"><i class="bi bi-caret-up"></i></span>
                     {% endif %}
-                </a>
+                </button>
             </th>
             <th>
-                <a hx-get="{% url 'grow:hx-my-seeds-in-stock' %}?sort=breeder{% if sis_sort == 'breeder' %}{% if sis_ordering == 'asc' %}&ord=desc{% else %}&ord=asc{% endif %}{% else %}&ord=asc{% endif %}"
+                <button class="btn btn-link {% if sis_sort  == 'breeder' %}link-success{% else %}link-dark{% endif %} text-decoration-none p-0 m-0 fw-bold"
+                    hx-get="{% url 'grow:hx-my-seeds-in-stock' %}?sort=breeder{% if sis_sort == 'breeder' %}{% if sis_ordering == 'asc' %}&ord=desc{% else %}&ord=asc{% endif %}{% else %}&ord=asc{% endif %}"
                    hx-swap="innerHTML"
                    hx-target="{{ hx_target }}"
                 >
                     {% translate "Breeder" %}
                     {% if sis_sort == 'breeder' %}
                         {% if sis_ordering == 'asc' %}
-                            [ASC]
+                            <i class="bi bi-caret-up-fill"></i>
                         {% else %}
-                            [DESC]
+                            <i class="bi bi-caret-down-fill"></i>
                         {% endif %}
+                    {% else %}
+                        <span style="color:gray-50;"><i class="bi bi-caret-up"></i></span>
                     {% endif %}
-                </a>
+                </button>
             </th>
             <th>
-                <a hx-get="{% url 'grow:hx-my-seeds-in-stock' %}?sort=purchased_on{% if sis_sort == 'purchased_on' %}{% if sis_ordering == 'asc' %}&ord=desc{% else %}&ord=asc{% endif %}{% else %}&ord=asc{% endif %}"
-                   hx-swap="innerHTML"
-                   hx-target="{{ hx_target }}"
+                <button class="btn btn-link {% if sis_sort == 'purchased_on' %}link-success{% else %}link-dark{% endif %} text-decoration-none p-0 m-0 fw-bold"
+                    hx-get="{% url 'grow:hx-my-seeds-in-stock' %}?sort=purchased_on{% if sis_sort == 'purchased_on' %}{% if sis_ordering == 'asc' %}&ord=desc{% else %}&ord=asc{% endif %}{% else %}&ord=asc{% endif %}"
+                    hx-swap="innerHTML"
+                    hx-target="{{ hx_target }}"
                 >
                     {% translate "Purchased On" %}
                     {% if sis_sort == 'purchased_on' %}
                         {% if sis_ordering == 'asc' %}
-                            [ASC]
+                            <i class="bi bi-caret-up-fill"></i>
                         {% else %}
-                            [DESC]
+                            <i class="bi bi-caret-down-fill"></i>
                         {% endif %}
+                    {% else %}
+                        <span style="color:gray-50;"><i class="bi bi-caret-up"></i></span>
                     {% endif %}
-                </a>
+                </button>
             </th>
             <th>
-                <a hx-get="{% url 'grow:hx-my-seeds-in-stock' %}?sort=genotype{% if sis_sort == 'genotype' %}{% if sis_ordering == 'asc' %}&ord=desc{% else %}&ord=asc{% endif %}{% else %}&ord=asc{% endif %}"
-                   hx-swap="innerHTML"
-                   hx-target="{{ hx_target }}"
+                <button class="btn btn-link {% if sis_sort == 'genotype' %}link-success{% else %}link-dark{% endif %} text-decoration-none p-0 m-0 fw-bold"
+                    hx-get="{% url 'grow:hx-my-seeds-in-stock' %}?sort=genotype{% if sis_sort == 'genotype' %}{% if sis_ordering == 'asc' %}&ord=desc{% else %}&ord=asc{% endif %}{% else %}&ord=asc{% endif %}"
+                    hx-swap="innerHTML"
+                    hx-target="{{ hx_target }}"
                 >
                     {% translate "Genotype" %}
                     {% if sis_sort == 'genotype' %}
                         {% if sis_ordering == 'asc' %}
-                            [ASC]
+                            <i class="bi bi-caret-up-fill"></i>
                         {% else %}
-                            [DESC]
+                            <i class="bi bi-caret-down-fill"></i>
                         {% endif %}
+                    {% else %}
+                        <span style="color:gray-50;"><i class="bi bi-caret-up"></i></span>
                     {% endif %}
-                </a>
+                </button>
             </th>
             <th>
-                <a hx-get="{% url 'grow:hx-my-seeds-in-stock' %}?sort=flowering_time{% if sis_sort == 'flowering_time' %}{% if sis_ordering == 'asc' %}&ord=desc{% else %}&ord=asc{% endif %}{% else %}&ord=asc{% endif %}"
-                   hx-swap="innerHTML"
-                   hx-target="{{ hx_target }}"
+                <button class="btn btn-link {% if sis_sort == 'flowering_time' %}link-success{% else %}link-dark{% endif %} text-decoration-none p-0 m-0 fw-bold"
+                    hx-get="{% url 'grow:hx-my-seeds-in-stock' %}?sort=flowering_time{% if sis_sort == 'flowering_time' %}{% if sis_ordering == 'asc' %}&ord=desc{% else %}&ord=asc{% endif %}{% else %}&ord=asc{% endif %}"
+                    hx-swap="innerHTML"
+                    hx-target="{{ hx_target }}"
                 >
                     {% translate "Flowering time" %}
                     {% if sis_sort == 'flowering_time' %}
                         {% if sis_ordering == 'asc' %}
-                            [ASC]
+                            <i class="bi bi-caret-up-fill"></i>
                         {% else %}
-                            [DESC]
+                            <i class="bi bi-caret-down-fill"></i>
                         {% endif %}
+                    {% else %}
+                        <span style="color:gray-50;"><i class="bi bi-caret-up"></i></span>
                     {% endif %}
-                </a>
+                </button>
             </th>
             <th>
-                <a hx-get="{% url 'grow:hx-my-seeds-in-stock' %}?sort=growlogs{% if sis_sort == 'growlogs' %}{% if sis_ordering == 'asc' %}&ord=desc{% else %}&ord=asc{% endif %}{% else %}&ord=asc{% endif %}"
-                   hx-swap="innerHTML"
-                   hx-target="{{ hx_target }}"
+                <button class="btn btn-link {% if sis_sort == 'growlogs' %}link-success{% else %}link-dark{% endif %} text-decoration-none p-0 m-0 fw-bold"
+                    hx-get="{% url 'grow:hx-my-seeds-in-stock' %}?sort=growlogs{% if sis_sort == 'growlogs' %}{% if sis_ordering == 'asc' %}&ord=desc{% else %}&ord=asc{% endif %}{% else %}&ord=asc{% endif %}"
+                    hx-swap="innerHTML"
+                    hx-target="{{ hx_target }}"
                 >
                     {% translate "Own Growlogs" %}
                     {% if sis_sort == 'growlogs' %}
                         {% if sis_ordering == 'asc' %}
-                            [ASC]
+                            <i class="bi bi-caret-up-fill"></i>
                         {% else %}
-                            [DESC]
+                            <i class="bi bi-caret-down-fill"></i>
                         {% endif %}
+                    {% else %}
+                            <span style="color:gray-50;"><i class="bi bi-caret-up"></i></span>
                     {% endif %}
-                </a>
+                </button>
             </th>
             <th>
-                <a hx-get="{% url 'grow:hx-my-seeds-in-stock' %}?sort=quantity{% if sis_sort == 'quantity' %}{% if sis_ordering == 'asc' %}&ord=desc{% else %}&ord=asc{% endif %}{% else %}&ord=asc{% endif %}"
-                   hx-swap="innerHTML"
-                   hx-target="{{ hx_target }}"
+                <button class="btn btn-link {% if sis_sort == 'quantity' %}link-success{% else %}link-dark{% endif %} text-decoration-none p-0 m-0 fw-bold"
+                    hx-get="{% url 'grow:hx-my-seeds-in-stock' %}?sort=quantity{% if sis_sort == 'quantity' %}{% if sis_ordering == 'asc' %}&ord=desc{% else %}&ord=asc{% endif %}{% else %}&ord=asc{% endif %}"
+                    hx-swap="innerHTML"
+                    hx-target="{{ hx_target }}"
                 >
                      {% translate "Quantity" %}
                     {% if sis_sort == 'quantity' %}
                         {% if sis_ordering == 'asc' %}
-                            [ASC]
+                            <i class="bi bi-caret-up-fill"></i>
                         {% else %}
-                            [DESC]
+                            <i class="bi bi-caret-down-fill"></i>
                         {% endif %}
+                    {% else %}
+                        <span style="color:gray-50;"><i class="bi bi-caret-up"></i></span>
                     {% endif %}
-                </a>
+                </button>
             </th>
         </tr>
     </thead>
-    <tbody>
+    <tbody class="table-group-divider">
         {% for sis in seeds_in_stock %}
         <tr>
             <td>
@@ -142,7 +163,7 @@
 <script>
 PAGE_URL.update({
     '{{ urlvars.sis_sort }}': "{{ sis_sort }}",
-    '{{ urlvars.sis_ord }}': "{{ sis_ordering }}",
+    '{{ urlvars.sis_ordering }}': "{{ sis_ordering }}",
 });
 </script>
 {% endif %}

@@ -161,8 +161,8 @@ GROW_BUILTIN_BS_SIS_TEMPLATES = {
     'grow/seeds_in_stock/hx/info': GROW_BUILTIN_SIS_TEMPLATES['grow/seeds_in_stock/hx/info'],
     'grow/seeds_in_stock/hx/dialog': GROW_BUILTIN_SIS_TEMPLATES['grow/seeds_in_stock/hx/dialog'],
     'grow/seeds_in_stock/hx/info': GROW_BUILTIN_SIS_TEMPLATES['grow/seeds_in_stock/hx/info'],
-    'grow/seeds_in_stock/hx/my_seeds_in_stock': GROW_BUILTIN_SIS_TEMPLATES['grow/seeds_in_stock/hx/my_seeds_in_stock'],
-    'grow/seeds_in_stock/my_seeds_in_stock': GROW_BUILTIN_SIS_TEMPLATES['grow/seeds_in_stock/my_seeds_in_stock'],
+    'grow/seeds_in_stock/hx/my_seeds_in_stock': 'grow/bootstrap/seeds_in_stock/hx/my_seeds_in_stock.html',
+    'grow/seeds_in_stock/my_seeds_in_stock': 'grow/bootstrap/seeds_in_stock/my_seeds_in_stock.html',
 }
 
 GROW_BUILTIN_GROWLOG_TEMPLATES = {
