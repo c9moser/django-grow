@@ -1,0 +1,22 @@
+{% extends base_template %}
+{% load static i18n grow %}
+
+{% block head_title %}{{ grow_head_title }}{% endblock %}
+{% block subtitle %}{% translate "My Seeds in Stock" %}{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'grow/js/page-url.js' %}"></script>
+<script>
+    const PAGE_URL = new PageUrl({
+        'sis_sort': "{{ sis_sort }}",
+        'sis_ord': "{{ sis_ordering }}",
+    })
+</script>
+{% endblock scripts%}
+
+{% block content %}
+<h1>{% translate "My Seeds in Stock" %}</h1>
+<div id="my-seeds-in-stock">
+    {% include 'grow/seeds_in_stock/hx/my_seeds_in_stock'|grow_template with seeds_in_stock=seeds_in_stock hx_target="#my-seeds-in-stock" update_page_url=False %}
+</div>
+{% endblock content %}
