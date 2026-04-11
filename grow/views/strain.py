@@ -1748,8 +1748,10 @@ class HxMySeedsInStockView(LoginRequiredMixin, View):
                 'is_feminized')
 
         if self.urlvars != HxMySeedsInStockView.urlvars:
-            self.urlvars.setdefault('sis_sort', sort)
-            self.urlvars.setdefault('sis_ordering', ordering)
+            self.urlvars.setdefault('sis_sort',
+                                    HxMySeedsInStockView.urlvars.get('sis_sort', 'sis_sort'))
+            self.urlvars.setdefault('sis_ordering',
+                                    HxMySeedsInStockView.urlvars.get('sis_ordering', 'sis_ord'))
 
         context['seeds_in_stock'] = seeds_in_stock
         context['urlvars'] = self.urlvars

@@ -146,7 +146,17 @@
             <td>{{ sis.purchased_on }}</td>
             <td>{{ sis.strain.genotype.name }}</td>
             <td>{{ sis.strain.flowering_time_days }}</td>
-            <td>{{ sis.my_growlogs_count }}</td>
+            <td>
+                <ul class="list-unstyled mb-0">
+                {% for sgl in sis.my_growlogs %}
+                    <li>
+                        <a class="link-info" href="{% url 'grow:growlog-detail' pk=sgl.growlog.pk %}">{{ sgl.growlog.name }}</a>
+                    </li>
+                {% empty %}
+                    <li>---</li>
+                {% endfor %}
+                </ul>
+            </td>
             <td>{{ sis.quantity }}</td>
         </tr>
         {% empty %}
