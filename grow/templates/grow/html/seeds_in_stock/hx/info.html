@@ -352,15 +352,13 @@
         }
     {% endif %}
 </script>
-{% if seeds_in_stock_update_page_url %}
+{% if update_page_url %}
 <script>
-    PAGE_URL.setVariables({
+    PAGE_URL.update({
         {% for key, value in seeds_in_stock_paginator.url_variables.items %}
             '{{ key }}': '{{ value }}'{% if not forloop.last %},{% endif %}
         {% endfor %}
-    })
-    PAGE_URL.updateUrl();
-    console.log("Updated page URL with seeds in stock pagination variables.");
+    });
 </script>
 {% endif %}
 

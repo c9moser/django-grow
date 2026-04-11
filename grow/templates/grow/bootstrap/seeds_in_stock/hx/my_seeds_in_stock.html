@@ -172,8 +172,8 @@
 {% if update_page_url %}
 <script>
 PAGE_URL.update({
-    '{{ urlvars.sis_sort }}': "{{ sis_sort }}",
-    '{{ urlvars.sis_ordering }}': "{{ sis_ordering }}",
+    '{% if urlvars.sis_sort %}{{ urlvars.sis_sort }}{% else %}sis_sort{% endif %}': "{{ sis_sort }}",
+    '{% if urlvars.sis_ordering %}{{ urlvars.sis_ordering }}{% else %}sis_ordering{% endif %}': "{{ sis_ordering }}",
 });
 </script>
 {% endif %}

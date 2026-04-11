@@ -15,6 +15,7 @@ from django.views.generic import FormView
 from django.db.models import Q
 from grow.growapi.models.strain import StrainUserComment
 
+
 from ._base import BaseView
 
 from ..growapi.models import (
@@ -1258,6 +1259,7 @@ class SeedsInStockInfoPaginator(QuerySetPaginator):
 class HxSeedsInStockInfoView(LoginRequiredMixin, BaseView):
     template_name = settings.GROW_TEMPLATES['grow/seeds_in_stock/hx/info']
     logger = logging.getLogger(f"{__name__}.HxSeedsInStockInfoView")
+    update_page_url = True
 
     def get_context_data(self, **kwargs):
         seeds_in_stock = StrainsInStock.objects.filter(
@@ -1483,25 +1485,26 @@ class HxSeedsInStockInfoView(LoginRequiredMixin, BaseView):
             paginate_by=paginate_by,
             page=page)
 
-        context = {
-            'n_strains_in_stock': StrainsInStock.objects.filter(user=self.request.user).count(),
-            'n_seeds_in_stock': n_seeds_in_stock,
-            'n_feminized_seeds_in_stock': n_feminized_seeds_in_stock,
-            'n_regular_seeds_in_stock': n_regular_seeds_in_stock,
-            'n_autoflowering_seeds_in_stock': n_autoflowering_seeds_in_stock,
-            'n_photoperiod_seeds_in_stock': n_photoperiod_seeds_in_stock,
-            'seeds_in_stock_render_table': render_table,
-            'seeds_in_stock_render_text': render_text,
-            'seeds_in_stock_render_user_text': render_user_text,
-            'seeds_in_stock_current_page': page,
+        context = kwargs
+        context.setdefault('update_page_url', self.update_page_url)
+        context.setdefault('n_strains_in_stock', seeds_in_stock.count())
+        context.setdefault('n_seeds_in_stock', n_seeds_in_stock)
+        context.setdefault('n_feminized_seeds_in_stock', n_feminized_seeds_in_stock)
+        context.setdefault('n_regular_seeds_in_stock', n_regular_seeds_in_stock)
+        context.setdefault('n_autoflowering_seeds_in_stock', n_autoflowering_seeds_in_stock)
+        context.setdefault('n_photoperiod_seeds_in_stock', n_photoperiod_seeds_in_stock)
+        context.setdefault('seeds_in_stock_render_table', render_table)
+        context.setdefault('seeds_in_stock_render_text', render_text)
+        context.setdefault('seeds_in_stock_render_user_text', render_user_text)
+        context.update({
             'seeds_in_stock_paginator': paginator,
             'seeds_in_stock_scroll_to_card': True,
             'seeds_in_stock_user': kwargs.get('seeds_in_stock_user', self.request.user),
             'seeds_in_stock_sort': sort,
             'seeds_in_stock_ordering': ordering,
             'seeds_in_stock_update_page_url': True,
-        }
-        context.update(kwargs)
+        })
+
         return context
 
     def get(self, request: HttpRequest) -> HttpResponse:
@@ -1757,7 +1760,7 @@ class HxMySeedsInStockView(LoginRequiredMixin, View):
         context['urlvars'] = self.urlvars
         context['sis_sort'] = sort
         context['sis_ordering'] = ordering
-        context['hx_target'] = self.sis_hx_target
+        context['sis_hx_target'] = self.sis_hx_target
         context.setdefault('seeds_in_stock_update_page_url', self.update_page_url)
         context.setdefault('update_page_url', self.update_page_url)
 

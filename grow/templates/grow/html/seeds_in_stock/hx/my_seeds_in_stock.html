@@ -5,7 +5,7 @@
             <th>
                 <a hx-get="{% url 'grow:hx-my-seeds-in-stock' %}?sort=strain{% if sis_sort == 'strain' %}{% if sis_ordering == 'asc' %}&ord=desc{% else %}&ord=asc{% endif %}{% else %}&ord=asc{% endif %}"
                    hx-swap="innerHTML"
-                   hx-target="{{ hx_target }}"
+                   hx-target="{{ sis_hx_target }}"
                 >
                     {% translate "Strain" %}
                     {% if sis_sort == 'strain' %}
@@ -20,7 +20,7 @@
             <th>
                 <a hx-get="{% url 'grow:hx-my-seeds-in-stock' %}?sort=breeder{% if sis_sort == 'breeder' %}{% if sis_ordering == 'asc' %}&ord=desc{% else %}&ord=asc{% endif %}{% else %}&ord=asc{% endif %}"
                    hx-swap="innerHTML"
-                   hx-target="{{ hx_target }}"
+                   hx-target="{{ sis_hx_target }}"
                 >
                     {% translate "Breeder" %}
                     {% if sis_sort == 'breeder' %}
@@ -35,7 +35,7 @@
             <th>
                 <a hx-get="{% url 'grow:hx-my-seeds-in-stock' %}?sort=purchased_on{% if sis_sort == 'purchased_on' %}{% if sis_ordering == 'asc' %}&ord=desc{% else %}&ord=asc{% endif %}{% else %}&ord=asc{% endif %}"
                    hx-swap="innerHTML"
-                   hx-target="{{ hx_target }}"
+                   hx-target="{{ sis_hx_target }}"
                 >
                     {% translate "Purchased On" %}
                     {% if sis_sort == 'purchased_on' %}
@@ -50,7 +50,7 @@
             <th>
                 <a hx-get="{% url 'grow:hx-my-seeds-in-stock' %}?sort=genotype{% if sis_sort == 'genotype' %}{% if sis_ordering == 'asc' %}&ord=desc{% else %}&ord=asc{% endif %}{% else %}&ord=asc{% endif %}"
                    hx-swap="innerHTML"
-                   hx-target="{{ hx_target }}"
+                   hx-target="{{ sis_hx_target }}"
                 >
                     {% translate "Genotype" %}
                     {% if sis_sort == 'genotype' %}
@@ -65,7 +65,7 @@
             <th>
                 <a hx-get="{% url 'grow:hx-my-seeds-in-stock' %}?sort=flowering_time{% if sis_sort == 'flowering_time' %}{% if sis_ordering == 'asc' %}&ord=desc{% else %}&ord=asc{% endif %}{% else %}&ord=asc{% endif %}"
                    hx-swap="innerHTML"
-                   hx-target="{{ hx_target }}"
+                   hx-target="{{ sis_hx_target }}"
                 >
                     {% translate "Flowering time" %}
                     {% if sis_sort == 'flowering_time' %}
@@ -80,7 +80,7 @@
             <th>
                 <a hx-get="{% url 'grow:hx-my-seeds-in-stock' %}?sort=growlogs{% if sis_sort == 'growlogs' %}{% if sis_ordering == 'asc' %}&ord=desc{% else %}&ord=asc{% endif %}{% else %}&ord=asc{% endif %}"
                    hx-swap="innerHTML"
-                   hx-target="{{ hx_target }}"
+                   hx-target="{{ sis_hx_target }}"
                 >
                     {% translate "Own Growlogs" %}
                     {% if sis_sort == 'growlogs' %}
@@ -95,7 +95,7 @@
             <th>
                 <a hx-get="{% url 'grow:hx-my-seeds-in-stock' %}?sort=quantity{% if sis_sort == 'quantity' %}{% if sis_ordering == 'asc' %}&ord=desc{% else %}&ord=asc{% endif %}{% else %}&ord=asc{% endif %}"
                    hx-swap="innerHTML"
-                   hx-target="{{ hx_target }}"
+                   hx-target="{{ sis_hx_target }}"
                 >
                      {% translate "Quantity" %}
                     {% if sis_sort == 'quantity' %}
@@ -141,8 +141,8 @@
 {% if update_page_url %}
 <script>
 PAGE_URL.update({
-    '{{ urlvars.sis_sort }}': "{{ sis_sort }}",
-    '{{ urlvars.sis_ord }}': "{{ sis_ordering }}",
+    '{% if urlvars.sis_sort %}{{ urlvars.sis_sort }}{% else %}sis_sort{% endif %}': "{{ sis_sort }}",
+    '{% if urlvars.sis_ordering %}{{ urlvars.sis_ordering }}{% else %}sis_ordering{% endif %}': "{{ sis_ordering }}",
 });
 </script>
 {% endif %}
