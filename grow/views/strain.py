@@ -12,6 +12,7 @@ from django.db.models.functions import Lower
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from django.views.generic import FormView
+from django.db.models import Q
 from grow.growapi.models.strain import StrainUserComment
 
 from ._base import BaseView
@@ -1590,3 +1591,190 @@ class HxSeedsInStockDialogUpdateView(HxSeedsInStockDialogView):
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
+
+
+class HxMySeedsInStockView(LoginRequiredMixin, View):
+    template_name = settings.GROW_TEMPLATES['grow/seeds_in_stock/hx/my_seeds_in_stock']
+    update_page_url = True
+    logger = logging.getLogger(f"{__name__}.HxMySeedsInStockView")
+    urlvars = {
+        'sis_sort': 'sis_sort',
+        'sis_ordering': 'sis_ord',
+    }
+    sis_hx_target = "#my-seeds-in-stock"
+
+    def get_context_data(self, **kwargs):
+        context = kwargs
+        seeds_in_stock = StrainsInStock.objects.filter(
+            user=self.request.user,
+            quantity__gt=0
+        )
+        sort = self.request.GET.get(
+            'sis_sort',
+            self.request.GET.get(
+                'sis_s',
+                self.request.GET.get(
+                    'sort',
+                    self.request.GET.get(
+                        's',
+                        context.get('sis_sort', 'strain')
+                    )
+                )
+            )
+        )
+        ordering = self.request.GET.get(
+            'sis_ordering',
+            self.request.GET.get(
+                'sis_ord',
+                self.request.GET.get(
+                    'sis_o',
+                    self.request.GET.get(
+                        'ordering',
+                        self.request.GET.get(
+                            'ord',
+                            context.get('sis_ordering', 'asc')
+                        )
+                    )
+                )
+            )
+        )
+        if ordering in ['asc', 'a', 'ascending', 'up', '1']:
+            ordering = 'asc'
+        elif ordering in ['desc', 'd', 'descending', 'down', '-1']:
+            ordering = 'desc'
+        else:
+            self.logger.warning(f"Invalid ordering value: {ordering}. Defaulting to 'asc'.")
+            ordering = 'asc'
+
+        if sort == 'strain':
+            if ordering == 'asc':
+                seeds_in_stock = seeds_in_stock.order_by(
+                    'strain__name', 'strain__breeder__name', 'is_feminized')
+            else:
+                seeds_in_stock = seeds_in_stock.order_by(
+                    '-strain__name', '-strain__breeder__name', '-is_feminized')
+        elif sort == 'breeder':
+            if ordering == 'asc':
+                seeds_in_stock = seeds_in_stock.order_by(
+                    'strain__breeder__name', 'strain__name', 'is_feminized')
+            else:
+                seeds_in_stock = seeds_in_stock.order_by(
+                    '-strain__breeder__name', '-strain__name', '-is_feminized')
+        elif sort == 'genotype':
+            if ordering == 'asc':
+                seeds_in_stock = seeds_in_stock.order_by(
+                    'strain__genotype_data',
+                    'strain__name',
+                    'strain__breeder__name',
+                    'is_feminized')
+            else:
+                seeds_in_stock = seeds_in_stock.order_by(
+                    '-strain__genotype_data',
+                    'strain__name',
+                    'strain__breeder__name',
+                    'is_feminized')
+        elif sort == 'purchased_on':
+            if ordering == 'asc':
+                seeds_in_stock = seeds_in_stock.order_by(
+                    'purchased_on',
+                    'strain__name',
+                    'strain__breeder__name',
+                    'is_feminized')
+            else:
+                seeds_in_stock = seeds_in_stock.order_by(
+                    '-purchased_on',
+                    'strain__name',
+                    'strain__breeder__name',
+                    'is_feminized')
+        elif sort == 'quantity':
+            if ordering == 'asc':
+                seeds_in_stock = seeds_in_stock.order_by(
+                    'quantity',
+                    'strain__name',
+                    'strain__breeder__name',
+                    'is_feminized')
+            else:
+                seeds_in_stock = seeds_in_stock.order_by(
+                    '-quantity',
+                    'strain__name',
+                    'strain__breeder__name',
+                    'is_feminized')
+        elif sort in ['flowering_time', 'flt', 'floweringtime', 'flowering']:
+            sort = 'flowering_time'
+            if ordering == 'asc':
+                seeds_in_stock = seeds_in_stock.order_by(
+                    'strain__flowering_time_days',
+                    'strain__name',
+                    'strain__breeder__name',
+                    'is_feminized')
+            else:
+                seeds_in_stock = seeds_in_stock.order_by(
+                    '-strain__flowering_time_days',
+                    'strain__name',
+                    'strain__breeder__name',
+                    'is_feminized')
+        elif sort == 'growlogs':
+            if ordering == 'asc':
+                seeds_in_stock = seeds_in_stock.annotate(
+                    growlogs_count=Count(
+                        'strain__growlog_strains__growlog',
+                        filter=Q(strain__growlog_strains__growlog__grower=self.request.user)
+                    )
+                ).order_by(
+                    'growlogs_count',
+                    'strain__name',
+                    'strain__breeder__name',
+                    'is_feminized'
+                )
+            else:
+                seeds_in_stock = seeds_in_stock.annotate(
+                    growlogs_count=Count(
+                        'strain__growlog_strains__growlog',
+                        filter=Q(strain__growlog_strains__growlog__grower=self.request.user)
+                    )
+                ).order_by(
+                    '-growlogs_count',
+                    'strain__name',
+                    'strain__breeder__name',
+                    'is_feminized'
+                )
+        else:
+            self.logger.warning(f"Invalid sort value: {sort}. Defaulting to 'strain'.")
+            sort = 'strain'
+            ordering = 'asc'
+            seeds_in_stock = seeds_in_stock.order_by(
+                'strain__name',
+                'strain__breeder__name',
+                'is_feminized')
+
+        if self.urlvars != HxMySeedsInStockView.urlvars:
+            self.urlvars.setdefault('sis_sort', sort)
+            self.urlvars.setdefault('sis_ordering', ordering)
+
+        context['seeds_in_stock'] = seeds_in_stock
+        context['urlvars'] = self.urlvars
+        context['sis_sort'] = sort
+        context['sis_ordering'] = ordering
+        context['hx_target'] = self.sis_hx_target
+        context.setdefault('seeds_in_stock_update_page_url', self.update_page_url)
+        context.setdefault('update_page_url', self.update_page_url)
+
+        return context
+
+    def get(self, request: HttpRequest) -> HttpResponse:
+        return render(request, self.template_name, self.get_context_data())
+
+
+class MySeedsInStockView(HxMySeedsInStockView):
+    template_name = settings.GROW_TEMPLATES['grow/seeds_in_stock/my_seeds_in_stock']
+    update_page_url = False
+    urlvars = {
+        'sis_sort': 'sort',
+        'sis_ordering': 'ord',
+    }
+
+    def get_context_data(self, **kwargs):
+        return HxMySeedsInStockView.get_context_data(self, **kwargs)
+
+    def get(self, request: HttpRequest) -> HttpResponse:
+        return render(request, self.template_name, self.get_context_data())

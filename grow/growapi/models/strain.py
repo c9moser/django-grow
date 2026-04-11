@@ -1264,6 +1264,28 @@ class Strain(models.Model):
 
         return None
 
+    def my_growlogs(self, user):
+        """
+        Get the growlogs of the strain for the specified user.
+
+        :param user: The user for whom to retrieve the growlogs.
+        :type user: User
+        :return: A queryset of GrowlogStrain objects for the user's growlogs.
+        :rtype: QuerySet[GrowlogStrain]
+        """
+        return self.growlog_strains.filter(growlog__user=user)
+
+    def my_growlog_count(self, user) -> int:
+        """
+        Get the count of growlogs for the strain for the specified user.
+
+        :param user: The user for whom to count the growlogs.
+        :type user: User
+        :return: The count of growlogs for the user's growlogs.
+        :rtype: int
+        """
+        return self.my_growlogs(user).count()
+
     def __str__(self):
         return f"{self.breeder.name} - {self.name}"
 
@@ -1732,6 +1754,26 @@ class StrainsInStock(models.Model):
 
     def __str__(self):
         return f"{self.strain.name} ({self.strain.breeder.name}) [{'F' if self.is_feminized else 'R'}{'A' if self.strain.is_automatic else 'P'}] - {self.quantity}"  # noqa: E501
+
+    @property
+    def my_growlogs(self):
+        """
+        Get the growlogs of the strain for the user who owns the seeds in stock.
+
+        :return: A queryset of GrowlogStrain objects for the user's growlogs.
+        :rtype: QuerySet[GrowlogStrain]
+        """
+        return self.strain.growlog_strains.filter(growlog__grower=self.user)
+
+    @property
+    def my_growlogs_count(self) -> int:
+        """
+        Get the count of growlogs for the strain for the user who owns the seeds in stock.
+
+        :return: The count of growlogs for the user's growlogs.
+        :rtype: int
+        """
+        return self.my_growlogs.count()
 
     class Meta:
         db_table = "grow_strains_in_stock"

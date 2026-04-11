@@ -146,6 +146,8 @@ GROW_BUILTIN_SIS_TEMPLATES = {
     'grow/seeds_in_stock/hx/info': 'grow/html/seeds_in_stock/hx/info.html',
     'grow/seeds_in_stock/hx/dialog': 'grow/html/seeds_in_stock/hx/dialog.html',
     'grow/seeds_in_stock/hx/info': 'grow/html/seeds_in_stock/hx/info.html',
+    'grow/seeds_in_stock/hx/my_seeds_in_stock': 'grow/html/seeds_in_stock/hx/my_seeds_in_stock.html',
+    'grow/seeds_in_stock/my_seeds_in_stock': 'grow/html/seeds_in_stock/my_seeds_in_stock.html',
 }
 
 GROW_BUILTIN_BS_SIS_TEMPLATES = {
@@ -159,6 +161,8 @@ GROW_BUILTIN_BS_SIS_TEMPLATES = {
     'grow/seeds_in_stock/hx/info': GROW_BUILTIN_SIS_TEMPLATES['grow/seeds_in_stock/hx/info'],
     'grow/seeds_in_stock/hx/dialog': GROW_BUILTIN_SIS_TEMPLATES['grow/seeds_in_stock/hx/dialog'],
     'grow/seeds_in_stock/hx/info': GROW_BUILTIN_SIS_TEMPLATES['grow/seeds_in_stock/hx/info'],
+    'grow/seeds_in_stock/hx/my_seeds_in_stock': GROW_BUILTIN_SIS_TEMPLATES['grow/seeds_in_stock/hx/my_seeds_in_stock'],
+    'grow/seeds_in_stock/my_seeds_in_stock': GROW_BUILTIN_SIS_TEMPLATES['grow/seeds_in_stock/my_seeds_in_stock'],
 }
 
 GROW_BUILTIN_GROWLOG_TEMPLATES = {
@@ -285,12 +289,12 @@ GROW_BUILTIN_BS_TEMPLATES = {
     #index
     'grow/index': 'grow/bootstrap/index/index.html',
     # user views
-    'grow/user/hx-add_seeds_to_stock': 'grow/user/hx_add_seeds_to_stock.html',
-    'grow/user/hx-remove_seeds_from_stock': 'grow/user/hx_remove_seeds_from_stock.html',
-    'grow/user/info': 'grow/user/info.html',
+    'grow/user/hx-add_seeds_to_stock': 'grow/html/user/hx_add_seeds_to_stock.html',
+    'grow/user/hx-remove_seeds_from_stock': 'grow/html/user/hx_remove_seeds_from_stock.html',
+    'grow/user/info': 'grow/html/user/info.html',
 
     # utils
-    'grow/utils/hx_select_date_days_sanitize': 'grow/utils/hx_select_date_days_sanitize.html'
+    'grow/utils/hx_select_date_days_sanitize': 'grow/html/utils/hx_select_date_days_sanitize.html'
 }
 GROW_BUILTIN_BS_TEMPLATES.update(GROW_BUILTIN_BS_BREEDER_TEMPLATES)
 GROW_BUILTIN_BS_TEMPLATES.update(GROW_BUILTIN_BS_STRAIN_TEMPLATES)

@@ -26,4 +26,9 @@ class PageUrl {
         }
         window.history.replaceState({}, '', url);
     }
+
+    update(variables) {
+        this.setVariables(variables);
+        this.updateUrl();
+    }
 }
