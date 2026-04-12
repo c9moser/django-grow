@@ -8,7 +8,7 @@ APACHE_USER_KEY = u"user"
 APACHE_PASS_KEY = u"pw"
 
 sys.path.insert(0, os.path.dirname(__file__))
-os.environ['DJANGO_SETTINGS_MODULE'] = 'myapp.settings'
+os.environ['DJANGO_SETTINGS_MODULE'] = os.environ.get('DJANGO_SETTINGS_MODULE', 'django_project.settings')
 
 def __get_apache_keys_(environ):
     user_key = APACHE_USER_KEY
