@@ -42,10 +42,18 @@ from .views.strain import (
     HxStrainSearchView,
     HxStrainStockNotesView,
     HxStrainTranslationView,
+    # HxSeedsInStockInfoView,
+    # HxSeedsInStockDialogView,
+    # HxSeedsInStockDialogUpdateView,
+
+    # HxMySeedsInStockView,
+    # MySeedsInStockView,
+)
+
+from .views.seeds_in_stock import (
     HxSeedsInStockInfoView,
     HxSeedsInStockDialogView,
     HxSeedsInStockDialogUpdateView,
-
     HxMySeedsInStockView,
     MySeedsInStockView,
 )
@@ -94,6 +102,7 @@ from .views.growlog import (  # noqa: F401
     HxGrowlogAddPlantsView,
     HxGrowlogRemovePlantsView,
     HxGrowlogDeleteStrainView,
+    HxMyActiveGrowlogsView,
     GrowlogSetGerminatingAtView,
     GrowlogUnsetGerminatingAtView,
     GrowlogSetCuttedAtView,
@@ -358,6 +367,8 @@ growlog_patterns = [
     path("growlog/entry/image/delete/<int:pk>/",
          GrowlogEntryDeleteImageView.as_view(),
          name="growlog-entry-image-delete"),
+    path("__hx__/my-grow/active-growlogs/", HxMyActiveGrowlogsView.as_view(), name="hx-my-active-growlogs"),
+    #path("__hx__/my-grow/finished-growlogs/", HxMyFinishedGrowlogsView.as_view(), name="hx-my-finished-growlogs"),
     path('my-grow/growlogs/', MyGrowlogsView.as_view(), name='my-growlogs'),
     path('my-grow/strains-grown/', MyStrainsGrownView.as_view(), name='my-strains-grown'),
 ]

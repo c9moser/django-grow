@@ -134,12 +134,12 @@
         {% for sis in seeds_in_stock %}
         <tr>
             <td>
-                <a href="{% url 'grow:strain-detail' breeder_slug=sis.strain.breeder.slug slug=sis.strain.slug %}">
+                <a href="{% url 'grow:strain-detail' breeder_slug=sis.strain.breeder.slug slug=sis.strain.slug %}" class="link-info">
                     {{ sis.strain.name }}
                 </a>
             </td>
             <td>
-                <a href="{% url 'grow:breeder-detail' slug=sis.strain.breeder.slug %}">
+                <a href="{% url 'grow:breeder-detail' slug=sis.strain.breeder.slug %}" class="link-info">
                     {{ sis.strain.breeder.name }}
                 </a>
             </td>

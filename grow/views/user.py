@@ -7,9 +7,12 @@ from ..growapi.models import Growlog
 from ._base import BaseView
 
 from .strain import (   # noqa: F401
-    HxSeedsInStockDialogView,
-    HxStrainAddToStock2View,
+    # HxStrainAddToStock2View,
     HxStrainRemoveFromStockView,
+)
+
+from .seeds_in_stock import (  # noqa: F401
+    HxSeedsInStockDialogView,
     HxSeedsInStockInfoView,
 )
 

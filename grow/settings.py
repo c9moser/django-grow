@@ -171,7 +171,6 @@ GROW_BUILTIN_GROWLOG_TEMPLATES = {
     'grow/growlog/detail': 'grow/html/growlog/growlog/detail.html',
     'grow/growlog/update': 'grow/html/growlog/growlog/update.html',
     'grow/growlog/form': 'grow/html/growlog/growlog/form.html',
-
     'grow/growlog/entry/image_delete': 'grow/html/growlog/entry/image_delete.html',
     'grow/growlog/entry/image_upload': 'grow/html/growlog/entry/image_upload.html',
     'grow/growlog/entry/create': 'grow/html/growlog/entry/form.html',
@@ -191,6 +190,8 @@ GROW_BUILTIN_GROWLOG_TEMPLATES = {
     'grow/growlog/forbidden': 'grow/html/growlog/forbidden.html',
     'grow/growlog/hx/active_info' : 'grow/html/growlog/hx/active_info.html',
     'grow/growlog/hx/finished_info' : 'grow/html/growlog/hx/finished_info.html',
+    'grow/growlog/hx/my_active_growlogs' : 'grow/html/growlog/hx/my_active_growlogs.html',
+    'grow/growlog/hx/my_finished_growlogs' : 'grow/html/growlog/hx/my_finished_growlogs.html',
     'grow/growlog/hx/strains_grown': 'grow/html/growlog/hx/strains_grown.html',
     'grow/growlog/growlog/hx/entries': 'grow/html/growlog/growlog/hx/entries.html',
     'grow/growlog/growlog/hx/seeds_add': 'grow/html/growlog/growlog/hx/add_seeds.html',
@@ -233,6 +234,10 @@ GROW_BUILTIN_BS_GROWLOG_TEMPLATES = {
     'grow/growlog/forbidden': GROW_BUILTIN_GROWLOG_TEMPLATES['grow/growlog/forbidden'],
     'grow/growlog/hx/active_info' : GROW_BUILTIN_GROWLOG_TEMPLATES['grow/growlog/hx/active_info'],
     'grow/growlog/hx/finished_info' : GROW_BUILTIN_GROWLOG_TEMPLATES['grow/growlog/hx/finished_info'],
+
+    'grow/growlog/hx/my_active_growlogs' : 'grow/bootstrap/growlog/hx/my_active_growlogs.html',
+    'grow/growlog/hx/my_finished_growlogs': GROW_BUILTIN_GROWLOG_TEMPLATES['grow/growlog/hx/my_finished_growlogs'],
+
     'grow/growlog/hx/strains_grown': GROW_BUILTIN_GROWLOG_TEMPLATES['grow/growlog/hx/strains_grown'],
     'grow/growlog/growlog/hx/entries': GROW_BUILTIN_GROWLOG_TEMPLATES['grow/growlog/growlog/hx/entries'],
     'grow/growlog/growlog/hx/seeds_add': GROW_BUILTIN_GROWLOG_TEMPLATES['grow/growlog/growlog/hx/seeds_add'],
@@ -245,7 +250,9 @@ GROW_BUILTIN_BS_GROWLOG_TEMPLATES = {
     'grow/growlog/growlog/hx/remove_plants':  GROW_BUILTIN_GROWLOG_TEMPLATES['grow/growlog/growlog/hx/remove_plants'],
     'grow/growlog/growlog/hx/add_strain':  GROW_BUILTIN_GROWLOG_TEMPLATES['grow/growlog/growlog/hx/add_strain'],
     'grow/growlog/growlog/hx/delete_strain':  GROW_BUILTIN_GROWLOG_TEMPLATES['grow/growlog/growlog/hx/delete_strain'],
-    'grow/growlog/my_growlogs': GROW_BUILTIN_GROWLOG_TEMPLATES['grow/growlog/my_growlogs'],
+
+    'grow/growlog/my_growlogs': 'grow/bootstrap/growlog/my_growlogs.html',
+
     'grow/growlog/strains_grown': GROW_BUILTIN_GROWLOG_TEMPLATES['grow/growlog/strains_grown'],
 }
 

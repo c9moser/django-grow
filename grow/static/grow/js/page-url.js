@@ -32,3 +32,5 @@ class PageUrl {
         this.updateUrl();
     }
 }
+
+const pageUrl = new PageUrl();

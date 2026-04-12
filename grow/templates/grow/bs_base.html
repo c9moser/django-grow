@@ -18,8 +18,9 @@
 
         <script>
             document.documentElement.setAttribute('data-bs-theme',
-                (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'))
+                (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
         </script>
+        <script src="{% static 'grow/js/page-url.js' %}"></script>
 
         {% block scripts %}{% endblock scripts %}
         {# TODO: Write CSS #}
@@ -107,23 +108,13 @@
                                 aria-expanded="false"
                             >{% translate 'My Grow' %}</a>
                             <ul class="dropdown-menu dropdown-menu-center" aria-labelledby="navbar-mygrow-dropdown">
+
                                 <li>
-                                    <a
-                                        class="dropdown-item"
-                                        href="{% url 'grow:user-info' %}"
-                                    >
-                                        <i class="bi bi-person"></i>
-                                        {% translate "My Infos" %}
+                                    <a class="dropdown-item" href="{% url 'grow:my-seeds-in-stock' %}">
+                                        <i class="bi bi-seedling"></i>
+                                        {% translate "My Seeds in Stock" %}
                                     </a>
                                 </li>
-                                <li>
-                                    <a
-                                        class="dropdown-item"
-                                        href="{% url 'grow:my-seeds-in-stock' %}"
-                                    >
-                                        <i class="bi bi-person-gear"></i>
-                                        {% translate "Profile" %}
-                                    </a>
                                 <li>
                                     <a
                                         class="dropdown-item"
@@ -133,6 +124,14 @@
                                         {% translate "My Growlogs" %}
                                     </a>
                                 </li>
+                                <li>
+                                    <a
+                                        class="dropdown-item"
+                                        href="{% url 'grow:my-seeds-in-stock' %}"
+                                    >
+                                        <i class="bi bi-flower1"></i>
+                                        {% translate "My Seeds in Stock" %}
+                                    </a>
                                 <li>
                                     <a
                                         class="dropdown-item"
