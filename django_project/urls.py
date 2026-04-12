@@ -20,25 +20,29 @@ from django.contrib import admin
 from allauth.account.decorators import secure_admin_login
 from django.conf.urls.i18n import i18n_patterns
 
-
-urlpatterns = [
-    path('api/', include('grow.growapi.urls')),
-    *i18n_patterns(
+locale_patterns = [
         path('accounts/', include('allauth.urls')),
         path('', include('grow.urls')),
-        path('', include('core.urls'))),
+        path('', include('core.urls')),
 ]
+
+urlpatterns = [
+    path('growapi/', include('grow.growapi.urls')),
+]
+
 if settings.ADMIN_URL:
     urlpatterns.insert(0, path(settings.ADMIN_URL, admin.site.urls))
 
 if settings.INCLUDE_WIKI:
-    urlpatterns.insert(-1, path('wiki/', include('tinywiki.urls')))
+    locale_patterns.append(path('wiki/', include('tinywiki.urls')))
 
 if settings.DEBUG:
     from django.conf.urls.static import static
     urlpatterns.insert(0, path('__reload__/', include('django_browser_reload.urls')))
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+urlpatterns += i18n_patterns(*locale_patterns)
 
 admin.autodiscover()
 admin.site.site_header = "Grow Administration"

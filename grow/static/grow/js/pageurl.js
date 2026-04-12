@@ -33,4 +33,4 @@ class PageUrl {
     }
 }
 
-const pageUrl = new PageUrl();
+const pageURL = new PageUrl();

@@ -113,7 +113,7 @@
 
 {% if update_page_url %}
 <script>
-PAGE_URL.update({
+pageURL.update({
     '{% if urlvars.my_active_growlogs_sort %}{{ urlvars.my_active_growlogs_sort }}{% else %}myagl_sort{% endif %}': "{{ my_active_growlogs_sort }}",
     '{% if urlvars.my_active_growlogs_ordering %}{{ urlvars.my_active_growlogs_ordering }}{% else %}myagl_ordering{% endif %}': "{{ my_active_growlogs_ordering }}",
 });

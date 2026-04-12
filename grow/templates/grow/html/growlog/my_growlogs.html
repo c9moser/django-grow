@@ -2,8 +2,25 @@
 {% load i18n grow %}
 {% block subtitle %}{% translate "My Grow Logs" %}{% endblock subtitle %}
 
-{% block content %}
+{##### SCRIPTS ######}
+{% block scripts %}
+<script>
+pageURL.setVariables({
+    '{% if urlvars.my_active_growlogs_sort %}{{ urlvars.my_active_growlogs_sort }}{% else %}myagl_sort{% endif %}': "{{ my_active_growlogs_sort }}",
+    '{% if urlvars.my_active_growlogs_ordering %}{{ urlvars.my_active_growlogs_ordering }}{% else %}myagl_ord{% endif %}': "{{ my_active_growlogs_ordering }}",
+    '{% if urlvars.my_finished_growlogs_sort %}{{ urlvars.my_finished_growlogs_sort }}{% else %}myfgl_sort{% endif %}': "{{ my_finished_growlogs_sort }}",
+    '{% if urlvars.my_finished_growlogs_ordering %}{{ urlvars.my_finished_growlogs_ordering }}{% else %}myfgl_ord{% endif %}': "{{ my_finished_growlogs_ordering }}",
+});
+console.log("Set page URL variables for my grow logs: " + JSON.stringify(pageURL.variables));
+</script>
+{% endblock scripts %}
 
+{% block body_scripts %}
+<script>pageURL.updateUrl();</script>
+{% endblock body_scripts %}
+
+{##### CONTENT ######}
+{% block content %}
 <h1>{% translate "My Grow Logs" %}</h1>
 <div>
     <a href="{% url 'grow:growlog-create' %}">{% translate "Start New Grow Log" %}</a>

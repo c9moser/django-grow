@@ -99,6 +99,10 @@ class HxMyActiveGrowlogsView(LoginRequiredMixin, View):
     template_name = GROW_TEMPLATES['grow/growlog/hx/my_active_growlogs']
     my_active_growlogs_hx_target = '#my-active-growlogs'
     logger = logging.getLogger(__name__ + ".HxMyActiveGrowlogsView")
+    urlvars = {
+        'my_active_growlogs_sort': 'myagl_sort',
+        'my_active_growlogs_ordering': 'myagl_ord',
+    }
 
     def get_context_data(self, **kwargs):
         my_active_growlogs = Growlog.objects.filter(
@@ -124,12 +128,15 @@ class HxMyActiveGrowlogsView(LoginRequiredMixin, View):
             self.request.GET.get(
                 'myagl_ordering',
                 self.request.GET.get(
-                    'myagl_o',
+                    'myagl_ord',
                     self.request.GET.get(
-                        'ordering',
+                        'myagl_o',
                         self.request.GET.get(
-                            'ord',
-                            self.request.GET.get('o', 'desc')
+                            'ordering',
+                            self.request.GET.get(
+                                'ord',
+                                self.request.GET.get('o', 'desc')
+                            )
                         )
                     )
                 )
@@ -174,11 +181,112 @@ class HxMyActiveGrowlogsView(LoginRequiredMixin, View):
         return render(request, self.template_name, self.get_context_data())
 
 
-class MyGrowlogsView(HxMyActiveGrowlogsView, BaseView):
+class HxMyFinishedGrowlogsView(LoginRequiredMixin, View):
+    template_name = GROW_TEMPLATES['grow/growlog/hx/my_finished_growlogs']
+    urlvars = {
+        'my_finished_growlogs_sort': 'myfgl_sort',
+        'my_finished_growlogs_ordering': 'myfgl_ord',
+    }
+    my_finished_growlogs_hx_target = '#my-finished-growlogs'
+    udate_page_url = True
+
+    def get_context_data(self, **kwargs):
+        context = kwargs
+        context.setdefault('hx_target', self.my_finished_growlogs_hx_target)
+        context.setdefault('urlvars', self.urlvars)
+        context.setdefault('update_page_url', self.udate_page_url)
+
+        finished_growlogs = Growlog.objects.filter(
+            grower=self.request.user,
+            finished_at__isnull=False
+        )
+
+        desc_sort = ['finished_at', 'started_at', 'updated_at']
+
+        sort = self.request.GET.get(
+            'my_finished_growlogs_sort',
+            self.request.GET.get(
+                'myfgl_sort',
+                self.request.GET.get(
+                    'myfgl_s',
+                    self.request.GET.get(
+                        'myfgl_sort',
+                        self.request.GET.get(
+                            'sort',
+                            self.request.GET.get(
+                                's',
+                                'name'
+                            )
+                        )
+                    )
+                )
+            )
+        )
+        ordering = self.request.GET.get(
+            'my_finished_growlogs_ordering',
+            self.request.GET.get(
+                'myfgl_ordering',
+                self.request.GET.get(
+                    'myfgl_ord',
+                    self.request.GET.get(
+                        'ordering',
+                        self.request.GET.get(
+                            'ord',
+                            self.request.GET.get('o', 'desc' if sort in desc_sort else 'asc')
+                        )
+                    )
+                )
+            )
+        )
+        if sort == 'name':
+            finished_growlogs = finished_growlogs.order_by(
+                f'{"-" if ordering == "desc" else ""}name'
+            )
+        elif sort == 'started_at':
+            finished_growlogs = finished_growlogs.order_by(
+                f'{"-" if ordering == "desc" else ""}started_at'
+            )
+        elif sort == 'updated_at':
+            finished_growlogs = finished_growlogs.order_by(
+                f'{"-" if ordering == "desc" else ""}updated_at',
+                f'{"-" if ordering == "desc" else ""}started_at'
+            )
+        elif sort == 'finished_at':
+            finished_growlogs = finished_growlogs.order_by(
+                f'{"-" if ordering == "desc" else ""}finished_at',
+                f'{"-" if ordering == "desc" else ""}started_at'
+            )
+        else:
+            self.logger.warning(f"Invalid sort parameter for my finished growlogs: {sort}. Defaulting to finished_at.")  # noqa: E501
+            sort = 'finished_at'
+            ordering = 'desc'
+            finished_growlogs = finished_growlogs.order_by('-finished_at', '-started_at')
+
+        if ordering in ['asc', 'ascending', 'a', '1', 'up', 'oldest']:
+            ordering = 'asc'
+        elif ordering in ['desc', 'descending', 'd', '0', 'down', 'newest']:
+            ordering = 'desc'
+        else:
+            self.logger.warning(f"Invalid ordering parameter for my finished growlogs: {ordering}. Defaulting to desc.")  # noqa: E501
+            ordering = 'desc'
+
+        context['my_finished_growlogs'] = finished_growlogs
+        context['my_finished_growlogs_sort'] = sort
+        context['my_finished_growlogs_ordering'] = ordering
+        return context
+
+    def get(self, request: HttpRequest) -> HttpResponse:
+        return render(request, self.template_name, self.get_context_data())
+
+
+class MyGrowlogsView(HxMyActiveGrowlogsView, HxMyFinishedGrowlogsView, BaseView):
     template_name = GROW_TEMPLATES['grow/growlog/my_growlogs']
 
     def get_context_data(self, **kwargs):
-        context = HxMyActiveGrowlogsView.get_context_data(self, **kwargs)
+        context = HxMyActiveGrowlogsView.get_context_data(
+            self,
+            **HxMyFinishedGrowlogsView.get_context_data(self, **kwargs)
+        )
         context['finished_growlogs'] = Growlog.objects.filter(
             grower=self.request.user,
             finished_at__isnull=False

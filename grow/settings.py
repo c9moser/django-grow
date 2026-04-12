@@ -236,7 +236,7 @@ GROW_BUILTIN_BS_GROWLOG_TEMPLATES = {
     'grow/growlog/hx/finished_info' : GROW_BUILTIN_GROWLOG_TEMPLATES['grow/growlog/hx/finished_info'],
 
     'grow/growlog/hx/my_active_growlogs' : 'grow/bootstrap/growlog/hx/my_active_growlogs.html',
-    'grow/growlog/hx/my_finished_growlogs': GROW_BUILTIN_GROWLOG_TEMPLATES['grow/growlog/hx/my_finished_growlogs'],
+    'grow/growlog/hx/my_finished_growlogs': 'grow/bootstrap/growlog/hx/my_finished_growlogs.html',
 
     'grow/growlog/hx/strains_grown': GROW_BUILTIN_GROWLOG_TEMPLATES['grow/growlog/hx/strains_grown'],
     'grow/growlog/growlog/hx/entries': GROW_BUILTIN_GROWLOG_TEMPLATES['grow/growlog/growlog/hx/entries'],

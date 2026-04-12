@@ -1,32 +1,90 @@
 {% load i18n %}
 <table class="table table-hover">
     <thead>
-        <tr class="table-success">
-            <th scope="col">{% translate "Title" %}</th>
-            <th scope="col">{% translate "Started" %}</th>
+        <tr>
+            <th scope="col">
+                <a href="#"
+                   hx-get="{% url 'grow:hx-my-finished-growlogs' %}?sort=name&ord={% if my_finished_growlogs_sort == 'name' %}{% if my_finished_growlogs_ordering == 'asc' %}desc{% else %}asc{% endif %}{% else %}asc{% endif %}"
+                   hx-swap="innerHTML"
+                   hx-target="{{ hx_target }}"
+                >
+                    {% translate "Growlog" %}
+                    {% if my_finished_growlogs_sort == 'name' %}
+                        {% if my_finished_growlogs_ordering == 'asc' %}
+                            [ASC]
+                        {% else %}
+                            [DESC]
+                        {% endif %}
+                    {% endif %}
+                </a>
+            </th>
+            <th scope="col">
+                <a href="#"
+                   hx-get="{% url 'grow:hx-my-finished-growlogs' %}?sort=started_at&ord={% if my_finished_growlogs_sort == 'started_at' %}{% if my_finished_growlogs_ordering == 'asc' %}desc{% else %}asc{% endif %}{% else %}desc{% endif %}"
+                   hx-swap="innerHTML"
+                   hx-target="{{ hx_target }}"
+                >
+                    {% translate "Started" %}
+                    {% if my_finished_growlogs_sort == 'started_at' %}
+                        {% if my_finished_growlogs_ordering == 'asc' %}
+                            [ASC]
+                        {% else %}
+                            [DESC]
+                        {% endif %}
+                    {% endif %}
+                </a>
+            </th>
             <th scope="col">{% translate "Flowering" %}</th>
             <th scope="col">{% translate "Age" %}</th>
             <th scope="col">{% translate "Duration" %}</th>
-            <th scope="col">{% translate "Finished" %}</th>
+            <th scope="col">
+                <a href="#"
+                   hx-get="{% url 'grow:hx-my-finished-growlogs' %}?sort=finished_at&ord={% if my_finished_growlogs_sort == 'finished_at' %}{% if my_finished_growlogs_ordering == 'asc' %}desc{% else %}asc{% endif %}{% else %}desc{% endif %}"
+                   hx-swap="innerHTML"
+                   hx-target="{{ hx_target }}"
+                >
+                {% translate "Finished" %}
+                {% if my_finished_growlogs_sort == 'finished_at' %}
+                    {% if my_finished_growlogs_ordering == 'asc' %}
+                        [ASC]
+                    {% else %}
+                        [DESC]
+                    {% endif %}
+                {% endif %}
+                </a>
+            </th>
+            <th scope="col">{% translate "Locations" %}</th>
             <th scope="col">{% translate "Strains" %}</th>
         </tr>
     </thead>
     <tbody>
-    {% for growlog in finished_growlogs %}
+    {% for growlog in my_finished_growlogs %}
         <tr>
-            <td><a href="{% url 'grow:growlog-detail' growlog.id %}" class="link-success">{{ growlog.name }}</a></td>
+            <td>
+                <a href="{% url 'grow:growlog-detail' pk=growlog.id %}">{{ growlog.name }}</a>
+            </td>
             <td>{{ growlog.started_at|date:"SHORT_DATE_FORMAT" }}</td>
             <td>{% if growlog.flowering_at %}{{ growlog.flowering_display }}{% else %}---{% endif %}</td>
             <td>{{ growlog.age_display }}</td>
             <td>{% with growlog.duration_display as dd %}{% if dd %}{{ dd }}{% else %}{% translate "0 days" %}{% endif %}{% endwith %}</td>
             <td>{{ growlog.finished_at|date:"SHORT_DATE_FORMAT" }}</td>
-            <td><ul class="list-unstyled mb-0">
-                    {% for strain in growlog.growlog_strains.all %}
+            <td><ul style="list-style: none; padding: 0; margin: 0;">
+                    {% for location in growlog.growlog_locations.all %}
                         <li>
-                            <a href="{% url 'grow:strain-detail' breeder_slug=strain.strain.breeder.slug slug=strain.strain.slug %}" class="link-info">{{ strain.strain.name }}</a>
+                            <a href="{% url 'grow:location-detail' pk=location.location.id %}" class="link-info">{{ location.location.name }}</a>
                         </li>
                     {% empty %}
-                        <li class="text-muted">{% translate "No strains specified." %}</li>
+                        <li class="text-muted">---</li>
+                    {% endfor %}
+                </ul>
+            </td>
+            <td><ul style="list-style: none; padding: 0; margin: 0;">
+                    {% for strain in growlog.growlog_strains.all %}
+                        <li>
+                            <a href="{% url 'grow:strain-detail' breeder_slug=strain.strain.breeder.slug slug=strain.strain.slug %}">{{ strain.strain.name }}</a>
+                        </li>
+                    {% empty %}
+                        <li class="text-muted">---</li>
                     {% endfor %}
                 </ul>
         </tr>
@@ -40,7 +98,7 @@
 
 {% if update_page_url %}
 <script>
-PAGE_URL.update({
+pageURL.update({
     '{% if urlvars.my_finished_growlogs_sort %}{{ urlvars.my_finished_growlogs_sort }}{% else %}myfgl_sort{% endif %}': "{{ my_finished_growlogs_sort }}",
     '{% if urlvars.my_finished_growlogs_ordering %}{{ urlvars.my_finished_growlogs_ordering }}{% else %}myfgl_ordering{% endif %}': "{{ my_finished_growlogs_ordering }}",
 });
