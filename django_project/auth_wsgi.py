@@ -2,13 +2,22 @@
 
 import sys
 import os
+from pathlib import Path
 
 APACHE_AUTH_KEY = u"AUTH_NAME"
 APACHE_USER_KEY = u"user"
 APACHE_PASS_KEY = u"pw"
 
-sys.path.insert(0, os.path.dirname(__file__))
-os.environ['DJANGO_SETTINGS_MODULE'] = os.environ.get('DJANGO_SETTINGS_MODULE', 'django_project.settings')
+BASE_DIR = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(BASE_DIR))
+sys.path.insert(1, str(BASE_DIR
+                       / ".venv"
+                       / "lib"
+                       / f"python{sys.version_info.major}.{sys.version_info.minor}"
+                       / "site-packages"))
+os.environ['DJANGO_SETTINGS_MODULE'] = os.environ.get(
+    'DJANGO_SETTINGS_MODULE', 'django_project.settings')
+
 
 def __get_apache_keys_(environ):
     user_key = APACHE_USER_KEY
@@ -21,6 +30,7 @@ def __get_apache_keys_(environ):
 
     return (user_key, pw_key)
 
+
 def __get_session_id_(environ):
     from django.conf import settings
     from django.http import parse_cookie
@@ -29,6 +39,7 @@ def __get_session_id_(environ):
         cookies = parse_cookie(environ[u"HTTP_COOKIE"])
         if settings.SESSION_COOKIE_NAME in cookies:
             return cookies[settings.SESSION_COOKIE_NAME]
+
 
 def __get_session_(environ):
     from django.contrib.sessions.models import Session
@@ -44,6 +55,7 @@ def __get_session_(environ):
 
     return s
 
+
 def __encode_data_(data):
     from importlib import import_module
     from django.conf import settings
@@ -52,6 +64,7 @@ def __encode_data_(data):
     s = SessionStore()
     return s.encode(data)
 
+
 def __decode_data_(data):
     from importlib import import_module
     from django.conf import settings
@@ -59,6 +72,7 @@ def __decode_data_(data):
     SessionStore = import_module(settings.SESSION_ENGINE).SessionStore
     s = SessionStore()
     return s.decode(data)
+
 
 def check_password(environ, username, password):
     s = __get_session_(environ)
@@ -77,10 +91,12 @@ def check_password(environ, username, password):
 
     return False
 
+
 def load_session(environ):
     s = __get_session_(environ)
     if s is not None:
         return s.session_data
+
 
 def decode_session(environ, data):
     session_data = __decode_data_(data)
@@ -134,4 +150,4 @@ def save_session(environ, data):
     return False
 
 
-from django.contrib.auth.handlers.modwsgi import groups_for_user
+from django.contrib.auth.handlers.modwsgi import groups_for_user  # noqa
