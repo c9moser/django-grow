@@ -300,6 +300,7 @@ class MyGrowlogsView(HxMyActiveGrowlogsView, HxMyFinishedGrowlogsView, BaseView)
 
 class HxGrowlogEntriesView(BaseView):
     template_name = GROW_TEMPLATES['grow/growlog/growlog/hx/entries']
+    update_page_url = True
 
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         entries = self.growlog.entries.filter().order_by('timestamp')
@@ -365,12 +366,12 @@ class HxGrowlogEntriesView(BaseView):
             page=entries_page
         )
 
-        context = {
-            'growlog': self.growlog,
-            'entries_paginator': entries_paginator,
-            'can_edit': can_edit,
-        }
-        context.update(kwargs)
+        context = kwargs
+        context['growlog'] = self.growlog
+        context['entries_paginator'] = entries_paginator
+        context['can_edit'] = can_edit
+        context.setdefault('update_page_url', self.update_page_url)
+
         return context
 
     def get(self, request: HttpRequest, growlog_pk: int) -> HttpResponse:

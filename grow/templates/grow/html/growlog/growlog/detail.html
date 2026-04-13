@@ -1,33 +1,23 @@
 {% extends base_template %}
-{% load i18n %}
+{% load static i18n %}
 {% block subtitle %}{% translate "Grow Log" %}{% endblock subtitle %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'grow/css/lightbox.min.css' %}">
+{% endblock extra_css %}
 
 {% block scripts %}
 <script>
-    let URL_VARS = {
-        "gle_pg": {{ entries_paginator.current_page }},
-        "gle_pgn": {{ entries_paginator.paginate_by }},
+    let pageURL.setVariables({
+        "gle_pg": "{{ entries_paginator.current_page }}",
+        "gle_pgn": "{{ entries_paginator.paginate_by }}",
         "gle_ord": "{{ entries_paginator.ordering }}",
-    };
-
-    function createURLWithParams(url, params) {
-        const baseURL = window.location.origin
-        const urlObj = new URL(url, baseURL);
-        Object.keys(params).forEach(key => urlObj.searchParams.append(key, params[key]));
-        return urlObj.href;
-    }
-
-    function createPageURL() {
-        const baseURL = "{% url 'grow:growlog-detail' pk=growlog.id %}";
-        return createURLWithParams(baseURL, URL_VARS);
-    }
-
-    function updateURL() {
-        const newURL = createPageURL();
-        window.history.pushState({}, '', newURL);
-    }
+    });
 </script>
 {% endblock scripts %}
+{% block body_scripts %}
+<script src="{% static 'grow/js/lightbox-plus-jquery.js' %}"></script>
+{% endblock %}
 
 {% block content %}
 {% if use_bootstrap%}
@@ -393,6 +383,6 @@
 </div>
 {% endif %}
 <div id="growlog-entries">
-    {% include entries_template %}
+    {% include entries_template with update_page_url=False %}
 </div>
 {% endblock content %}

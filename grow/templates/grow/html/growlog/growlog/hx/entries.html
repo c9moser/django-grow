@@ -179,7 +179,13 @@
                                 </div>
                             </div>
                             <div class="card-body p-0">
-                                <img src="{{ image.image.url }}" class="img-fluid" alt="{% translate "Entry Image" %}">
+                                <a  href="{{ image.image.url }}"
+                                    data-lightbox="growlogentry-{{ entry.id }}"
+                                    data-title="{{ image.description_html|escape }}"
+                                    data-alt="{{ image.caption|escape }}"
+                                >
+                                    <img src="{{ image.image.url }}" class="img-fluid" alt="{{ image.caption|escape }}">
+                                </a>
                             </div>
                             <div class="card-footer p-1">
                                 <small class="text-muted">{{ image.description_html }}</small>
@@ -236,15 +242,11 @@
         </div>
     </div>
 </div>
+{% if update_page_url %}
 <script>
-    function entriesUpdate() {
-        const growlogEntriesCard = document.getElementById("growlog-entries-card");
-        URL_VARS["gle_pg"] = "{{ entries_paginator.current_page }}";
-        URL_VARS["gle_pgn"] = "{{ entries_paginator.paginate_by }}";
-        htmx.process(growlogEntriesCard);
-        growlogEntriesCard.scroll({behavior: "smooth", top: 20});
-        updateURL();
-    }
-
-    entriesUpdate();
+    pageURL.update({
+        "gle_pg": "{{ entries_paginator.current_page }}",
+        "gle_pgn": "{{ entries_paginator.paginate_by }}",
+    });
 </script>
+{% endif %}
