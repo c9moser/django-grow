@@ -1,4 +1,10 @@
 # -*- coding: utf-8 -*-
+"""
+Apache mod_wsgi authentication handler for Django.
+
+Integrates Django's session-based authentication with Apache's form-based auth.
+Validates users against Django's session cache rather than password file.
+"""
 
 import sys
 import os
@@ -10,13 +16,13 @@ APACHE_PASS_KEY = u"pw"
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(BASE_DIR))
-sys.path.insert(1, str(BASE_DIR
-                       / ".venv"
-                       / "lib"
-                       / f"python{sys.version_info.major}.{sys.version_info.minor}"
-                       / "site-packages"))
+
 os.environ['DJANGO_SETTINGS_MODULE'] = os.environ.get(
     'DJANGO_SETTINGS_MODULE', 'django_project.settings')
+
+# Import and setup Django
+import django
+django.setup()
 
 
 def __get_apache_keys_(environ):
@@ -42,19 +48,16 @@ def __get_session_id_(environ):
 
 
 def __get_session_(environ):
+    """Retrieve Django session object from database."""
     from django.contrib.sessions.models import Session
-
-    s = None
 
     session_id = __get_session_id_(environ)
     if session_id is not None:
         try:
-            s = Session.objects.get(pk = session_id)
-        except Session.DoesNotExists:
+            return Session.objects.get(pk=session_id)
+        except Session.DoesNotExist:
             pass
-
-    return s
-
+    return None
 
 def __encode_data_(data):
     from importlib import import_module
@@ -75,8 +78,23 @@ def __decode_data_(data):
 
 
 def check_password(environ, username, password):
+    """
+    Validate user credentials against Django session.
+
+    Returns True if user has active Django session, False otherwise.
+    Apache passes username and password; we verify the session exists.
+    """
     s = __get_session_(environ)
-    session_data = s.get_decoded()
+    if s is None:
+        return False
+
+    try:
+        session_data = s.get_decoded()
+    except Exception:
+        return False
+
+    if not session_data:
+        return False
 
     from django.contrib.auth import SESSION_KEY
     if SESSION_KEY in session_data and session_data[SESSION_KEY] is not None:
@@ -84,8 +102,10 @@ def check_password(environ, username, password):
         UserModel = get_user_model()
 
         try:
-            user = UserModel.objects.get(pk = session_data[SESSION_KEY])
-            return True
+            user = UserModel.objects.get(pk=session_data[SESSION_KEY])
+            # Verify username matches
+            if user.get_username() == username:
+                return True
         except UserModel.DoesNotExist:
             pass
 
@@ -99,7 +119,12 @@ def load_session(environ):
 
 
 def decode_session(environ, data):
-    session_data = __decode_data_(data)
+    """
+    Decode session data and convert to bytes for Apache.
+
+    Injects current username into session data if user is authenticated.
+    """
+    session_data = __decode_data_(data) if data else {}
 
     (user_key, pw_key) = __get_apache_keys_(environ)
     if user_key not in session_data:
@@ -112,7 +137,7 @@ def decode_session(environ, data):
             uid = session_data[SESSION_KEY]
             if uid is not None:
                 try:
-                    user = UserModel.objects.get(pk = uid)
+                    user = UserModel.objects.get(pk=uid)
                 except UserModel.DoesNotExist:
                     pass
 
@@ -121,10 +146,17 @@ def decode_session(environ, data):
             if pw_key not in session_data:
                 session_data[pw_key] = u"<fake>"
 
-    return {k.encode(u"utf-8"): v.encode(u"utf-8") for (k, v) in session_data.iteritems()}
+    # Convert to bytes for Apache
+    return {k.encode(u"utf-8"): v.encode(u"utf-8")
+            for (k, v) in session_data.items()}
 
 
 def encode_session(environ, data):
+    """
+    Encode session data back to Django format.
+
+    Removes Apache auth keys before storing in session.
+    """
     (user_key, pw_key) = __get_apache_keys_(environ)
     if user_key in data:
         del data[user_key]
@@ -132,7 +164,14 @@ def encode_session(environ, data):
         del data[pw_key]
 
     s = __get_session_(environ)
-    session_data = __decode_data_(s.session_data)
+    if s is None:
+        return None
+
+    try:
+        session_data = __decode_data_(s.session_data)
+    except Exception:
+        return None
+
     for key in data:
         if not key.startswith(u"_"):
             session_data[key] = data[key]
@@ -150,4 +189,5 @@ def save_session(environ, data):
     return False
 
 
-from django.contrib.auth.handlers.modwsgi import groups_for_user  # noqa
+# Required: groups_for_user function for Apache mod_wsgi
+from django.contrib.auth.handlers.modwsgi import groups_for_user  # noqa: F401, E402
