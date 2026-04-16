@@ -1,6 +1,6 @@
 {% load i18n %}
 <nav aria-label="{% translate 'Pagination' %}" class="d-flex justify-content-start text-end mb-2">
-    <ul class="pagination pgination-sm mb-0">
+    <ul class="pagination pagination-sm mb-0">
         {% for page in paginator.pagination %}
         <li class="page-item page-item-sm {% if page.current_page %}active{% endif %}">
             <button class="page-link page-link-sm {% if page.current_page %}active{% endif %}"
