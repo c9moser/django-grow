@@ -1,11 +1,19 @@
 #!/bin/bash
 
 runserver() {
-    #apachectl configtest || { echo "Apache configuration test failed. Aborting."; exit 1; }
+    # Set up signal traps to ensure the server is stopped gracefully
+    # This allows the container to shut down cleanly when receiving SIGINT or SIGTERM
+    # The stopserver function will be called to stop Apache before exiting
+    trap "stopserver; exit 0" SIGINT SIGTERM
     . /etc/apache2/envvars
     sudo -u www-data ./manage migrate --noinput || { echo "Database migration failed. Aborting."; exit 1; }
     apache2 -t || { echo "Apache configuration test failed. Aborting."; exit 1; }
-    exec apache2 -D FOREGROUND -E /var/log/apache2/startup-errors.log -k start
+
+    # run in background and wait for it to exit, then check the exit code
+    # this allows to hook up a asgi server in the future if deemed useful for sensor monitoring,
+    # and also to capture the exit code of apache
+    apache2 -D FOREGROUND -E /var/log/apache2/startup-errors.log -k start &
+    wait $!
     rc=$?
     echo "Apache exited with code $rc"
     if [ $rc -ne 0 ]; then
@@ -25,7 +33,7 @@ BASE_DIR="$(dirname "$0")"
 cd "$BASE_DIR"
 
 if [ -z "$1" ]; then
-    echo "No command provided. Defaulting to 'runserver'."
+    echo "No command provided. Defaulting to 'runserver'." >&2
     runserver
     exit 0
 fi
@@ -63,7 +71,12 @@ case "$1" in
     ;;
     sh)
         shift
-        bash "$@"
+        /bin/sh "$@"
+        exit $?
+    ;;
+    bash)
+        shift
+        /bin/bash "$@"
         exit $?
     ;;
     update)

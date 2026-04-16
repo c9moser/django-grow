@@ -3,7 +3,7 @@
 {% block subtitle %}{% translate "Grow Log" %}{% endblock subtitle %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'grow/css/lightbox.min.grocss' %}">
+<link rel="stylesheet" href="{% static 'grow/css/lightbox.min.css' %}">
 {% endblock extra_css %}
 
 {% block scripts %}
@@ -377,9 +377,11 @@
         hx-swap="innerHTML"
         data-bs-target="#modals-here"
         data-bs-toggle="modal"
-    ><span data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Create a new Grow Log Entry with current timestamp' %}">
-        <i class="bi bi-plus-square"></i> {% translate "Create new entry" %}</i>
-    </span></button>
+    >
+        <span data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Create a new Grow Log Entry with current timestamp' %}">
+            <i class="bi bi-plus-square me-2"></i>{% translate "Create new entry" %}
+        </span>
+    </button>
 </div>
 {% endif %}
 <div id="growlog-entries">

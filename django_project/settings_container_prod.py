@@ -19,15 +19,22 @@ LOGGING = {
     'filters': {
         'django_browser_reload': {
             'class': 'grow.growapi.logging.DjangoAutoReloadFilter'
-        }
+        },
     },
     'handlers': {
         'console': {
-            'level': 'DEBUG',
+            'level': 'INFO',
             'class': 'logging.StreamHandler',
             'filters': ['django_browser_reload'],
             'formatter': 'console',
-        }
+        },
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': '/var/log/grow/grow.log',
+            'filters': ['django_browser_reload'],
+            'formatter': 'file',
+        },
     },
     'formatters': {
         'verbose': {
@@ -45,14 +52,14 @@ LOGGING = {
     },
     'loggers': {
         'django': {
-            'handlers': ['console'],
+            'handlers': ['console', 'file'],
             'level': 'INFO',
             'propagate': True,
         },
         'grow': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
             'propagate': True,
-        }
+        },
     },
 }

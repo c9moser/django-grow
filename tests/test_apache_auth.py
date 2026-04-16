@@ -11,6 +11,7 @@ Tests verify that the auth_wsgi.py module correctly:
 import os
 import sys
 from pathlib import Path
+import django
 from django.test import TestCase, RequestFactory
 from django.contrib.auth import get_user_model
 from django.contrib.sessions.models import Session
@@ -22,7 +23,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(BASE_DIR))
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'django_project.settings')
 
-import django
 django.setup()
 
 from django_project import auth_wsgi

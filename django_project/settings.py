@@ -21,36 +21,37 @@ from django.utils.translation import gettext_lazy as L_
 BASE_DIR = Path(__file__).resolve().parent.parent
 LOCAL_SETTINGS_DIR = Path(__file__).resolve().parent / 'local'
 env = Env(
-    GROW_DEBUG=(bool, bool(os.environ.get('GROW_DEBUG', "0"))),
-    GROW_SECRET_KEY=(str, 'django-insecure-#zp@r)@gr(f%o3y3*g1dup_z+@lt$o)mgq#8ne%llaz4vh82lf'),
-    GROW_ALLOWED_HOSTS=(list, ['*']),
-    GROW_DB=(str, f'sqlite:////{BASE_DIR / "db.sqlite3"}'),
-    GROW_DEFAULT_FROM_EMAIL=(str, 'webmaster@localhost'),
-    GROW_EMAIL_BACKEND=(str, 'django.core.mail.backends.console.EmailBackend'),
-    GROW_EMAIL_HOST=(str, 'localhost'),
-    GROW_EMAIL_PORT=(int, 25),
-    GROW_EMAIL_USE_TLS=(bool, False),
-    GROW_EMAIL_HOST_USER=(str, ''),
-    GROW_EMAIL_HOST_PASSWORD=(str, ''),
-    GROW_STATIC_URL=(str, 'static/'),
-    GROW_STATIC_ROOT=(str, BASE_DIR / '.static'),
-    GROW_MEDIA_URL=(str, 'media/'),
-    GROW_MEDIA_ROOT=(str, BASE_DIR / '.media'),
-    GROW_TIME_ZONE=(str, 'UTC'),
-    GROW_LANGUAGE_CODE=(str, 'en-us'),
-    GROW_ALLOW_SIGNUP=(bool, True),
-    GROW_ADMIN_URL=(str, "admin/"),
-    GROW_ACCOUNT_LOGIN_METHODS=(list, ['email']),
-    GROW_LOGIN_REQUIRED=(bool, False),
-    GROW_INCLUDE_WIKI=(bool, True),
-    GROW_HEAD_TITLE=(str, 'Grow'),
-    GROW_SITE_TITLE=(str, 'Grow'),
-    GROW_COOKIES_CONSENT_REQUIRED=(bool, False),
-    GROW_COOKIES_CONSENT_NAME=(str, 'cookies_consent'),
-    GROW_AGE_GATE_REQUIRED=(bool, False),
-    GROW_AGE_GATE_NAME=(str, 'age_gate_passed'),
-    GROW_AGE_GATE_MINIMUM_AGE=(int, 18),
-    GROW_AGE_GATE_REJECTED_URL=(str, '/age-gate/'),
+    DEBUG=(bool, bool(os.environ.get('GROW_DEBUG', "0"))),
+    SECRET_KEY=(str, 'django-insecure-#zp@r)@gr(f%o3y3*g1dup_z+@lt$o)mgq#8ne%llaz4vh82lf'),
+    ALLOWED_HOSTS=(list, ['*']),
+    DATABASE_URL=(str, f'sqlite:////{BASE_DIR / "db.sqlite3"}'),
+    DEFAULT_FROM_EMAIL=(str, 'webmaster@localhost'),
+    EMAIL_BACKEND=(str, 'django.core.mail.backends.console.EmailBackend'),
+    EMAIL_HOST=(str, 'localhost'),
+    EMAIL_PORT=(int, 25),
+    EMAIL_USE_TLS=(bool, False),
+    EMAIL_HOST_USER=(str, ''),
+    EMAIL_HOST_PASSWORD=(str, ''),
+    STATIC_URL=(str, 'static/'),
+    STATIC_ROOT=(str, BASE_DIR / '.static'),
+    MEDIA_URL=(str, 'media/'),
+    MEDIA_ROOT=(str, BASE_DIR / '.media'),
+    TIME_ZONE=(str, 'UTC'),
+    LANGUAGE_CODE=(str, 'en-us'),
+    ALLOW_SIGNUP=(bool, True),
+    ADMIN_URL=(str, "admin/"),
+    ACCOUNT_LOGIN_METHODS=(list, ['email']),
+    LOGIN_REQUIRED=(bool, False),
+    INCLUDE_WIKI=(bool, True),
+    HEAD_TITLE=(str, 'Grow'),
+    SITE_TITLE=(str, 'Grow'),
+    COOKIES_CONSENT_REQUIRED=(bool, False),
+    COOKIES_CONSENT_NAME=(str, 'cookies_consent'),
+    AGE_GATE_REQUIRED=(bool, False),
+    AGE_GATE_NAME=(str, 'age_gate_passed'),
+    AGE_GATE_MINIMUM_AGE=(int, 18),
+    AGE_GATE_REJECTED_URL=(str, '/age-gate/'),
+    SESSION_COOKIE_NAME=(str, 'grow_sessionid'),
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -61,7 +62,7 @@ if (BASE_DIR / '.env').is_file():
 if (LOCAL_SETTINGS_DIR / '.env').exists():
     env.read_env(LOCAL_SETTINGS_DIR / '.env')
 
-DEBUG = env.bool('GROW_DEBUG')
+DEBUG = env.bool('DEBUG')
 
 if DEBUG and (BASE_DIR / '.env-dev').is_file():
     env.read_env(BASE_DIR / '.env-dev')
@@ -78,7 +79,7 @@ elif not DEBUG and (LOCAL_SETTINGS_DIR / 'local' / '.env-prod').is_file():
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('GROW_SECRET_KEY')
+SECRET_KEY = env('GROW_SECRET_KEY', default=env('SECRET_KEY'))
 if (LOCAL_SETTINGS_DIR / 'secret_key').is_file():
     with open(LOCAL_SETTINGS_DIR / 'secret_key', 'rt', encoding='utf-8') as skf:
         SECRET_KEY = skf.readline().strip()
@@ -89,7 +90,7 @@ if (LOCAL_SETTINGS_DIR / 'secret_key_fallabcks').is_file():
             line.strip() for line in skf.readlines() if line.strip()
         ]
 
-ALLOWED_HOSTS = env.list('GROW_ALLOWED_HOSTS')
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 
 
 # Application definition
@@ -162,7 +163,7 @@ WSGI_APPLICATION = 'django_project.wsgi.application'
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 DATABASES = {
-    'default': env.db_url('GROW_DB'),
+    'default': env.db_url('DATABASE_URL'),
 }
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -193,15 +194,15 @@ AUTHENTICATION_BACKENDS = [
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
-LANGUAGE_CODE = env('GROW_LANGUAGE_CODE')
+LANGUAGE_CODE = env('LANGUAGE_CODE')
 LANGUAGES = [
     ('en', 'English'),
     ('de', 'Deutsch'),
 ]
-TIME_ZONE = env('GROW_TIME_ZONE')
+TIME_ZONE = env('TIME_ZONE')
 
 USE_I18N = True
-
+USE_L10N = True
 USE_TZ = True
 
 
@@ -211,20 +212,20 @@ USE_TZ = True
 STATICFILES_DIRS = [
     BASE_DIR / 'staticfiles',
 ]
-STATIC_URL = env('GROW_STATIC_URL')
-STATIC_ROOT = env('GROW_STATIC_ROOT')
-MEDIA_URL = env('GROW_MEDIA_URL')
-MEDIA_ROOT = env('GROW_MEDIA_ROOT')
+STATIC_URL = env('GROW_STATIC_URL', default=env('STATIC_URL'))
+STATIC_ROOT = env('GROW_STATIC_ROOT', default=env('STATIC_ROOT'))
+MEDIA_URL = env('GROW_MEDIA_URL', default=env('MEDIA_URL'))
+MEDIA_ROOT = env('GROW_MEDIA_ROOT', default=env('MEDIA_ROOT'))
 
 AUTH_USER_MODEL = 'core.User'
 
-EMAIL_BACKEND = env('GROW_EMAIL_BACKEND')
-DEFAULT_FROM_EMAIL = env('GROW_DEFAULT_FROM_EMAIL')
-EMAIL_HOST = env('GROW_EMAIL_HOST')
-EMAIL_PORT = env('GROW_EMAIL_PORT')
-EMAIL_USE_TLS = env('GROW_EMAIL_USE_TLS')
-EMAIL_HOST_USER = env('GROW_EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = env('GROW_EMAIL_HOST_PASSWORD')
+EMAIL_BACKEND = env('GROW_EMAIL_BACKEND', default=env('EMAIL_BACKEND'))
+DEFAULT_FROM_EMAIL = env('GROW_DEFAULT_FROM_EMAIL', default=env('DEFAULT_FROM_EMAIL'))
+EMAIL_HOST = env('GROW_EMAIL_HOST', default=env('EMAIL_HOST'))
+EMAIL_PORT = env('GROW_EMAIL_PORT', default=env('EMAIL_PORT'))
+EMAIL_USE_TLS = env('GROW_EMAIL_USE_TLS', default=env('EMAIL_USE_TLS'))
+EMAIL_HOST_USER = env('GROW_EMAIL_HOST_USER', default=env('EMAIL_HOST_USER'))
+EMAIL_HOST_PASSWORD = env('GROW_EMAIL_HOST_PASSWORD', default=env('EMAIL_HOST_PASSWORD'))
 
 # Allauth settings
 ACCOUNT_SIGNUP_FIELDS = [
@@ -236,18 +237,18 @@ ACCOUNT_SIGNUP_FIELDS = [
     'password2*',
 ]
 ACCOUNT_SIGNUP_FORM_HONEYPOT_FIELD = 'country'
-ACCOUNT_LOGIN_METHODS = env('GROW_ACCOUNT_LOGIN_METHODS')
+ACCOUNT_LOGIN_METHODS = env('GROW_ACCOUNT_LOGIN_METHODS', default=env('ACCOUNT_LOGIN_METHODS'))
 ACCOUNT_EMAIL_VERIFICATION_SUPPORTS_RESEND = True
 
 LOGIN_REDIRECT_URL = reverse_lazy("grow:home")
 LOGOUT_REDIRECT_URL = reverse_lazy("grow:home")
 
 # PROJECT settings
-ADMIN_URL = env("GROW_ADMIN_URL")
+ADMIN_URL = env("GROW_ADMIN_URL", default=env("ADMIN_URL", default="admin/"))
 USE_BOOTSTRAP = True
-ALLOW_SIGNUP = env.bool('GROW_ALLOW_SIGNUP')
-LOGIN_REQUIRED = env.bool('GROW_LOGIN_REQUIRED')
-INCLUDE_WIKI = env.bool('GROW_INCLUDE_WIKI')
+ALLOW_SIGNUP = env.bool('GROW_ALLOW_SIGNUP', default=env.bool('ALLOW_SIGNUP'))
+LOGIN_REQUIRED = env.bool('GROW_LOGIN_REQUIRED', default=env.bool('LOGIN_REQUIRED'))
+INCLUDE_WIKI = env.bool('GROW_INCLUDE_WIKI', default=env.bool('INCLUDE_WIKI'))
 
 LOCALE_PATHS = [
     BASE_DIR / "locale",
@@ -271,21 +272,18 @@ if INCLUDE_WIKI:
     TINYWIKI_BRAND_NAME = "Grow: Wiki"
 
 GROW_IS_MAIN_APP = True
-HEAD_TITLE = env('GROW_HEAD_TITLE')
-SITE_TITLE = env('GROW_SITE_TITLE')
+HEAD_TITLE = env('GROW_HEAD_TITLE', default=env('HEAD_TITLE'))
+SITE_TITLE = env('GROW_SITE_TITLE', default=env('SITE_TITLE'))
 
 SITE_TITLE = "Grow"
 
-
-
-AGE_GATE_REQUIRED = env.bool('GROW_AGE_GATE_REQUIRED')
-AGE_GATE_NAME = env('GROW_AGE_GATE_NAME')
-AGE_GATE_MINIMUM_AGE = env.int('GROW_AGE_GATE_MINIMUM_AGE')
-AGE_GATE_REJECTED_URL = env('GROW_AGE_GATE_REJECTED_URL')
-COOKIES_CONSENT_REQUIRED = env.bool('GROW_COOKIES_CONSENT_REQUIRED')
-COOKIES_CONSENT_NAME = env('GROW_COOKIES_CONSENT_NAME')
-
-SESSION_COOKIE_NAME = 'grow_sessionid'
+AGE_GATE_REQUIRED = env.bool('GROW_AGE_GATE_REQUIRED', default=env.bool('AGE_GATE_REQUIRED'))
+AGE_GATE_NAME = env('GROW_AGE_GATE_NAME', default=env('AGE_GATE_NAME'))
+AGE_GATE_MINIMUM_AGE = env.int('GROW_AGE_GATE_MINIMUM_AGE', default=env.int('AGE_GATE_MINIMUM_AGE'))
+AGE_GATE_REJECTED_URL = env('GROW_AGE_GATE_REJECTED_URL', default=env('AGE_GATE_REJECTED_URL'))
+COOKIES_CONSENT_REQUIRED = env.bool('GROW_COOKIES_CONSENT_REQUIRED', default=env.bool('COOKIES_CONSENT_REQUIRED'))
+COOKIES_CONSENT_NAME = env('GROW_COOKIES_CONSENT_NAME', default=env('COOKIES_CONSENT_NAME'))
+SESSION_COOKIE_NAME = env('GROW_SESSION_COOKIE_NAME', default=env('SESSION_COOKIE_NAME'))
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
 # load local config
