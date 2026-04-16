@@ -292,18 +292,6 @@
                 </td>
             </tr>
             {% endif %}
-            <tr>
-                <th class="table-primary fit-content">{% translate "Flowering duration" %}</th>
-                <td>
-                    {% if  growlog.flowering_days < 14 %}
-                        {% blocktranslate count n=growlog.flowering_days %}{{ n }} day{% plural %}{{ n }} days{% endblocktranslate %}
-                    {% else %}
-                        {{ growlog.flowering_display }}
-                    {% endif %}
-                </td>
-                <th class="table-primary fit-content"></th>
-                <td></td>
-            </tr>
             {% endwith %}
             {% endif %}
 
