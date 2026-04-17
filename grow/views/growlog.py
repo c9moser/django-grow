@@ -57,6 +57,7 @@ class GrowlogDetailView(BaseView):
 
     def get(self, request: HttpRequest, pk: int) -> HttpResponse:
         growlog = get_object_or_404(Growlog, pk=pk)
+        user_settings = GROW_USER_SETTINGS(request)
 
         if not growlog_user_is_allowed_to_view(request.user, growlog):
             if request.user.is_authenticated:
@@ -73,7 +74,7 @@ class GrowlogDetailView(BaseView):
         else:
             entries = growlog.entries.filter().order_by('timestamp')
 
-        paginate_by = GROW_USER_SETTINGS(request).growlog_paginate
+        paginate_by = user_settings.growlog_paginate if user_settings else 10
 
         entries_paginator = QuerySetPaginator(
             entries,

@@ -39,6 +39,24 @@
                 </button>
             </th>
             <th>
+                <button class="btn btn-link {% if sis_sort == 'quantity' %}link-success{% else %}link-dark{% endif %} text-decoration-none p-0 m-0 fw-bold"
+                    hx-get="{% url 'grow:hx-my-seeds-in-stock' %}?sort=quantity{% if sis_sort == 'quantity' %}{% if sis_ordering == 'asc' %}&ord=desc{% else %}&ord=asc{% endif %}{% else %}&ord=asc{% endif %}"
+                    hx-swap="innerHTML"
+                    hx-target="{{ hx_target }}"
+                >
+                     {% translate "Quantity" %}
+                    {% if sis_sort == 'quantity' %}
+                        {% if sis_ordering == 'asc' %}
+                            <i class="bi bi-caret-up-fill"></i>
+                        {% else %}
+                            <i class="bi bi-caret-down-fill"></i>
+                        {% endif %}
+                    {% else %}
+                        <span style="color:gray-50;"><i class="bi bi-caret-up"></i></span>
+                    {% endif %}
+                </button>
+            </th>
+            <th>
                 <button class="btn btn-link {% if sis_sort == 'purchased_on' %}link-success{% else %}link-dark{% endif %} text-decoration-none p-0 m-0 fw-bold"
                     hx-get="{% url 'grow:hx-my-seeds-in-stock' %}?sort=purchased_on{% if sis_sort == 'purchased_on' %}{% if sis_ordering == 'asc' %}&ord=desc{% else %}&ord=asc{% endif %}{% else %}&ord=asc{% endif %}"
                     hx-swap="innerHTML"
@@ -110,24 +128,6 @@
                     {% endif %}
                 </button>
             </th>
-            <th>
-                <button class="btn btn-link {% if sis_sort == 'quantity' %}link-success{% else %}link-dark{% endif %} text-decoration-none p-0 m-0 fw-bold"
-                    hx-get="{% url 'grow:hx-my-seeds-in-stock' %}?sort=quantity{% if sis_sort == 'quantity' %}{% if sis_ordering == 'asc' %}&ord=desc{% else %}&ord=asc{% endif %}{% else %}&ord=asc{% endif %}"
-                    hx-swap="innerHTML"
-                    hx-target="{{ hx_target }}"
-                >
-                     {% translate "Quantity" %}
-                    {% if sis_sort == 'quantity' %}
-                        {% if sis_ordering == 'asc' %}
-                            <i class="bi bi-caret-up-fill"></i>
-                        {% else %}
-                            <i class="bi bi-caret-down-fill"></i>
-                        {% endif %}
-                    {% else %}
-                        <span style="color:gray-50;"><i class="bi bi-caret-up"></i></span>
-                    {% endif %}
-                </button>
-            </th>
         </tr>
     </thead>
     <tbody class="table-group-divider">
@@ -143,6 +143,7 @@
                     {{ sis.strain.breeder.name }}
                 </a>
             </td>
+            <td>{{ sis.quantity }}</td>
             <td>{{ sis.purchased_on }}</td>
             <td>{{ sis.strain.genotype.name }}</td>
             <td>{{ sis.strain.flowering_time_days }}</td>
@@ -157,7 +158,6 @@
                 {% endfor %}
                 </ul>
             </td>
-            <td>{{ sis.quantity }}</td>
         </tr>
         {% empty %}
         <tr>

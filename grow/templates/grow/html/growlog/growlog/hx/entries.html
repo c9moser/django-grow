@@ -105,6 +105,7 @@
                     {% for image in entry.images.all %}
                     <div class="col-6 col-lg-4 mb-3">
                         <div class="card h-100">
+                            {% if can_edit %}
                             <div class="card-header p-1">
                                 <div class="d-flex justify-content-end">
                                     {% if can_edit %}
@@ -161,6 +162,7 @@
                                     {% endif %}
                                 </div>
                             </div>
+                            {% endif %}{# can_edit #}
                             <div class="card-body p-0">
                                 <a  href="{{ image.image.url }}"
                                     data-lightbox="growlogentry-{{ entry.id }}"
@@ -175,8 +177,8 @@
                             </div>
                         </div>
                     </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
             </div>
             {% endif %}
         </div>

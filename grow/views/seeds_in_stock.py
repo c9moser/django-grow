@@ -519,7 +519,7 @@ class HxMySeedsInStockView(LoginRequiredMixin, View):
         context['urlvars'] = self.urlvars
         context['sis_sort'] = sort
         context['sis_ordering'] = ordering
-        context['sis_hx_target'] = self.sis_hx_target
+        context['hx_target'] = self.sis_hx_target
         context.setdefault('seeds_in_stock_update_page_url', self.update_page_url)
         context.setdefault('update_page_url', self.update_page_url)
 
