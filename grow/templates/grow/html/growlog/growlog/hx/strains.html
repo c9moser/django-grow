@@ -44,9 +44,22 @@
     <tbody class="table-group-divider">
         {% for growlog_strain in growlog_strains %}
         <tr>
-            <td><a href="{% url 'grow:strain-detail' breeder_slug=growlog_strain.strain.breeder.slug slug=growlog_strain.strain.slug %}">{{ growlog_strain.strain.name }}</a></td>
-            <td><a href="{% url 'grow:breeder-detail' slug=growlog_strain.strain.breeder.slug %}">{{ growlog_strain.strain.breeder.name }}</a></td>
-            <td>{% blocktranslate count n=growlog_strain.strain.flowering_time_days %}{{ n }} day{% plural %}{{ n }} days{% endblocktranslate %}
+            <td>
+                <a href="{% url 'grow:strain-detail' breeder_slug=growlog_strain.strain.breeder.slug slug=growlog_strain.strain.slug %}"
+                    class="link-info"
+                >
+                    {{ growlog_strain.strain.name }}
+                </a>
+            </td>
+            <td>
+                <a href="{% url 'grow:breeder-detail' slug=growlog_strain.strain.breeder.slug %}"
+                    class="link-info"
+                >
+                    {{ growlog_strain.strain.breeder.name }}
+                </a>
+            </td>
+            <td>
+                {% blocktranslate count n=growlog_strain.strain.flowering_time_days %}{{ n }} day{% plural %}{{ n }} days{% endblocktranslate %}
                 ({% blocktranslate count n=growlog_strain.strain.flowering_time_weeks %}{{ n }} week{% plural %}{{ n }} weeks{% endblocktranslate %})</td>
             </td>
             <td>{% if growlog_strain.is_grown_from_seed %}{% translate "Yes" %}{% else %}{% translate "No" %}{% endif %}</td>

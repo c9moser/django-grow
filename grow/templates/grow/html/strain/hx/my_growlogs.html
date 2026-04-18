@@ -4,11 +4,11 @@
         <div class="row">
             <div class="col-4">
                 {% with "grow/utils/paginator"|grow_template as paginator_template %}
-                {% include paginator_template with paginator=my_growlogs_paginator %}
+                {% include paginator_template with paginator=my_growlogs_paginator hx_target=hx_target %}
                 {% endwith %}
             </div>
             <div class="col-4 d-flex align-items-center">
-                <h5 class="card-title my-auto mx-auto">{% translate "Grow logs" %}</h5>
+                <h5 class="card-title my-auto mx-auto">{% blocktranslate with strain_name=strain.name %}My Growlogs for <i>{{ strain_name }}</i>{% endblocktranslate %}</h5>
             </div>
             <div class="col-4 d-flex justify-content-end text-end">
             </div>

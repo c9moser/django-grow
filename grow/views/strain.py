@@ -133,7 +133,7 @@ class HxStrainGrowlogsView(View):
                             'paginate_by',
                             self.request.GET.get(
                                 'pgn',
-                                user_settings.paginate
+                                user_settings.paginate if user_settings else settings.GROW_PAGINATE
                             )
                         )
                     )

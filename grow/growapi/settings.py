@@ -30,8 +30,8 @@ GROW_DEFAULT_TEXT_TYPE = getattr(settings,
 if isinstance(GROW_DEFAULT_TEXT_TYPE, str):
     GROW_DEFAULT_TEXT_TYPE = TextType.from_string(GROW_DEFAULT_TEXT_TYPE)
 
-GROW_PAGINATE = getattr(settings, 'GROW_PAGINATE', 25)
-GROW_GROWLOG_PAGINATE = getattr(settings, 'GROW_GROWLOG_PAGINATE', 20)
+GROW_PAGINATE = getattr(settings, 'GROW_PAGINATE', 10)
+GROW_GROWLOG_PAGINATE = getattr(settings, 'GROW_GROWLOG_PAGINATE', 15)
 
 GROW_EXPORTS_VERSIONS = getattr(settings, "GROW_EXPRTS_VERSIONS", 3)
 GROW_EXPORTS_DIR = getattr(settings, 'GROW_EXPORTS_DIR',
@@ -43,5 +43,14 @@ if isinstance(GROW_EXPORTS_DIR, str):
 GROW_EXPORTS_FILE_FORMAT = str(GROW_EXPORTS_DIR / "grow-exports-{date}.zip")
 GROW_EXPORTS_VERSIONS_FILE = GROW_EXPORTS_DIR / "grow-exports.versions"
 
+GROW_MARKDOWN_EXTENSIONS = getattr(
+    settings,
+    "GROW_MARKDOWN_EXTENSIONS",
+    [
+        'markdown.extensions.extra',
+        'markdown.extensions.toc',
+        'markdown.extensions.sane_lists',
+        'grow.growapi.parser.markdown.strain:StrainExtension',
+    ])
 INCLUDE_WIKI = getattr(settings, "INCLUDE_WIKI", False)
 USE_BOOTSTRAP = getattr(settings, "USE_BOOTSTRAP", False)
