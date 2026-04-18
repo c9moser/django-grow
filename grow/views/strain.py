@@ -47,6 +47,7 @@ logger = logging.getLogger(__name__)
 
 class HxStrainMyGrowlogsView(View):
     template_name = settings.GROW_TEMPLATES["grow/strain/strain/hx/my_growlogs"]
+    my_growlogs_hx_target = "#my-growlogs-info"
 
     def get_context_data(self, **kwargs):
         user_settings = settings.GROW_USER_SETTINGS(self.request)
@@ -107,6 +108,7 @@ class HxStrainMyGrowlogsView(View):
         context.setdefault('breeder', self.breeder)
         context.setdefault('strain', self.strain)
         context.setdefault('my_growlogs_paginator', paginator)
+        context.setdefault('hx_target', self.my_growlogs_hx_target)
 
         return context
 
@@ -119,6 +121,7 @@ class HxStrainMyGrowlogsView(View):
 
 class HxStrainGrowlogsView(View):
     template_name = settings.GROW_TEMPLATES["grow/strain/strain/hx/growlogs"]
+    strain_growlogs_hx_target = "#growlogs-info"
 
     def get_context_data(self, **kwargs):
         user_settings = settings.GROW_USER_SETTINGS(self.request)
@@ -188,6 +191,7 @@ class HxStrainGrowlogsView(View):
         context.setdefault('breeder', self.breeder)
         context.setdefault('strain', self.strain)
         context.setdefault('growlogs_paginator', paginator)
+        context.setdefault('hx_target', self.strain_growlogs_hx_target)
 
         return context
 

@@ -250,7 +250,7 @@
                     <ul class="nav navbar-collapse justify-content-end">
                     {% if not request.user.is_authenticated %}
                         <li class="nav-item">
-                            <a class="nav-link text-white" href="{% url 'account_login' %}">{% translate "Login" %}</a>
+                            <a class="nav-link text-white" href="{% url 'account_login' %}?next={{ request.path }}">{% translate "Login" %}</a>
                         </li>
                         {% if allow_signup %}
                         <li class="nav-item">
