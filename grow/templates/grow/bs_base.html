@@ -82,19 +82,21 @@
                                         hx-swap="innerHTML"
                                     ><i class="bi bi-search"></i> {% translate "Search for strains" %}</button>
                                 </li>
-                                <li><hr class="dropdown divider"></li>
                                 <li>
                                     <a class="dropdown-item" href="{% url "grow:breeder-overview" %}">
                                         <i class="bi bi-people-fill"></i>
                                         {% translate "Breeders" %}
                                     </a>
                                 </li>
+                                {% if user.is_authenticated %}
+                                <li><hr class="dropdown divider"></li>
                                 <li>
-                                    <a class="dropdown-item" href={% url "grow:breeder-create" %}>
-                                        <i class="bi bi-person-fill-add"></i>
+                                    <a class="dropdown-item" href="{% url 'grow:breeder-create' %}">
+                                        <i class="bi bi-person-plus-fill"></i>
                                         {% translate "New Breeder" %}
                                     </a>
                                 </li>
+                                {% endif %}
                             </ul>
                         </li>
 
@@ -108,13 +110,14 @@
                                 aria-expanded="false"
                             >{% translate 'My Grow' %}</a>
                             <ul class="dropdown-menu dropdown-menu-center" aria-labelledby="navbar-mygrow-dropdown">
-
                                 <li>
-                                    <a class="dropdown-item" href="{% url 'grow:my-seeds-in-stock' %}">
-                                        <i class="bi bi-seedling"></i>
-                                        {% translate "My Seeds in Stock" %}
+                                    <a class="dropdown-item"
+                                        href="{% url 'grow:user-info' %}">
+                                        <i class="bi bi-person"></i>
+                                        {% translate "My Infos" %}
                                     </a>
                                 </li>
+
                                 <li>
                                     <a
                                         class="dropdown-item"
