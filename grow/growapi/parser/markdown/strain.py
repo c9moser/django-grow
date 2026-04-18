@@ -26,7 +26,9 @@ class BreederInlineProcessor(InlineProcessor):
             if title:
                 el.text = title
             else:
-                el.text = _("Breeder: <i>{breeder_slug}</i> not found!").format(breeder_slug=breeder_slug)
+                el.text = _("Breeder: <i>{breeder_slug}</i> not found!").format(
+                    breeder_slug=breeder_slug
+                )
         else:
             if not title:
                 title = breeder.name
@@ -97,7 +99,8 @@ class StrainInlineProecessor(InlineProcessor):
 
             {
                 'href': reverse(
-                'grow:breeder-detail', kwargs={'slug': breeder_slug}),
+                    'grow:breeder-detail',
+                    kwargs={'slug': breeder_slug}),
                 'class': " ".join(css_classes),
             },
         )
