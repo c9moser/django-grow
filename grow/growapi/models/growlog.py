@@ -301,26 +301,21 @@ class Growlog(models.Model):
         Calculate the age of the grow log in days since germination.
         Returns 0 if germination date and cutted date is not set.
         """
-        if not self.is_germintated and not self.is_cutted:
+        if not self.germinating_at and not self.cutted_at:
             return 0
 
         if self.germinating_at:
             if self.finished_at:
-                return self.finished_at.date() - self.germinating_at
+                delta = (self.finished_at.date() - self.germinating_at)
             else:
-                return date.today() - self.germinating_at
+                delta = (date.today() - self.germinating_at)
         elif self.cutted_at:
             if self.finished_at:
-                return self.finished_at.date() - self.cutted_at
+                delta = (self.finished_at.date() - self.cutted_at)
             else:
-                return date.today() - self.cutted_at
+                delta = (date.today() - self.cutted_at)
 
-        if self.finished_at:
-            delta = self.finished_at.date() - self.germinating_at
-        else:
-            delta = timezone.now().date() - self.germinating_at
-
-        return delta.days
+        return delta.days if delta.days >= 0 else 0
 
     @property
     def germinating_days(self):

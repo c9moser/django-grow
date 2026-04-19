@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: django-grc.api 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-23 12:48+0100\n"
+"POT-Creation-Date: 2026-04-19 10:56+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Christian Moser <christian@cmoser.eu>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -214,19 +214,19 @@ msgstr "Dies bestimmt wer den Growlog ansehen kann."
 msgid "name"
 msgstr "Name"
 
-#: grow/growapi/models/growlog.py:37 grow/growapi/models/growlog.py:1527
-#: grow/growapi/models/location.py:48 grow/growapi/models/location.py:293
+#: grow/growapi/models/growlog.py:37 grow/growapi/models/growlog.py:1728
+#: grow/growapi/models/location.py:48 grow/growapi/models/location.py:299
 #: grow/growapi/models/strain.py:95 grow/growapi/models/strain.py:651
-#: grow/growapi/models/strain.py:1357 grow/growapi/models/strain.py:1574
-#: grow/growapi/models/strain.py:1582
+#: grow/growapi/models/strain.py:1379 grow/growapi/models/strain.py:1596
+#: grow/growapi/models/strain.py:1604
 msgid "description"
 msgstr "Beschreibung"
 
-#: grow/growapi/models/growlog.py:59 grow/growapi/models/growlog.py:1534
-#: grow/growapi/models/location.py:72 grow/growapi/models/location.py:300
+#: grow/growapi/models/growlog.py:59 grow/growapi/models/growlog.py:1737
+#: grow/growapi/models/location.py:72 grow/growapi/models/location.py:306
 #: grow/growapi/models/strain.py:186 grow/growapi/models/strain.py:508
-#: grow/growapi/models/strain.py:659 grow/growapi/models/strain.py:1325
-#: grow/growapi/models/strain.py:1474
+#: grow/growapi/models/strain.py:659 grow/growapi/models/strain.py:1347
+#: grow/growapi/models/strain.py:1496
 msgid "description type"
 msgstr "Beschreibungstyp"
 
@@ -274,177 +274,193 @@ msgstr "Beendet am"
 msgid "permission"
 msgstr "Berechtigung"
 
-#: grow/growapi/models/growlog.py:364 grow/growapi/models/growlog.py:481
-#: grow/growapi/models/growlog.py:1406
+#: grow/growapi/models/growlog.py:164 grow/growapi/models/strain.py:327
+#: grow/growapi/models/strain.py:575 grow/growapi/models/strain.py:1416
+#: grow/growapi/models/strain.py:1533
+msgid "updated at"
+msgstr "Aktualisiert am"
+
+#: grow/growapi/models/growlog.py:373 grow/growapi/models/growlog.py:490
+#: grow/growapi/models/growlog.py:1581
 msgid "Not germinated"
 msgstr "Nicht gekeimt"
 
-#: grow/growapi/models/growlog.py:370 grow/growapi/models/growlog.py:424
-#: grow/growapi/models/growlog.py:489 grow/growapi/models/growlog.py:564
-#: grow/growapi/models/growlog.py:629 grow/growapi/models/growlog.py:769
-#: grow/growapi/models/growlog.py:1362 grow/growapi/models/growlog.py:1468
-#: grow/growapi/models/growlog.py:1492
+#: grow/growapi/models/growlog.py:379 grow/growapi/models/growlog.py:433
+#: grow/growapi/models/growlog.py:498 grow/growapi/models/growlog.py:573
+#: grow/growapi/models/growlog.py:638 grow/growapi/models/growlog.py:778
+#: grow/growapi/models/growlog.py:1537 grow/growapi/models/growlog.py:1643
+#: grow/growapi/models/growlog.py:1667
 #, python-brace-format
 msgid "{n} week"
 msgid_plural "{n} weeks"
 msgstr[0] "{n} Woche"
 msgstr[1] "{n} Wochen"
 
-#: grow/growapi/models/growlog.py:372 grow/growapi/models/growlog.py:426
-#: grow/growapi/models/growlog.py:491 grow/growapi/models/growlog.py:566
-#: grow/growapi/models/growlog.py:631 grow/growapi/models/growlog.py:771
-#: grow/growapi/models/growlog.py:1365 grow/growapi/models/growlog.py:1407
-#: grow/growapi/models/growlog.py:1450 grow/growapi/models/growlog.py:1471
-#: grow/growapi/models/growlog.py:1495
+#: grow/growapi/models/growlog.py:381 grow/growapi/models/growlog.py:435
+#: grow/growapi/models/growlog.py:500 grow/growapi/models/growlog.py:575
+#: grow/growapi/models/growlog.py:640 grow/growapi/models/growlog.py:780
+#: grow/growapi/models/growlog.py:1540 grow/growapi/models/growlog.py:1582
+#: grow/growapi/models/growlog.py:1625 grow/growapi/models/growlog.py:1646
+#: grow/growapi/models/growlog.py:1670
 #, python-brace-format
 msgid "{n} day"
 msgid_plural "{n} days"
 msgstr[0] "{n} Tag"
 msgstr[1] "{n} Tage"
 
-#: grow/growapi/models/growlog.py:377 grow/growapi/models/growlog.py:431
-#: grow/growapi/models/growlog.py:496 grow/growapi/models/growlog.py:571
-#: grow/growapi/models/growlog.py:636 grow/growapi/models/growlog.py:776
-#: grow/growapi/models/growlog.py:1369 grow/growapi/models/growlog.py:1371
-#: grow/growapi/models/growlog.py:1477 grow/growapi/models/growlog.py:1501
+#: grow/growapi/models/growlog.py:386 grow/growapi/models/growlog.py:440
+#: grow/growapi/models/growlog.py:505 grow/growapi/models/growlog.py:580
+#: grow/growapi/models/growlog.py:645 grow/growapi/models/growlog.py:785
+#: grow/growapi/models/growlog.py:1544 grow/growapi/models/growlog.py:1546
+#: grow/growapi/models/growlog.py:1652 grow/growapi/models/growlog.py:1676
 msgid "0 days"
 msgstr "0 Tage"
 
-#: grow/growapi/models/growlog.py:418 grow/growapi/models/growlog.py:1449
+#: grow/growapi/models/growlog.py:427 grow/growapi/models/growlog.py:1624
 msgid "Not cutted"
 msgstr "Nicht geschnitten"
 
-#: grow/growapi/models/growlog.py:487 grow/growapi/models/growlog.py:562
-#: grow/growapi/models/growlog.py:767 grow/growapi/models/growlog.py:1359
-#: grow/growapi/models/growlog.py:1465
+#: grow/growapi/models/growlog.py:496 grow/growapi/models/growlog.py:571
+#: grow/growapi/models/growlog.py:776 grow/growapi/models/growlog.py:1534
+#: grow/growapi/models/growlog.py:1640
 #, python-brace-format
 msgid "{n} year"
 msgid_plural "{n} years"
 msgstr[0] "{n} Jahr"
 msgstr[1] "{n} Jahre"
 
-#: grow/growapi/models/growlog.py:556 grow/growapi/models/growlog.py:1459
+#: grow/growapi/models/growlog.py:565 grow/growapi/models/growlog.py:1634
 msgid "Not in vegetative stage"
 msgstr "Nicht in der vegetativen Phase"
 
-#: grow/growapi/models/growlog.py:623 grow/growapi/models/growlog.py:1486
+#: grow/growapi/models/growlog.py:632 grow/growapi/models/growlog.py:1661
 msgid "Not in flowering stage"
 msgstr "Nicht in der Blütephase"
 
-#: grow/growapi/models/growlog.py:888
+#: grow/growapi/models/growlog.py:904
 msgid "Finished"
 msgstr "Beendet"
 
-#: grow/growapi/models/growlog.py:890
+#: grow/growapi/models/growlog.py:906
 msgid "Harvested"
 msgstr "Geerntet"
 
-#: grow/growapi/models/growlog.py:892
+#: grow/growapi/models/growlog.py:908
 msgid "Flowering"
 msgstr "Blüte"
 
-#: grow/growapi/models/growlog.py:894
+#: grow/growapi/models/growlog.py:910
 msgid "Vegetative"
 msgstr "Vegetativ"
 
-#: grow/growapi/models/growlog.py:896
+#: grow/growapi/models/growlog.py:912
 msgid "Cutted"
 msgstr "Geschnitten"
 
-#: grow/growapi/models/growlog.py:898
+#: grow/growapi/models/growlog.py:914
 msgid "Germinating"
 msgstr "Keimend"
 
-#: grow/growapi/models/growlog.py:900
+#: grow/growapi/models/growlog.py:916
 msgid "Unknown"
 msgstr "Unbekannt"
 
-#: grow/growapi/models/growlog.py:914
+#: grow/growapi/models/growlog.py:1053
 msgid "growlog"
 msgstr "Growlog"
 
-#: grow/growapi/models/growlog.py:922 grow/growapi/models/strain.py:1285
-#: grow/growapi/models/strain.py:1425 grow/growapi/models/strain.py:1633
+#: grow/growapi/models/growlog.py:1061 grow/growapi/models/strain.py:1307
+#: grow/growapi/models/strain.py:1447 grow/growapi/models/strain.py:1655
 msgid "strain"
 msgstr "Sorte"
 
-#: grow/growapi/models/growlog.py:927
+#: grow/growapi/models/growlog.py:1066
 msgid "grown from seed"
 msgstr "vom Samen gezogen"
 
-#: grow/growapi/models/growlog.py:932 grow/growapi/models/strain.py:1661
+#: grow/growapi/models/growlog.py:1071 grow/growapi/models/strain.py:1683
 msgid "quantity"
 msgstr "Menge"
 
-#: grow/growapi/models/growlog.py:955
+#: grow/growapi/models/growlog.py:1094
+msgid "Cannot delete the last strain from a grow log."
+msgstr ""
+
+#: grow/growapi/models/growlog.py:1116
 msgid "grow log"
 msgstr "Growlog"
 
-#: grow/growapi/models/growlog.py:957 grow/growapi/models/sensors.py:87
+#: grow/growapi/models/growlog.py:1118 grow/growapi/models/sensors.py:87
 msgid "timestamp"
 msgstr "Zeitstempel"
 
-#: grow/growapi/models/growlog.py:963
+#: grow/growapi/models/growlog.py:1124
 msgid "content"
 msgstr "Inhalt"
 
-#: grow/growapi/models/growlog.py:966
+#: grow/growapi/models/growlog.py:1127
 msgid "content type"
 msgstr "Inhaltstyp"
 
-#: grow/growapi/models/growlog.py:978 grow/growapi/models/location.py:159
-#: grow/growapi/models/location.py:267 grow/growapi/models/sensors.py:46
+#: grow/growapi/models/growlog.py:1139 grow/growapi/models/location.py:159
+#: grow/growapi/models/location.py:273 grow/growapi/models/sensors.py:46
 msgid "location"
 msgstr "Ort"
 
-#: grow/growapi/models/growlog.py:1086
+#: grow/growapi/models/growlog.py:1247
 #, python-brace-format
 msgid "Active (Day {n})"
 msgstr "Aktiv (Tag {n})"
 
-#: grow/growapi/models/growlog.py:1099
+#: grow/growapi/models/growlog.py:1252
 #, python-brace-format
 msgid "Germinating (Day {n})"
 msgstr "Keimen (Tag {n})"
 
-#: grow/growapi/models/growlog.py:1103
-#, python-brace-format
-msgid "Rooting (Day {n})"
+#: grow/growapi/models/growlog.py:1257
+#, fuzzy, python-brace-format
+#| msgid "Rooting (Day {n})"
+msgid "Rooting (Days {n})"
 msgstr "Anwurzeln (Tag {n})"
 
-#: grow/growapi/models/growlog.py:1106
+#: grow/growapi/models/growlog.py:1263
 #, python-brace-format
 msgid "Vegetative (Day {n})"
 msgstr "Vegetativ (Tag {n})"
 
-#: grow/growapi/models/growlog.py:1109
+#: grow/growapi/models/growlog.py:1269
 #, python-brace-format
 msgid "Flowering (Day {n})"
 msgstr "Blüte (Tag {n})"
 
-#: grow/growapi/models/growlog.py:1112
-#, python-brace-format
-msgid "Harvested (Day {n})"
-msgstr "Geerntet (Tag {n})"
+#: grow/growapi/models/growlog.py:1275
+#, fuzzy, python-brace-format
+#| msgid "Flowering (Day {n})"
+msgid "Drying (Day {n})"
+msgstr "Blüte (Tag {n})"
 
-#: grow/growapi/models/growlog.py:1116
+#: grow/growapi/models/growlog.py:1281
 #, python-brace-format
 msgid "Finished (Day {n})"
 msgstr "Beendet (Tag {n})"
 
-#: grow/growapi/models/growlog.py:1118
-msgid "Unknown Status"
-msgstr "Unbekannter Status"
-
-#: grow/growapi/models/growlog.py:1516
+#: grow/growapi/models/growlog.py:1717
 msgid "growlog entry"
 msgstr "Growlog Eintrag"
 
-#: grow/growapi/models/growlog.py:1521 grow/growapi/models/strain.py:1550
+#: grow/growapi/models/growlog.py:1722 grow/growapi/models/strain.py:1572
 msgid "image"
 msgstr "Bild"
 
-#: grow/growapi/models/growlog.py:1542
+#: grow/growapi/models/growlog.py:1775 grow/growapi/models/strain.py:1613
+msgid "caption"
+msgstr "Bildunterschrift"
+
+#: grow/growapi/models/growlog.py:1777
+msgid "Picture of my grow"
+msgstr ""
+
+#: grow/growapi/models/growlog.py:1784
 msgid "is plant image"
 msgstr "ist ein Pflanzenbild"
 
@@ -509,27 +525,27 @@ msgstr "Breite"
 msgid "Width in centimeters."
 msgstr "Breite in Zentimeter"
 
-#: grow/growapi/models/location.py:224
+#: grow/growapi/models/location.py:226
 msgid "height"
 msgstr "Höhe"
 
-#: grow/growapi/models/location.py:226
+#: grow/growapi/models/location.py:228
 msgid "Height in centimeters."
 msgstr "Höhe in Zentimeter"
 
-#: grow/growapi/models/location.py:231
+#: grow/growapi/models/location.py:235
 msgid "depth"
 msgstr "Tiefe"
 
-#: grow/growapi/models/location.py:233
+#: grow/growapi/models/location.py:237
 msgid "Depth in centimeters."
 msgstr "Tiefe in Zentimeter"
 
-#: grow/growapi/models/location.py:272
+#: grow/growapi/models/location.py:278
 msgid "longitude"
 msgstr "Längengrad"
 
-#: grow/growapi/models/location.py:281
+#: grow/growapi/models/location.py:287
 msgid "latitude"
 msgstr "Breitengrad"
 
@@ -569,7 +585,7 @@ msgstr "Englisch"
 msgid "logo URL"
 msgstr "Logo URL"
 
-#: grow/growapi/models/strain.py:204 grow/growapi/models/strain.py:762
+#: grow/growapi/models/strain.py:204 grow/growapi/models/strain.py:677
 msgid "logo image"
 msgstr "Bild"
 
@@ -585,14 +601,9 @@ msgstr "Website URL des Züchters"
 msgid "breeder moderator"
 msgstr "Züchtermoderator"
 
-#: grow/growapi/models/strain.py:312 grow/growapi/models/strain.py:893
+#: grow/growapi/models/strain.py:312 grow/growapi/models/strain.py:808
 msgid "added at"
 msgstr "hinzugefügt am"
-
-#: grow/growapi/models/strain.py:327 grow/growapi/models/strain.py:575
-#: grow/growapi/models/strain.py:1394 grow/growapi/models/strain.py:1511
-msgid "updated at"
-msgstr "Aktualisiert am"
 
 #: grow/growapi/models/strain.py:479
 msgid "language code"
@@ -602,8 +613,8 @@ msgstr "Sprachcode"
 msgid "breeder name"
 msgstr "Name des Züchters"
 
-#: grow/growapi/models/strain.py:494 grow/growapi/models/strain.py:802
-#: grow/growapi/models/strain.py:1317
+#: grow/growapi/models/strain.py:494 grow/growapi/models/strain.py:717
+#: grow/growapi/models/strain.py:1339
 msgid "seedfinder url"
 msgstr "Seedfinder URL"
 
@@ -615,16 +626,16 @@ msgstr "Züchter URL"
 msgid "Description"
 msgstr "Beschreibung"
 
-#: grow/growapi/models/strain.py:566 grow/growapi/models/strain.py:1385
+#: grow/growapi/models/strain.py:566 grow/growapi/models/strain.py:1407
 msgid "translator"
 msgstr "Übersetzer"
 
-#: grow/growapi/models/strain.py:570 grow/growapi/models/strain.py:1389
-#: grow/growapi/models/strain.py:1505
+#: grow/growapi/models/strain.py:570 grow/growapi/models/strain.py:1411
+#: grow/growapi/models/strain.py:1527
 msgid "created at"
 msgstr "Erstellt am"
 
-#: grow/growapi/models/strain.py:584 grow/growapi/models/strain.py:1403
+#: grow/growapi/models/strain.py:584 grow/growapi/models/strain.py:1425
 msgid "updated by"
 msgstr "Aktualisiert von"
 
@@ -632,104 +643,100 @@ msgstr "Aktualisiert von"
 msgid "breeder"
 msgstr "Züchter"
 
-#: grow/growapi/models/strain.py:617 grow/growapi/models/strain.py:1300
+#: grow/growapi/models/strain.py:617 grow/growapi/models/strain.py:1322
 msgid "strain name"
 msgstr "Sortenname"
 
-#: grow/growapi/models/strain.py:754
+#: grow/growapi/models/strain.py:669
 msgid "logo url"
 msgstr "Logo URL"
 
-#: grow/growapi/models/strain.py:771 grow/growapi/models/strain.py:1309
+#: grow/growapi/models/strain.py:686 grow/growapi/models/strain.py:1331
 msgid "strain homepage"
 msgstr "Sorten Homepage"
 
-#: grow/growapi/models/strain.py:835
+#: grow/growapi/models/strain.py:750
 msgid "is automatic"
 msgstr "ist eine Automatik"
 
-#: grow/growapi/models/strain.py:842
+#: grow/growapi/models/strain.py:757
 msgid "is feminized"
 msgstr "ist feminisiert"
 
-#: grow/growapi/models/strain.py:849
+#: grow/growapi/models/strain.py:764
 msgid "is regular"
 msgstr "ist regulär"
 
-#: grow/growapi/models/strain.py:856
+#: grow/growapi/models/strain.py:771
 msgid "flowering time (days)"
 msgstr "Blütezeit (Tage)"
 
-#: grow/growapi/models/strain.py:863
+#: grow/growapi/models/strain.py:778
 msgid "genotype"
 msgstr "Genotyp"
 
-#: grow/growapi/models/strain.py:878
+#: grow/growapi/models/strain.py:793
 msgid "created by"
 msgstr "Erstellt von"
 
-#: grow/growapi/models/strain.py:884
+#: grow/growapi/models/strain.py:799
 msgid "The name of the creator"
 msgstr "Der Name des Erstellers"
 
-#: grow/growapi/models/strain.py:900
+#: grow/growapi/models/strain.py:815
 msgid "is discontinued"
 msgstr "ist eingestellt"
 
-#: grow/growapi/models/strain.py:1292
+#: grow/growapi/models/strain.py:1314
 msgid "Language code"
 msgstr "Sprachcode"
 
-#: grow/growapi/models/strain.py:1432
+#: grow/growapi/models/strain.py:1454
 msgid "language"
 msgstr "Sprache"
 
-#: grow/growapi/models/strain.py:1445 grow/growapi/models/strain.py:1641
+#: grow/growapi/models/strain.py:1467 grow/growapi/models/strain.py:1663
 #: grow/growapi/models/user.py:15
 msgid "user"
 msgstr "Nutzer"
 
-#: grow/growapi/models/strain.py:1451
+#: grow/growapi/models/strain.py:1473
 msgid "comment"
 msgstr "Kommentar"
 
-#: grow/growapi/models/strain.py:1534
+#: grow/growapi/models/strain.py:1556
 msgid "user description"
 msgstr "Nutzerbeschreibung"
 
-#: grow/growapi/models/strain.py:1542
+#: grow/growapi/models/strain.py:1564
 msgid "User"
 msgstr "Nutzer"
 
-#: grow/growapi/models/strain.py:1557
+#: grow/growapi/models/strain.py:1579
 msgid "uploaded at"
 msgstr "hochgeladen am"
 
-#: grow/growapi/models/strain.py:1564
+#: grow/growapi/models/strain.py:1586
 msgid "uploader"
 msgstr "hochgeladen von"
 
-#: grow/growapi/models/strain.py:1591
-msgid "caption"
-msgstr "Bildunterschrift"
-
-#: grow/growapi/models/strain.py:1647
+#: grow/growapi/models/strain.py:1669
 msgid "regular seeds"
 msgstr "reguläre Samen"
 
-#: grow/growapi/models/strain.py:1654
+#: grow/growapi/models/strain.py:1676
 msgid "feminized seeds"
 msgstr "feminisierte Samen"
 
-#: grow/growapi/models/strain.py:1668
+#: grow/growapi/models/strain.py:1690
 msgid "purchased on"
 msgstr "Gekauft am"
 
-#: grow/growapi/models/strain.py:1676
+#: grow/growapi/models/strain.py:1698
 msgid "notes"
 msgstr "Notizen"
 
-#: grow/growapi/models/strain.py:1703
+#: grow/growapi/models/strain.py:1725
 msgid "text type"
 msgstr "Texttyp"
 
@@ -749,13 +756,32 @@ msgstr "Grow Einstellung"
 msgid "grow settings"
 msgstr "Grow Einstellungen"
 
-#: grow/growapi/parser/bbcode/text_formatters.py:90
+#: grow/growapi/parser/bbcode/text_formatters.py:47
+#, python-brace-format
+msgid "{strain} by {breeder}"
+msgstr ""
+
+#: grow/growapi/parser/bbcode/text_formatters.py:103
 msgid "Page not found"
 msgstr "Seite nicht gefunden"
 
-#: grow/growapi/parser/bbcode/text_formatters.py:95
+#: grow/growapi/parser/bbcode/text_formatters.py:108
 msgid "Home"
 msgstr "Start"
+
+#: grow/growapi/parser/markdown/strain.py:29
+#, python-brace-format
+msgid "Breeder: <i>{breeder_slug}</i> not found!"
+msgstr ""
+
+#: grow/growapi/parser/markdown/strain.py:68
+#, python-brace-format
+msgid "Strain: <i>{breeder_slug}/{strain_slug}</i> not found!"
+msgstr ""
+
+#: grow/growapi/parser/markdown/strain.py:95
+msgid " by "
+msgstr ""
 
 #: grow/growapi/translatable.py:6
 msgid "grow-home"
@@ -768,3 +794,10 @@ msgstr "grow-de-fertilizers"
 #: grow/growapi/translatable.py:8
 msgid "grow-fertilizers-biobizz"
 msgstr "grow-de-fertilizers-biobizz"
+
+#, python-brace-format
+#~ msgid "Harvested (Day {n})"
+#~ msgstr "Geerntet (Tag {n})"
+
+#~ msgid "Unknown Status"
+#~ msgstr "Unbekannter Status"

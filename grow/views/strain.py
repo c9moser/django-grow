@@ -228,11 +228,17 @@ class StrainView(HxStrainGrowlogsView, HxStrainMyGrowlogsView, BaseView):
         allowed_to_edit = request.user.is_authenticated
         allowed_to_delete = request.user.is_authenticated and self.strain.growlog_count == 0
         allowed_to_translate = request.user.is_authenticated  # TODO: add logic
+        has_seeds_in_stock = (
+            self.strain.get_total_seeds_in_stock(request.user) > 0
+            if request.user.is_authenticated
+            else False
+        )
 
         return render(request, self.template_name, self.get_context_data(**{
             'allowed_to_delete': allowed_to_delete,
             'allowed_to_edit': allowed_to_edit,
             'allowed_to_translate': allowed_to_translate,
+            'has_seeds_in_stock': has_seeds_in_stock,
             'regular_seeds_in_stock': (
                 self.strain.get_regular_seeds_in_stock(self.request.user)
                 if self.request.user.is_authenticated else 0

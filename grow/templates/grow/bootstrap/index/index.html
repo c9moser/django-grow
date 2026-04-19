@@ -41,8 +41,8 @@
                 <tr>
                     <td><a href="{% url 'grow:growlog-detail' pk=growlog.pk %}">{{ growlog.name }}</a></td>
                     <td>{{ growlog.locations_string }}</td>
-                    <td>{% blocktranslate count n=growlog.age_weeks %}{{ n }} week{% plural %}{{ n }} weeks{% endblocktranslate %}</td>
-                    <td>{% blocktranslate count n=growlog.flowering_weeks %}{{ n }} week{% plural %}{{ n }} weeks{% endblocktranslate%}</td>
+                    <td>{{ growlog.age_display }}</td>
+                    <td>{{ growlog.flowering_display }}</td>
                 </tr>
         {% endfor %}
             </tbody>

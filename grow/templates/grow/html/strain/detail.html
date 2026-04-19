@@ -248,6 +248,7 @@
 {% endif %}
 
 {% if request.user.is_authenticated %}
+{% if my_growlogs_paginator.page.count > 0 or has_seeds_in_stock %}
 <h2 id="my-growlogs">{% translate "My Growlogs" %}</h2>
 <p>
     {% blocktranslate %}Here you can see all growlogs in which you have grown this strain. You can click on a growlog to view details about that growlog and your grow there.{% endblocktranslate %}
@@ -255,7 +256,7 @@
 <div id="my-growlogs-info">
     {% include 'grow/strain/strain/hx/my_growlogs'|grow_template with paginator=my_growlogs_paginator hx_target="#my-growlogs-info" %}
 </div>
-
+{% endif %}
 {% endif %}
 
 

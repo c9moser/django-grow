@@ -73,8 +73,8 @@
                 <td><a href="{% url 'grow:growlog-detail' pk=growlog.pk %}">{{ growlog.name }}</a></td>
                 <td><a href="#">{{ growlog.grower.username }}</a></td>{# TODO: show public user profile #}
                 <td>{{ growlog.locations_string }}</td>
-                <td>{% blocktranslate count n=growlog.age_weeks %}{{ n }} week{% plural %}{{ n }} weeks{% endblocktranslate %}</td>
-                <td>{% blocktranslate count n=growlog.flowering_weeks %}{{ n }} week{% plural %}{{ n }} weeks{% endblocktranslate%}</td>
+                <td>{{ growlog.age_display }}</td>
+                <td>{{ growlog.flowering_display }}</td>
                 <td>
                     <ul class="mx-0 my-0 px-0 py-0 list-unstyled">
                     {% for growlog_strain in growlog.growlog_strains.all %}

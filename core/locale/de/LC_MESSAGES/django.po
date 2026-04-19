@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: django-grc.core 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 14:07+0100\n"
+"POT-Creation-Date: 2026-04-19 10:56+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Christian Moser <christian@cmoser.eu>\n"
 "Language-Team: de \n"
@@ -30,31 +30,31 @@ msgstr ""
 msgid "Confirm your password"
 msgstr ""
 
-#: core/models.py:37
+#: core/models.py:39
 msgid "email address"
 msgstr "Email Adresse"
 
-#: core/models.py:38
+#: core/models.py:40
 msgid "username"
 msgstr "Nutzername"
 
-#: core/models.py:39
+#: core/models.py:41
 msgid "first name"
 msgstr "Vorname"
 
-#: core/models.py:40
+#: core/models.py:42
 msgid "last name"
 msgstr "Nachname"
 
-#: core/models.py:41
+#: core/models.py:43
 msgid "active"
 msgstr "aktiv"
 
-#: core/models.py:42
+#: core/models.py:44
 msgid "staff status"
 msgstr ""
 
-#: core/models.py:43
+#: core/models.py:45
 msgid "date joined"
 msgstr "Datum beigetreten"
 
