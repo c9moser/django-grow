@@ -281,8 +281,6 @@ GROW_BUILTIN_BS_UTILS_TEMPLATES = {
 GROW_BUILTIN_TEMPLATES = {
     # home
     'grow/index': 'grow/html/index/index.html',
-
-
 }
 GROW_BUILTIN_TEMPLATES.update(GROW_BUILTIN_BREEDER_TEMPLATES)
 GROW_BUILTIN_TEMPLATES.update(GROW_BUILTIN_STRAIN_TEMPLATES)
@@ -294,7 +292,7 @@ GROW_BUILTIN_TEMPLATES.update(GROW_BUILTIN_UTILS_TEMPLATES)
 
 GROW_BUILTIN_BS_TEMPLATES = {
     #index
-    'grow/index': 'grow/bootstrap/index/index.html',
+    'grow/index': 'grow/html/index/index.html',
     # user views
     'grow/user/hx-add_seeds_to_stock': 'grow/html/user/hx_add_seeds_to_stock.html',
     'grow/user/hx-remove_seeds_from_stock': 'grow/html/user/hx_remove_seeds_from_stock.html',
