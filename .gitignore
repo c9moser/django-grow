@@ -164,4 +164,5 @@ django_project/local/settings.py
 django_project/local/settings_dev.py
 django_project/local/settings_prod.py
 
+poetry.tomL
 *.bak
