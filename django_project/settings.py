@@ -112,7 +112,6 @@ third_party_apps = [
     'allauth.socialaccount.providers.github',
     'allauth.socialaccount.providers.openid',
     'allauth.socialaccount.providers.steam',
-    'django_components',
     'rest_framework',
     'widget_tweaks',
 ]
@@ -144,7 +143,7 @@ TEMPLATES = [
         'DIRS': [
             BASE_DIR / 'templates',
         ],
-        #'APP_DIRS': True,
+        'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.request',
@@ -153,14 +152,6 @@ TEMPLATES = [
                 'core.context_processors.core',
                 'grow.context_processors.grow',
             ],
-            'loaders':[(
-                'django.template.loaders.cached.Loader', [
-                    'django.template.loaders.filesystem.Loader',
-                    'django.template.loaders.app_directories.Loader',
-                    'django_components.template_loader.Loader',
-                ]
-
-            )],
         },
     },
 ]
