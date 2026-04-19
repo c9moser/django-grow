@@ -89,6 +89,7 @@
                     {% for strain in growlog.growlog_strains.all %}
                         <li>
                             <a href="{% url 'grow:strain-detail' breeder_slug=strain.strain.breeder.slug slug=strain.strain.slug %}" class="link-info">{{ strain.strain.name }}</a>
+                            (<a href="{% url 'grow:breeder-detail' slug=strain.strain.breeder.slug %}" class="link-info">{{ strain.strain.breeder.name }}</a>)
                         </li>
                     {% empty %}
                         <li class="text-muted">---</li>

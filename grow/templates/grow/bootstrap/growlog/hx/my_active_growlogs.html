@@ -107,11 +107,14 @@
             <td>
                 <ul style="list-style-type:none; padding-left:0; margin-left:0;">
                     {% for strain in growlog.growlog_strains.all %}
-                    <li>
+                    <li class="{% if not forloop.last %}mb-1{% endif %}">
                         <a href="{% url 'grow:strain-detail' breeder_slug=strain.strain.breeder.slug slug=strain.strain.slug %}" class="link-info">
                             {{ strain.strain.name }}
                         </a>
+                        (<a href="{% url 'grow:breeder-detail' slug=strain.strain.breeder.slug %}" class="link-info">{{ strain.strain.breeder.name }}</a>)
                     </li>
+                    {% empty %}
+                        <li>{% translate "No strains added yet." %}</li>
                     {% endfor %}
                 </ul>
             </td>
