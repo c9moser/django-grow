@@ -164,11 +164,9 @@
                             </div>
                             {% endif %}{# can_edit #}
                             <div class="card-body p-0">
-                                {% with "growlogentry-|add:entry.id" as lightbox_group %}
-                                <a  href="{{ image.image.url }}" data-lightbox="{{ lightbox_group }}" data-title="{{ image.caption }}" data-alt="{{ image.caption }}">
+                                <a  href="{{ image.image.url }}" data-lightbox="growlogentry-{{ entry.id }}" data-title="{{ image.caption }}" data-alt="{{ image.caption }}">
                                     <img src="{{ image.image.url }}" class="img-fluid" alt="{{ image.caption|escape }}">
                                 </a>
-                                {% endwith %}
                             </div>
                             <div class="card-footer p-1">
                                 <small class="text-muted">{{ image.description_html }}</small>
