@@ -20,15 +20,15 @@ msgstr ""
 
 #: core/forms/userforms.py:22
 msgid "Password"
-msgstr ""
+msgstr "Passwort"
 
 #: core/forms/userforms.py:27
 msgid "New password"
-msgstr ""
+msgstr "Neues Passwort"
 
 #: core/forms/userforms.py:32
 msgid "Confirm your password"
-msgstr ""
+msgstr "Bestätige dein Passwort"
 
 #: core/models.py:39
 msgid "email address"
@@ -52,7 +52,7 @@ msgstr "aktiv"
 
 #: core/models.py:44
 msgid "staff status"
-msgstr ""
+msgstr "Mitarbeiterstatus"
 
 #: core/models.py:45
 msgid "date joined"
@@ -60,28 +60,28 @@ msgstr "Datum beigetreten"
 
 #: core/templates/core/user/hx_account.html:5
 msgid "Account data"
-msgstr ""
+msgstr "Kontodaten"
 
 #: core/templates/core/user/hx_account.html:58
 msgid "Update my account"
-msgstr ""
+msgstr "Mein Konto aktualisieren"
 
 #: core/templates/core/user/hx_password.html:4
 msgid "Change password"
-msgstr ""
+msgstr "Passwort ändern"
 
 #: core/templates/core/user/hx_password.html:24
 msgid "Update my password"
-msgstr ""
+msgstr "Mein Passwort aktualisieren"
 
 #: core/templates/core/user/profile_update.html:5
 msgid "My Profile"
-msgstr ""
+msgstr "Mein Profil"
 
 #: core/views/user.py:58
 msgid "Username is already taken!"
-msgstr ""
+msgstr "Nutzername ist bereits vergeben!"
 
 #: core/views/user.py:70
 msgid "Email is already taken!"
-msgstr ""
+msgstr "E-Mail ist bereits vergeben!"

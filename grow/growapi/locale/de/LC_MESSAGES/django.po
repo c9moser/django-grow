@@ -384,7 +384,7 @@ msgstr "Menge"
 
 #: grow/growapi/models/growlog.py:1094
 msgid "Cannot delete the last strain from a grow log."
-msgstr ""
+msgstr "Kann die letzte Sorte eines Growlogs nicht löschen."
 
 #: grow/growapi/models/growlog.py:1116
 msgid "grow log"
@@ -418,8 +418,6 @@ msgid "Germinating (Day {n})"
 msgstr "Keimen (Tag {n})"
 
 #: grow/growapi/models/growlog.py:1257
-#, fuzzy, python-brace-format
-#| msgid "Rooting (Day {n})"
 msgid "Rooting (Days {n})"
 msgstr "Anwurzeln (Tag {n})"
 
@@ -434,10 +432,8 @@ msgid "Flowering (Day {n})"
 msgstr "Blüte (Tag {n})"
 
 #: grow/growapi/models/growlog.py:1275
-#, fuzzy, python-brace-format
-#| msgid "Flowering (Day {n})"
 msgid "Drying (Day {n})"
-msgstr "Blüte (Tag {n})"
+msgstr "Trocknen (Tag {n})"
 
 #: grow/growapi/models/growlog.py:1281
 #, python-brace-format
@@ -458,7 +454,7 @@ msgstr "Bildunterschrift"
 
 #: grow/growapi/models/growlog.py:1777
 msgid "Picture of my grow"
-msgstr ""
+msgstr "Bild meines Growlogs"
 
 #: grow/growapi/models/growlog.py:1784
 msgid "is plant image"
@@ -759,7 +755,7 @@ msgstr "Grow Einstellungen"
 #: grow/growapi/parser/bbcode/text_formatters.py:47
 #, python-brace-format
 msgid "{strain} by {breeder}"
-msgstr ""
+msgstr "{strain} von {breeder}"
 
 #: grow/growapi/parser/bbcode/text_formatters.py:103
 msgid "Page not found"
@@ -772,16 +768,16 @@ msgstr "Start"
 #: grow/growapi/parser/markdown/strain.py:29
 #, python-brace-format
 msgid "Breeder: <i>{breeder_slug}</i> not found!"
-msgstr ""
+msgstr "Züchter: <i>{breeder_slug}</i> nicht gefunden!"
 
 #: grow/growapi/parser/markdown/strain.py:68
 #, python-brace-format
 msgid "Strain: <i>{breeder_slug}/{strain_slug}</i> not found!"
-msgstr ""
+msgstr "Sorte: <i>{breeder_slug}/{strain_slug}</i> nicht gefunden!"
 
 #: grow/growapi/parser/markdown/strain.py:95
 msgid " by "
-msgstr ""
+msgstr " von "
 
 #: grow/growapi/translatable.py:6
 msgid "grow-home"
