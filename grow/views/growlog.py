@@ -762,7 +762,10 @@ class HxGrowlogAddSeedsStrainFilterView(LoginRequiredMixin, FormView):
             raise PermissionDenied(_("You do not have permission to edit this growlog."))
 
         form = GrowlogSeedsFromStockForm(request.POST, user=request.user)
-        form.is_valid()  # we want to run the validation to get the cleaned_data, but we don't care if it's valid or not for this view  # noqa: E501
+        # we want to run the validation to get the cleaned_data,
+        # but we don't care if it's valid or not for this view
+        form.is_valid()
+
         strain_filter = form.cleaned_data['strain_filter']
         if strain_filter:
             form.fields['seeds_in_stock'].queryset = StrainsInStock.objects.filter(
