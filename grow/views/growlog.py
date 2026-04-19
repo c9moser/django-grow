@@ -32,6 +32,7 @@ from ..growapi.models import (
     GrowlogEntryImage,
     GrowlogStrain,
     Breeder,
+    StrainsInStock,
 )
 # from django.urls import reverse
 
@@ -749,6 +750,34 @@ class HxGrowlogAddSeedsView(LoginRequiredMixin, HxGrowlogStrainsInfoView, FormVi
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
+
+
+class HxGrowlogAddSeedsStrainFilterView(LoginRequiredMixin, FormView):
+    template_name = GROW_TEMPLATES['grow/growlog/growlog/hx/seeds_add']
+    form_class = GrowlogSeedsFromStockForm
+
+    def post(self, request: HttpRequest, growlog_pk: int) -> HttpResponse:
+        self.growlog = get_object_or_404(Growlog, pk=growlog_pk)
+        if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
+            raise PermissionDenied(_("You do not have permission to edit this growlog."))
+
+        form = GrowlogSeedsFromStockForm(request.POST, user=request.user)
+        form.is_valid()  # we want to run the validation to get the cleaned_data, but we don't care if it's valid or not for this view  # noqa: E501
+        strain_filter = form.cleaned_data['strain_filter']
+        if strain_filter:
+            form.fields['seeds_in_stock'].queryset = StrainsInStock.objects.filter(
+                user=request.user,
+                strain__name__icontains=strain_filter
+            ).order_by('strain__name', 'purchased_on')
+        else:
+            form.fields['seeds_in_stock'].queryset = StrainsInStock.objects.filter(
+                user=request.user
+            ).order_by('strain__name', 'purchased_on')
+
+        return render(request, self.template_name, {
+            'form': form,
+            'growlog': self.growlog,
+        })
 
 
 class HxGrowlogAddPlantsView(LoginRequiredMixin, HxGrowlogStrainsInfoView, FormView):

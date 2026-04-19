@@ -5,13 +5,14 @@
       <h5 class="modal-title">{% translate "Add seeds to grow log" %}</h5>
       <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
-    <form method="post">
+    <form method="put post">
         <div class="modal-body">
             {% csrf_token %}
             <div>
                 <div class="input-group mb-3">
                     <span class="input-group-text">{% translate "Filter" %}</span>
-                    {% render_field form.strain_filter class="form-control" %}
+                    {% url 'grow:hx-growlog-seeds-add-filter-strains' growlog_pk=growlog.pk as seeds_add_hx_url %}
+                    {% render_field form.strain_filter class="form-control" hx-target="#modals-here" hx-swap="innerHTML" hx-post=seeds_add_hx_url hx-trigger="keyup changed delay:500ms" %}
                     <label for="{{ form.strain_filter.id_for_label }}" class="visually-hidden">{{ form.strain_filter.label }}</label>
                 </div>
 
