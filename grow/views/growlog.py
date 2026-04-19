@@ -374,7 +374,10 @@ class HxGrowlogEntriesView(BaseView):
         context['growlog'] = self.growlog
         context['entries_paginator'] = entries_paginator
         context['can_edit'] = can_edit
-        context.setdefault('update_page_url', self.update_page_url if hasattr(self, 'update_page_url') else True)
+        context.setdefault(
+            'update_page_url',
+            self.update_page_url if hasattr(self, 'update_page_url') else True
+        )
 
         return context
 
