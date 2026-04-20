@@ -66,7 +66,11 @@
     {% endif %}
 </p>
 <p>
-    {% blocktranslate %}You can add more seeds to your stock in the strain detail page.{% endblocktranslate %}
+    {% blocktranslate %}You can add more seeds to your stock in the strain detail page. Just go to the strain you have in stock and click on the "Add to seeds in stock" button. {% endblocktranslate %}
+    {% blocktranslate %}You can also edit or delete your seeds in stock by clicking on the edit button in the table below.{% endblocktranslate %}
+</p>
+<p>
+    <a href="{% url 'grow:my-seeds-in-stock' %}" class="link-info">{% blocktranslate %}Go to my seeds in stock{% endblocktranslate %} <i class="bi bi-arrow-right"></i></a>
 </p>
 {% endif %}
 {% endif %}
@@ -262,10 +266,10 @@
             {% for seed in seeds_in_stock_paginator.page %}
                 <tr>
                     <td>
-                        <a href="{% url 'grow:strain-detail' breeder_slug=seed.strain.breeder.slug slug=seed.strain.slug %}">{{ seed.strain.name }}</a>
+                        <a href="{% url 'grow:strain-detail' breeder_slug=seed.strain.breeder.slug slug=seed.strain.slug %}" class="link-info">{{ seed.strain.name }}</a>
                     </td>
                     <td>
-                        <a href="{% url 'grow:breeder-detail' slug=seed.strain.breeder.slug %}">{{ seed.strain.breeder.name }}</a></td>
+                        <a href="{% url 'grow:breeder-detail' slug=seed.strain.breeder.slug %}" class="link-info">{{ seed.strain.breeder.name }}</a></td>
                     </td>
                     <td>
                         {% if seed.strain.is_feminized %}{% translate "feminized" %}{% else %}{% translate "regular" %}{% endif %}{% if seed.strain.is_autoflowering %}, {% translate "autoflowering" %}{% endif %}
