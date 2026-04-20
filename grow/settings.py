@@ -202,6 +202,7 @@ GROW_BUILTIN_GROWLOG_TEMPLATES = {
     'grow/growlog/growlog/hx/remove_plants':  'grow/html/growlog/growlog/hx/remove_plants.html',
     'grow/growlog/growlog/hx/add_strain':  'grow/html/growlog/growlog/hx/add_strain.html',
     'grow/growlog/growlog/hx/delete_strain':  'grow/html/growlog/growlog/hx/delete_strain.html',
+    'grow/growlog/growlog/hx/permission_update':  'grow/html/growlog/growlog/hx/permission_update.html',
     'grow/growlog/my_growlogs': 'grow/html/growlog/my_growlogs.html',
     'grow/growlog/strains_grown': 'grow/html/growlog/strains_grown.html',
 }
@@ -232,7 +233,7 @@ GROW_BUILTIN_BS_GROWLOG_TEMPLATES = {
     'grow/growlog/forbidden': GROW_BUILTIN_GROWLOG_TEMPLATES['grow/growlog/forbidden'],
     'grow/growlog/hx/active_info' : GROW_BUILTIN_GROWLOG_TEMPLATES['grow/growlog/hx/active_info'],
     'grow/growlog/hx/finished_info' : GROW_BUILTIN_GROWLOG_TEMPLATES['grow/growlog/hx/finished_info'],
-
+    'grow/growlog/growlog/hx/permission_update':  GROW_BUILTIN_GROWLOG_TEMPLATES['grow/growlog/growlog/hx/permission_update'],
     'grow/growlog/hx/my_active_growlogs' : 'grow/bootstrap/growlog/hx/my_active_growlogs.html',
     'grow/growlog/hx/my_finished_growlogs': 'grow/bootstrap/growlog/hx/my_finished_growlogs.html',
 

@@ -183,3 +183,12 @@ class GrowlogEntryImageUpdateForm(forms.ModelForm):
             'description_type_data',
             'description',
         ]
+
+
+class GrowlogPermissionUpdateForm(forms.ModelForm):
+
+    class Meta:
+        model = Growlog
+        fields = [
+            'permission_data',
+        ]

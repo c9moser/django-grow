@@ -1,5 +1,5 @@
 {% extends base_template %}
-{% load static i18n %}
+{% load static i18n widget_tweaks grow %}
 {% block subtitle %}{% translate "Grow Log" %}{% endblock subtitle %}
 
 {% block extra_css %}
@@ -187,7 +187,13 @@
                     {% endif %}
                 </td>
                 <th class="table-primary fit-content">{% translate "Permissions" %}</th>
-                <td>{{ growlog.permission.name }}</td>
+                <td>
+                    {% if can_edit %}
+                        {% include "grow/growlog/growlog/hx/permission_update"|grow_template %}
+                    {% else %}
+                        {{ growlog.permission.name }}
+                    {% endif %}
+                </td>
             </tr>
             <tr>
                 <th class="table-primary fit-content">{% translate "Started on" %}</th>

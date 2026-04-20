@@ -23,6 +23,7 @@ from grow.forms.growlog import (
     GrowlogSeedsFromStockForm,
     GrowlogStrainDeleteForm,
     GrowlogEntryImageForm,
+    GrowlogPermissionUpdateForm,
 )
 
 # from grow.growapi.models.strain import Strain
@@ -175,13 +176,49 @@ class HxGrowlogEntriesView(BaseView):
         return render(request, self.template_name, self.get_context_data())
 
 
-class GrowlogDetailView(HxGrowlogEntriesView):
+class HxGrowlogPermissionsUpdateView(LoginRequiredMixin, View):
+    template_name = GROW_TEMPLATES['grow/growlog/growlog/hx/permission_update']
+    permission_form_class = GrowlogPermissionUpdateForm
+
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
+        context = kwargs
+        context['growlog'] = self.growlog
+        context.setdefault('permission_form', self.permission_form_class(instance=self.growlog))
+        context.setdefault('growlog', self.growlog)
+
+        return context
+
+    def get(self, request: HttpRequest, pk: int) -> HttpResponse:
+        self.growlog = get_object_or_404(Growlog, pk=pk)
+        if not growlog_user_is_allowed_to_edit(request.user, self.growlog):
+            raise PermissionDenied(_("You do not have permission to edit this growlog."))
+
+        return render(request, self.template_name, self.get_context_data())
+
+    def post(self, request: HttpRequest, pk: int) -> HttpResponse:
+        growlog = get_object_or_404(Growlog, pk=pk)
+        if not growlog_user_is_allowed_to_edit(request.user, growlog):
+            raise PermissionDenied(_("You do not have permission to edit this growlog."))
+
+        form = GrowlogPermissionUpdateForm(request.POST, instance=growlog)
+        if form.is_valid():
+            form.save()
+            return render(request, self.template_name, {'form': form, 'growlog': growlog})
+        else:
+            return render(request, self.template_name,
+                          {'permission_form': form},
+                          status=400)
+
+
+class GrowlogDetailView(HxGrowlogPermissionsUpdateView, HxGrowlogEntriesView):
     template_name = GROW_TEMPLATES['grow/growlog/detail']
     strains_template_name = GROW_TEMPLATES['grow/growlog/growlog/hx/strains']
     entries_template_name = GROW_TEMPLATES['grow/growlog/growlog/hx/entries']
 
     def get_context_data(self, **kwargs):
-        context = HxGrowlogEntriesView.get_context_data(self, **kwargs)
+        context = HxGrowlogEntriesView.get_context_data(
+            self,
+            **HxGrowlogPermissionsUpdateView.get_context_data(self, **kwargs))
 
         growlog_strains = GrowlogStrain.objects.filter(growlog=self.growlog).order_by(
             'strain__name', 'strain__breeder__name')

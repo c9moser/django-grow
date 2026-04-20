@@ -1,0 +1,8 @@
+{% load widget_tweaks %}
+<form id="growlog_permission_form" class="form-inline" method='post'>
+    {% csrf_token %}
+    <div class="input-group input-group-sm">
+        {% url 'grow:hx-growlog-permission-update' pk=growlog.id as permission_update_url %}
+        {% render_field permission_form.permission_data class="form-control" hx-trigger="change" hx-post=permission_update_url hx-target="#growlog-permission_form" hx-swap="outerHTML" %}
+    </div>
+</form>
