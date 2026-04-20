@@ -76,7 +76,7 @@
                             </a>
                         </li>
                         {# Strains Dropdown #}
-                        <li class="nav-item  dropdown-center">
+                        <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-white"
                                 href="#" id="navbar-strain-dropdown"
                                 role="button"
@@ -92,7 +92,7 @@
                                         hx-target="#modals-here"
                                         hx-swap="innerHTML"
                                     ><i class="bi bi-search"></i> {% translate "Search for strains" %}</button>
-                                </li>
+                                </li>dropdown-menu-lg-center
                                 <li>
                                     <a class="dropdown-item" href="{% url "grow:breeder-overview" %}">
                                         <i class="bi bi-people-fill"></i>
@@ -113,14 +113,14 @@
 
                         {# "My Grow" Dropdown #}
                         {% if user.is_authenticated %}
-                        <li class="nav-item dropdown-center">
+                        <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-white"
                                 href="#"
                                 id="navbar-mygrow-dropdown"
                                 data-bs-toggle="dropdown"
                                 aria-expanded="false"
                             >{% translate 'My Grow' %}</a>
-                            <ul class="dropdown-menu dropdown-menu-center" aria-labelledby="navbar-mygrow-dropdown">
+                            <ul class="dropdown-menu" aria-labelledby="navbar-mygrow-dropdown">
                                 <li>
                                     <a class="dropdown-item"
                                         href="{% url 'grow:user-info' %}">
@@ -128,16 +128,16 @@
                                         {% translate "My Infos" %}
                                     </a>
                                 </li>
-                                <!-- -------------------------------------------- -->
-                                <li class="dropdown-submenu dropend">
-                                    <button type="button" class="dropdown-submenu-button dropdown-item dropdown-toggle text-white"
+                                <!-- BEGIN My Grow Details -------------------------------------------- -->
+                                <li class="dropdown-submenu dropdown dropend">
+                                    <a href="#" class="dropdown-submenu-button dropdown-item text-white"
                                         data-bs-toggle="dropdown"
                                         data-bs-trigger="hover focus"
                                         data-bs-auto-close="outside"
                                         tabindex="-1"
-                                        aria-expanded="true"
+                                        aria-expanded="false"
                                         id="my-detailed-infos-dropdown"
-                                    ><i class="bi bi-clipboard-data"></i>{% translate "My detailed infos"%}</button>
+                                    ><i class="bi bi-clipboard-data"></i> {% translate "My detailed infos"%} <i class="bi bi-caret-right-fill"></i></a>
                                     <ul class="dropdown-menu" aria-labelledby="my-detailed-infos-dropdown">
                                         <li>
                                             <a
@@ -185,7 +185,7 @@
                                         </li>
                                     </ul>
                                 </li>
-                                <!-- -------------------------------------------- -->
+                                <!-- END My Grow Details -------------------------------------------- -->
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
                                     <a
@@ -219,7 +219,7 @@
 
                         {# Wiki Dropdown #}
                         {% if include_wiki %}
-                        <li class="nav-item dropdown-center">
+                        <li class="nav-item dropdown">
 
                             <a class="btn btn-success text-white dropdown-toggle"
                                 href="#"
@@ -376,7 +376,7 @@
     </script>
     <script>
         $(document).ready(function() {
-            $('.dropdown-submenu-button').on('click', function(e) {
+            $('.dropdown-submenu-button').on('mouseenter', function(e) {
                 $(this).next('ul').toggle();
                 e.stopPropagation();
                 e.preventDefault();

@@ -1,8 +1,8 @@
 {% load i18n growlog %}
 <div class="card mb-3" id="growlog-entries-card">
     <div class="card-header">
-        <div class="d-flex justify-content-between align-items-center">
-            <div style="width:33%;" class="d-flex justify-content-start text-start">
+        <div class="row align-items-center">
+            <div class="col-4 col-lg-3 d-flex justify-content-start text-start">
                 <nav aria-label="{% translate 'Grow log entries pagination' %}">
                     <ul class="pagination pagination-sm mb-0">
                         {% for page_item in entries_paginator.pagination %}
@@ -26,10 +26,10 @@
                         {% endfor %}
                 </nav>
             </div>
-            <div style="width:33%;" class="d-flex align-items-center text-center justify-content-center">
+            <div class="col-4 col-lg-6 d-flex align-items-center text-center justify-content-center">
                 <h5 class="card-title mb-0">{% translate "Grow log entries" %}</h5>
             </div>
-            <div style="width:33%;">
+            <div class="col-4 col-lg-3 d-flex justify-content-end text-end">
                 {% if can_edit %}
                 <a
                     href="{% url 'grow:growlog-entry-create' growlog_pk=growlog.pk %}"

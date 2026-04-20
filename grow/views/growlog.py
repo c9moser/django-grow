@@ -51,52 +51,162 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class GrowlogDetailView(BaseView):
+class HxGrowlogEntriesView(BaseView):
+    template_name = GROW_TEMPLATES['grow/growlog/growlog/hx/entries']
+    update_page_url = True
+    hx_target = '#growlog-entries'
+
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
+
+        can_edit = False
+
+        user_settings = GROW_USER_SETTINGS(self.request)
+
+        default_ordering = 'asc'
+        if growlog_user_is_allowed_to_edit(self.request.user, self.growlog):
+            can_edit = True
+            if not self.growlog.is_finished:
+                default_ordering = 'desc'
+
+        try:
+            entries_page = int(self.request.GET.get(
+                'entries_page',
+                self.request.GET.get(
+                    'gle_page',
+                    self.request.GET.get(
+                        'gle_pg',
+                        self.request.GET.get(
+                            'gle_p',
+                            self.request.GET.get(
+                                'page',
+                                self.request.GET.get('p', 1)
+                            )
+                        )
+                    )
+                )
+            ))
+        except ValueError:
+            entries_page = 1
+
+        try:
+            entries_paginate_by = int(self.request.GET.get(
+                'entries_paginate_by',
+                self.request.GET.get(
+                    'gle_paginate_by',
+                    self.request.GET.get(
+                        'gle_pgn',
+                        self.request.GET.get(
+                            'paginate_by',
+                            self.request.GET.get(
+                                'pgn',
+                                (
+                                    user_settings.growlog_paginate
+                                    if user_settings else 10
+                                )
+                            )
+                        )
+                    )
+                )
+            ))
+        except ValueError:
+            entries_paginate_by = user_settings.growlog_paginate if user_settings else 10
+
+        entries_ordering = self.request.GET.get(
+            'growlog_entries_ordering',
+            self.request.GET.get(
+                'gle_ordering',
+                self.request.GET.get(
+                    'gle_ord',
+                    self.request.GET.get(
+                        'ordering',
+                        self.request.GET.get(
+                            'ord', default_ordering))
+                )
+            )
+        )
+
+        if entries_ordering in ['asc', 'ascending', 'a', '1', 'up', 'oldest']:
+            entries_ordering = 'asc'
+        elif entries_ordering in ['desc', 'descending', 'd', '0', 'down', 'newest']:
+            entries_ordering = 'desc'
+        else:
+            logger.warning(f"Invalid entries ordering parameter: {entries_ordering}. Defaulting to {default_ordering}.")  # noqa: E501
+            entries_ordering = default_ordering
+
+
+        entries = self.growlog.entries.all().order_by('timestamp' if entries_ordering == 'asc' else '-timestamp')
+
+        entries_paginator = QuerySetPaginator(
+            entries,
+            url_path='grow:hx-growlog-entries',
+            url_path_kwargs={'growlog_pk': self.growlog.pk},
+            url_variables={'gle_ord': entries_ordering},
+            paginate_by=entries_paginate_by,
+            page=entries_page
+        )
+
+        context = kwargs
+        context['growlog'] = self.growlog
+        context['entries_paginator'] = entries_paginator
+        context['can_edit'] = can_edit
+        context.setdefault(
+            'update_page_url',
+            self.update_page_url if hasattr(self, 'update_page_url') else True
+        )
+        context.setdefault(
+            'hx_target',
+            self.hx_target if hasattr(self, 'hx_target') else '#growlog-entries'
+        )
+
+        print("HxGrowlogEntriesView: page={entries_page}, paginate_by={entries_paginate_by}, total_entries={total_entries}".format(  # noqa: E501
+                        entries_page=entries_page,
+                        entries_paginate_by=entries_paginate_by,
+                        total_entries=entries.count()
+        ))
+        return context
+
+    def get(self, request: HttpRequest, growlog_pk: int) -> HttpResponse:
+        self.growlog = get_object_or_404(Growlog, pk=growlog_pk)
+        if not growlog_user_is_allowed_to_view(request.user, self.growlog):
+            raise PermissionDenied(_("You do not have permission to view this growlog."))
+
+        return render(request, self.template_name, self.get_context_data())
+
+
+class GrowlogDetailView(HxGrowlogEntriesView):
     template_name = GROW_TEMPLATES['grow/growlog/detail']
     strains_template_name = GROW_TEMPLATES['grow/growlog/growlog/hx/strains']
     entries_template_name = GROW_TEMPLATES['grow/growlog/growlog/hx/entries']
 
+    def get_context_data(self, **kwargs):
+        context =  HxGrowlogEntriesView.get_context_data(self, **kwargs)
+
+        growlog_strains = GrowlogStrain.objects.filter(growlog=self.growlog).order_by(
+            'strain__name', 'strain__breeder__name')
+        context['growlog_strains'] = growlog_strains
+
+        context.update({
+            'strains_template': self.strains_template_name,
+            'entries_template': self.entries_template_name,
+            'notes_template': GROW_TEMPLATES['grow/growlog/growlog/hx/notes'],
+            'description_template': GROW_TEMPLATES['grow/growlog/growlog/hx/description'],
+
+        })
+        return context
+
     def get(self, request: HttpRequest, pk: int) -> HttpResponse:
-        growlog = get_object_or_404(Growlog, pk=pk)
+        self.growlog = get_object_or_404(Growlog, pk=pk)
         user_settings = GROW_USER_SETTINGS(request)
 
-        if not growlog_user_is_allowed_to_view(request.user, growlog):
+        if not growlog_user_is_allowed_to_view(request.user, self.growlog):
             if request.user.is_authenticated:
-                logger.warning(f"User {request.user.username} tried to access growlog {growlog.pk} without permission.")  # noqa: E501
+                logger.warning(f"User {request.user.username} tried to access growlog {self.growlog.pk} without permission.")  # noqa: E501
                 raise PermissionDenied(_("You do not have permission to view this growlog."))
             else:
                 redirect_url = reverse('account_login') + f"?next={request.path}"
                 return redirect(redirect_url)
 
-        growlog_strains = GrowlogStrain.objects.filter(growlog=growlog).order_by(
-            'strain__name', 'strain__breeder__name')
-        if (growlog_user_is_allowed_to_edit(request.user, growlog) and not growlog.is_finished):
-            entries = growlog.entries.all().order_by('-timestamp')
-        else:
-            entries = growlog.entries.filter().order_by('timestamp')
-
-        paginate_by = user_settings.growlog_paginate if user_settings else 10
-
-        entries_paginator = QuerySetPaginator(
-            entries,
-            url_path='grow:hx-growlog-entries',
-            url_path_kwargs={'growlog_pk': growlog.pk},
-            paginate_by=paginate_by,
-            page=request.GET.get('entries_page', 1)
-        )
-
-        context = {
-            'growlog': growlog,
-            'growlog_strains': growlog_strains,
-            'growlog_entries': entries,
-            'can_edit': growlog_user_is_allowed_to_edit(request.user, growlog),
-            'strains_template': self.strains_template_name,
-            'entries_template': self.entries_template_name,
-            'notes_template': GROW_TEMPLATES['grow/growlog/growlog/hx/notes'],
-            'description_template': GROW_TEMPLATES['grow/growlog/growlog/hx/description'],
-            'entries_paginator': entries_paginator,
-        }
-        return render(request, self.template_name, context)
+        return render(request, self.template_name, self.get_context_data())
 
 
 class HxMyActiveGrowlogsView(LoginRequiredMixin, View):
@@ -302,91 +412,6 @@ class MyGrowlogsView(HxMyActiveGrowlogsView, HxMyFinishedGrowlogsView, BaseView)
         return render(request, self.template_name, context)
 
 
-class HxGrowlogEntriesView(BaseView):
-    template_name = GROW_TEMPLATES['grow/growlog/growlog/hx/entries']
-    update_page_url = True
-
-    def get_context_data(self, **kwargs) -> dict[str, Any]:
-        entries = self.growlog.entries.filter().order_by('timestamp')
-        can_edit = False
-
-        user_settings = GROW_USER_SETTINGS(self.request)
-
-        if growlog_user_is_allowed_to_edit(self.request.user, self.growlog):
-            can_edit = True
-            if not self.growlog.is_finished:
-                entries = self.growlog.entries.all().order_by('-timestamp')
-
-        try:
-            entries_page = int(self.request.GET.get(
-                'entries_page',
-                self.request.GET.get(
-                    'gle_page',
-                    self.request.GET.get(
-                        'gle_p',
-                        self.request.GET.get(
-                            'page',
-                            self.request.GET.get('p', 1)
-                        )
-                    )
-                )
-            ))
-        except ValueError:
-            entries_page = 1
-
-        try:
-            entries_paginate_by = int(self.request.GET.get(
-                'entries_paginate_by',
-                self.request.GET.get(
-                    'gle_paginate_by',
-                    self.request.GET.get(
-                        'gle_pgn',
-                        self.request.GET.get(
-                            'paginate_by',
-                            self.request.GET.get('pgn', user_settings.growlog_paginate)
-                        )
-                    )
-                )
-            ))
-        except ValueError:
-            entries_paginate_by = user_settings.growlog_paginate
-
-        entries_paginate_by = int(self.request.GET.get(
-            'entries_paginate_by',
-            self.request.GET.get(
-                'paginate_by',
-                self.request.GET.get('pgn', 5)
-            )
-        ))
-        entries_paginator = QuerySetPaginator(
-            entries,
-            url_path='grow:hx-growlog-entries',
-            url_path_kwargs={'growlog_pk': self.growlog.pk},
-            url_variables={
-                'entries_paginate_by': entries_paginate_by,
-                'entries_page': entries_page,
-            },
-            paginate_by=entries_paginate_by,
-            page=entries_page
-        )
-
-        context = kwargs
-        context['growlog'] = self.growlog
-        context['entries_paginator'] = entries_paginator
-        context['can_edit'] = can_edit
-        context.setdefault(
-            'update_page_url',
-            self.update_page_url if hasattr(self, 'update_page_url') else True
-        )
-
-        return context
-
-    def get(self, request: HttpRequest, growlog_pk: int) -> HttpResponse:
-        self.growlog = get_object_or_404(Growlog, pk=growlog_pk)
-        if not growlog_user_is_allowed_to_view(request.user, self.growlog):
-            raise PermissionDenied(_("You do not have permission to view this growlog."))
-
-        return render(request, self.template_name, self.get_context_data())
 
 
 class GrowlogCreateView(LoginRequiredMixin, CreateView):
@@ -1311,7 +1336,6 @@ class HxGrowlogFinishedInfoView(BaseView):
 class GrowlogEntryCreateView(LoginRequiredMixin, FormView):
     template_name = GROW_TEMPLATES['grow/growlog/entry/create']
     form_template_name = GROW_TEMPLATES['grow/growlog/entry/form']
-
     form_class = GrowlogEntryForm
 
     def get_form(self, form_class=None, **form_kwargs):
@@ -1398,6 +1422,9 @@ class GrowlogEntryCreateView(LoginRequiredMixin, FormView):
 class HxGrowlogEntryCreateView(GrowlogEntryCreateView, HxGrowlogEntriesView):
     template_name = GROW_TEMPLATES['grow/growlog/entry/hx/create']
     result_template_name = GROW_TEMPLATES['grow/growlog/growlog/hx/entries']
+
+    hx_target = '#growlog-entries'
+    update_page_url = True
 
     def get_context_data(self, **kwargs):
         context = GrowlogEntryCreateView.get_context_data(

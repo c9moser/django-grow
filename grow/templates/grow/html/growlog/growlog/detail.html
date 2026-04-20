@@ -359,7 +359,7 @@
     <button
         type="button"
         class="btn btn-outline-primary btn-sm"
-        hx-get="{% url 'grow:hx-growlog-entry-create' growlog_pk=growlog.id %}"
+        hx-get="{% url 'grow:hx-growlog-entry-create' growlog_pk=growlog.id %}?gle_p={{ entries_paginator.current_page }}&gle_pgn={{ entries_paginator.paginate.by }}"
         hx-target="#modals-here"
         hx-swap="innerHTML"
         data-bs-target="#modals-here"
@@ -372,6 +372,6 @@
 </div>
 {% endif %}
 <div id="growlog-entries">
-    {% include entries_template with update_page_url=False %}
+    {% include entries_template with update_page_url=False hx_target="#growlog-entries" %}
 </div>
 {% endblock content %}
