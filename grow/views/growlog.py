@@ -133,8 +133,9 @@ class HxGrowlogEntriesView(BaseView):
             logger.warning(f"Invalid entries ordering parameter: {entries_ordering}. Defaulting to {default_ordering}.")  # noqa: E501
             entries_ordering = default_ordering
 
-
-        entries = self.growlog.entries.all().order_by('timestamp' if entries_ordering == 'asc' else '-timestamp')
+        entries = self.growlog.entries.all().order_by(
+            'timestamp' if entries_ordering == 'asc' else '-timestamp'
+        )
 
         entries_paginator = QuerySetPaginator(
             entries,
@@ -149,6 +150,7 @@ class HxGrowlogEntriesView(BaseView):
         context['growlog'] = self.growlog
         context['entries_paginator'] = entries_paginator
         context['can_edit'] = can_edit
+        context['entries_ordering'] = entries_ordering
         context.setdefault(
             'update_page_url',
             self.update_page_url if hasattr(self, 'update_page_url') else True
@@ -179,7 +181,7 @@ class GrowlogDetailView(HxGrowlogEntriesView):
     entries_template_name = GROW_TEMPLATES['grow/growlog/growlog/hx/entries']
 
     def get_context_data(self, **kwargs):
-        context =  HxGrowlogEntriesView.get_context_data(self, **kwargs)
+        context = HxGrowlogEntriesView.get_context_data(self, **kwargs)
 
         growlog_strains = GrowlogStrain.objects.filter(growlog=self.growlog).order_by(
             'strain__name', 'strain__breeder__name')
@@ -196,7 +198,6 @@ class GrowlogDetailView(HxGrowlogEntriesView):
 
     def get(self, request: HttpRequest, pk: int) -> HttpResponse:
         self.growlog = get_object_or_404(Growlog, pk=pk)
-        user_settings = GROW_USER_SETTINGS(request)
 
         if not growlog_user_is_allowed_to_view(request.user, self.growlog):
             if request.user.is_authenticated:
@@ -410,8 +411,6 @@ class MyGrowlogsView(HxMyActiveGrowlogsView, HxMyFinishedGrowlogsView, BaseView)
     def get(self, request: HttpRequest) -> HttpResponse:
         context = self.get_context_data()
         return render(request, self.template_name, context)
-
-
 
 
 class GrowlogCreateView(LoginRequiredMixin, CreateView):

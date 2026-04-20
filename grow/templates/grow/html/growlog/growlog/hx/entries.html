@@ -228,6 +228,7 @@
     pageURL.update({
         "{% if urlvars and 'growlog_entry_page' in urlvars %}urlvars.growlog_entry_page{% else %}gle_pg{% endif %}": "{{ entries_paginator.current_page }}",
         "{% if urlvars and 'growlog_entry_paginate_by' in urlvars %}urlvars.growlog_entry_paginate_by{% else %}gle_pgn{% endif %}": "{{ entries_paginator.paginate_by }}",
+        "{% if urlvars and 'growlog_entry_ordering' in urlvars %}urlvars.growlog_entry_ordering{% else %}gle_ord{% endif %}": "{{ entries_ordering }}",
     });
 </script>
 {% endif %}
