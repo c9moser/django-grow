@@ -1,14 +1,19 @@
 {% load i18n grow growlog %}
 <div class="card mb-3" id="growlog-entries-card">
     <div class="card-header">
-        <div class="d-flex justify-content-between align-items-center">
-            <div style="width:33%;" class="d-flex justify-content-start text-start">
+        <div class="row justify-content-between align-items-center">
+            <div  class="col-4 col-lg-3 d-flex justify-content-start text-start">
                 {% include "grow/utils/paginator"|grow_template with paginator=entries_paginator hx_target=hx_target %}
             </div>
-            <div style="width:33%;" class="d-flex align-items-center text-center justify-content-center">
-                <h5 class="card-title mb-0">{% translate "Grow log entries" %}</h5>
+            <div class="col-4 col-lg-6 d-flex align-items-center text-center justify-content-center">
+                <h5 class="card-title mb-0">
+                    <a class="text-decoration-none link-body-emphasis"
+                    href="#"
+                    hx-target="{{ hx_target }}"
+                    hx-get="{% url 'grow:hx-growlog-entries' growlog_pk=growlog.pk %}?gle_pgn={{ entries_paginator.paginate_by }}&gle_pg={{ entries_paginator.current_page }}&gle_ord={% if entries_ordering == 'asc' %}desc{% else %}asc{% endif %}"
+                >{% translate "Growlog entries" %}<i class="ms-2 bi {% if entries_ordering == 'asc' %}bi-caret-down-fill{% else %}bi-caret-up-fill{% endif %}"></i></a></h5>
             </div>
-            <div style="width:33%;">
+            <div class="col-4 col-lg-3 d-flex justify-content-end text-end">
                 {% if can_edit %}
                 <button type="button"
                     hx-get="{% url 'grow:hx-growlog-entry-create' growlog_pk=growlog.id %}"
