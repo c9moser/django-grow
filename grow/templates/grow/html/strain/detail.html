@@ -60,7 +60,7 @@
     <p>
         <ul>
             <li>
-                <span class="fw-bold">{% translate "Flowering time:" %}</span>
+                <b>{% translate "Flowering time:" %}</b>
                 {% if strain.flowering_time_days == 0 %}
                 {% translate "Unknown" %}
                 {% else %}
@@ -69,22 +69,22 @@
                 {% endif %}
             </li>
             <li>
-                <span class="fw-bold">{% translate "Genotype:"%}</span>
+                <b>{% translate "Genotype:"%}</b>
                 {{ strain.genotype.name }}
             <li>
-                <span class="fw-bold">{% translate "Is this is a autoflowering strain?" %}</span>
+                <b>{% translate "Is this is a autoflowering strain?" %}</b>
                 {% if strain.is_automatic %}{% translate "Yes" %}{% else %}{% translate "No" %}{% endif %}
             </li>
             <li>
-                <span class="fw-bold">{% translate "Can one get regular seeds?" %}</span>
+                <b>{% translate "Can one get regular seeds?" %}</b>
                 {% if strain.is_regular %}{% translate "Yes" %}{% else %}{% translate "No" %}{% endif %}
             </li>
             <li>
-                <span class="fw-bold">{% translate "Can one get feminized seeds?" %}</span>
+                <b>{% translate "Can one get feminized seeds?" %}</b>
                 {% if strain.is_feminized %}{% translate "Yes" %}{% else %}{% translate "No" %}{% endif %}
             </li>
             <li>
-                <span class="fw-bold">{% translate "Is this a clone-only strain?" %}</span>
+                <b>{% translate "Is this a clone-only strain?" %}</b>
                 {% if not strain.is_feminized and not strain.is_regular %}
                     {% translate "Yes" %}
                 {% else %}
@@ -92,7 +92,7 @@
                 {% endif %}
             </li>
             <li>
-                <span class="fw-bold">{% translate "Is this strain still available?" %}</span>
+                <b>{% translate "Is this strain still available?" %}</b>
                 {% if strain.is_discontinued %}{% translate "No" %}{% else %}{% translate "Yes" %}{% endif %}
             </li>
         </ul>

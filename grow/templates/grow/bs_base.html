@@ -20,6 +20,7 @@
             document.documentElement.setAttribute('data-bs-theme',
                 (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
         </script>
+        <script src=" https://cdn.jsdelivr.net/npm/jquery@4.0.0/dist/jquery.min.js "></script>
         <script src="{% static 'grow/js/pageurl.js' %}"></script>
 
         {% block scripts %}{% endblock scripts %}
@@ -27,6 +28,16 @@
         <style>
             p {
                 text-align:justify;
+            }
+
+            .dropdown-submenu {
+                position: relative;
+            }
+
+            .dropdown-submenu .dropdown-menu {
+                top: 0;
+                left: 100%;
+                margin-top: -1px;
             }
         </style>
     </head>
@@ -117,51 +128,64 @@
                                         {% translate "My Infos" %}
                                     </a>
                                 </li>
-
-                                <li>
-                                    <a
-                                        class="dropdown-item"
-                                        href="{% url 'grow:my-growlogs' %}"
-                                    >
-                                        <i class="bi bi-clipboard-data"></i>
-                                        {% translate "My Growlogs" %}
-                                    </a>
+                                <!-- -------------------------------------------- -->
+                                <li class="dropdown-submenu dropend">
+                                    <button type="button" class="dropdown-submenu-button dropdown-item dropdown-toggle text-white"
+                                        data-bs-toggle="dropdown"
+                                        data-bs-trigger="hover focus"
+                                        data-bs-auto-close="outside"
+                                        tabindex="-1"
+                                        aria-expanded="true"
+                                        id="my-detailed-infos-dropdown"
+                                    ><i class="bi bi-clipboard-data"></i>{% translate "My detailed infos"%}</button>
+                                    <ul class="dropdown-menu" aria-labelledby="my-detailed-infos-dropdown">
+                                        <li>
+                                            <a
+                                                class="dropdown-item"
+                                                href="{% url 'grow:my-growlogs' %}"
+                                            >
+                                                <i class="bi bi-clipboard-data"></i>
+                                                {% translate "My Growlogs" %}
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a
+                                                class="dropdown-item"
+                                                href="{% url 'grow:my-seeds-in-stock' %}"
+                                            >
+                                                <i class="bi bi-flower1"></i>
+                                                {% translate "My Seeds in Stock" %}
+                                            </a>
+                                        <li>
+                                            <a
+                                                class="dropdown-item"
+                                                href="{% url 'grow:my-strains-grown' %}"
+                                            >
+                                                <i class="bi bi-flower2"></i>
+                                                {% translate "Strains I've Grown" %}
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a
+                                                class="dropdown-item"
+                                                href="{% url 'grow:location-index' %}"
+                                            >
+                                                <i class="bi bi-house-check"></i>
+                                                {% translate "My Locations" %}
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a
+                                                class="dropdown-item"
+                                                href="#"
+                                            >
+                                                <i class="bi bi-thermometer-half"></i>
+                                                {% translate "My Sensors" %}
+                                            </a>
+                                        </li>
+                                    </ul>
                                 </li>
-                                <li>
-                                    <a
-                                        class="dropdown-item"
-                                        href="{% url 'grow:my-seeds-in-stock' %}"
-                                    >
-                                        <i class="bi bi-flower1"></i>
-                                        {% translate "My Seeds in Stock" %}
-                                    </a>
-                                <li>
-                                    <a
-                                        class="dropdown-item"
-                                        href="{% url 'grow:my-strains-grown' %}"
-                                    >
-                                        <i class="bi bi-flower2"></i>
-                                        {% translate "Strains I've Grown" %}
-                                    </a>
-                                </li>
-                                <li>
-                                    <a
-                                        class="dropdown-item"
-                                        href="{% url 'grow:location-index' %}"
-                                    >
-                                        <i class="bi bi-house-check"></i>
-                                        {% translate "My Locations" %}
-                                    </a>
-                                </li>
-                                <li>
-                                    <a
-                                        class="dropdown-item"
-                                        href="#"
-                                    >
-                                        <i class="bi bi-thermometer-half"></i>
-                                        {% translate "My Sensors" %}
-                                    </a>
-                                </li>
+                                <!-- -------------------------------------------- -->
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
                                     <a
@@ -350,6 +374,16 @@
         const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
         const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
     </script>
+    <script>
+        $(document).ready(function() {
+            $('.dropdown-submenu-button').on('click', function(e) {
+                $(this).next('ul').toggle();
+                e.stopPropagation();
+                e.preventDefault();
+            });
+        });
+    </script>
+
     {% block extra_scripts %}
     {% endblock extra_scripts %}
 </html>

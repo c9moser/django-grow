@@ -1,3 +1,4 @@
+
 {% load i18n grow %}
 <div class="card mb-3">
     <div class="card-header">
@@ -15,11 +16,10 @@
         </div>
     </div>
     <div class="card-body p-0">
-        <table class="{% if use_bootstrap %}table table-hover m-0 p-0{% endif %}">
+        <table class="{% if use_bootstrap %}table table-hover m-0{% endif %}">
             <thead>
-                <tr class="{% if use_bootstrap %}table-success{% endif %}">
+                <tr class="table-primary">
                     <th scope="col">{% translate "Name" %}</th>
-                    <th scope="col">{% translate "Grower" %}</th>
                     <th scope="col">{% translate "Start date" %}</th>
                     <th scope="col">{% translate "Duration" %}</th>
                     <th scope="col">{% translate "End date" %}</th>
@@ -28,10 +28,9 @@
                 </tr>
             </thead>
             <tbody>
-                {% for growlog_strain in growlogs_paginator.page %}
+                {% for growlog_strain in my_growlogs_paginator.page %}
                 <tr>
                     <td><a href="{% url 'grow:growlog-detail' growlog_strain.growlog.pk %}">{{ growlog_strain.growlog.name }}</a></td>
-                    <td>{{ growlog_strain.growlog.grower.username }}</td>
                     <td>{{ growlog_strain.growlog.started_at|date }}</td>
                     <td>{% if growlog_strain.growlog.duration_days > 30 %}
                             {% blocktranslate count n=growlog_strain.growlog.duration_weeks %}{{ n }} week{% plural %}{{ n }} weeks{% endblocktranslate %}
@@ -42,7 +41,7 @@
                     <td>{% if growlog_strain.growlog.finished_at %}{{ growlog_strain.growlog.finished_at|date }}{% else %}---{% endif %}</td>
                     <td>{{ growlog_strain.growlog.current_stage }}</td>
                     <td>
-                        {% with growlog_strain.growlog.anonymized_locations as locations %}
+                        {% with growlog_strain.growlog.locations as locations %}
                         {% if locations %}
                         <ul class="list-unstyled my-0 mx-0">
                             {% for location in locations %}<li>{{ location.location_type.name }}</li>{% endfor %}
@@ -54,11 +53,16 @@
                     </td>
                 </tr>
                 {% empty %}
-                <tr>
-                    <td colspan="7" class="text-center m-0"><div class="alert alert-warning m-0" role="alert">{% translate "No grow logs available." %}</div></td>
+                <tr class="m-0 p-1">
+                    <td colspan="6" class="mb-0"><div class="alert alert-warning m-0 text-center" role="alert">{% translate "It seems like you have not grown this strain yet." %}</div></td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+    </div>
+    <div class="card-footer p-0">
+        <div class="alert alert-info m-0 text-center" role="alert">
+            {% translate "This table shows your grow logs for this strain and is only visible to you." %}
+        </div>
     </div>
 </div>

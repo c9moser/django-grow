@@ -38,7 +38,6 @@ GROW_BUILTIN_BS_BREEDER_TEMPLATES = {
 
 GROW_BUILTIN_STRAIN_TEMPLATES = {
     # strain templates
-    'grow/strain': 'grow/html/strain/index.html',
     'grow/strain/create': 'grow/html/strain/create.html',
     'grow/strain/delete': 'grow/html/strain/delete.html',
     'grow/strain/form': 'grow/html/strain/form.html',
@@ -75,7 +74,6 @@ GROW_BUILTIN_STRAIN_TEMPLATES = {
 
 GROW_BUILTIN_BS_STRAIN_TEMPLATES = {
     # strain templates
-    'grow/strain': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain'],
     'grow/strain/create': 'grow/bootstrap/strain/strain/create.html',
     'grow/strain/delete': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain/delete'],
     'grow/strain/form': 'grow/bootstrap/strain/strain/form.html',
@@ -93,8 +91,8 @@ GROW_BUILTIN_BS_STRAIN_TEMPLATES = {
     'grow/strain/strain/hx/add_to_stock2': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain/strain/hx/add_to_stock2'],
     'grow/strain/strain/hx/add_to_stock_dialog': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain/strain/hx/add_to_stock_dialog'],
     'grow/strain/strain/hx/filter': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain/strain/hx/filter'],
-    'grow/strain/strain/hx/growlogs': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain/strain/hx/growlogs'],
-    'grow/strain/strain/hx/my_growlogs': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain/strain/hx/my_growlogs'],
+    'grow/strain/strain/hx/growlogs': 'grow/bootstrap/strain/strain/hx/growlogs.html',
+    'grow/strain/strain/hx/my_growlogs': 'grow/bootstrap/strain/strain/hx/my_growlogs.html',
     'grow/strain/strain/hx/translation': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain/strain/hx/translation'],
     'grow/strain/strain/in_stock/hx/add': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain/strain/in_stock/hx/add'],
     'grow/strain/strain/in_stock/hx/remove': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain/strain/in_stock/hx/remove'],

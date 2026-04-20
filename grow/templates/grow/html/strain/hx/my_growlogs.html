@@ -1,69 +1,64 @@
 {% load i18n grow %}
-<div class="card mb-3">
-    <div class="card-header">
-        <div class="row">
-            <div class="col-4">
-                {% with "grow/utils/paginator"|grow_template as paginator_template %}
-                {% include paginator_template with paginator=my_growlogs_paginator hx_target=hx_target %}
-                {% endwith %}
-            </div>
-            <div class="col-4 d-flex align-items-center">
-                <h5 class="card-title my-auto mx-auto">{% blocktranslate with strain_name=strain.name %}My Growlogs for <i>{{ strain_name }}</i>{% endblocktranslate %}</h5>
-            </div>
-            <div class="col-4 d-flex justify-content-end text-end">
-            </div>
-        </div>
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+    <div style="width: 33%; margin-right: 1rem;">
+        {% with "grow/utils/paginator"|grow_template as paginator_template %}
+        {% include paginator_template with paginator=growlogs_paginator %}
+        {% endwith %}
     </div>
-    <div class="card-body p-0">
-        <table class="{% if use_bootstrap %}table table-hover mb-0{% endif %} mb-0">
-            <thead>
-                <tr class="{% if use_bootstrap %}table-success{% endif %}">
-                    <th scope="col">{% translate "Name" %}</th>
-                    <th scope="col">{% translate "Start date" %}</th>
-                    <th scope="col">{% translate "Duration" %}</th>
-                    <th scope="col">{% translate "End date" %}</th>
-                    <th scope="col">{% translate "Current Stage" %}</th>
-                    <th scope="col">{% translate "Locations" %}</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for growlog_strain in my_growlogs_paginator.page %}
-                <tr>
-                    <td><a href="{% url 'grow:growlog-detail' growlog_strain.growlog.pk %}">{{ growlog_strain.growlog.name }}</a></td>
-                    <td>{{ growlog_strain.growlog.started_at|date }}</td>
-                    <td>{% if growlog_strain.growlog.duration_days > 30 %}
-                            {% blocktranslate count n=growlog_strain.growlog.duration_weeks %}{{ n }} week{% plural %}{{ n }} weeks{% endblocktranslate %}
-                        {% else %}
-                            {% blocktranslate count n=growlog_strain.growlog.duration_days %}{{ n }} day{% plural %}{{ n }} days{% endblocktranslate %}
-                        {% endif %}
-                    </td>
-                    <td>{% if growlog_strain.growlog.finished_at %}{{ growlog_strain.growlog.finished_at|date }}{% else %}---{% endif %}</td>
-                    <td>{{ growlog_strain.growlog.current_stage }}</td>
-                    <td>
-                        {% with growlog_strain.growlog.anonymized_locations as locations %}
-                        {% if locations %}
-                        <ul class="list-unstyled my-0 mx-0">
-                            {% for location in locations %}<li>{{ location.name }}</li>{% endfor %}
-                        </ul>
-                        {% else %}
-                        ---
-                        {% endif %}
-                        {% endwith %}
-                    </td>
-                </tr>
-                {% empty %}
-                <tr class="mb-0">
-                    <td colspan="6" class="mb-0"><div class="alert alert-warning mb-0 text-center">{% translate "It seems like you have not grown this strain yet." %}</div></td>
-                </tr>
-                {% endfor %}
-            </tbody>
-            <tfoot class="{% if use_bootstrap %}table-group-divider{% endif %}">
-                <tr>
-                    <td colspan="6" class="text-center">
-                        <div class="alert alert-info mb-0">{% translate "This table shows your grow logs for this strain and is only visible to you." %}</div>
-                    </td>
-                </tr>
-            </tfoot>
-        </table>
+    <h5 style="margin: 0; text-align: center; flex-grow: 1;">{% blocktranslate with strain_name=strain.name %}My Growlogs for <i>{{ strain_name }}</i>{% endblocktranslate %}</h5>
+    <div style="width: 33%; margin-left: 1rem; text-align: right;">
     </div>
 </div>
+
+<table style="width: 100%; border-collapse: collapse; margin-bottom: 1rem;">
+    <thead>
+            <tr style="background-color: #d4edda; color: #155724;">
+            <th scope="col">{% translate "Name" %}</th>
+            <th scope="col">{% translate "Start date" %}</th>
+            <th scope="col">{% translate "Duration" %}</th>
+            <th scope="col">{% translate "End date" %}</th>
+            <th scope="col">{% translate "Current Stage" %}</th>
+            <th scope="col">{% translate "Locations" %}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for growlog_strain in my_growlogs_paginator.page %}
+        <tr>
+            <td><a href="{% url 'grow:growlog-detail' growlog_strain.growlog.pk %}">{{ growlog_strain.growlog.name }}</a></td>
+            <td>{{ growlog_strain.growlog.started_at|date }}</td>
+            <td>{% if growlog_strain.growlog.duration_days > 30 %}
+                    {% blocktranslate count n=growlog_strain.growlog.duration_weeks %}{{ n }} week{% plural %}{{ n }} weeks{% endblocktranslate %}
+                {% else %}
+                    {% blocktranslate count n=growlog_strain.growlog.duration_days %}{{ n }} day{% plural %}{{ n }} days{% endblocktranslate %}
+                {% endif %}
+            </td>
+            <td>{% if growlog_strain.growlog.finished_at %}{{ growlog_strain.growlog.finished_at|date }}{% else %}---{% endif %}</td>
+            <td>{{ growlog_strain.growlog.current_stage }}</td>
+            <td>
+                {% with growlog_strain.growlog.anonymized_locations as locations %}
+                {% if locations %}
+                <ul style="list-style-type: none; margin: 0; padding: 0;">
+                    {% for location in locations %}<li>{{ location.name }}</li>{% endfor %}
+                </ul>
+                {% else %}
+                ---
+                {% endif %}
+                {% endwith %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr class="mb-0">
+            <td colspan="6" class="mb-0"><div style="background-color: #fff3cd; color: #856404; padding: 0.75rem; border-radius: 0.25rem; text-align: center;">{% translate "It seems like you have not grown this strain yet." %}</div></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    <tfoot class="{% if use_bootstrap %}table-group-divider{% endif %}">
+        <tr>
+            <td colspan="6" class="text-center">
+                <div style="background-color: #d1ecf1; color: #0c5460; padding: 0.75rem; border-radius: 0.25rem; text-align: center;">
+                    {% translate "This table shows your grow logs for this strain and is only visible to you." %}
+                </div>
+            </td>
+        </tr>
+    </tfoot>
+</table>

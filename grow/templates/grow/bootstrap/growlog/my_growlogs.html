@@ -21,6 +21,24 @@ console.log("Set page URL variables for my grow logs: " + JSON.stringify(pageURL
 
 {% block content %}
 
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb" >
+
+    {% if GROW_IS_MAIN_APP %}
+        <li class="breadcrumb-item"><a href="{% url 'grow:home' %}">{% translate "Home" %}</a></li>
+    {% else %}
+        <li class="breadcrumb-item"><a href="/">{% translate "Home" %}</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'grow:home' %}">{% translate "Grow" %}</a></li>
+    {% endif %}
+        <li class="breadcrumb-item">
+            <a href="{% url 'grow:user-info' %}">
+                 {% translate "My Grow" %}
+            </a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">{% translate "My Grow Logs" %}</li>
+    </ol>
+</nav>
+
 <h1>{% translate "My Grow Logs" %}</h1>
 
 <h2>{% translate "Active Grow Logs" %}</h2>

@@ -22,6 +22,7 @@ console.log("Set page URL variables for my grow logs: " + JSON.stringify(pageURL
 {##### CONTENT ######}
 {% block content %}
 <h1>{% translate "My Grow Logs" %}</h1>
+
 <div>
     <a href="{% url 'grow:growlog-create' %}">{% translate "Start New Grow Log" %}</a>
 </div>
