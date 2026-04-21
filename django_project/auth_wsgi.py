@@ -16,7 +16,7 @@ APACHE_USER_KEY = u"user"
 APACHE_PASS_KEY = u"pw"
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-sys.path.insert(0, os.environ.get("VIRTUAL_ENV",
+sys.path.insert(0, os.environ.get("GROW_VENV",
                                   str(BASE_DIR
                                       / ".venv"
                                       / "lib"
