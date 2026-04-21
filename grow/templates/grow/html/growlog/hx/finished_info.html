@@ -30,7 +30,7 @@
             </thead>
             <tbody class="{% if use_bootstrap %}table-group-divider{% endif %}">
             {% for growlog in finished_growlogs_paginator.page %}
-                <tr>
+                <tr class="{% if forloop.last %}mb-0{% endif %}">
                     <td>
                         <a href="{% url 'grow:growlog-detail' pk=growlog.id %}">{{ growlog.name }}</a>
                     </td>
