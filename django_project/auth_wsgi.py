@@ -9,7 +9,6 @@ Validates users against Django's session cache rather than password file.
 import sys
 import os
 from pathlib import Path
-import django
 
 APACHE_AUTH_KEY = u"Restricted Access"
 APACHE_USER_KEY = u"user"
@@ -29,9 +28,8 @@ os.environ['DJANGO_SETTINGS_MODULE'] = os.environ.get(
     'DJANGO_SETTINGS_MODULE', 'django_project.settings')
 
 # Import and setup Django
-
+import django
 django.setup()
-
 
 def __get_apache_keys_(environ):
     user_key = APACHE_USER_KEY
