@@ -17,9 +17,8 @@ APACHE_PASS_KEY = u"pw"
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, Path(os.environ.get("GROW_VENV",
-                                       str(BASE_DIR))
+                                       str(BASE_DIR / ".venv"))
                         ).resolve()
-                / ".venv"
                 / "lib"
                 / f"python{sys.version_info.major}.{sys.version_info.minor}"
                 / "site-packages")
