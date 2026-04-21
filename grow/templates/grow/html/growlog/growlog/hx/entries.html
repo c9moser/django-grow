@@ -29,9 +29,9 @@
             </div>
         </div>
     </div>
-    <div class="card-body ">
+    <div class="card-body p">
         {% for entry in entries_paginator.page %}
-        <div class="card w-100 m-3-auto {% if forloop.last %}mb-0{% endif %}">
+        <div class="card w-100 mx-3-auto {% if forloop.last %} mb-0{% else %} mb-3{% endif %}">
             <div class="card-header">
                 <div class="d-flex {% if can_edit %}justify-content-between{% endif %} align-items-center">
                     <h5 class="card-title mb-0" style="width:33%;">{{ entry|growlog_entry_timestamp:request }}</h5>
