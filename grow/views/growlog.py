@@ -24,6 +24,7 @@ from grow.forms.growlog import (
     GrowlogStrainDeleteForm,
     GrowlogEntryImageForm,
     GrowlogPermissionUpdateForm,
+    GrowlogEntriesViewForm,
 )
 
 # from grow.growapi.models.strain import Strain
@@ -56,6 +57,13 @@ class HxGrowlogEntriesView(BaseView):
     template_name = GROW_TEMPLATES['grow/growlog/growlog/hx/entries']
     update_page_url = True
     hx_target = '#growlog-entries'
+    filter = 'all'
+    urlvars = {
+        'growlog_entries_page': 'gle_pg',
+        'growlog_entries_filter': 'gle_filter',
+        'growlog_entries_paginate_by': 'gle_pgn',
+        'growlog_entries_ordering': 'gle_ord',
+    }
 
     def get_context_data(self, **kwargs) -> dict[str, Any]:
 
@@ -68,7 +76,6 @@ class HxGrowlogEntriesView(BaseView):
             can_edit = True
             if not self.growlog.is_finished:
                 default_ordering = 'desc'
-
         try:
             entries_page = int(self.request.GET.get(
                 'entries_page',
@@ -112,19 +119,127 @@ class HxGrowlogEntriesView(BaseView):
         except ValueError:
             entries_paginate_by = user_settings.growlog_paginate if user_settings else 10
 
-        entries_ordering = self.request.GET.get(
-            'growlog_entries_ordering',
-            self.request.GET.get(
-                'gle_ordering',
+        if hasattr(self, 'growlog_entries_ordering'):
+            entries_ordering = self.growlog_entries_ordering
+        else:
+            entries_ordering = self.request.GET.get(
+                'growlog_entries_ordering',
                 self.request.GET.get(
-                    'gle_ord',
+                    'gle_ordering',
                     self.request.GET.get(
-                        'ordering',
+                        'gle_ord',
                         self.request.GET.get(
-                            'ord', default_ordering))
+                            'ordering',
+                            self.request.GET.get(
+                                'ord', default_ordering))
+                    )
                 )
             )
-        )
+
+        if hasattr(self, 'growlog_entries_filter'):
+            filter = self.growlog_entries_filter
+        else:
+            filter = self.request.GET.get(
+                'growlog_entries_filter',
+                self.request.GET.get(
+                    'gle_filter',
+                    self.request.GET.get(
+                        'gle_flt',
+                        self.request.GET.get(
+                            'filter',
+                            self.request.GET.get('f', self.filter)
+                        )
+                    )
+                )
+            )
+        gle_filters = [
+            ('all', _('All')),
+        ]
+        has_unknonwn_filter = False
+        unknown_end_date = (
+            self.growlog.germinating_at
+            or self.growlog.cutted_at
+            or self.growlog.vegetative_at
+            or self.growlog.flowering_at
+            or self.growlog.harvested_at
+            or self.growlog.finished_at
+        )  # noqa: E501
+        if self.growlog.entries.filter(timestamp__date__lt=unknown_end_date).exists():
+            has_unknonwn_filter = True
+            gle_filters.append(('unknown', _('Unknown')))
+        if self.growlog.germinating_at:
+            gle_filters.append(('germinating', _('Germinating')))
+        if self.growlog.cutted_at:
+            gle_filters.append(('rooting', _('Rooting')))
+        if self.growlog.vegetative_at:
+            gle_filters.append(('vegetative', _('Vegetative')))
+        if self.growlog.flowering_at:
+            gle_filters.append(('flowering', _('Flowering')))
+        if self.growlog.harvested_at:
+            gle_filters.append(('harvested', _('Harvested')))
+        if self.growlog.finished_at:
+            gle_filters.append(('finished', _('Finished')))
+
+        if filter in ['all', 'a', '']:
+            filter = 'all'
+            entries = self.growlog.entries.all()
+        elif filter in ['germinating', 'g', 'germ'] and self.growlog.germinating_at:
+            filter = 'germinating'
+            end_date = (
+                self.growlog.vegetative_at
+                or self.growlog.flowering_at
+                or self.growlog.cutted_at
+                or self.growlog.harvested_at
+                or self.growlog.finished_at
+                or timezone.now().date()
+            )
+            entries = self.growlog.entries.filter(timestamp__date__gte=self.growlog.germinating_at,
+                                                  timestamp__date__lte=end_date)
+        elif filter in ['rooting', 'r', 'root'] and self.growlog.cutted_at:
+            filter = 'rooting'
+            end_date = (
+                self.growlog.vegetative_at
+                or self.growlog.flowering_at
+                or self.growlog.harvested_at
+                or self.growlog.finished_at
+                or timezone.now().date()
+            )
+            entries = self.growlog.entries.filter(timestamp__date__gte=self.growlog.cutted_at,
+                                                  timestamp__date__lte=end_date)
+        elif filter in ['vegetative', 'v', 'veg'] and self.growlog.vegetative_at:
+            filter = 'vegetative'
+            end_date = (
+                self.growlog.flowering_at
+                or self.growlog.harvested_at
+                or self.growlog.finished_at
+                or timezone.now().date()
+            )
+            entries = self.growlog.entries.filter(timestamp__date__gte=self.growlog.vegetative_at,
+                                                  timestamp__date__lte=end_date)
+        elif filter in ['flowering', 'f', 'flow'] and self.growlog.flowering_at:
+            filter = 'flowering'
+            end_date = (
+                self.growlog.harvested_at
+                or self.growlog.finished_at
+                or timezone.now().date()
+            )
+            entries = self.growlog.entries.filter(timestamp__date__gte=self.growlog.flowering_at,
+                                                  timestamp__date__lte=end_date)
+        elif filter in ['harvested', 'h', 'harv'] and self.growlog.harvested_at:
+            filter = 'harvested'
+            end_date = self.growlog.finished_at or timezone.now().date()
+            entries = self.growlog.entries.filter(timestamp__date__gte=self.growlog.harvested_at,
+                                                  timestamp__date__lte=end_date)
+        elif filter in ['finished', 'fin', 'fi'] and self.growlog.finished_at:
+            filter = 'finished'
+            entries = self.growlog.entries.filter(timestamp__date__gte=self.growlog.finished_at)
+        elif filter in ['unknown', 'u', 'unk'] and has_unknonwn_filter:
+            filter = 'unknown'
+            entries = self.growlog.entries.filter(timestamp__date__lt=end_date)
+        else:
+            logger.warning(f"Invalid filter parameter for growlog entries: {filter}. Defaulting to all.")  # noqa: E501
+            filter = 'all'
+            entries = self.growlog.entries.all()
 
         if entries_ordering in ['asc', 'ascending', 'a', '1', 'up', 'oldest']:
             entries_ordering = 'asc'
@@ -134,24 +249,28 @@ class HxGrowlogEntriesView(BaseView):
             logger.warning(f"Invalid entries ordering parameter: {entries_ordering}. Defaulting to {default_ordering}.")  # noqa: E501
             entries_ordering = default_ordering
 
-        entries = self.growlog.entries.all().order_by(
-            'timestamp' if entries_ordering == 'asc' else '-timestamp'
-        )
-
         entries_paginator = QuerySetPaginator(
             entries,
             url_path='grow:hx-growlog-entries',
             url_path_kwargs={'growlog_pk': self.growlog.pk},
-            url_variables={'gle_ord': entries_ordering},
+            url_variables={'gle_ord': entries_ordering, 'gle_filter': filter},
             paginate_by=entries_paginate_by,
             page=entries_page
         )
 
+        entries_form = GrowlogEntriesViewForm(initial={
+            'ordering': entries_ordering,
+            'filter': filter
+        })
+        entries_form.fields['filter'].choices = gle_filters
+
         context = kwargs
         context['growlog'] = self.growlog
-        context['entries_paginator'] = entries_paginator
+        context['growlog_entries_paginator'] = entries_paginator
         context['can_edit'] = can_edit
-        context['entries_ordering'] = entries_ordering
+        context['growlog_entries_ordering'] = entries_ordering
+        context['growlog_entries_filter'] = filter
+        context['growlog_entries_form'] = entries_form
         context.setdefault(
             'update_page_url',
             self.update_page_url if hasattr(self, 'update_page_url') else True
@@ -175,6 +294,22 @@ class HxGrowlogEntriesView(BaseView):
 
         return render(request, self.template_name, self.get_context_data())
 
+    def post(self, request: HttpRequest, growlog_pk: int) -> HttpResponse:
+        self.growlog = get_object_or_404(Growlog, pk=growlog_pk)
+        if not growlog_user_is_allowed_to_view(request.user, self.growlog):
+            raise PermissionDenied(_("You do not have permission to view this growlog."))
+
+        form = GrowlogEntriesViewForm(request.POST)
+        if form.is_valid():
+            filter = form.cleaned_data['filter']
+            ordering = form.cleaned_data['ordering']
+            self.growlog_entries_ordering = ordering
+            self.growlog_entries_filter = filter
+
+            return render(request, self.template_name, self.get_context_data())
+        else:
+            print(f"Invalid form data: {form.errors}")
+            return render(request, self.template_name, self.get_context_data(), status=400)
 
 class HxGrowlogPermissionsUpdateView(View):
     template_name = GROW_TEMPLATES['grow/growlog/growlog/hx/permission_update']

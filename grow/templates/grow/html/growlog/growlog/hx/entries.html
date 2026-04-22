@@ -1,17 +1,21 @@
-{% load i18n grow growlog %}
+{% load i18n grow growlog widget_tweaks %}
 <div class="card mb-3" id="growlog-entries-card">
     <div class="card-header">
         <div class="row justify-content-between align-items-center">
             <div  class="col-4 col-lg-3 d-flex justify-content-start text-start">
-                {% include "grow/utils/paginator"|grow_template with paginator=entries_paginator hx_target=hx_target %}
+                {% include "grow/utils/paginator"|grow_template with paginator=growlog_entries_paginator hx_target=hx_target %}
             </div>
             <div class="col-4 col-lg-6 d-flex align-items-center text-center justify-content-center">
                 <h5 class="card-title mb-0">
                     <a class="text-decoration-none link-body-emphasis"
                     href="#"
                     hx-target="{{ hx_target }}"
-                    hx-get="{% url 'grow:hx-growlog-entries' growlog_pk=growlog.pk %}?gle_pgn={{ entries_paginator.paginate_by }}&gle_pg={{ entries_paginator.current_page }}&gle_ord={% if entries_ordering == 'asc' %}desc{% else %}asc{% endif %}"
-                >{% translate "Growlog entries" %}<i class="ms-2 bi {% if entries_ordering == 'asc' %}bi-caret-down-fill{% else %}bi-caret-up-fill{% endif %}"></i></a></h5>
+                    hx-get="{% url 'grow:hx-growlog-entries' growlog_pk=growlog.pk %}?gle_pgn={{ growlog_entries_paginator.paginate_by }}&gle_pg={{ growlog_entries_paginator.current_page }}&gle_ord={% if growlog_entries_ordering == 'asc' %}desc{% else %}asc{% endif %}"
+                    >
+                        {% translate "Growlog entries" %}
+                        <i class="ms-2 bi {% if growlog_entries_ordering == 'asc' %}bi-caret-down-fill{% else %}bi-caret-up-fill{% endif %}"></i>
+                    </a>
+                </h5>
             </div>
             <div class="col-4 col-lg-3 d-flex justify-content-end text-end">
                 {% if can_edit %}
@@ -26,17 +30,25 @@
                     <i data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Add new entry' %}" class="bi bi-plus"></i>
                 </button>
                 {% endif %}
+                <form method="post" class="d-inline-flex ms-2">
+                    {% csrf_token %}
+                    <div class="input-group input-group">
+                        {% render_field growlog_entries_form.ordering class="visually-hidden" %}
+                        {% url 'grow:hx-growlog-entries' growlog_pk=growlog.pk as hx_url%}
+                        {% render_field growlog_entries_form.filter class="form-select" hx-post=hx_url hx-target=hx_target hx-swap="innerHTML" %}
+                    </div>
+                </form>
             </div>
         </div>
     </div>
     <div class="card-body p">
-        {% for entry in entries_paginator.page %}
+        {% for entry in growlog_entries_paginator.page %}
         <div class="card w-100 mx-3-auto {% if forloop.last %} mb-0{% else %} mb-3{% endif %}">
             <div class="card-header">
-                <div class="d-flex {% if can_edit %}justify-content-between{% endif %} align-items-center">
-                    <h5 class="card-title mb-0" style="width:33%;">{{ entry|growlog_entry_timestamp:request }}</h5>
-                    <h5 class="text-muted mb-0 text-center" style="width:33%;">{{ entry.status_display }}</h5>
-                    <div class="text-end" style="width:33%;">
+                <div class="row align-items-center">
+                    <h5 class="col-md-4 card-title mb-0"{{ entry|growlog_entry_timestamp:request }}</h5>
+                    <h5 class="col-md-4 text-muted mb-0 text-center">{{ entry.status_display }}</h5>
+                    <div class="col-md-4 text-end">
                         {% if can_edit %}
                         <a href="{% url 'grow:growlog-entry-image-upload' entry_pk=entry.id %}"
                            class="btn btn-outline-success btn-sm">
@@ -231,9 +243,10 @@
 {% if update_page_url %}
 <script>
     pageURL.update({
-        "{% if urlvars and 'growlog_entry_page' in urlvars %}urlvars.growlog_entry_page{% else %}gle_pg{% endif %}": "{{ entries_paginator.current_page }}",
-        "{% if urlvars and 'growlog_entry_paginate_by' in urlvars %}urlvars.growlog_entry_paginate_by{% else %}gle_pgn{% endif %}": "{{ entries_paginator.paginate_by }}",
-        "{% if urlvars and 'growlog_entry_ordering' in urlvars %}urlvars.growlog_entry_ordering{% else %}gle_ord{% endif %}": "{{ entries_ordering }}",
+        "{% if urlvars and 'growlog_entry_page' in urlvars %}urlvars.growlog_entry_page{% else %}gle_pg{% endif %}": "{{ growlog_entries_paginator.current_page }}",
+        "{% if urlvars and 'growlog_entry_paginate_by' in urlvars %}urlvars.growlog_entry_paginate_by{% else %}gle_pgn{% endif %}": "{{ growlog_entries_paginator.paginate_by }}",
+        "{% if urlvars and 'growlog_entry_ordering' in urlvars %}urlvars.growlog_entry_ordering{% else %}gle_ord{% endif %}": "{{ growlog_entries_ordering }}",
+        "{% if urlvars and 'growlog_entry_filter' in urlvars %}urlvars.growlog_entry_filter{% else %}gle_filter{% endif %}": "{{ growlog_entries_filter }}",
     });
 </script>
 {% endif %}

@@ -9,149 +9,100 @@
 {% block scripts %}
 <script>
     pageURL.setVariables({
-        "gle_pg": "{{ entries_paginator.current_page }}",
-        "gle_pgn": "{{ entries_paginator.paginate_by }}",
-        "gle_ord": "{{ entries_ordering }}",
+        "gle_pg": "{{ growlog_entries_paginator.current_page }}",
+        "gle_pgn": "{{ growlog_entries_paginator.paginate_by }}",
+        "gle_ord": "{{ growlog_entries_ordering }}",
+        "gle_filter": "{{ growlog_entries_filter }}",
     });
 </script>
 {% endblock scripts %}
+
 {% block body_scripts %}
-<script src="{% static 'grow/js/lightbox-plus-jquery.js' %}"></script>
+<script src="{% static 'grow/js/lightbox.min.js' %}"></script>
 {% endblock %}
 
 {% block content %}
-{% if use_bootstrap%}
 
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb" >
-
-    {% if GROW_IS_MAIN_APP %}
-        <li class="breadcrumb-item"><a href="{% url 'grow:home' %}">{% translate "Home" %}</a></li>
-    {% else %}
-        <li class="breadcrumb-item"><a href="/">{% translate "Home" %}</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'grow:home' %}">{% translate "Grow" %}</a></li>
-    {% endif %}
-        <li class="breadcrumb-item">
-            <a href="#{#{% url 'grow:growlog-overview' %}#}">
-                {% translate "Growlogs" %}
-            </a>
-        </li>
-        <li class="breadcrumb-item active">{{ growlog.name }}</li>
-    </ol>
-</nav>
-
-{% if request.user == growlog.grower %}
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb" >
-
-    {% if GROW_IS_MAIN_APP %}
-        <li class="breadcrumb-item"><a href="{% url 'grow:home' %}">{% translate "Home" %}</a></li>
-    {% else %}
-        <li class="breadcrumb-item"><a href="/">{% translate "Home" %}</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'grow:home' %}">{% translate "Grow" %}</a></li>
-    {% endif %}
-        <li class="breadcrumb-item">
-            <a href="{% url 'grow:user-info' %}">
-                {% translate "My Grow" %}
-            </a>
-        </li>
-        <li class="breadcrumb-item active">
-            <a href="{% url 'grow:my-growlogs' %}">
-                {% translate "My Growlogs" %}
-            </a>
-        </li>
-        <li class="breadcrumb-item active">{{ growlog.name }}</li>
-
-    </ol>
-</nav>
-{% endif %}
-{% endif %}{# use_bootstrap #}
 
 <h1>{{ growlog.name }}</h1>
 {% if can_edit %}
 <div class="mb-3">
     {% if not growlog.germinating_at and not growlog.cutted_at and not growlog.vegetative_at and not growlog.flowering_at and not growlog.harvested_at and not growlog.finished_at %}
-    <form class="form-inline d-inline" action="{% url 'grow:growlog-set-germinating-at' pk=growlog.id %}" method="post">
+    <form style="display:inline;" action="{% url 'grow:growlog-set-germinating-at' pk=growlog.id %}" method="post">
         {% csrf_token %}
-        <button type="submit" class="btn btn-outline-primary" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Set Germinating Date' %}"><i class="bi bi-calendar-plus"></i></button>
+        <button type="submit">Start Germinating</button>
     </form>
-    <form class="form-inline d-inline" action="{% url 'grow:growlog-set-cutted-at' pk=growlog.id %}" method="post">
+    <form style="display:inline;" action="{% url 'grow:growlog-set-cutted-at' pk=growlog.id %}" method="post">
         {% csrf_token %}
-        <button type="submit" class="btn btn-outline-info" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Set Cutted Date' %}"><i class="bi bi-calendar-plus"></i></button>
+        <button type="submit">{% translate 'Clone cutted' %}</button>
     </form>
     {% elif growlog.germinating_at and not growlog.vegetative_at and not growlog.flowering_at and not growlog.harvested_at and not growlog.finished_at %}
-    <form class="form-inline d-inline" action="{% url 'grow:growlog-unset-germinating-at' pk=growlog.id %}" method="post">
+    <form style="display:inline;" action="{% url 'grow:growlog-unset-germinating-at' pk=growlog.id %}" method="post">
         {% csrf_token %}
 
-        <button type="submit" class="btn btn-outline-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Unset Germinating Date' %}">
-            <i class="bi bi-calendar-minus"></i>
-        </button>
+        <button type="submit">{% translate 'Unset Germinating Date' %}</button>
     </form>
     {% elif growlog.cutted_at and not growlog.vegetative_at and not growlog.flowering_at and not growlog.harvested_at and not growlog.finished_at %}
-    <form class="form-inline d-inline" action="{% url 'grow:growlog-unset-cutted-at' pk=growlog.id %}" method="post">
+    <form style="display:inline;" action="{% url 'grow:growlog-unset-cutted-at' pk=growlog.id %}" method="post">
         {% csrf_token %}
-        <button type="submit" class="btn btn-outline-info" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Unset Cutted Date' %}">
+        <button type="submit">{% translate 'Unset Cutted Date' %}</button>
             <i class="bi bi-calendar-calendar-minus"></i>
         </button>
     </form>
     {% endif %}
 
     {% if not growlog.vegetative_at and not growlog.flowering_at and not growlog.harvested_at and not growlog.finished_at %}
-    <form class="form-inline d-inline" action="{% url 'grow:growlog-set-vegetative-at' pk=growlog.id %}" method="post">
+    <form style="display:inline;" action="{% url 'grow:growlog-set-vegetative-at' pk=growlog.id %}" method="post">
         {% csrf_token %}
-        <button type="submit" class="btn btn-outline-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Set Vegetative Date' %}"><i class="bi bi-calendar-range"></i></button>
+        <button type="submit">{% translate 'Start Vegetative stage' %}</button>
     </form>
     {% elif growlog.vegetative_at and not growlog.flowering_at and not growlog.harvested_at and not growlog.finished_at %}
-    <form class="form-inline d-inline" action="{% url 'grow:growlog-unset-vegetative-at' pk=growlog.id %}" method="post">
+    <form style="display:inline;" action="{% url 'grow:growlog-unset-vegetative-at' pk=growlog.id %}" method="post">
         {% csrf_token %}
-        <button type="submit" class="btn btn-outline-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Unset Vegetative Date' %}"><i class="bi bi-calendar-minus"></i></button>
+        <button type="submit">{% translate 'Unset Vegetative stage' %}</button>
     </form>
     {% endif %}
 
     {% if not growlog.flowering_at and not growlog.harvested_at and not growlog.finished_at %}
-    <form class="form-inline d-inline" action="{% url 'grow:growlog-set-flowering-at' pk=growlog.id %}" method="post">
+    <form style="display:inline;" action="{% url 'grow:growlog-set-flowering-at' pk=growlog.id %}" method="post">
         {% csrf_token %}
-        <button type="submit" class="btn btn-outline-success" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Set Flowering Date' %}"><i class="bi bi-flower3"></i></button>
+        <button type="submit">{% translate 'Start Flowering stage' %}</button>
     </form>
     {% elif growlog.flowering_at and not growlog.harvested_at and not growlog.finished_at %}
-    <form class="form-inline d-inline" action="{% url 'grow:growlog-unset-flowering-at' pk=growlog.id %}" method="post">
+    <form style="display:inline;" action="{% url 'grow:growlog-unset-flowering-at' pk=growlog.id %}" method="post">
         {% csrf_token %}
-        <button type="submit" class="btn btn-outline-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Unset Flowering Date' %}"><i class="bi bi-calendar-minus"></i></button>
+        <button type="submit">{% translate 'Unset Flowering stage' %}</button>
     </form>
     {% endif %}
 
     {% if not growlog.harvested_at and not growlog.finished_at %}
-    <form class="form-inline d-inline" action="{% url 'grow:growlog-set-harvested-at' pk=growlog.id %}" method="post">
+    <form style="display:inline;" action="{% url 'grow:growlog-set-harvested-at' pk=growlog.id %}" method="post">
         {% csrf_token %}
-        <button type="submit" class="btn btn-outline-info" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Set Harvested Date' %}"><i class="bi bi-calendar-check"></i></button>
+        <button type="submit">{% translate 'Set Harvested stage' %}</button>
     </form>
     {% elif growlog.harvested_at and not growlog.finished_at %}
-    <form class="form-inline d-inline" action="{% url 'grow:growlog-unset-harvested-at' pk=growlog.id %}" method="post">
+    <form style="display:inline;" action="{% url 'grow:growlog-unset-harvested-at' pk=growlog.id %}" method="post">
         {% csrf_token %}
-        <button type="submit" class="btn btn-outline-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Unset Harvested Date' %}"><i class="bi bi-calendar-minus"></i></button>
+        <button type="submit">{% translate 'Unset Harvested stage' %}</button>
     </form>
     {% endif %}
 
     {% if not growlog.finished_at %}
-    <form class="form-inline d-inline" action="{% url 'grow:growlog-set-finished-at' pk=growlog.id %}" method="post">
+    <form style="display:inline;" action="{% url 'grow:growlog-set-finished-at' pk=growlog.id %}" method="post">
         {% csrf_token %}
-        <button type="submit" class="btn btn-outline-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Set Finished Date' %}"><i class="bi bi-calendar-date"></i></button>
+        <button type="submit">{% translate 'Set Finished stage' %}</button>
     </form>
     {% else %}
-    <form class="form-inline d-inline" action="{% url 'grow:growlog-unset-finished-at' pk=growlog.id %}" method="post">
+    <form style="display:inline;" action="{% url 'grow:growlog-unset-finished-at' pk=growlog.id %}" method="post">
         {% csrf_token %}
-        <button type="submit" class="btn btn-outline-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Unset Finished Date' %}"><i class="bi bi-calendar-minus"></i></button>
+        <button type="submit">{% translate 'Unset Finished stage' %}</button>
     </form>
     {% endif %}
 
-    <a href="{% url 'grow:growlog-update' pk=growlog.id %}"
-        class="btn btn-outline-primary"
-        data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Edit Grow Log' %}"
-    ><i class="bi bi-pencil-square"></i></a>
-    <a href="{% url 'grow:growlog-delete' pk=growlog.id %}" class="btn btn-outline-danger"
-        data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Delete Grow Log' %}"
-    ><i class="bi bi-trash"></i></a>
+    <a href="{% url 'grow:growlog-update' pk=growlog.id %}">{% translate 'Edit Grow Log' %}</a>
+    <a href="{% url 'grow:growlog-delete' pk=growlog.id %}">{% translate 'Delete Grow Log' %}</a>
 </div>
+{% endif %}
 
 <p>
     {% if growlog.grower == request.user %}
@@ -161,24 +112,24 @@
     {% endif %}
 </p>
 <p>
-    <a href="#growlog-strains" class="link-success"><i class="bi bi-arrow-down"></i> {% translate "Go to Strains" %}</a><br>
+    <a href="#growlog-strains">{% translate "Go to Strains" %}</a><br>
      {% if can_edit %}
-     <a href="#personal-notes" class="link-success"><i class="bi bi-arrow-down"></i> {% translate "Go to Personal Notes" %}</a><br>
+     <a href="#personal-notes">{% translate "Go to Personal Notes" %}</a><br>
      {% endif %}
     {% if can_edit %}
-    <a href="#personal-notes" class="link-success"><i class="bi bi-arrow-down"></i> {% translate "Go to Personal Notes" %}</a><br>
+    <a href="#personal-notes">{% translate "Go to Personal Notes" %}</a><br>
     {% endif %}
-    <a href="#description" class="link-success"><i class="bi bi-arrow-down"></i> {% translate "Go to Description" %}</a><br>
-    <a href="#entries" class="link-success"><i class="bi bi-arrow-down"></i> {% translate "Go to Entries" %}</a>
+    <a href="#description">{% translate "Go to Description" %}</a><br>
+    <a href="#entries">{% translate "Go to Entries" %}</a>
 </p>
 
-{% endif %}
+
 <h2>{% translate "Overview" %}</h2>
 <div id="growlog-overview">
-    <table class="{% if use_bootstrap %}table{% endif %}">
+    <table style="width: 100%;">
         <tbody>
             <tr>
-                <th class="table-primary fit-content">{% translate "Grower" %}</th>
+                <th style="width:1%; white-space: nowrap;">{% translate "Grower" %}</th>
                 <td>
                     {% if request.user == growlog.grower %}
                         <a href="{% url 'grow:user-info' %}">{{ growlog.grower.username }}</a>
@@ -186,7 +137,7 @@
                         {{ growlog.grower.username }}
                     {% endif %}
                 </td>
-                <th class="table-primary fit-content">{% translate "Permissions" %}</th>
+                <th style="width:1%; white-space: nowrap;">{% translate "Permissions" %}</th>
                 <td>
                     {% if can_edit %}
                         {% include "grow/growlog/growlog/hx/permission_update"|grow_template %}
@@ -196,19 +147,19 @@
                 </td>
             </tr>
             <tr>
-                <th class="table-primary fit-content">{% translate "Started on" %}</th>
+                <th style="width:1%; white-space: nowrap;">{% translate "Started on" %}</th>
                 <td>
                     <time datetime="{{ growlog.started_at|date:"c" }}">{{ growlog.started_at|date:'DATETIME_FORMAT' }}</time>
                 </td>
-                <th class="table-primary fit-content">{% translate "Last update on" %}</th>
+                <th style="width:1%; white-space: nowrap;">{% translate "Last update on" %}</th>
                 <td>
                     <time datetime="{{ growlog.updated_at|date:"c" }}">{{ growlog.updated_at|date:'DATETIME_FORMAT' }}</time>
                 </td>
             </tr>
             <tr>
-                <th class="table-primary fit-content">{% translate "Current Stage" %}</th>
+                <th style="width:1%; white-space: nowrap;">{% translate "Current Stage" %}</th>
                 <td >{{ growlog.current_stage }}</td>
-                <th class="table-primary fit-content">{% translate "Duration" %}</th>
+                <th style="width:1%; white-space: nowrap;">{% translate "Duration" %}</th>
                 <td>
                     {% if growlog.duration_days > 14 %}
                         {{ growlog.duration_display }}
@@ -218,9 +169,9 @@
             </tr>
             {% if growlog.germinating_at %}
             <tr>
-                <th class="table-primary fit-content">{% translate "Germinating started on" %}</th>
+                <th style="width:1%; white-space: nowrap;">{% translate "Germinating started on" %}</th>
                 <td><time datetime="{{ growlog.germinating_at|date:"c" }}">{{ growlog.germinating_at|date:'DATE_FORMAT' }}</time></td>
-                <th class="table-primary fit-content">{% translate "Germinating duration" %}</th>
+                <th style="width:1%; white-space: nowrap;">{% translate "Germinating duration" %}</th>
                 <td>
                     {% if growlog.germinating_days > 14 %}
                         {{ growlog.germinating_display }}
@@ -231,9 +182,9 @@
             </tr>
             {% elif growlog.cutted_at %}
             <tr>
-                <th class="table-primary fit-content">{% translate "Cutted on" %}</th>
+                <th style="width:1%; white-space: nowrap;">{% translate "Cutted on" %}</th>
                 <td><time datetime="{{ growlog.cutted_at|date:"c" }}">{{ growlog.cutted_at|date:'DATE_FORMAT' }}</time></td>
-                <th class="table-primary fit-content">{% translate "Rooting duration" %}</th>
+                <th style="width:1%; white-space: nowrap;">{% translate "Rooting duration" %}</th>
                 <td>
                     {% if growlog.rooting_days > 14 %}
                         {{ growlog.rooting_display }}
@@ -245,9 +196,9 @@
             {% endif %}
             {% if growlog.vegetative_at %}
             <tr>
-                <th class="table-primary fit-content">{% translate "Vegetative stage started on" %}</th>
+                <th style="width:1%; white-space: nowrap;">{% translate "Vegetative stage started on" %}</th>
                 <td><time datetime="{{ growlog.vegetative_at|date:"c" }}">{{ growlog.vegetative_at|date:'DATE_FORMAT' }}</time></td>
-                <th class="table-primary fit-content">{% translate "Vegetative duration" %}</th>
+                <th style="width:1%; white-space: nowrap;">{% translate "Vegetative duration" %}</th>
                 <td>
                     {% if growlog.vegetative_days > 14 %}
                         {{ growlog.vegetative_display }} ({% blocktranslate count n=growlog.vegetative_days %}{{ n }} day{% plural %}{{ n }} days{% endblocktranslate %})
@@ -259,9 +210,9 @@
             {% endif %}
             {% if growlog.flowering_at %}
             <tr>
-                <th class="table-primary fit-content">{% translate "Flowering stage started on" %}</th>
+                <th style="width:1%; white-space: nowrap;">{% translate "Flowering stage started on" %}</th>
                 <td><time datetime="{{ growlog.flowering_at|date:"c" }}">{{ growlog.flowering_at|date:'DATE_FORMAT' }}</time></td>
-                <th class="table-primary fit-content">{% translate "Flowering duration" %}</th>
+                <th style="width:1%; white-space: nowrap;">{% translate "Flowering duration" %}</th>
                 <td>
                     {% if growlog.flowering_days > 14 %}
                         {{ growlog.flowering_display }} ({% blocktranslate count n=growlog.flowering_days %}{{ n }} day{% plural %}{{ n }} days{% endblocktranslate %})
@@ -273,7 +224,7 @@
             {% with estimated_harvest=growlog.estimated_harvest_date %}
             {% if estimated_harvest %}
             <tr class="fit-content">
-                <th class="table-primary fit-content">{% translate "Estimated Harvest Date" %}</th>
+                <th style="width:1%; white-space: nowrap;">{% translate "Estimated Harvest Date" %}</th>
                 <td>
                 {% if estimated_harvest.0 == estimated_harvest.1 %}
                     {{ estimated_harvest.0|date:'DATE_FORMAT' }}
@@ -281,7 +232,7 @@
                     {{ estimated_harvest.0|date:'DATE_FORMAT' }} - {{ estimated_harvest.1|date:'DATE_FORMAT' }}
                 {% endif %}
                 </td>
-                <th class="table-primary fit-content">{% translate "Estimated Flowering duration" %}</th>
+                <th style="width:1%; white-space: nowrap;">{% translate "Estimated Flowering duration" %}</th>
                 <td>
                 {% with growlog.estimated_flowering_duration as flowering_duration %}
                 {% if flowering_duration %}
@@ -302,17 +253,17 @@
 
             {% if growlog.harvested_at %}
             <tr>
-                <th class="table-primary fit-content">{% translate "Harvested on" %}</th>
+                <th style="width:1%; white-space: nowrap;">{% translate "Harvested on" %}</th>
                 <td><time datetime="{{ growlog.harvested_at|date:"c" }}">{{ growlog.harvested_at|date:'DATE_FORMAT' }}</time></td>
-                <th class="table-primary fit-content"></th>
+                <th style="width:1%; white-space: nowrap;"></th>
                 <td></td>
             </tr>
             {% endif %}
             {% if growlog.finished_at %}
             <tr>
-                <th class="table-primary fit-content">{% translate "Finished on" %}</th>
+                <th style="width:1%; white-space: nowrap;">{% translate "Finished on" %}</th>
                 <td><time datetime="{{ growlog.finished_at|date:"c" }}">{{ growlog.finished_at|date:'DATE_FORMAT' }}</time></td>
-                <th class="table-primary fit-content"></th>
+                <th style="width:1%; white-space: nowrap;"></th>
                 <td></td>
             </tr>
             {% endif %}
@@ -330,51 +281,21 @@
 <div class="alert alert-warning" role="alert">
     {% translate "These notes are only visible to you!" %}
 </div>
-<div>
-    <button type="button" class="btn btn-sm btn-outline-primary mb-3"
-        hx-get="{% url 'grow:hx-growlog-edit-notes' pk=growlog.id %}"
-        hx-target="#modals-here"
-        hx-swap="innerHTML"
-        data-bs-target="#modals-here"
-        data-bs-toggle="modal"
-    ><span data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Edit Personal Notes' %}">
-        <i class="bi bi-pencil-square"></i> {% translate "Edit Personal Notes" %}
-    </span></button>
-</div>
-
 <div id="growlog-notes">{% include notes_template %}</div>
 
 {% endif %}
 
 <h2 id="description">{% translate "Description" %}</h2>
-<button type="button" class="btn btn-sm btn-outline-primary mb-3"
-    hx-get="{% url 'grow:hx-growlog-edit-description' pk=growlog.id %}"
-    hx-target="#modals-here"
-    hx-swap="innerHTML"
-    data-bs-target="#modals-here"
-    data-bs-toggle="modal"
-><span data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Edit Description' %}">
-    <i class="bi bi-pencil-square"></i> {% translate "Edit Description" %}
-</span></button>
-
 <div id="growlog-description">{% include description_template %}</div>
 
 <h2 id="entries">{% translate "Entries" %}</h2>
 {% if can_edit %}
 <div class="mb-3">
-    <button
-        type="button"
-        class="btn btn-outline-primary btn-sm"
-        hx-get="{% url 'grow:hx-growlog-entry-create' growlog_pk=growlog.id %}?gle_p={{ entries_paginator.current_page }}&gle_pgn={{ entries_paginator.paginate.by }}"
-        hx-target="#modals-here"
-        hx-swap="innerHTML"
-        data-bs-target="#modals-here"
-        data-bs-toggle="modal"
-    >
-        <span data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="{% translate 'Create a new Grow Log Entry with current timestamp' %}">
-            <i class="bi bi-plus-square me-2"></i>{% translate "Create new entry" %}
-        </span>
-    </button>
+    <p>
+        <a
+            href="{% url 'grow:growlog-entry-create' growlog_pk=growlog.id %}?gle_p={{ entries_paginator.current_page }}&gle_pgn={{ entries_paginator.paginate.by }}"
+        >{% translate "Create new entry" %}</a>
+    </p>
 </div>
 {% endif %}
 <div id="growlog-entries">

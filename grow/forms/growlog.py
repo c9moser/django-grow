@@ -192,3 +192,30 @@ class GrowlogPermissionUpdateForm(forms.ModelForm):
         fields = [
             'permission_data',
         ]
+
+
+class GrowlogEntriesViewForm(forms.Form):
+
+    filter = forms.ChoiceField(
+        label=_("Filter"),
+        choices=[
+            ('all', _("All entries")),
+            ('germinating', _("Germinating stage")),
+            ('vegetative', _("Vegetative stage")),
+            ('flowering', _("Flowering stage")),
+            ('harvested', _("Harvested")),
+            ('finished', _("Finished")),
+        ],
+        required=False,
+        initial='all'
+    )
+
+    ordering = forms.ChoiceField(
+        label=_("Ordering"),
+        choices=[
+            ('asc', _("Oldest first")),
+            ('desc', _("Newest first")),
+        ],
+        required=False,
+        initial='desc'
+    )

@@ -1,12 +1,18 @@
 from django.conf import settings
 from .growapi.settings import *  # noqa
 
-USE_BOOTSTRAP = getattr(settings, "USE_BOOTSTRAP", True)
-BASE_TEMPLATE = getattr(settings, "BASE_TEMPLATE", "grow/bs_base.html") # if USE_BOOTSTRAP else "grow/base.html")
-LOGIN_REQUIRED = getattr(settings, "LOGIN_REQUIRED", False)
-GROW_SITE_TITLE = getattr(settings, "GROW_SITE_TITLE", getattr(settings, "SITE_TITLE", "Grow"))
-GROW_HEAD_TITLE = getattr(settings, "GROW_HEAD_TITLE", getattr(settings, "HEAD_TITLE", GROW_SITE_TITLE))
-GROW_IS_MAIN_APP = getattr(settings, "GROW_IS_MAIN_APP", False)
+USE_BOOTSTRAP = getattr(settings, 'USE_BOOTSTRAP', True)
+BASE_TEMPLATE = getattr(
+    settings,
+    'GROW_BASE_TEMPLATE',
+    getattr(settings,
+            'BASE_TEMPLATE',
+            'grow/bootstrap/base.html' if USE_BOOTSTRAP else 'grow/html/base.html')
+)
+LOGIN_REQUIRED = getattr(settings, 'LOGIN_REQUIRED', False)
+GROW_SITE_TITLE = getattr(settings, 'GROW_SITE_TITLE', getattr(settings, 'SITE_TITLE', 'Grow'))
+GROW_HEAD_TITLE = getattr(settings, 'GROW_HEAD_TITLE', getattr(settings, 'HEAD_TITLE', GROW_SITE_TITLE))
+GROW_IS_MAIN_APP = getattr(settings, 'GROW_IS_MAIN_APP', False)
 
 GROW_BUILTIN_BREEDER_TEMPLATES = {
     'grow/breeder': 'grow/html/breeder/index.html',
@@ -210,7 +216,7 @@ GROW_BUILTIN_GROWLOG_TEMPLATES = {
 GROW_BUILTIN_BS_GROWLOG_TEMPLATES = {
     'grow/growlog/create': GROW_BUILTIN_GROWLOG_TEMPLATES['grow/growlog/create'],
     'grow/growlog/delete': GROW_BUILTIN_GROWLOG_TEMPLATES['grow/growlog/delete'],
-    'grow/growlog/detail': GROW_BUILTIN_GROWLOG_TEMPLATES['grow/growlog/detail'],
+    'grow/growlog/detail': 'grow/bootstrap/growlog/growlog/detail.html',
     'grow/growlog/update': GROW_BUILTIN_GROWLOG_TEMPLATES['grow/growlog/update'],
     'grow/growlog/form': GROW_BUILTIN_GROWLOG_TEMPLATES['grow/growlog/form'],
 
