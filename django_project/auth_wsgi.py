@@ -28,8 +28,9 @@ os.environ['DJANGO_SETTINGS_MODULE'] = os.environ.get(
     'DJANGO_SETTINGS_MODULE', 'django_project.settings')
 
 # Import and setup Django
-import django
+import django  # noqa: E402
 django.setup()
+
 
 def __get_apache_keys_(environ):
     user_key = APACHE_USER_KEY

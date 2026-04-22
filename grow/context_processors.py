@@ -51,4 +51,5 @@ def grow(request: HttpRequest) -> dict[str, Any]:
         'GROW_IS_MAIN_APP': settings.GROW_IS_MAIN_APP,
         'grow_paginate': paginate,
         'growlog_paginate': growlog_paginate,
+        'DEBUG': settings.settings.DEBUG,
     }
