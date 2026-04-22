@@ -249,6 +249,11 @@ class HxGrowlogEntriesView(BaseView):
             logger.warning(f"Invalid entries ordering parameter: {entries_ordering}. Defaulting to {default_ordering}.")  # noqa: E501
             entries_ordering = default_ordering
 
+        if entries_ordering == 'asc':
+            entries = entries.order_by('timestamp')
+        else:
+            entries = entries.order_by('-timestamp')
+
         entries_paginator = QuerySetPaginator(
             entries,
             url_path='grow:hx-growlog-entries',
@@ -310,6 +315,7 @@ class HxGrowlogEntriesView(BaseView):
         else:
             print(f"Invalid form data: {form.errors}")
             return render(request, self.template_name, self.get_context_data(), status=400)
+
 
 class HxGrowlogPermissionsUpdateView(View):
     template_name = GROW_TEMPLATES['grow/growlog/growlog/hx/permission_update']
