@@ -10,7 +10,7 @@
                     <a class="text-decoration-none link-body-emphasis"
                     href="#"
                     hx-target="{{ hx_target }}"
-                    hx-get="{% url 'grow:hx-growlog-entries' growlog_pk=growlog.pk %}?gle_pgn={{ growlog_entries_paginator.paginate_by }}&gle_pg={{ growlog_entries_paginator.current_page }}&gle_ord={% if growlog_entries_ordering == 'asc' %}desc{% else %}asc{% endif %}"
+                    hx-get="{% url 'grow:hx-growlog-entries' growlog_pk=growlog.pk %}?gle_pgn={{ growlog_entries_paginator.paginate_by }}&gle_pg={{ growlog_entries_paginator.current_page }}&gle_ord={% if growlog_entries_ordering == 'asc' %}desc{% else %}asc{% endif %}&gle_filter={{ growlog_entries_filter }}"
                     >
                         {% translate "Growlog entries" %}
                         <i class="ms-2 bi {% if growlog_entries_ordering == 'asc' %}bi-caret-down-fill{% else %}bi-caret-up-fill{% endif %}"></i>
