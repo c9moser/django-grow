@@ -79,3 +79,17 @@ th.fit-content * {
     --bs-link-hover-color: #a3c9ff;
 }
 */
+
+ p {
+    text-align:justify;
+}
+
+.dropdown-submenu {
+    position: relative;
+}
+
+.dropdown-submenu .dropdown-menu {
+    top: 0;
+    left: 110%;
+    margin-top: -1px;
+}

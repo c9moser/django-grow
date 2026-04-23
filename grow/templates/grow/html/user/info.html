@@ -78,7 +78,9 @@
 <h2 id="my-growlogs">{% translate "My grow logs" %}</h2>
 <a class="btn btn-sm btn-outline-primary mb-3" href="{% url 'grow:growlog-create' %}"><i class="bi bi-journal-plus"></i> {% translate "Create new grow log" %}</a>
 <p>
-
+    <a href="{% url 'grow:my-growlogs' %}" class="link-info"><i class="bi bi-arrow-right"></i> {% translate "Go to my grow logs" %}</a>
+</p>
+<p>
 {% blocktranslate count n=n_growlogs %}You currently have one grow log.{% plural %}You currently have {{ n }} grow logs.{% endblocktranslate %}
 {% blocktranslate count n=n_finished_growlogs %}One of them is finished.{% plural %}{{ n }} of them are finished.{% endblocktranslate %}
 {% blocktranslate count n=n_active_growlogs %}One of them is still active.{% plural %}{{ n }} of them are still active.{% endblocktranslate %}
@@ -94,6 +96,5 @@
     {% include finished_growlogs_template %}
 {% endwith %}
 </div>
-
 </main>
 {% endblock content%}

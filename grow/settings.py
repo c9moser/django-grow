@@ -170,6 +170,7 @@ GROW_BUILTIN_BS_SIS_TEMPLATES = {
 }
 
 GROW_BUILTIN_GROWLOG_TEMPLATES = {
+    'grow/growlog/index': 'grow/html/growlog/index.html',
     'grow/growlog/create': 'grow/html/growlog/growlog/create.html',
     'grow/growlog/delete': 'grow/html/growlog/growlog/delete.html',
     'grow/growlog/detail': 'grow/html/growlog/growlog/detail.html',
@@ -214,6 +215,7 @@ GROW_BUILTIN_GROWLOG_TEMPLATES = {
 }
 
 GROW_BUILTIN_BS_GROWLOG_TEMPLATES = {
+    'grow/growlog/index': GROW_BUILTIN_GROWLOG_TEMPLATES['grow/growlog/index'],
     'grow/growlog/create': GROW_BUILTIN_GROWLOG_TEMPLATES['grow/growlog/create'],
     'grow/growlog/delete': GROW_BUILTIN_GROWLOG_TEMPLATES['grow/growlog/delete'],
     'grow/growlog/detail': 'grow/bootstrap/growlog/growlog/detail.html',

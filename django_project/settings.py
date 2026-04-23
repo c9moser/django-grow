@@ -301,9 +301,9 @@ else:
 del _local_settings_path
 
 if USE_BOOTSTRAP:
-    BASE_TEMPLATE = "grow/bs_base.html"
+    BASE_TEMPLATE = "grow/bootstrap/base.html"
 else:
-    BASE_TEMPLATE = "grow/base.html"
+    BASE_TEMPLATE = "grow/html/base.html"
 
 if DEBUG:
     third_party_apps.insert(0, 'django_browser_reload')

@@ -1,0 +1,41 @@
+{% include i18n grow %}
+
+{% block content %}
+<main>
+<h2>{% translate "Growlogs" %}</h2>
+<table style="width: 100%;">
+    <thead>
+        <tr>
+            <th>{% translate "Name" %}</th>
+            <th>{% translate "Grower" %}</th>
+            <th>{% translate "Created at" %}</th>
+            <th>{% translate "Updated at" %}</th>
+            <th>{% translate "Duration" %}</th>
+            <th>{% translate "Strains" %}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for growlog in growlogs %}
+        <tr>
+            <td><a href="{% url 'grow:growlog:detail' growlog.id %}">{{ growlog.name }}</a></td>
+            <td><a href="#{# url 'grow:grower/<int:pk>/ #}">{% translate "Grower" %}</a></td>
+            <td>{{ growlog.created_at }}</td>
+            <td>{{ growlog.updated_at }}</td>
+            <td>{{ growlog.duration }}</td>
+            <td>
+                <ul style="margin: 0; padding-left: 0; list-style: none;">
+                {% for strain in growlog.strains.all %}
+                    <li>
+                        <a href="{% url 'grow:strain-detail' breeder_slug=strain.breeder.slug slug=strain.slug %}">{{ strain.name }}</a>
+                        (<a href="{% url 'grow:breeder-detail' slug=strain.breeder.slug %}">{{ strain.breeder.name }}</a>)
+                    </li>
+                {% endfor %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="3">{% translate "No growlogs found." %}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</main>

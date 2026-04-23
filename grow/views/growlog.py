@@ -156,6 +156,9 @@ class HxGrowlogEntriesView(BaseView):
             ('all', _('All')),
         ]
         has_unknonwn_filter = False
+        today = timezone.now().date()
+        tomorrow = today + timezone.timedelta(days=1)
+
         unknown_end_date = (
             self.growlog.germinating_at
             or self.growlog.cutted_at
@@ -163,8 +166,9 @@ class HxGrowlogEntriesView(BaseView):
             or self.growlog.flowering_at
             or self.growlog.harvested_at
             or self.growlog.finished_at
+            or tomorrow
         )  # noqa: E501
-        if self.growlog.entries.filter(timestamp__date__lt=unknown_end_date).exists():
+        if self.growlog.entries.filter(timestamp__date__lte=unknown_end_date).exists():
             has_unknonwn_filter = True
             gle_filters.append(('unknown', _('Unknown')))
         if self.growlog.germinating_at:
@@ -191,10 +195,10 @@ class HxGrowlogEntriesView(BaseView):
                 or self.growlog.cutted_at
                 or self.growlog.harvested_at
                 or self.growlog.finished_at
-                or timezone.now().date()
+                or tomorrow
             )
             entries = self.growlog.entries.filter(timestamp__date__gte=self.growlog.germinating_at,
-                                                  timestamp__date__lte=end_date)
+                                                  timestamp__date__lt=end_date)
         elif filter in ['rooting', 'r', 'root'] and self.growlog.cutted_at:
             filter = 'rooting'
             end_date = (
@@ -202,29 +206,29 @@ class HxGrowlogEntriesView(BaseView):
                 or self.growlog.flowering_at
                 or self.growlog.harvested_at
                 or self.growlog.finished_at
-                or timezone.now().date()
+                or tomorrow
             )
             entries = self.growlog.entries.filter(timestamp__date__gte=self.growlog.cutted_at,
-                                                  timestamp__date__lte=end_date)
+                                                  timestamp__date__lt=end_date)
         elif filter in ['vegetative', 'v', 'veg'] and self.growlog.vegetative_at:
             filter = 'vegetative'
             end_date = (
                 self.growlog.flowering_at
                 or self.growlog.harvested_at
                 or self.growlog.finished_at
-                or timezone.now().date()
+                or tomorrow
             )
             entries = self.growlog.entries.filter(timestamp__date__gte=self.growlog.vegetative_at,
-                                                  timestamp__date__lte=end_date)
+                                                  timestamp__date__lt=end_date)
         elif filter in ['flowering', 'f', 'flow'] and self.growlog.flowering_at:
             filter = 'flowering'
             end_date = (
                 self.growlog.harvested_at
                 or self.growlog.finished_at
-                or timezone.now().date()
+                or tomorrow
             )
             entries = self.growlog.entries.filter(timestamp__date__gte=self.growlog.flowering_at,
-                                                  timestamp__date__lte=end_date)
+                                                  timestamp__date__lt=end_date)
         elif filter in ['harvested', 'h', 'harv'] and self.growlog.harvested_at:
             filter = 'harvested'
             end_date = self.growlog.finished_at or timezone.now().date()
@@ -235,7 +239,17 @@ class HxGrowlogEntriesView(BaseView):
             entries = self.growlog.entries.filter(timestamp__date__gte=self.growlog.finished_at)
         elif filter in ['unknown', 'u', 'unk'] and has_unknonwn_filter:
             filter = 'unknown'
-            entries = self.growlog.entries.filter(timestamp__date__lt=end_date)
+            entries = self.growlog.entries.filter(timestamp__date__lt=tomorrow).exclude(
+                timestamp__date__gte=self.growlog.germinating_at,
+                timestamp__date__lt=(
+                    self.growlog.vegetative_at
+                    or self.growlog.flowering_at
+                    or self.growlog.cutted_at
+                    or self.growlog.harvested_at
+                    or self.growlog.finished_at
+                    or tomorrow
+                )
+            )
         else:
             logger.warning(f"Invalid filter parameter for growlog entries: {filter}. Defaulting to all.")  # noqa: E501
             filter = 'all'
