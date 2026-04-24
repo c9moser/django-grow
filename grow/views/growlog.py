@@ -1949,6 +1949,7 @@ class GrowlogEntryUpdateImageView(LoginRequiredMixin, FormView):
         kwargs.setdefault('image', self.image)
         kwargs.setdefault('entry', self.entry)
         kwargs.setdefault('growlog', self.growlog)
+        self.filter = 'all'
 
         context = FormView.get_context_data(
             self,
