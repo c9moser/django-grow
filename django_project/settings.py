@@ -298,6 +298,13 @@ else:
     if (_local_settings_path / 'settings_prod.py').exists():
         from .local.settings_prod import *  # noqa
 
+if (_local_settings_path / 'secret_key.py').exists():
+    from .local import secret_key
+    if hasattr(secret_key, 'SECRET_KEY'):
+        SECRET_KEY = secret_key.SECRET_KEY
+    if hasattr(secret_key, 'SECRET_KEY_FALLBACKS'):
+        SECRET_KEY_FALLBACKS = secret_key.SECRET_KEY_FALLBACKS
+
 del _local_settings_path
 
 if USE_BOOTSTRAP:
