@@ -19,6 +19,7 @@ dependencies = [
     "django-tinywiki @ git+https://git.cmoser.eu/tinytools/django-tinywiki.git",
     "psycopg2 (>=2.9.11,<3.0.0)",
     "djangorestframework (>=3.17.1,<4.0.0)",
+    "django-invitations (>=2.1.0,<3.0.0)",
 ]
 
 [tool.poetry]
