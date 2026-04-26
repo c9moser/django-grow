@@ -147,7 +147,10 @@ class HxGrowlogEntriesView(BaseView):
                         'gle_flt',
                         self.request.GET.get(
                             'filter',
-                            self.request.GET.get('f', self.default_growlog_entries_filter)
+                            self.request.GET.get('f',
+                                                 getattr(self,
+                                                         'default_growlog_entries_filter',
+                                                         'all'))
                         )
                     )
                 )
