@@ -17,8 +17,8 @@ APACHE_PASS_KEY = u"pw"
 BASE_DIR = Path(__file__).resolve().parent.parent
 venv_dir = Path(
     os.environ.get(
-        'GROW_VIRUTAL_ENV',
-        os.environ.get('VIRTUAL_ENV', BASE_DIR / 'venv')
+        'GROW_VIRTUAL_ENV',
+        os.environ.get('VIRTUAL_ENV', BASE_DIR / '.venv')
     )
 ).resolve()
 
