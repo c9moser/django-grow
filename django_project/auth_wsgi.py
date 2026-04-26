@@ -32,7 +32,7 @@ if venv_dir.exists():
             / 'site-packages'
         )
     )
-
+sys.path.insert(0, str(BASE_DIR))
 
 os.environ['DJANGO_SETTINGS_MODULE'] = os.environ.get(
     'DJANGO_SETTINGS_MODULE', 'django_project.settings')
