@@ -1031,10 +1031,10 @@ class Growlog(models.Model):
                     htaccess_file.write(f"Require user {self.grower.username}\n")
                 elif self.permission == PermissionType.FRIENDS_ONLY:
                     htaccess_file.write("Require valid-user\n")
-                    htaccess_file.write(f"Require group grow-u{self.grower.id}-friends\n")
+                    htaccess_file.write(f"Require wsgi-group grow-u{self.grower.id}-friends\n")
                 elif self.permission == PermissionType.MEMBERS_ONLY:
                     htaccess_file.write("Require valid-user\n")
-                    htaccess_file.write("Require group grow-member\n")
+                    htaccess_file.write("Require wsgi-group grow-member\n")
                 elif self.permission == PermissionType.PUBLIC:
                     htaccess_file.write("Require all granted\n")
 
