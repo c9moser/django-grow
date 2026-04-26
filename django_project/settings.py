@@ -39,6 +39,7 @@ env = Env(
     TIME_ZONE=(str, 'UTC'),
     LANGUAGE_CODE=(str, 'en-us'),
     ALLOW_SIGNUP=(bool, True),
+    INVITATIONS_INVITATION_ONLY=(bool, False),
     ADMIN_URL=(str, "admin/"),
     ACCOUNT_LOGIN_METHODS=(list, ['email']),
     LOGIN_REQUIRED=(bool, False),
@@ -120,6 +121,7 @@ third_party_apps = [
     'allauth.socialaccount.providers.steam',
     'rest_framework',
     'widget_tweaks',
+    'invitations',
 ]
 
 project_apps = [
@@ -234,6 +236,8 @@ EMAIL_HOST_USER = env('GROW_EMAIL_HOST_USER', default=env('EMAIL_HOST_USER'))
 EMAIL_HOST_PASSWORD = env('GROW_EMAIL_HOST_PASSWORD', default=env('EMAIL_HOST_PASSWORD'))
 
 # Allauth settings
+ACCOUNT_ADAPTER = 'invitations.models.InvitationsAdapter'
+INVITATIONS_ADAPTER = ACCOUNT_ADAPTER  # Use the same adapter for invitations
 ACCOUNT_SIGNUP_FIELDS = [
     'username*',
     'email*',

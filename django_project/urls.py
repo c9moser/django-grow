@@ -22,6 +22,7 @@ from django.conf.urls.i18n import i18n_patterns
 
 locale_patterns = [
         path('accounts/', include('allauth.urls')),
+        path('invitations/', include('invitations.urls', namespace='invitations')),
         path('', include('grow.urls')),
         path('', include('core.urls')),
 ]
