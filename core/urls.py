@@ -21,7 +21,7 @@ urlpatterns = [
     path("__hx__/password/", HxPasswordView.as_view(), name="hx_password"),
 ]
 
-if settings.APACHE_AUTH_ENABLED or not settings.APACHE_AUTH_ENABLED:
+if settings.APACHE_AUTH_ENABLED:
     from .views.apache import ApacheLoginView
     a2login_url = settings.APACHE_AUTH_LOGIN_URL.lstrip('/')
     urlpatterns += [
