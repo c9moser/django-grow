@@ -57,7 +57,7 @@ class HxGrowlogEntriesView(BaseView):
     template_name = GROW_TEMPLATES['grow/growlog/growlog/hx/entries']
     update_page_url = True
     hx_target = '#growlog-entries'
-    filter = 'all'
+    default_growlog_entries_filter = 'all'
     urlvars = {
         'growlog_entries_page': 'gle_pg',
         'growlog_entries_filter': 'gle_filter',
@@ -147,7 +147,7 @@ class HxGrowlogEntriesView(BaseView):
                         'gle_flt',
                         self.request.GET.get(
                             'filter',
-                            self.request.GET.get('f', self.filter)
+                            self.request.GET.get('f', self.default_growlog_entries_filter)
                         )
                     )
                 )
