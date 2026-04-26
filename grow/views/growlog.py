@@ -302,7 +302,7 @@ class HxGrowlogEntriesView(BaseView):
             self.hx_target if hasattr(self, 'hx_target') else '#growlog-entries'
         )
 
-        print("HxGrowlogEntriesView: page={entries_page}, paginate_by={entries_paginate_by}, total_entries={total_entries}".format(  # noqa: E501
+        logger.debug("HxGrowlogEntriesView: page={entries_page}, paginate_by={entries_paginate_by}, total_entries={total_entries}".format(  # noqa: E501
                         entries_page=entries_page,
                         entries_paginate_by=entries_paginate_by,
                         total_entries=entries.count()
@@ -330,7 +330,7 @@ class HxGrowlogEntriesView(BaseView):
 
             return render(request, self.template_name, self.get_context_data())
         else:
-            print(f"Invalid form data: {form.errors}")
+            logger.warning(f"Invalid form data: {form.errors}")
             return render(request, self.template_name, self.get_context_data(), status=400)
 
 
