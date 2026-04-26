@@ -6,7 +6,7 @@ from core.settings import (
 )
 
 
-if APACHE_AUTH_ENABLED:
+if APACHE_AUTH_ENABLED or not APACHE_AUTH_ENABLED:
     class ApacheLoginView(View):
         def get(self, request):
             if request.user.is_authenticated:
