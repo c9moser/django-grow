@@ -102,6 +102,8 @@ def check_password(environ, username, password):
     Returns True if user has active Django session, False otherwise.
     Apache passes username and password; we verify the session exists.
     """
+    print(f"Checking password for user: {username}")
+
     s = __get_session_(environ)
     if s is None:
         return False
