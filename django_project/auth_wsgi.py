@@ -10,6 +10,8 @@ import sys
 import os
 from pathlib import Path
 
+print("-" * 80, file=sys.stderr)
+
 APACHE_AUTH_KEY = u"Restricted Access"
 APACHE_USER_KEY = u"user"
 APACHE_PASS_KEY = u"pw"
@@ -102,7 +104,7 @@ def check_password(environ, username, password):
     Returns True if user has active Django session, False otherwise.
     Apache passes username and password; we verify the session exists.
     """
-    print(f"Checking password for user: {username}")
+    print(f"Checking password for user: {username}", file=sys.stderr)
 
     s = __get_session_(environ)
     if s is None:

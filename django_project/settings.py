@@ -60,7 +60,6 @@ env = Env(
     APACHE_AUTH_LOGIN_ACTION_URL=(str, '/accounts/do-a2login/'),
 )
 
-print('APACHE_AUTH_LOGIN_ACTION_URL', os.environ.get('APACHE_AUTH_LOGIN_ACTION_URL', 'Not set'))
 # SECURITY WARNING: don't run with debug turned on in production!
 
 
