@@ -1,0 +1,27 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Apache Login</title>
+    </head>
+    <body>
+
+        <form method="post" action="{{ url_for('login') }}" action={% if action %}{{ action }}{% else %}"/auth/a2login/"{% endif %}>
+            {% csrf_token %}
+            <div class="form-group mb-3">
+                <label for="httpd_username">Username</label>
+                <input type="text" class="form-control" id="httpd_username" name="httpd_username" value="{{ request.user.username }}" required>
+            </div>
+            <div class="form-group mb-3">
+                <label for="httpd_password">Password</label>
+                <input type="password" class="form-control" id="httpd_password" name="httpd_password" value="htpasswd" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100" id="login_button">Login</button>
+        </form>
+        <script>
+            $(document).ready(function() {
+                $('#login_button').click();
+            });
+        </script>
+    </body>
+</html>

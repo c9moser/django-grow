@@ -1,5 +1,7 @@
 from django.urls import path
 
+from core import settings
+
 from .views.user import (
     ProfileView,
     ProfileEditView,
@@ -9,6 +11,7 @@ from .views.user import (
     HxPasswordView,
 )
 
+from .views.apache import ApacheLoginView
 
 app_name = "core"
 urlpatterns = [
@@ -18,3 +21,8 @@ urlpatterns = [
     path("__hx__/account/", HxAccountView.as_view(), name="hx_account"),
     path("__hx__/password/", HxPasswordView.as_view(), name="hx_password"),
 ]
+
+if settings.APACHE_AUTH_ENABLED:
+    urlpatterns += [
+        path(settings.APACHE_AUTH_LOGIN_URL, ApacheLoginView.as_view(), name="a2login"),
+    ]

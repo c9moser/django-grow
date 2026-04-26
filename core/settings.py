@@ -14,3 +14,8 @@ AGE_GATE_MINIMUM_AGE = getattr(settings, 'AGE_GATE_MINIMUM_AGE', 18)
 AGE_GATE_REJECTED_URL = getattr(settings, 'AGE_GATE_REJECTED_URL', '/age-gate/')
 COOKIES_CONSENT_REQUIRED = getattr(settings, 'COOKIES_CONSENT_REQUIRED', False)
 COOKIES_CONSENT_NAME = getattr(settings, 'COOKIES_CONSENT_NAME', 'cookies_consent')
+
+APACHE_AUTH_ENABLED = getattr(settings, 'APACHE_AUTH_ENABLED', False)
+APACHE_AUTH_USERNAME_HEADER = getattr(settings, 'APACHE_AUTH_USERNAME_HEADER', 'HTTP_X_REMOTE_USER')
+APACHE_AUTH_LOGIN_URL = getattr(settings, 'APACHE_AUTH_LOGIN_URL', '/accounts/a2login/')
+APACHE_AUTH_LOGIN_ACTION_URL = getattr(settings, 'APACHE_AUTH_LOGIN_ACTION_URL', '/accounts/do-a2login/')

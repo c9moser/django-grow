@@ -15,13 +15,23 @@ APACHE_USER_KEY = u"user"
 APACHE_PASS_KEY = u"pw"
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-sys.path.insert(0, Path(os.environ.get("GROW_VENV",
-                                       str(BASE_DIR / ".venv"))
-                        ).resolve()
-                / "lib"
-                / f"python{sys.version_info.major}.{sys.version_info.minor}"
-                / "site-packages")
-sys.path.insert(0, str(BASE_DIR))
+venv_dir = Path(
+    os.environ.get(
+        'GROW_VIRUTAL_ENV',
+        os.environ.get('VIRTUAL_ENV', BASE_DIR / 'venv')
+    )
+).resolve()
+
+if venv_dir.exists():
+    sys.path.insert(
+        0,
+        str(
+            venv_dir
+            / 'lib'
+            / f'python{sys.version_info.major}.{sys.version_info.minor}'
+            / 'site-packages'
+        )
+    )
 
 
 os.environ['DJANGO_SETTINGS_MODULE'] = os.environ.get(

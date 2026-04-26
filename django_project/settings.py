@@ -52,6 +52,12 @@ env = Env(
     AGE_GATE_MINIMUM_AGE=(int, 18),
     AGE_GATE_REJECTED_URL=(str, '/age-gate/'),
     SESSION_COOKIE_NAME=(str, 'grow_sessionid'),
+
+    # Apache auth settings
+    APACHE_AUTH_ENABLED=(bool, False),
+    APACHE_AUTH_USERNAME_HEADER=(str, 'HTTP_X_REMOTE_USER'),
+    APACHE_AUTH_LOGIN_URL=(str, '/accounts/a2login/'),
+    APACHE_AUTH_LOGIN_ACTION_URL=(str, '/accounts/do-a2login/'),
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -285,6 +291,13 @@ COOKIES_CONSENT_REQUIRED = env.bool('GROW_COOKIES_CONSENT_REQUIRED', default=env
 COOKIES_CONSENT_NAME = env('GROW_COOKIES_CONSENT_NAME', default=env('COOKIES_CONSENT_NAME'))
 SESSION_COOKIE_NAME = env('GROW_SESSION_COOKIE_NAME', default=env('SESSION_COOKIE_NAME'))
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+
+
+# Apache auth settings
+APACHE_AUTH_ENABLED = env.bool('APACHE_AUTH_ENABLED')
+APACHE_AUTH_USERNAME_HEADER = env('APACHE_AUTH_USERNAME_HEADER')
+APACHE_AUTH_LOGIN_URL = env('APACHE_AUTH_LOGIN_URL')
+APACHE_AUTH_LOGIN_ACTION_URL = env('APACHE_AUTH_LOGIN_ACTION_URL')
 
 # load local config
 _local_settings_path = BASE_DIR / 'django_project' / 'local'
