@@ -11,8 +11,6 @@ from .views.user import (
     HxPasswordView,
 )
 
-from .views.apache import ApacheLoginView
-
 app_name = "core"
 urlpatterns = [
     path("me/", ProfileView.as_view(), name="user"),
@@ -23,6 +21,7 @@ urlpatterns = [
 ]
 
 if settings.APACHE_AUTH_ENABLED:
+    from .views.apache import ApacheLoginView
     urlpatterns += [
         path(settings.APACHE_AUTH_LOGIN_URL, ApacheLoginView.as_view(), name="a2login"),
     ]
