@@ -5,8 +5,8 @@ from .models import User
 
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
-    list_display = ('id', 'email', 'username', 'first_name', 'last_name', 'is_staff')
-    search_fields = ('id', 'email', 'username', 'first_name', 'last_name')
+    list_display = ('email', 'username', 'id', 'first_name', 'last_name', 'is_staff')
+    search_fields = ('email', 'username', 'id', 'first_name', 'last_name')
     readonly_fields = ('last_login', 'date_joined')
     fieldsets = BaseUserAdmin.fieldsets + (
     )
