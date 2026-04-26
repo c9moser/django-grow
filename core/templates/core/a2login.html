@@ -6,7 +6,7 @@
     </head>
     <body>
 
-        <form method="post" action="{{ url_for('login') }}" action={% if action %}{{ action }}{% else %}"/auth/a2login/"{% endif %}>
+        <form method="post" action="{% if action %}{{ action }}{% else %}/auth/do-a2login/{% endif %}">
             {% csrf_token %}
             <div class="form-group mb-3">
                 <label for="httpd_username">Username</label>
