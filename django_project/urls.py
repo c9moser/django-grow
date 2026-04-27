@@ -33,6 +33,8 @@ urlpatterns = [
 
 if settings.ADMIN_URL:
     urlpatterns.insert(0, path(settings.ADMIN_URL, admin.site.urls))
+else:
+    urlpatterns.insert(0, path('admin/', admin.site.urls))
 
 if settings.INCLUDE_WIKI:
     locale_patterns.append(path('wiki/', include('tinywiki.urls')))

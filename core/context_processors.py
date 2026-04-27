@@ -10,6 +10,16 @@ def core(request: HttpRequest):
                                    and settings.AGE_GATE_NAME not in request.COOKIES)
 
     age_gate_confirmed = request.COOKIES.get(settings.AGE_GATE_NAME, 'false') == 'true'
+
+    if not request.user.is_staff:
+        admin_url = '#'
+    else:
+        admin_url = settings.ADMIN_URL if settings.ADMIN_URL else 'admin/'
+        if admin_url and not admin_url.startswith('/'):
+            admin_url = '/' + admin_url
+        if admin_url and not admin_url.endswith('/'):
+            admin_url += '/'
+
     return {
         'allow_signup': settings.ALLOW_SIGNUP,
         'include_wiki': settings.INCLUDE_WIKI,
@@ -22,4 +32,5 @@ def core(request: HttpRequest):
         'age_gate_name': settings.AGE_GATE_NAME,
         'age_gate_minimum_age': settings.AGE_GATE_MINIMUM_AGE,
         'age_gate_rejected_url': settings.AGE_GATE_REJECTED_URL,
+        'admin_url': admin_url,
     }

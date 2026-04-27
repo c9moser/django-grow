@@ -298,6 +298,15 @@
                                         {% translate "Settings" %}
                                     </a>
                                 </li>
+                                {% if user.is_staff %}
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ admin_url }}">
+                                        <i class="bi bi-shield-lock"></i>
+                                        {% translate "Site Admin" %}
+                                    </a>
+                                </li>
+                                {% endif %}
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
                                     <form class=""
