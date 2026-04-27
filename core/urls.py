@@ -2,6 +2,7 @@ from django.urls import path
 
 from core import settings
 
+
 from .views.user import (
     ProfileView,
     ProfileEditView,
@@ -25,5 +26,5 @@ if settings.APACHE_AUTH_ENABLED:
     from .views.apache import ApacheLoginView
     a2login_url = settings.APACHE_AUTH_LOGIN_URL.lstrip('/')
     urlpatterns += [
-        path(a2login_url, ApacheLoginView.as_view(), name="a2login"),
+        path("accounts/a2login/", ApacheLoginView.as_view(), name="a2login"),
     ]
