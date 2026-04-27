@@ -28,7 +28,7 @@
 {% blocktranslate %}If you have an account, you can log in to see your growlogs and the growlogs of other users. If you don't have an account, you can create one for free if the site allows it.{% endblocktranslate %}
 </p>
 
-{% if grow_show_legal_disclaimer %}
+{% if grow_show_legal_disclaimer|default:True %}
 <p>
 {% blocktranslate %}By using this site, you agree to our terms and conditions and privacy policy. You also accept our cookies policy.{% endblocktranslate %}
 </p>
@@ -42,7 +42,7 @@
 <p>
 {% blocktranslate %}We are not providing any medical advice. The information on this site is for educational and entertainment purposes only. Always consult a qualified healthcare professional for medical advice related to cannabis use.{% endblocktranslate %}
 </p>
-{% endif %}
+
 <div class="alert alert-warning mb-3">
     <ol>
         <li>{% blocktranslate %}We are not selling cannabis products, seeds, or any other related items. Using this site for selling such items is strictly prohibited and leads to account suspension.{% endblocktranslate %}</li>
@@ -56,9 +56,9 @@
         <li>{% blocktranslate %}By using this site, you agree to our terms and conditions, privacy policy, cookies policy, and any other policies. If you do not agree to our policies, please do not use this site or host your own instance, where your own policies would apply.{% endblocktranslate %}</li>
     </ol>
 </div>
+{% endif %}
 <div class="alert alert-danger mb-3">{% blocktranslate %}This site is in early development and may contain bugs, incomplete features, and other issues. Please report any problems you encounter to us so we can improve the site.{% endblocktranslate %}</div>
 <p>
-
 {% blocktranslate with github_url="https://github.com/c9moser/django-grow" %}Grow is a community-driven project. If you have any feedback, suggestions, or want to contribute, please visit our <a href="{{ github_url }}" target="_blank">GitHub repository</a>.{% endblocktranslate %}
 </p>
 
