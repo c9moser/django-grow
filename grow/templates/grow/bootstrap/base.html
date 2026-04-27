@@ -258,7 +258,8 @@
                     <ul class="nav navbar-collapse justify-content-end">
                     {% if not request.user.is_authenticated %}
                         <li class="nav-item">
-                            <a class="nav-link text-white" href="{% url 'account_login' %}?next={{ request.path }}">{% translate "Login" %}</a>
+
+                            <a class="nav-link text-white" href="{% url 'account_login' %}?next={{ request.path|add:"?httpd_auth_method=login"|grow_urlencode }}">{% translate "Login" %}</a>
                         </li>
                         {% if allow_signup %}
                         <li class="nav-item">
@@ -311,7 +312,7 @@
                                 <li>
                                     <form class=""
                                         method="POST"
-                                        action="{% url 'account_logout' %}">
+                                        action="{% url 'account_logout' %}?next_page={% url "grow:home" %}{{ "?httpd_auth_method=logout"|grow_urlencode }}">
                                         {% csrf_token %}
                                         <button tpye="submit" class='btn btn-link dropdown-item'>
                                             <i class="bi bi-box-arrow-left"></i>
