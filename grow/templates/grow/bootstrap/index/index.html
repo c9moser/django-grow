@@ -60,7 +60,7 @@
 {% endif %}
 <div class="alert alert-danger mb-3">{% blocktranslate %}This site is in early development and may contain bugs, incomplete features, and other issues. Please report any problems you encounter to us so we can improve the site.{% endblocktranslate %}</div>
 <p>
-{% blocktranslate with github_url="https://github.com/c9moser/django-grow" %}Grow is a community-driven project. If you have any feedback, suggestions, or want to contribute, please visit our <a href="{{ github_url }}" target="_blank">GitHub repository</a>.{% endblocktranslate %}
+{% blocktranslate with github_url="https://github.com/c9moser/django-grow" codeberg_url="https://codeberg.org/c9moser/django-grow" %}Grow is a community-driven project. If you have any feedback, suggestions, or want to contribute, please visit our <a href="{{ github_url }}" target="_blank">GitHub repository</a> or the mirrored <a href="{{ codeberg_url }}" target="_blank">Codeberg repository</a>.{% endblocktranslate %}
 </p>
 
 {% if request.user.is_authenticated %}
