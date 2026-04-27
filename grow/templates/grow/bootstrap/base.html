@@ -29,7 +29,13 @@
         <script>
             $.ajax({
                 type: 'POST',
-                async: false,  // Make the request synchronous to ensure it completes before the page loads
+                async: false,  /* Make the request synchronous to ensure it completes before the page loads
+                                * and the user can interact with the page. This causes a warning in the browser
+                                * console, but it's necessary to ensure the Apache login is completed before any
+                                * other actions are taken on the page, as Apache will rely on this login for
+                                * authentication and authorization decisions for subsequent requests. Which is
+                                * necessary to ensure proper access control for the application content like images.
+                                */
                 url: '{% if APACHE_AUTH_LOGIN_ACTION_URL %}{{ APACHE_AUTH_LOGIN_ACTION_URL }}{% else %}/accounts/do-a2login/{% endif %}',
                 data: {
                     'httpd_username': '{% if APACHE_AUTH_LOGIN_METHOD == "email" %}{{ request.user.email }}{% else %}{{ request.user.username }}{% endif %}',
@@ -57,7 +63,7 @@
         <script>
             $.ajax({
                 type: 'GET',
-                async: false,  // Make the request synchronous to ensure it completes before the page loads
+                async: true,
                 url: '{% if APACHE_AUTH_LOGOUT_URL %}{{ APACHE_AUTH_LOGOUT_URL }}{% else %}/accounts/a2logout/{% endif %}',
                 success: function() {
                     console.log('Apache logout successful');

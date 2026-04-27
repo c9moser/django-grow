@@ -349,13 +349,7 @@ class HxGrowlogPermissionsUpdateView(View):
 
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = kwargs
-        if (
-            not self.request.user.is_authenticated
-            or not growlog_user_is_allowed_to_edit(self.request.user, self.growlog)
-        ):
-            can_edit = False
-        else:
-            can_edit = True
+        can_edit = growlog_user_is_allowed_to_edit(self.request.user, self.growlog)
         context['growlog'] = self.growlog
         context.setdefault('permission_form', self.permission_form_class(instance=self.growlog))
         context.setdefault('growlog', self.growlog)
@@ -369,20 +363,20 @@ class HxGrowlogPermissionsUpdateView(View):
         return render(request, self.template_name, self.get_context_data())
 
     def post(self, request: HttpRequest, pk: int) -> HttpResponse:
-        growlog = get_object_or_404(Growlog, pk=pk)
+        self.growlog = get_object_or_404(Growlog, pk=pk)
         if (
             not request.user.is_authenticated
-            or not growlog_user_is_allowed_to_edit(request.user, growlog)
+            or not growlog_user_is_allowed_to_edit(request.user, self.growlog)
         ):
             raise PermissionDenied(_("You do not have permission to edit this growlog."))
 
-        form = GrowlogPermissionUpdateForm(request.POST, instance=growlog)
+        form = GrowlogPermissionUpdateForm(request.POST, instance=self.growlog)
         if form.is_valid():
             form.save()
-            return render(request, self.template_name, {'form': form, 'growlog': growlog})
+            return render(request, self.template_name, self.get_context_data(permission_form=form))
         else:
             return render(request, self.template_name,
-                          {'permission_form': form},
+                          self.get_context_data(),
                           status=400)
 
 
