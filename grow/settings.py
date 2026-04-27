@@ -299,14 +299,14 @@ GROW_BUILTIN_TEMPLATES.update(GROW_BUILTIN_UTILS_TEMPLATES)
 
 GROW_BUILTIN_BS_TEMPLATES = {
     #index
-    'grow/index': 'grow/html/index/index.html',
+    'grow/index': 'grow/bootstrap/index/index.html',
     # user views
-    'grow/user/hx-add_seeds_to_stock': 'grow/html/user/hx_add_seeds_to_stock.html',
-    'grow/user/hx-remove_seeds_from_stock': 'grow/html/user/hx_remove_seeds_from_stock.html',
-    'grow/user/info': 'grow/html/user/info.html',
+    'grow/user/hx-add_seeds_to_stock': GROW_BUILTIN_TEMPLATES['grow/user/hx-add_seeds_to_stock'],
+    'grow/user/hx-remove_seeds_from_stock': GROW_BUILTIN_TEMPLATES['grow/user/hx-remove_seeds_from_stock'],
+    'grow/user/info': GROW_BUILTIN_TEMPLATES['grow/user/info'],
 
     # utils
-    'grow/utils/hx_select_date_days_sanitize': 'grow/html/utils/hx_select_date_days_sanitize.html'
+    'grow/utils/hx_select_date_days_sanitize': GROW_BUILTIN_TEMPLATES['grow/utils/hx_select_date_days_sanitize']
 }
 GROW_BUILTIN_BS_TEMPLATES.update(GROW_BUILTIN_BS_BREEDER_TEMPLATES)
 GROW_BUILTIN_BS_TEMPLATES.update(GROW_BUILTIN_BS_STRAIN_TEMPLATES)
