@@ -65,6 +65,14 @@
         </script>
             {% endif %}
         {% endif %}
+        <script>
+            function remove_httpd_login_param() {
+                const url = new URL(window.location);
+                url.searchParams.delete('httpd_login');
+                url.searchParams.delete('httpd_auth_method');
+                window.history.replaceState({}, '', url);
+            }
+        </script>
 
         {% block scripts %}{% endblock scripts %}
     </head>
