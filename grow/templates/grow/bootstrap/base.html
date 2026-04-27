@@ -24,6 +24,9 @@
         <script src="{% static 'grow/js/pageurl.js' %}"></script>
 
         {% if perform_httpd_login and request.user.is_authenticated %}
+        <script>
+            console.log('Performing Apache login for user {{ request.user.username }}');
+        </script>
             {% if APACHE_AUTH_ENABLED and APACHE_AUTH_TYPE == 'form' %}
         <script>
             $.ajax({
