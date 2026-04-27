@@ -54,7 +54,7 @@
         <script>
             $.ajax({
                 type: 'GET',
-                url: '{% if APACHE_AUTH_LOGOUT_URL %}{{ APACHE_AUTH_LOGOUT_URL }}{% else %}/accounts/do-a2logout/{% endif %}',
+                url: '{% if APACHE_AUTH_LOGOUT_URL %}{{ APACHE_AUTH_LOGOUT_URL }}{% else %}/accounts/a2logout/{% endif %}',
                 success: function() {
                     console.log('Apache logout successful');
                 },
