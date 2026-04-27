@@ -24,7 +24,6 @@ urlpatterns = [
 
 if settings.APACHE_AUTH_ENABLED:
     from .views.apache import ApacheLoginView
-    a2login_url = settings.APACHE_AUTH_LOGIN_URL.lstrip('/')
     urlpatterns += [
         path("accounts/a2login/", ApacheLoginView.as_view(), name="a2login"),
     ]
