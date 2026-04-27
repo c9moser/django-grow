@@ -23,7 +23,7 @@
         <script src=" https://cdn.jsdelivr.net/npm/jquery@4.0.0/dist/jquery.min.js "></script>
         <script src="{% static 'grow/js/pageurl.js' %}"></script>
 
-        <script>var requestPageReaload = false;</script>
+        <script>var requestPageReload = false;</script>
         {% if perform_httpd_login and request.user.is_authenticated %}
 
             {% if APACHE_AUTH_ENABLED and APACHE_AUTH_TYPE == 'form' %}
@@ -44,7 +44,7 @@
                 },
                 success: function() {
                     console.log('Apache login successful');
-                    requstPageReaload = true;
+                    requestPageReload = true;
                 },
                 error: function() {
                     console.error('Apache login failed');
@@ -76,7 +76,7 @@
                 window.history.replaceState({}, '', url);
             }
             remove_httpd_login_param();
-            if (requestPageReaload) {
+            if (requestPageReload) {
                 console.log('Reloading page to complete Apache login/logout process');
                 window.location.reload();
             }
