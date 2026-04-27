@@ -43,8 +43,8 @@
                     'csrfmiddlewaretoken': '{% csrf_token %}'
                 },
                 success: function() {
-                    console.log('Apache login successful');
                     requestPageReload = true;
+                    console.log('Apache login successful');
                 },
                 error: function() {
                     console.error('Apache login failed');
@@ -76,9 +76,12 @@
                 window.history.replaceState({}, '', url);
             }
             remove_httpd_login_param();
+
             if (requestPageReload) {
                 console.log('Reloading page to complete Apache login/logout process');
                 window.location.reload();
+            } else {
+                console.log('No page reload needed');
             }
         </script>
 
