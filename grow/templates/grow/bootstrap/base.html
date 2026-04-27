@@ -23,6 +23,49 @@
         <script src=" https://cdn.jsdelivr.net/npm/jquery@4.0.0/dist/jquery.min.js "></script>
         <script src="{% static 'grow/js/pageurl.js' %}"></script>
 
+        {% if perform_httpd_login and request.user.is_authenticated %}
+            {% if APACHE_AUTH_ENABLED and APACHE_AUTH_TYPE == 'form' %}
+        <script>
+            $.ajax({
+                type: 'POST',
+                url: '{% if APACHE_AUTH_LOGIN_ACTION_URL %}{{ APACHE_AUTH_LOGIN_ACTION_URL }}{% else %}/accounts/do-a2login/{% endif %}',
+                data: {
+                    'httpd_username': '{% if APACHE_AUTH_LOGIN_METHOD == "email" %}{{ request.user.email }}{% else %}{{ request.user.username }}{% endif %}',
+                    'httpd_password': 'htpasswd', /* The password is not actually used for authentication in this case,
+                                                * as Apache will trust the login if the username is the same as the
+                                                * logged-in django-user given by the django session cookie and the
+                                                * successful authentication by Django. (See "django_project/auth_wsgi.py"
+                                                * for details.)
+                                                * However, we need to send something to satisfy the form requirements.
+                                                */
+                    'csrfmiddlewaretoken': '{% csrf_token %}'
+                },
+                success: function() {
+                    console.log('Apache login successful');
+                },
+                error: function() {
+                    console.error('Apache login failed');
+                }
+            });
+        </script>
+            {% endif %}
+        {% elif perform_httpd_logout %}
+            {% if APACHE_AUTH_ENABLED and APACHE_AUTH_TYPE == 'form' %}
+        <script>
+            $.ajax({
+                type: 'GET',
+                url: '{% if APACHE_AUTH_LOGOUT_URL %}{{ APACHE_AUTH_LOGOUT_URL }}{% else %}/accounts/do-a2logout/{% endif %}',
+                success: function() {
+                    console.log('Apache logout successful');
+                },
+                error: function() {
+                    console.error('Apache logout failed');
+                }
+            });
+        </script>
+            {% endif %}
+        {% endif %}
+
         {% block scripts %}{% endblock scripts %}
     </head>
     <body style="" id="body">
@@ -378,45 +421,7 @@
         });
     </script>
 
-    {% if perform_httpd_login and request.user.is_authenticated and APACHE_AUTH_ENABLED and APACHE_AUTH_TYPE == 'form' %}
-    <script>
-        $.ajax({
-            type: 'POST',
-            url: '{% if APACHE_AUTH_LOGIN_ACTION_URL %}{{ APACHE_AUTH_LOGIN_ACTION_URL }}{% else %}/accounts/do-a2login/{% endif %}',
-            data: {
-                'httpd_username': '{% if APACHE_AUTH_LOGIN_METHOD == "email" %}{{ request.user.email }}{% else %}{{ request.user.username }}{% endif %}',
-                'httpd_password': 'htpasswd', /* The password is not actually used for authentication in this case,
-                                               * as Apache will trust the login if the username is the same as the
-                                               * logged-in django-user given by the django session cookie and the
-                                               * successful authentication by Django. (See "django_project/auth_wsgi.py"
-                                               * for details.)
-                                               * However, we need to send something to satisfy the form requirements.
-                                               */
-                'csrfmiddlewaretoken': '{% csrf_token %}'
-            },
-            success: function() {
-                console.log('Apache login successful');
-            },
-            error: function() {
-                console.error('Apache login failed');
-            }
-        });
-    </script>
-    {% endif %}
-    {% if perform_httpd_logout and APACHE_AUTH_ENABLED and APACHE_AUTH_TYPE == 'form' %}
-    <script>
-        $.ajax({
-            type: 'GET',
-            url: '{% if APACHE_AUTH_LOGOUT_URL %}{{ APACHE_AUTH_LOGOUT_URL }}{% else %}/accounts/do-a2logout/{% endif %}',
-            success: function() {
-                console.log('Apache logout successful');
-            },
-            error: function() {
-                console.error('Apache logout failed');
-            }
-        });
-    </script>
-    {% endif %}
+
     {% block extra_scripts %}
     {% endblock extra_scripts %}
 </html>
