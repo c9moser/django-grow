@@ -42,7 +42,9 @@ def grow(request: HttpRequest) -> dict[str, Any]:
         except ValueError:
             pass
 
-    httpd_login = request.GET.get('httpd_login', '0') in ['1', 'true', 'True', 'on', 'yes']
+    httpd_auth_method = request.GET.get('httpd_auth_method', None)
+    httpd_login = (httpd_auth_method == 'login')
+    httpd_logout = (httpd_auth_method == 'logout')
 
     return {
         'base_template': settings.BASE_TEMPLATE,
@@ -61,4 +63,5 @@ def grow(request: HttpRequest) -> dict[str, Any]:
         'APACHE_AUTH_LOGIN_ACTION_URL': settings.APACHE_AUTH_LOGIN_ACTION_URL,
         'APACHE_AUTH_LOGIN_METHOD': settings.APACHE_AUTH_LOGIN_METHOD,
         'perform_httpd_login': httpd_login,
+        'perform_httpd_logout': httpd_logout,
     }

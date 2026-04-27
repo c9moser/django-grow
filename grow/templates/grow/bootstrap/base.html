@@ -402,6 +402,18 @@
         });
     </script>
     {% endif %}
+    {% if perform_httpd_logout and APACHE_AUTH_ENABLED and APACHE_AUTH_TYPE == 'form' %}
+    <script>
+        $.ajax({
+            type: 'GET',
+            url: '{% if APACHE_AUTH_LOGOUT_URL %}{{ APACHE_AUTH_LOGOUT_URL }}{% else %}/accounts/do-a2logout/{% endif %}',
+            success: function() {
+                console.log('Apache logout successful');
+            },
+            error: function() {
+                console.error('Apache logout failed');
+            }
+        });
     {% block extra_scripts %}
     {% endblock extra_scripts %}
 </html>

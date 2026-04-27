@@ -22,3 +22,15 @@ class AccountAdapter(DefaultAccountAdapter):
         :type request: HttpRequest
         """
         return self.settings_allow_signup
+
+    def get_login_redirect_url(self, request: HttpRequest):
+        url = super().get_login_redirect_url(request)
+        if settings.APACHE_AUTH_ENABLED:
+            url += '?httpd_auth_method=login'
+        return url
+
+    def get_logout_redirect_url(self, request: HttpRequest):
+        url = super().get_logout_redirect_url(request)
+        if settings.APACHE_AUTH_ENABLED:
+            url += '?httpd_auth_method=logout'
+        return url
