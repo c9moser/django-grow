@@ -23,13 +23,13 @@
         <script src=" https://cdn.jsdelivr.net/npm/jquery@4.0.0/dist/jquery.min.js "></script>
         <script src="{% static 'grow/js/pageurl.js' %}"></script>
 
-        <script>var requestPageReload = false;</script>
         {% if perform_httpd_login and request.user.is_authenticated %}
 
             {% if APACHE_AUTH_ENABLED and APACHE_AUTH_TYPE == 'form' %}
         <script>
             $.ajax({
                 type: 'POST',
+                async: false,  // Make the request synchronous to ensure it completes before the page loads
                 url: '{% if APACHE_AUTH_LOGIN_ACTION_URL %}{{ APACHE_AUTH_LOGIN_ACTION_URL }}{% else %}/accounts/do-a2login/{% endif %}',
                 data: {
                     'httpd_username': '{% if APACHE_AUTH_LOGIN_METHOD == "email" %}{{ request.user.email }}{% else %}{{ request.user.username }}{% endif %}',
@@ -57,6 +57,7 @@
         <script>
             $.ajax({
                 type: 'GET',
+                async: false,  // Make the request synchronous to ensure it completes before the page loads
                 url: '{% if APACHE_AUTH_LOGOUT_URL %}{{ APACHE_AUTH_LOGOUT_URL }}{% else %}/accounts/a2logout/{% endif %}',
                 success: function() {
                     console.log('Apache logout successful');
@@ -69,20 +70,12 @@
             {% endif %}
         {% endif %}
         <script>
-            function remove_httpd_login_param() {
+            (function remove_httpd_login_param() {
                 const url = new URL(window.location);
                 url.searchParams.delete('httpd_login');
                 url.searchParams.delete('httpd_auth_method');
                 window.history.replaceState({}, '', url);
-            }
-            remove_httpd_login_param();
-
-            if (requestPageReload) {
-                console.log('Reloading page to complete Apache login/logout process');
-                window.location.reload();
-            } else {
-                console.log('No page reload needed');
-            }
+            })();
         </script>
 
         {% block scripts %}{% endblock scripts %}
