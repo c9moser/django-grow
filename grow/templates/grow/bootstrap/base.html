@@ -72,6 +72,7 @@
                 url.searchParams.delete('httpd_auth_method');
                 window.history.replaceState({}, '', url);
             }
+            remove_httpd_login_param();
         </script>
 
         {% block scripts %}{% endblock scripts %}
