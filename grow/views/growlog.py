@@ -9,7 +9,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from django.views.generic import CreateView, UpdateView, DeleteView, FormView
 from django.db.models import Count
+from urllib.parse import quote
+
 # from grow.growapi import settings
+
 
 from grow.forms.growlog import (
     GrowlogAddStrainForm,
@@ -38,7 +41,12 @@ from ..growapi.models import (
 )
 # from django.urls import reverse
 
-from ..settings import GROW_TEMPLATES, GROW_USER_SETTINGS
+from ..settings import (
+    GROW_TEMPLATES,
+    GROW_USER_SETTINGS,
+    APACHE_AUTH_ENABLED,
+    APACHE_AUTH_TYPE,
+)
 
 
 from ._base import BaseView
@@ -48,6 +56,7 @@ from ..growapi.permission import (
 )
 
 from ..paginator import QuerySetPaginator
+
 import logging
 
 logger = logging.getLogger(__name__)
@@ -408,7 +417,10 @@ class GrowlogDetailView(HxGrowlogPermissionsUpdateView, HxGrowlogEntriesView):
                 logger.warning(f"User {request.user.username} tried to access growlog {self.growlog.pk} without permission.")  # noqa: E501
                 raise PermissionDenied(_("You do not have permission to view this growlog."))
             else:
-                redirect_url = reverse('account_login') + f"?next={request.path}"
+                if APACHE_AUTH_ENABLED and APACHE_AUTH_TYPE == 'form':
+                    redirect_url = reverse('account_login') + f"?next={request.path}{quote('?httpd_auth_method=login')}"  # noqa: E501
+                else:
+                    redirect_url = reverse('account_login') + f"?next={request.path}"
                 return redirect(redirect_url)
 
         return render(request, self.template_name, self.get_context_data())
