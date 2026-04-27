@@ -56,6 +56,7 @@ env = Env(
 
     # Apache auth settings
     APACHE_AUTH_ENABLED=(bool, False),
+    APACHE_AUTH_METHOD=(str, None),
     APACHE_AUTH_USERNAME_HEADER=(str, 'HTTP_X_REMOTE_USER'),
     APACHE_AUTH_LOGIN_URL=(str, '/accounts/a2login/'),
     APACHE_AUTH_LOGIN_ACTION_URL=(str, '/accounts/do-a2login/'),

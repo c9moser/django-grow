@@ -54,3 +54,10 @@ GROW_MARKDOWN_EXTENSIONS = getattr(
     ])
 INCLUDE_WIKI = getattr(settings, "INCLUDE_WIKI", False)
 USE_BOOTSTRAP = getattr(settings, "USE_BOOTSTRAP", False)
+
+ALLOW_SIGNUP = getattr(settings, 'ALLOW_SIGNUP', True)
+APACHE_AUTH_ENABLED = getattr(settings, 'APACHE_AUTH_ENABLED', False)
+APACHE_AUTH_TYPE = getattr(settings, 'APACHE_AUTH_TYPE', None)
+APACHE_AUTH_LOGIN_URL = getattr(settings, 'APACHE_AUTH_LOGIN_URL', None)
+APACHE_AUTH_LOGIN_ACTION_URL = getattr(settings, 'APACHE_AUTH_LOGIN_ACTION_URL', None)
+APACHE_AUTH_LOGIN_METHOD = getattr(settings, 'ACCOUNT_LOGIN_METHODS', ['username'])[0]

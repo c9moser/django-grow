@@ -42,6 +42,8 @@ def grow(request: HttpRequest) -> dict[str, Any]:
         except ValueError:
             pass
 
+    httpd_login = request.GET.get('httpd_login', '0') in ['1', 'true', 'True', 'on', 'yes']
+
     return {
         'base_template': settings.BASE_TEMPLATE,
         'use_bootstrap': settings.USE_BOOTSTRAP,
@@ -52,4 +54,11 @@ def grow(request: HttpRequest) -> dict[str, Any]:
         'grow_paginate': paginate,
         'growlog_paginate': growlog_paginate,
         'DEBUG': settings.settings.DEBUG,
+        'allow_signup': settings.ALLOW_SIGNUP,
+        'APACHE_AUTH_ENABLED': settings.APACHE_AUTH_ENABLED,
+        'APACHE_AUTH_TYPE': settings.APACHE_AUTH_TYPE,
+        'APACHE_AUTH_LOGIN_URL': settings.APACHE_AUTH_LOGIN_URL,
+        'APACHE_AUTH_LOGIN_ACTION_URL': settings.APACHE_AUTH_LOGIN_ACTION_URL,
+        'APACHE_AUTH_LOGIN_METHOD': settings.APACHE_AUTH_LOGIN_METHOD,
+        'perform_httpd_login': httpd_login,
     }
