@@ -27,7 +27,8 @@ if venv_conf.exists():
             venv_dir = Path(venv_path).resolve()
             print(f"Using virtual environment from {venv_conf}: {venv_dir}", file=sys.stderr)
         else:
-            print(f"No virtual environment path specified in {venv_conf}, using default.", file=sys.stderr)
+            print(f"No virtual environment path specified in {venv_conf}, using default.", file=sys.stderr)  # noqa: E501
+
 if not venv_dir:
     venv_dir = Path(
         os.environ.get(
