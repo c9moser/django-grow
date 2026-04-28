@@ -237,13 +237,20 @@ def import_data(filename: str | Path, user=None, moderator=None) -> bool:
             if (not breeder.logo_image
                     or os.path.basename(breeder.logo_image.path) != data['logo_image']):
                 zimage = _breeder_logo_archname_format.format(basename=data['logo_image'])
+                img_path = Path("/tmp/") / data['logo_image']
                 try:
-                    zfile = zarchive.open(zimage)
-                    img_file = ImageFile(zfile, data['logo_image'])
-                    breeder.logo_image = img_file
-                    breeder.save()
+                    with zarchive.open(zimage) as zfile:
+                        with open(img_path, "wb") as img_tmp:
+                            img_tmp.write(zfile.read())
+
+                    with open(img_path, "rb") as img:
+                        img_file = ImageFile(img, data['logo_image'])
+                        breeder.logo_image = img_file
+                        breeder.save()
                 except Exception as ex:
                     print(f"Unable to import breeder.logo_image! ({str(ex)})")
+                if os.path.exists(img_path):
+                    os.unlink(img_path)
 
         for lang_code, translation_data in data.get('translations', {}).items():
             try:
@@ -313,17 +320,28 @@ def import_data(filename: str | Path, user=None, moderator=None) -> bool:
         if 'logo_image' in data:
             if (not strain.logo_image
                     or os.path.basename(strain.logo_image) != data['logo_image']):
+                img_path = Path("/tmp/") / data['logo_image']
+
                 try:
                     img_zpath = _strain_logo_archname_format.format(
                         breeder_slug=breeder.slug,
                         strain_slug=slug,
                         basename=data['logo_image'],
                     )
-                    img_file = ImageFile(zarchive.open(img_zpath), data['logo_image'])
-                    strain.logo_image = img_file
-                    strain.save()
+
+                    with zarchive.open(img_zpath) as img_file_data:
+                        with open(img_path, "wb") as img_tmp:
+                            img_tmp.write(img_file_data.read())
+
+                    with open(img_path, "rb") as img_temp_file:
+                        img_file = ImageFile(img_temp_file, data['logo_image'])
+                        strain.logo_image = img_file
+                        strain.save()
                 except Exception as ex:
                     print(f"Unable to import strain.logo_image! ({str(ex)})")
+
+                if os.path.exists(img_path):
+                    os.unlink(img_path)
 
         # import StrainImage
         if 'strain_images' in data:
