@@ -16,7 +16,6 @@ dependencies = [
     "markdown (>=3.10,<4.0)",
     "bbcode (>=1.1.0,<2.0.0)",
     "flake8 (>=7.3.0,<8.0.0)",
-    "django-tinywiki @ git+https://git.cmoser.eu/tinytools/django-tinywiki.git",
     "psycopg2 (>=2.9.11,<3.0.0)",
     "djangorestframework (>=3.17.1,<4.0.0)",
     "django-invitations (>=2.1.0,<3.0.0)",
@@ -38,12 +37,17 @@ dev = [
     "flake8 (>=7.3.0,<8.0.0)",
     "django-browser-reload (>=1.21.0,<2.0.0)"
 ]
-postgresql = [
-    "psycopg2 (>=2.9.11,<3.0.0)"
-]
 postgres = [
     "psycopg2 (>=2.9.11,<3.0.0)"
 ]
 firebird = [
     "django-firebird (>=2.2.2,<3.0.0)"
 ]
+
+tinywiki = [
+    "django-tinywiki @ git+https://git.cmoser.eu/tinytools/django-tinywiki.git",
+]
+mysql = [
+    "mysqlclient (>=2.2.8,<3.0.0)"
+]
+

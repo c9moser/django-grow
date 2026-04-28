@@ -14,15 +14,17 @@ ENV GROW_DB=sqlite:////data/db.sqlite3
 
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-	build-essential \
-	libpq-dev \
-	acl \
-	gettext \
-	git \
-	firebird-dev \
-    apache2 \
-    libapache2-mod-wsgi-py3 \
-	sudo \
+        build-essential \
+        libpq-dev \
+        acl \
+        gettext \
+        git \
+	pkgconf \
+        firebird-dev \
+	libmariadb-dev \
+        apache2 \
+        libapache2-mod-wsgi-py3 \
+        sudo \
     && apt-get clean \
     && pip install --upgrade pip setuptools wheel \
 	&& pip install poetry \

@@ -18,6 +18,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 		git \
 		npm \
 		firebird-dev \
+		pkgconf \
+		libmariadb-dev \
 	&& apt-get clean \
     && pip install --upgrade pip setuptools wheel \
 	&& pip install poetry \
