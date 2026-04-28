@@ -17,12 +17,24 @@ APACHE_USER_KEY = u"user"
 APACHE_PASS_KEY = u"pw"
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-venv_dir = Path(
-    os.environ.get(
-        'GROW_VIRTUAL_ENV',
-        os.environ.get('VIRTUAL_ENV', BASE_DIR / '.venv')
-    )
-).resolve()
+venv_conf = Path(__file__).parent / 'local' / 'venv.conf'
+
+venv_dir = None
+if venv_conf.exists():
+    with open(venv_conf) as f:
+        venv_path = f.read().strip()
+        if venv_path:
+            venv_dir = Path(venv_path).resolve()
+            print(f"Using virtual environment from {venv_conf}: {venv_dir}", file=sys.stderr)
+        else:
+            print(f"No virtual environment path specified in {venv_conf}, using default.", file=sys.stderr)
+if not venv_dir:
+    venv_dir = Path(
+        os.environ.get(
+            'GROW_VIRTUAL_ENV',
+            os.environ.get('VIRTUAL_ENV', BASE_DIR / '.venv')
+        )
+    ).resolve()
 
 if venv_dir.exists():
     sys.path.insert(
