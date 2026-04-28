@@ -235,9 +235,11 @@ def import_data(filename: str | Path, user=None, moderator=None) -> bool:
 
         if ('logo_url' not in data or not data['logo_url']) and 'logo_image' in data:
             if (not breeder.logo_image
-                    or os.path.basename(breeder.logo_image.path) != data['logo_image']):
-                zimage = _breeder_logo_archname_format.format(basename=data['logo_image'])
-                img_path = Path("/tmp/") / data['logo_image']
+                    or (os.path.basename(breeder.logo_image.path)
+                        != os.path.basename(data['logo_image']))):
+                zimage = _breeder_logo_archname_format.format(
+                    basename=os.path.basename(data['logo_image']))
+                img_path = Path("/tmp/") / os.path.basename(data['logo_image'])
                 try:
                     with zarchive.open(zimage) as zfile:
                         with open(img_path, "wb") as img_tmp:
