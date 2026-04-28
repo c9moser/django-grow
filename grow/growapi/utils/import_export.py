@@ -321,7 +321,7 @@ def import_data(filename: str | Path, user=None, moderator=None) -> bool:
 
         if 'logo_image' in data:
             if (not strain.logo_image
-                    or os.path.basename(strain.logo_image) != data['logo_image']):
+                    or os.path.basename(strain.logo_image.path) != data['logo_image']):
                 img_path = Path("/tmp/") / data['logo_image']
 
                 try:
