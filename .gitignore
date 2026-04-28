@@ -166,3 +166,8 @@ django_project/local/settings_prod.py
 
 poetry.tomL
 *.bak
+
+.venv/
+.venv.dev/
+.venv.prod/
+
