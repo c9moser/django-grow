@@ -317,7 +317,7 @@ def import_data(filename: str | Path, user=None, moderator=None) -> bool:
                     img_zpath = _strain_logo_archname_format.format(
                         breeder_slug=breeder.slug,
                         strain_slug=slug,
-                        basename=['logo_image'],
+                        basename=data['logo_image'],
                     )
                     img_file = ImageFile(zarchive.open(img_zpath), data['logo_image'])
                     strain.logo_image = img_file
