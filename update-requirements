@@ -7,7 +7,7 @@ cd "$BASE_DIR"
 
 poetry export --format requirements.txt --output requirements/dev.txt --all-groups --without-hashes
 poetry export --format requirements.txt --output requirements/prod.txt --without-hashes --without=dev
-poetry export --format requirements.txt --output requirements/prod-postgres.txt --without-hashes --without=firebird --without=mysql --without=dev
-poetry export --format requirements.txt --output requirements/prod-mysql.txt --without-hashes --without=dev --without=firebird --without=postgres
-poetry export --format requirements.txt --output requirements/prod-firebird.txt --without-hashes --without=dev --without=postgres --without=mysql
+poetry export --format requirements.txt --output requirements/prod-postgres.txt  --with=tinywiki --without-hashes --without=firebird --without=mysql --without=dev
+poetry export --format requirements.txt --output requirements/prod-mysql.txt  --without-hashes --with=tinywiki  --without=dev --without=firebird --without=postgres
+poetry export --format requirements.txt --output requirements/prod-firebird.txt --with=tinywiki  --without-hashes --without=dev --without=postgres --without=mysql
 
