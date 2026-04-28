@@ -48,7 +48,7 @@ def export_data(filename: str | Path | None, include_images: bool = False) -> bo
             logo_arch_name = _strain_logo_archname_format.format(
                 breeder_slug=strain.breeder.slug,
                 strain_slug=strain.slug,
-                basename=os.path.basename(strain.logo_image)
+                basename=os.path.basename(strain.logo_image.path)
             )
             zf.write(strain.logo_image.path, logo_arch_name)
             data['logo_image'] = os.path.basename(strain.logo_image)
