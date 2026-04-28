@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: django-grc.api 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-19 10:56+0200\n"
+"POT-Creation-Date: 2026-04-28 14:51+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Christian Moser <christian@cmoser.eu>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -418,6 +418,7 @@ msgid "Germinating (Day {n})"
 msgstr "Keimen (Tag {n})"
 
 #: grow/growapi/models/growlog.py:1257
+#, python-brace-format
 msgid "Rooting (Days {n})"
 msgstr "Anwurzeln (Tag {n})"
 
@@ -432,6 +433,7 @@ msgid "Flowering (Day {n})"
 msgstr "Blüte (Tag {n})"
 
 #: grow/growapi/models/growlog.py:1275
+#, python-brace-format
 msgid "Drying (Day {n})"
 msgstr "Trocknen (Tag {n})"
 
