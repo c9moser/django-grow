@@ -51,7 +51,7 @@ def export_data(filename: str | Path | None, include_images: bool = False) -> bo
                 basename=os.path.basename(strain.logo_image.path)
             )
             zf.write(strain.logo_image.path, logo_arch_name)
-            data['logo_image'] = os.path.basename(strain.logo_image)
+            data['logo_image'] = os.path.basename(strain.logo_image.path)
 
         if include_images:
             for strain_image in strain.images.all():
