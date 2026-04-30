@@ -35,7 +35,7 @@ if settings.REST_FRMAEWORK_ENABLED:
     ]
     if settings.BROWSABLE_REST_FRAMEWORK:
         urlpatterns += [
-            # path('growapi/docs/', include('rest_framework_swagger.urls')),
+            path('apidocs/', include('rest_framework_swagger.urls')),
         ]
 
 if settings.ADMIN_URL:
