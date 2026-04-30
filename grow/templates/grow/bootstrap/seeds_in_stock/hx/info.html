@@ -182,7 +182,7 @@
                 </tr>
             {% empty %}
                 <tr>
-                    <td colspan="{% if seeds_in_stock_user == request.user %}6{% else %}5{% endif %}" class="table-warning">{% translate "You have no seeds in stock." %}</td>
+                    <td colspan="8" class="table-warning">{% translate "You have no seeds in stock." %}</td>
                 </tr>
             {% endfor %}
             </tbody>
