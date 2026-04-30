@@ -60,6 +60,10 @@ env = Env(
     APACHE_AUTH_USERNAME_HEADER=(str, 'HTTP_X_REMOTE_USER'),
     APACHE_AUTH_LOGIN_URL=(str, '/accounts/a2login/'),
     APACHE_AUTH_LOGIN_ACTION_URL=(str, '/accounts/do-a2login/'),
+
+    # Rest Framework settings
+    REST_FRMAEWORK_ENABLED=(bool, True),
+    BROWSABLE_REST_FRAMEWORK=(bool, True),
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -120,7 +124,6 @@ third_party_apps = [
     'allauth.socialaccount.providers.github',
     'allauth.socialaccount.providers.openid',
     'allauth.socialaccount.providers.steam',
-    'rest_framework',
     'widget_tweaks',
     'invitations',
 ]
@@ -304,6 +307,10 @@ APACHE_AUTH_USERNAME_HEADER = env('APACHE_AUTH_USERNAME_HEADER')
 APACHE_AUTH_LOGIN_URL = env('APACHE_AUTH_LOGIN_URL')
 APACHE_AUTH_LOGIN_ACTION_URL = env('APACHE_AUTH_LOGIN_ACTION_URL')
 
+# REST Framework settings
+REST_FRMAEWORK_ENABLED = True
+BROWSABLE_REST_FRAMEWORK = env.bool('BROWSABLE_REST_FRAMEWORK', default=True)
+
 # load local config
 _local_settings_path = BASE_DIR / 'django_project' / 'local'
 
@@ -325,6 +332,8 @@ if (_local_settings_path / 'secret_key.py').exists():
 
 del _local_settings_path
 
+
+
 if USE_BOOTSTRAP:
     BASE_TEMPLATE = "grow/bootstrap/base.html"
 else:
@@ -333,5 +342,15 @@ else:
 if DEBUG:
     third_party_apps.insert(0, 'django_browser_reload')
     MIDDLEWARE.insert(0, "django_browser_reload.middleware.BrowserReloadMiddleware")
+
+
+if REST_FRMAEWORK_ENABLED:
+    third_party_apps.append('rest_framework')
+    # if BROWSABLE_REST_FRAMEWORK:
+    #    third_party_apps.append('rest_framework_swagger')
+
+if INCLUDE_WIKI:
+    third_party_apps.append('tinywiki')
+
 
 INSTALLED_APPS = list(set(django_apps + third_party_apps + project_apps))

@@ -21,6 +21,7 @@ dependencies = [
     "django-invitations (>=2.1.0,<3.0.0)",
     "pyJWT (>=2.12.0)",
     "cryptography (>=46.0.7)",
+    "drf-spectacular (>=0.29.0,<0.30.0)",
 ]
 
 [tool.poetry]

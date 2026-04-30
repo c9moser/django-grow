@@ -27,9 +27,16 @@ locale_patterns = [
         path('', include('core.urls')),
 ]
 
-urlpatterns = [
-    path('growapi/', include('grow.growapi.urls')),
-]
+urlpatterns = []
+
+if settings.REST_FRMAEWORK_ENABLED:
+    urlpatterns += [
+        path('growapi/', include('grow.growapi.urls')),
+    ]
+    if settings.BROWSABLE_REST_FRAMEWORK:
+        urlpatterns += [
+            # path('growapi/docs/', include('rest_framework_swagger.urls')),
+        ]
 
 if settings.ADMIN_URL:
     urlpatterns.insert(0, path(settings.ADMIN_URL, admin.site.urls))
