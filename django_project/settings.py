@@ -62,7 +62,7 @@ env = Env(
     APACHE_AUTH_LOGIN_ACTION_URL=(str, '/accounts/do-a2login/'),
 
     # Rest Framework settings
-    REST_FRMAEWORK_ENABLED=(bool, True),
+    REST_FRAMEWORK_ENABLED=(bool, True),
     BROWSABLE_REST_FRAMEWORK=(bool, True),
 )
 
@@ -308,7 +308,7 @@ APACHE_AUTH_LOGIN_URL = env('APACHE_AUTH_LOGIN_URL')
 APACHE_AUTH_LOGIN_ACTION_URL = env('APACHE_AUTH_LOGIN_ACTION_URL')
 
 # REST Framework settings
-REST_FRMAEWORK_ENABLED = True
+REST_FRAMEWORK_ENABLED = env.bool('REST_FRAMEWORK_ENABLED', default=True)
 BROWSABLE_REST_FRAMEWORK = env.bool('BROWSABLE_REST_FRAMEWORK', default=True)
 
 # load local config
@@ -344,13 +344,18 @@ if DEBUG:
     MIDDLEWARE.insert(0, "django_browser_reload.middleware.BrowserReloadMiddleware")
 
 
-if REST_FRMAEWORK_ENABLED:
+if REST_FRAMEWORK_ENABLED:
     third_party_apps.append('rest_framework')
-    # if BROWSABLE_REST_FRAMEWORK:
-    #    third_party_apps.append('rest_framework_swagger')
+    if BROWSABLE_REST_FRAMEWORK:
+        third_party_apps.append('drf_spectacular')
 
 if INCLUDE_WIKI:
     third_party_apps.append('tinywiki')
 
+if REST_FRAMEWORK_ENABLED:
+    third_party_apps.append('rest_framework')
+    if BROWSABLE_REST_FRAMEWORK:
+        third_party_apps.append('drf_spectacular')
+        #third_party_apps.append('drf_spectacular_sidecar')
 
 INSTALLED_APPS = list(set(django_apps + third_party_apps + project_apps))

@@ -5,11 +5,10 @@ ENV PYTHONUNBUFFERED=1
 ENV POETRY_VIRTUALENVS_IN_PROJECT=1
 ENV POETRY_NO_INTERACTION=1
 ENV DJANGO_SETTINGS_MODULE=django_project.settings
-ENV GROW_DEBUG=0
-ENV GROW_DB=sqlite3:///var/www/grow/db.sqlite3
-ENV GROW_ALLOWED_HOSTS='*'
-ENV GROW_MEDIA_ROOT=/var/www/grow/media
-ENV GROW_STATIC_ROOT=/var/www/grow/static
+ENV DEBUG=0
+ENV ALLOWED_HOSTS='*'
+ENV MEDIA_ROOT=/var/www/grow/media
+ENV STATIC_ROOT=/var/www/grow/static
 ENV GROW_DB=sqlite:////data/db.sqlite3
 
 
@@ -42,6 +41,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 VOLUME /var/www/grow/media
 VOLUME /data/
+VOLUME /.config
 VOLUME /var/log/apache2
 
 WORKDIR /app

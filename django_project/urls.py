@@ -20,6 +20,7 @@ from django.contrib import admin
 from allauth.account.decorators import secure_admin_login
 from django.conf.urls.i18n import i18n_patterns
 
+
 locale_patterns = [
         path('accounts/', include('allauth.urls')),
         path('invitations/', include('invitations.urls', namespace='invitations')),
@@ -29,13 +30,16 @@ locale_patterns = [
 
 urlpatterns = []
 
-if settings.REST_FRMAEWORK_ENABLED:
-    urlpatterns += [
-        path('growapi/', include('grow.growapi.urls')),
+if settings.REST_FRAMEWORK_ENABLED:
+    import grow.growapi.urls
+    from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+    locale_patterns += [
+        path('api/grow/', include(grow.growapi.urls)),
     ]
     if settings.BROWSABLE_REST_FRAMEWORK:
-        urlpatterns += [
-            path('apidocs/', include('rest_framework_swagger.urls')),
+        locale_patterns += [
+            path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+            path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
         ]
 
 if settings.ADMIN_URL:

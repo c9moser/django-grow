@@ -14,105 +14,6 @@ GROW_SITE_TITLE = getattr(settings, 'GROW_SITE_TITLE', getattr(settings, 'SITE_T
 GROW_HEAD_TITLE = getattr(settings, 'GROW_HEAD_TITLE', getattr(settings, 'HEAD_TITLE', GROW_SITE_TITLE))
 GROW_IS_MAIN_APP = getattr(settings, 'GROW_IS_MAIN_APP', False)
 
-GROW_BUILTIN_BREEDER_TEMPLATES = {
-    'grow/breeder': 'grow/html/breeder/index.html',
-    'grow/breeder/create': 'grow/html/breeder/create.html',
-    'grow/breeder/delete': 'grow/html/breeder/delete.html',
-    'grow/breeder/detail': 'grow/html/breeder/detail.html',
-    'grow/breeder/translation': 'grow/html/breeder/translation.html',
-    'grow/breeder/hx/delete': 'grow/html/breeder/hx/delete.html',
-    'grow/breeder/hx/filter': 'grow/html/breeder/hx/filter.html',
-    'grow/breeder/hx/strains': 'grow/html/breeder/hx/strains.html',
-    'grow/breeder/hx/translation': 'grow/html/breeder/hx/translation.html',
-    'grow/breeder/update': 'grow/html/breeder/update.html',
-    'grow/breeder/form': 'grow/html/breeder/form.html',
-}
-
-GROW_BUILTIN_BS_BREEDER_TEMPLATES = {
-    'grow/breeder': 'grow/bootstrap/breeder/index.html',
-    'grow/breeder/create': 'grow/bootstrap/breeder/create.html',
-    'grow/breeder/delete': 'grow/bootstrap/breeder/delete.html',
-    'grow/breeder/detail': 'grow/bootstrap/breeder/detail.html',
-    'grow/breeder/translation': 'grow/bootstrap/breeder/translation.html',
-    'grow/breeder/hx/delete': 'grow/bootstrap/breeder/hx/delete.html',
-    'grow/breeder/hx/filter': 'grow/bootstrap/breeder/hx/filter.html',
-    'grow/breeder/hx/strains': 'grow/bootstrap/breeder/hx/strains.html',
-    'grow/breeder/hx/translation': 'grow/bootstrap/breeder/hx/translation.html',
-    'grow/breeder/update': 'grow/bootstrap/breeder/update.html',
-    'grow/breeder/form': 'grow/bootstrap/breeder/form.html',
-}
-
-GROW_BUILTIN_STRAIN_TEMPLATES = {
-    # strain templates
-    'grow/strain/create': 'grow/html/strain/create.html',
-    'grow/strain/delete': 'grow/html/strain/delete.html',
-    'grow/strain/form': 'grow/html/strain/form.html',
-    'grow/strain/gallery': 'grow/html/strain/gallery/gallery.html',
-    'grow/strain/gallery/slides': 'grow/html/strain/gallery/slides.html',
-    'grow/strain/hx/delete': 'grow/html/strain/hx/delete.html',
-    'grow/strain/hx/search': 'grow/html/strain/hx/search.html',
-    'grow/strain/strain': 'grow/html/strain/detail.html',
-    'grow/strain/strain/add_to_stock': 'grow/html/strain/add_to_stock.html',
-    'grow/strain/strain/add_to_stock2': 'grow/html/strain/add_to_stock2.html',
-    'grow/strain/strain/comment_create': 'grow/html/strain/comment/create.html',
-    'grow/strain/strain/comment_update': 'grow/html/strain/comment/update.html',
-    'grow/strain/strain/form': 'grow/html/strain/form.html',
-    'grow/strain/strain/hx/add_to_stock': 'grow/html/strain/hx/add_to_stock.html',
-    'grow/strain/strain/hx/add_to_stock2': 'grow/html/strain/hx/add_to_stock2.html',
-    'grow/strain/strain/hx/add_to_stock_dialog': 'grow/html/strain/hx/dialog.html',
-    'grow/strain/strain/hx/filter': 'grow/html/strain/hx/filter.html',
-    'grow/strain/strain/hx/growlogs': 'grow/html/strain/hx/growlogs.html',
-    'grow/strain/strain/hx/my_growlogs': 'grow/html/strain/hx/my_growlogs.html',
-    'grow/strain/strain/hx/translation': 'grow/html/strain/hx/translation.html',
-    'grow/strain/strain/in_stock/hx/add': 'grow/html/strain/hx/add_to_stock.html',
-    'grow/strain/strain/in_stock/hx/remove': 'grow/html/strain/hx/remove_from_stock.html',
-    'grow/strain/strain/in_stock/hx/remove_invalid': 'grow/html/strain/hx/remove_from_stock_invalid.html',
-    'grow/strain/strain/in_stock/hx/notes': 'grow/html/strain/hx/in_stock_notes.html',
-    'grow/strain/strain/in_stock/hx/update': 'grow/html/strain/hx/in_stock_update.html',
-
-    'grow/strain/strain/image_upload': 'grow/html/strain/image/upload.html',
-    'grow/strain/strain/remove_from_stock': 'grow/html/strain/remove_from_stock.html',
-    'grow/strain/strain/remove_from_stock_invalid': 'grow/html/remove_from_stock_invalid.html',
-    'grow/strain/strain_search_results': 'grow/html/strain/search_results.html',
-    'grow/strain/strain/translation': 'grow/html/strain/translation.html',
-    'grow/strain/strain/update': 'grow/html/strain/update.html',
-}
-
-GROW_BUILTIN_BS_STRAIN_TEMPLATES = {
-    # strain templates
-    'grow/strain/create': 'grow/bootstrap/strain/strain/create.html',
-    'grow/strain/delete': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain/delete'],
-    'grow/strain/form': 'grow/bootstrap/strain/strain/form.html',
-    'grow/strain/gallery': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain/gallery'],
-    'grow/strain/gallery/slides': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain/gallery/slides'],
-    'grow/strain/hx/delete': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain/hx/delete'],
-    'grow/strain/hx/search': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain/hx/search'],
-    'grow/strain/strain': 'grow/bootstrap/strain/strain/detail.html',
-    'grow/strain/strain/add_to_stock': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain/strain/add_to_stock'],
-    'grow/strain/strain/add_to_stock2': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain/strain/add_to_stock2'],
-    'grow/strain/strain/comment_create': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain/strain/comment_create'],
-    'grow/strain/strain/comment_update': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain/strain/comment_update'],
-    'grow/strain/strain/form': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain/strain/form'],
-    'grow/strain/strain/hx/add_to_stock': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain/strain/hx/add_to_stock'],
-    'grow/strain/strain/hx/add_to_stock2': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain/strain/hx/add_to_stock2'],
-    'grow/strain/strain/hx/add_to_stock_dialog': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain/strain/hx/add_to_stock_dialog'],
-    'grow/strain/strain/hx/filter': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain/strain/hx/filter'],
-    'grow/strain/strain/hx/growlogs': 'grow/bootstrap/strain/strain/hx/growlogs.html',
-    'grow/strain/strain/hx/my_growlogs': 'grow/bootstrap/strain/strain/hx/my_growlogs.html',
-    'grow/strain/strain/hx/translation': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain/strain/hx/translation'],
-    'grow/strain/strain/in_stock/hx/add': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain/strain/in_stock/hx/add'],
-    'grow/strain/strain/in_stock/hx/remove': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain/strain/in_stock/hx/remove'],
-    'grow/strain/strain/in_stock/hx/remove_invalid': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain/strain/in_stock/hx/remove_invalid'],
-    'grow/strain/strain/in_stock/hx/notes': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain/strain/in_stock/hx/notes'],
-    'grow/strain/strain/in_stock/hx/update': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain/strain/in_stock/hx/update'],
-
-    'grow/strain/strain/image_upload': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain/strain/image_upload'],
-    'grow/strain/strain/remove_from_stock': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain/strain/remove_from_stock'],
-    'grow/strain/strain/remove_from_stock_invalid': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain/strain/remove_from_stock_invalid'],
-    'grow/strain/strain_search_results': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain/strain_search_results'],
-    'grow/strain/strain/translation': GROW_BUILTIN_STRAIN_TEMPLATES['grow/strain/strain/translation'],
-    'grow/strain/strain/update': 'grow/bootstrap/strain/strain/update.html',
-}
 
 
 GROW_BUILTIN_LOCATION_TEMPLATES = {
@@ -127,17 +28,6 @@ GROW_BUILTIN_LOCATION_TEMPLATES = {
     'grow/location/hx-delete': 'grow/html/location/hx_delete.html',
 }
 
-GROW_BUILTIN_BS_LOCATION_TEMPLATES = {
-    # location templates
-    'grow/location/index': GROW_BUILTIN_LOCATION_TEMPLATES['grow/location/index'],
-    'grow/location/create': GROW_BUILTIN_LOCATION_TEMPLATES['grow/location/create'],
-    'grow/location/update': GROW_BUILTIN_LOCATION_TEMPLATES['grow/location/update'],
-    'grow/location/delete': GROW_BUILTIN_LOCATION_TEMPLATES['grow/location/delete'],
-    'grow/location/detail': GROW_BUILTIN_LOCATION_TEMPLATES['grow/location/detail'],
-    'grow/location/form': GROW_BUILTIN_LOCATION_TEMPLATES['grow/location/form'],
-    'grow/location/hx-type-change': GROW_BUILTIN_LOCATION_TEMPLATES['grow/location/hx-type-change'],
-    'grow/location/hx-delete': GROW_BUILTIN_LOCATION_TEMPLATES['grow/location/hx-delete'],
-}
 
 GROW_BUILTIN_SIS_TEMPLATES = {
     'grow/seeds_in_stock': 'grow/html/seeds_in_stock/my_seeds_in_stock.html',
@@ -152,21 +42,6 @@ GROW_BUILTIN_SIS_TEMPLATES = {
     'grow/seeds_in_stock/hx/info': 'grow/html/seeds_in_stock/hx/info.html',
     'grow/seeds_in_stock/hx/my_seeds_in_stock': 'grow/html/seeds_in_stock/hx/my_seeds_in_stock.html',
     'grow/seeds_in_stock/my_seeds_in_stock': 'grow/html/seeds_in_stock/my_seeds_in_stock.html',
-}
-
-GROW_BUILTIN_BS_SIS_TEMPLATES = {
-    'grow/seeds_in_stock': GROW_BUILTIN_SIS_TEMPLATES['grow/seeds_in_stock'],
-    'grow/seeds_in_stock/add': GROW_BUILTIN_SIS_TEMPLATES['grow/seeds_in_stock/add'],
-    'grow/seeds_in_stock/remove': GROW_BUILTIN_SIS_TEMPLATES['grow/seeds_in_stock/remove'],
-    'grow/seeds_in_stock/remove_invalid': GROW_BUILTIN_SIS_TEMPLATES['grow/seeds_in_stock/remove_invalid'],
-    'grow/seeds_in_stock/hx/add': GROW_BUILTIN_SIS_TEMPLATES['grow/seeds_in_stock/hx/add'],
-    'grow/seeds_in_stock/hx/remove': GROW_BUILTIN_SIS_TEMPLATES['grow/seeds_in_stock/hx/remove'],
-    'grow/seeds_in_stock/hx/remove_invalid': GROW_BUILTIN_SIS_TEMPLATES['grow/seeds_in_stock/hx/remove_invalid'],
-    'grow/seeds_in_stock/hx/info': GROW_BUILTIN_SIS_TEMPLATES['grow/seeds_in_stock/hx/info'],
-    'grow/seeds_in_stock/hx/dialog': GROW_BUILTIN_SIS_TEMPLATES['grow/seeds_in_stock/hx/dialog'],
-    'grow/seeds_in_stock/hx/info': GROW_BUILTIN_SIS_TEMPLATES['grow/seeds_in_stock/hx/info'],
-    'grow/seeds_in_stock/hx/my_seeds_in_stock': 'grow/bootstrap/seeds_in_stock/hx/my_seeds_in_stock.html',
-    'grow/seeds_in_stock/my_seeds_in_stock': 'grow/bootstrap/seeds_in_stock/my_seeds_in_stock.html',
 }
 
 GROW_BUILTIN_GROWLOG_TEMPLATES = {
@@ -289,8 +164,7 @@ GROW_BUILTIN_TEMPLATES = {
     # home
     'grow/index': 'grow/html/index/index.html',
 }
-GROW_BUILTIN_TEMPLATES.update(GROW_BUILTIN_BREEDER_TEMPLATES)
-GROW_BUILTIN_TEMPLATES.update(GROW_BUILTIN_STRAIN_TEMPLATES)
+
 GROW_BUILTIN_TEMPLATES.update(GROW_BUILTIN_LOCATION_TEMPLATES)
 GROW_BUILTIN_TEMPLATES.update(GROW_BUILTIN_SIS_TEMPLATES)
 GROW_BUILTIN_TEMPLATES.update(GROW_BUILTIN_GROWLOG_TEMPLATES)
@@ -308,10 +182,7 @@ GROW_BUILTIN_BS_TEMPLATES = {
     # utils
     'grow/utils/hx_select_date_days_sanitize': GROW_BUILTIN_TEMPLATES['grow/utils/hx_select_date_days_sanitize']
 }
-GROW_BUILTIN_BS_TEMPLATES.update(GROW_BUILTIN_BS_BREEDER_TEMPLATES)
-GROW_BUILTIN_BS_TEMPLATES.update(GROW_BUILTIN_BS_STRAIN_TEMPLATES)
-GROW_BUILTIN_BS_TEMPLATES.update(GROW_BUILTIN_BS_LOCATION_TEMPLATES)
-GROW_BUILTIN_BS_TEMPLATES.update(GROW_BUILTIN_BS_SIS_TEMPLATES)
+
 GROW_BUILTIN_BS_TEMPLATES.update(GROW_BUILTIN_BS_GROWLOG_TEMPLATES)
 GROW_BUILTIN_BS_TEMPLATES.update(GROW_BUILTIN_BS_USER_TEMPLATES)
 GROW_BUILTIN_BS_TEMPLATES.update(GROW_BUILTIN_BS_UTILS_TEMPLATES)
@@ -333,6 +204,137 @@ else:
             GROW_TEMPLATES.setdefault(_id, _template_name)
     del _id, _template_name
 
+def _set_default_templates():
+    global GROW_TEMPLATES
+
+    if USE_BOOTSTRAP:
+        # ################################################################### #
+        # Breeder templates
+        GROW_TEMPLATES.setdefault('grow/breeder', 'grow/bootstrap/breeder/index.html')
+        GROW_TEMPLATES.setdefault('grow/breeder/create', 'grow/bootstrap/breeder/create.html')
+        GROW_TEMPLATES.setdefault('grow/breeder/delete', 'grow/bootstrap/breeder/delete.html')
+        GROW_TEMPLATES.setdefault('grow/breeder/detail', 'grow/bootstrap/breeder/detail.html')
+        GROW_TEMPLATES.setdefault('grow/breeder/translation', 'grow/bootstrap/breeder/translation.html')
+        GROW_TEMPLATES.setdefault('grow/breeder/hx/delete', 'grow/bootstrap/breeder/hx/delete.html')
+        GROW_TEMPLATES.setdefault('grow/breeder/hx/filter', 'grow/bootstrap/breeder/hx/filter.html')
+        GROW_TEMPLATES.setdefault('grow/breeder/hx/strains', 'grow/bootstrap/breeder/hx/strains.html')
+        GROW_TEMPLATES.setdefault('grow/breeder/hx/translation', 'grow/bootstrap/breeder/hx/translation.html')
+        GROW_TEMPLATES.setdefault('grow/breeder/update', 'grow/bootstrap/breeder/update.html')
+        GROW_TEMPLATES.setdefault('grow/breeder/form', 'grow/bootstrap/breeder/form.html')
+
+        # ################################################################### #
+        # Strain templates
+
+        GROW_TEMPLATES.setdefault('grow/strain/create', 'grow/bootstrap/strain/strain/create.html')
+        GROW_TEMPLATES.setdefault('grow/strain/delete', 'grow/html/strain/delete.html')
+        GROW_TEMPLATES.setdefault('grow/strain/form', 'grow/bootstrap/strain/strain/form.html')
+        GROW_TEMPLATES.setdefault('grow/strain/gallery', 'grow/html/strain/strain/gallery.html')
+        GROW_TEMPLATES.setdefault('grow/strain/gallery/slides', 'grow/html/strain/strain/gallery/slides.html')
+        GROW_TEMPLATES.setdefault('grow/strain/hx/delete', 'grow/html/strain/hx/delete.html')
+        GROW_TEMPLATES.setdefault('grow/strain/hx/search', 'grow/html/strain/hx/search.html')
+        GROW_TEMPLATES.setdefault('grow/strain/strain', 'grow/bootstrap/strain/strain/detail.html')
+        GROW_TEMPLATES.setdefault('grow/strain/strain/add_to_stock', 'grow/html/strain/strain/add_to_stock.html')
+        GROW_TEMPLATES.setdefault('grow/strain/strain/add_to_stock2', 'grow/html/strain/strain/add_to_stock2.html')
+        GROW_TEMPLATES.setdefault('grow/strain/strain/comment_create', 'grow/html/strain/strain/comment_create.html')
+        GROW_TEMPLATES.setdefault('grow/strain/strain/comment_update', 'grow/html/strain/strain/comment_update.html')
+        GROW_TEMPLATES.setdefault('grow/strain/strain/form', 'grow/html/strain/strain/form.html')
+        GROW_TEMPLATES.setdefault('grow/strain/strain/hx/add_to_stock', 'grow/html/strain/strain/hx/add_to_stock.html')
+        GROW_TEMPLATES.setdefault('grow/strain/strain/hx/add_to_stock2', 'grow/html/strain/strain/hx/add_to_stock2.html')
+        GROW_TEMPLATES.setdefault('grow/strain/strain/hx/add_to_stock_dialog', 'grow/html/strain/strain/hx/add_to_stock_dialog.html')
+        GROW_TEMPLATES.setdefault('grow/strain/strain/hx/filter', 'grow/html/strain/strain/hx/filter.html')
+        GROW_TEMPLATES.setdefault('grow/strain/strain/hx/growlogs', 'grow/bootstrap/strain/strain/hx/growlogs.html')
+        GROW_TEMPLATES.setdefault('grow/strain/strain/hx/my_growlogs', 'grow/bootstrap/strain/strain/hx/my_growlogs.html')
+        GROW_TEMPLATES.setdefault('grow/strain/strain/hx/translation', 'grow/html/strain/strain/hx/translation.html')
+        GROW_TEMPLATES.setdefault('grow/strain/strain/in_stock/hx/add', 'grow/html/strain/strain/in_stock/hx/add.html')
+        GROW_TEMPLATES.setdefault('grow/strain/strain/in_stock/hx/remove', 'grow/html/strain/strain/in_stock/hx/remove.html')
+        GROW_TEMPLATES.setdefault('grow/strain/strain/in_stock/hx/remove_invalid', 'grow/html/strain/strain/in_stock/hx/remove_invalid.html')
+        GROW_TEMPLATES.setdefault('grow/strain/strain/in_stock/hx/notes', 'grow/html/strain/strain/in_stock/hx/notes.html')
+        GROW_TEMPLATES.setdefault('grow/strain/strain/in_stock/hx/update', 'grow/html/strain/strain/in_stock/hx/update.html')
+        GROW_TEMPLATES.setdefault('grow/strain/strain/image_upload', 'grow/html/strain/strain/image_upload.html')
+        GROW_TEMPLATES.setdefault('grow/strain/strain/remove_from_stock', 'grow/html/strain/strain/remove_from_stock.html')
+        GROW_TEMPLATES.setdefault('grow/strain/strain/remove_from_stock_invalid', 'grow/html/strain/strain/remove_from_stock_invalid.html')
+        GROW_TEMPLATES.setdefault('grow/strain/strain_search_results', 'grow/html/strain/strain_search_results.html')
+        GROW_TEMPLATES.setdefault('grow/strain/strain/translation', 'grow/html/strain/strain/translation.html')
+        GROW_TEMPLATES.setdefault('grow/strain/strain/update', 'grow/bootstrap/strain/strain/update.html')
+
+        # ################################################################### #
+        # Location templates
+        GROW_TEMPLATES.setdefault('grow/location/index', 'grow/html/location/index.html')
+        GROW_TEMPLATES.setdefault('grow/location/create', 'grow/html/location/create.html')
+        GROW_TEMPLATES.setdefault('grow/location/update', 'grow/html/location/update.html')
+        GROW_TEMPLATES.setdefault('grow/location/delete', 'grow/html/location/delete.html')
+        GROW_TEMPLATES.setdefault('grow/location/detail', 'grow/html/location/detail.html')
+        GROW_TEMPLATES.setdefault('grow/location/form', 'grow/html/location/form.html')
+        GROW_TEMPLATES.setdefault('grow/location/hx-type-change', 'grow/html/location/hx_locationtype_change.html')
+        GROW_TEMPLATES.setdefault('grow/location/hx-delete', 'grow/html/location/hx_delete.html')
+
+        # ################################################################### #
+        # Seeds in Stock templates
+
+        GROW_TEMPLATES.setdefault('grow/seeds_in_stock', 'grow/html/seeds_in_stock/my_seeds_in_stock.html')
+        GROW_TEMPLATES.setdefault('grow/seeds_in_stock/add', 'grow/html/seeds_in_stock/add.html')
+        GROW_TEMPLATES.setdefault('grow/seeds_in_stock/remove', 'grow/html/seeds_in_stock/remove.html')
+        GROW_TEMPLATES.setdefault('grow/seeds_in_stock/remove_invalid', 'grow/html/seeds_in_stock/remove_invalid.html')
+        GROW_TEMPLATES.setdefault('grow/seeds_in_stock/hx/add', 'grow/html/seeds_in_stock/hx/add.html')
+        GROW_TEMPLATES.setdefault('grow/seeds_in_stock/hx/remove', 'grow/html/seeds_in_stock/hx/remove.html')
+        GROW_TEMPLATES.setdefault('grow/seeds_in_stock/hx/remove_invalid', 'grow/html/seeds_in_stock/hx/remove_invalid.html')
+        GROW_TEMPLATES.setdefault('grow/seeds_in_stock/hx/info', 'grow/html/seeds_in_stock/hx/info.html')
+        GROW_TEMPLATES.setdefault('grow/seeds_in_stock/hx/dialog', 'grow/html/seeds_in_stock/hx/dialog.html')
+        GROW_TEMPLATES.setdefault('grow/seeds_in_stock/hx/info', 'grow/html/seeds_in_stock/hx/info.html')
+        GROW_TEMPLATES.setdefault('grow/seeds_in_stock/hx/my_seeds_in_stock', 'grow/bootstrap/seeds_in_stock/hx/my_seeds_in_stock.html')
+        GROW_TEMPLATES.setdefault('grow/seeds_in_stock/my_seeds_in_stock', 'grow/bootstrap/seeds_in_stock/my_seeds_in_stock.html')
+
+
+    else:
+        # ################################################################### #
+        # Breeder templates
+        GROW_TEMPLATES.setdefault('grow/breeder', 'grow/html/breeder/index.html')
+        GROW_TEMPLATES.setdefault('grow/breeder/create', 'grow/html/breeder/create.html')
+        GROW_TEMPLATES.setdefault('grow/breeder/delete', 'grow/html/breeder/delete.html')
+        GROW_TEMPLATES.setdefault('grow/breeder/detail', 'grow/html/breeder/detail.html')
+        GROW_TEMPLATES.setdefault('grow/breeder/translation', 'grow/html/breeder/translation.html')
+        GROW_TEMPLATES.setdefault('grow/breeder/hx/delete', 'grow/html/breeder/hx/delete.html')
+        GROW_TEMPLATES.setdefault('grow/breeder/hx/filter', 'grow/html/breeder/hx/filter.html')
+        GROW_TEMPLATES.setdefault('grow/breeder/hx/strains', 'grow/html/breeder/hx/strains.html')
+        GROW_TEMPLATES.setdefault('grow/breeder/hx/translation', 'grow/html/breeder/hx/translation.html')
+        GROW_TEMPLATES.setdefault('grow/breeder/update', 'grow/html/breeder/update.html')
+        GROW_TEMPLATES.setdefault('grow/breeder/form', 'grow/html/breeder/form.html')
+
+        # ################################################################### #
+        # Strain templates
+        GROW_TEMPLATES.setdefault('grow/strain/strain/add_to_stock', 'grow/html/strain/add_to_stock.html')
+        GROW_TEMPLATES.setdefault('grow/strain/strain/add_to_stock2', 'grow/html/strain/add_to_stock2.html')
+        GROW_TEMPLATES.setdefault('grow/strain/create', 'grow/html/strain/create.html')
+        GROW_TEMPLATES.setdefault('grow/strain/delete', 'grow/html/strain/delete.html')
+        GROW_TEMPLATES.setdefault('grow/strain/form', 'grow/html/strain/form.html')
+        GROW_TEMPLATES.setdefault('grow/strain/gallery', 'grow/html/strain/gallery/gallery.html')
+        GROW_TEMPLATES.setdefault('grow/strain/gallery/slides', 'grow/html/strain/gallery/slides.html')
+        GROW_TEMPLATES.setdefault('grow/strain/hx/delete', 'grow/html/strain/hx/delete.html')
+        GROW_TEMPLATES.setdefault('grow/strain/hx/search', 'grow/html/strain/hx/search.html')
+        GROW_TEMPLATES.setdefault('grow/strain/strain', 'grow/html/strain/detail.html')
+        GROW_TEMPLATES.setdefault('grow/strain/strain/comment_create', 'grow/html/strain/comment/create.html')
+        GROW_TEMPLATES.setdefault('grow/strain/strain/comment_update', 'grow/html/strain/comment/update.html')
+        GROW_TEMPLATES.setdefault('grow/strain/strain/hx/add_to_stock', 'grow/html/strain/hx/add_to_stock.html')
+        GROW_TEMPLATES.setdefault('grow/strain/strain/hx/add_to_stock2', 'grow/html/strain/hx/add_to_stock2.html')
+        GROW_TEMPLATES.setdefault('grow/strain/strain/hx/add_to_stock_dialog', 'grow/html/strain/hx/dialog.html')
+        GROW_TEMPLATES.setdefault('grow/strain/strain/hx/filter', 'grow/html/strain/hx/filter.html')
+        GROW_TEMPLATES.setdefault('grow/strain/strain/hx/growlogs', 'grow/html/strain/hx/growlogs.html')
+        GROW_TEMPLATES.setdefault('grow/strain/strain/hx/my_growlogs', 'grow/html/strain/hx/my_growlogs.html')
+        GROW_TEMPLATES.setdefault('grow/strain/strain/hx/translation', 'grow/html/strain/hx/translation.html')
+        GROW_TEMPLATES.setdefault('grow/strain/strain/in_stock/hx/add', 'grow/html/strain/hx/add_to_stock.html')
+        GROW_TEMPLATES.setdefault('grow/strain/strain/in_stock/hx/remove', 'grow/html/strain/hx/remove_from_stock.html')
+        GROW_TEMPLATES.setdefault('grow/strain/strain/in_stock/hx/remove_invalid', 'grow/html/strain/hx/remove_from_stock_invalid.html')
+        GROW_TEMPLATES.setdefault('grow/strain/strain/in_stock/hx/notes', 'grow/html/strain/hx/in_stock_notes.html')
+        GROW_TEMPLATES.setdefault('grow/strain/strain/in_stock/hx/update', 'grow/html/strain/hx/in_stock_update.html')
+        GROW_TEMPLATES.setdefault('grow/strain/strain/image_upload', 'grow/html/strain/image/upload.html')
+        GROW_TEMPLATES.setdefault('grow/strain/strain/remove_from_stock', 'grow/html/strain/remove_from_stock.html')
+        GROW_TEMPLATES.setdefault('grow/strain/strain/remove_from_stock_invalid', 'grow/html/strain/remove_from_stock_invalid.html')
+        GROW_TEMPLATES.setdefault('grow/strain/strain_search_results', 'grow/html/strain/search_results.html')
+        GROW_TEMPLATES.setdefault('grow/strain/strain/translation', 'grow/html/strain/translation.html')
+        GROW_TEMPLATES.setdefault('grow/strain/strain/update', 'grow/html/strain/update.html')
+
+_set_default_templates()
+del _set_default_templates
 
 SITE_TITLE = getattr(settings, "SITE_TITLE", "Grow")
 

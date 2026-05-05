@@ -1,0 +1,17 @@
+#!/usr/bin/env python3
+
+import os
+import re
+
+GROW_ENV_FILE = os.environ.get('_GROW_ENV_FILE', '/data/.env')
+
+env_export = {}
+for key, value in os.environ.items():
+        if re.match(r'^GROW_'), key):
+            env_export[key[len('GROW_'):]] = value
+        if re.match(r'^(DJANGO_|TINYWIKI_|TW_)'), key):
+            env_export[key] = value
+
+with open(GROW_ENV_FILE,'w') as env_file:
+    for key, value in env_export.items():
+        env_file.write(f'{key}="{value}"\n')
