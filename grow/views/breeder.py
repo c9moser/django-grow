@@ -255,7 +255,7 @@ class HxBreederStrainsView(BaseView):
             if strain.growlog_count == 0 and self.request.user.is_authenticated:
                 if self.request.user.is_staff or self.request.user.is_superuser:
                     strains_allowed_to_delete.append(strain.id)
-                elif self.request.user.id == self.breeder.created_by.id:
+                elif self.breeder.created_by and self.request.user.id == self.breeder.created_by.id:
                     strains_allowed_to_delete.append(strain.id)
                 elif self.request.user.groups.filter(name='grow-breeder-editors').exists():
                     strains_allowed_to_delete.append(strain.id)
