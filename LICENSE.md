@@ -1,4 +1,6 @@
-Copyright (C) 2025 - 2026 by Christian christian@cmoser.eu
+# License of django-grow
+
+Copyright (C) 2025 - 2026 by Christian (devel@c-moser.at)[mailto:devel@c-moser.at]
 
 Permission to use, copy, modify, and/or distribute this software for any
 purpose with or without fee is hereby granted.
