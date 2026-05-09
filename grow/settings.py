@@ -253,7 +253,7 @@ def _set_default_templates():
         GROW_TEMPLATES.setdefault('grow/strain/strain/image_upload', 'grow/html/strain/strain/image_upload.html')
         GROW_TEMPLATES.setdefault('grow/strain/strain/remove_from_stock', 'grow/html/strain/strain/remove_from_stock.html')
         GROW_TEMPLATES.setdefault('grow/strain/strain/remove_from_stock_invalid', 'grow/html/strain/strain/remove_from_stock_invalid.html')
-        GROW_TEMPLATES.setdefault('grow/strain/strain_search_results', 'grow/html/strain/strain_search_results.html')
+        GROW_TEMPLATES.setdefault('grow/strain/strain_search_results', 'grow/html/strain/search_results.html')
         GROW_TEMPLATES.setdefault('grow/strain/strain/translation', 'grow/html/strain/strain/translation.html')
         GROW_TEMPLATES.setdefault('grow/strain/strain/update', 'grow/bootstrap/strain/strain/update.html')
 
