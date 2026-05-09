@@ -6,7 +6,7 @@ version = "3.11.1"
 description = "ASGI specs, helper code, and adapters"
 optional = false
 python-versions = ">=3.9"
-groups = ["main", "dev"]
+groups = ["main", "dev", "tinywiki"]
 files = [
     {file = "asgiref-3.11.1-py3-none-any.whl", hash = "sha256:e8667a091e69529631969fd45dc268fa79b99c92c5fcdda727757e52146ec133"},
     {file = "asgiref-3.11.1.tar.gz", hash = "sha256:5f184dc43b7e763efe848065441eac62229c9f7b0475f41f80e207a114eda4ce"},
@@ -33,7 +33,7 @@ version = "1.1.0"
 description = "A pure python bbcode parser and formatter."
 optional = false
 python-versions = "*"
-groups = ["main"]
+groups = ["main", "tinywiki"]
 files = [
     {file = "bbcode-1.1.0-py2.py3-none-any.whl", hash = "sha256:83802f4b40c92426841a98350bd6ff9ea8fdf8f9b37df1968a88c5864fd225fa"},
     {file = "bbcode-1.1.0.tar.gz", hash = "sha256:eac4fb1d0f6c7ce5c41e4b5c0522562b15a1ac036fb9131adc59e9a28c7dc1d0"},
@@ -45,7 +45,7 @@ version = "2026.4.22"
 description = "Python package for providing Mozilla's CA Bundle."
 optional = false
 python-versions = ">=3.7"
-groups = ["main"]
+groups = ["main", "tinywiki"]
 files = [
     {file = "certifi-2026.4.22-py3-none-any.whl", hash = "sha256:3cb2210c8f88ba2318d29b0388d1023c8492ff72ecdde4ebdaddbb13a31b1c4a"},
     {file = "certifi-2026.4.22.tar.gz", hash = "sha256:8d455352a37b71bf76a79caa83a3d6c25afee4a385d632127b6afb3963f1c580"},
@@ -57,7 +57,7 @@ version = "2.0.0"
 description = "Foreign Function Interface for Python calling C code."
 optional = false
 python-versions = ">=3.9"
-groups = ["main"]
+groups = ["main", "tinywiki"]
 markers = "platform_python_implementation != \"PyPy\""
 files = [
     {file = "cffi-2.0.0-cp310-cp310-macosx_10_13_x86_64.whl", hash = "sha256:0cf2d91ecc3fcc0625c2c530fe004f82c110405f101548512cce44322fa8ac44"},
@@ -155,7 +155,7 @@ version = "3.4.7"
 description = "The Real First Universal Charset Detector. Open, modern and actively maintained alternative to Chardet."
 optional = false
 python-versions = ">=3.7"
-groups = ["main"]
+groups = ["main", "tinywiki"]
 files = [
     {file = "charset_normalizer-3.4.7-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:cdd68a1fb318e290a2077696b7eb7a21a49163c455979c639bf5a5dcdc46617d"},
     {file = "charset_normalizer-3.4.7-cp310-cp310-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:e17b8d5d6a8c47c85e68ca8379def1303fd360c3e22093a807cd34a71cd082b8"},
@@ -294,7 +294,7 @@ version = "47.0.0"
 description = "cryptography is a package which provides cryptographic recipes and primitives to Python developers."
 optional = false
 python-versions = "!=3.9.0,!=3.9.1,>=3.8"
-groups = ["main"]
+groups = ["main", "tinywiki"]
 files = [
     {file = "cryptography-47.0.0-cp311-abi3-macosx_10_9_universal2.whl", hash = "sha256:160ad728f128972d362e714054f6ba0067cab7fb350c5202a9ae8ae4ce3ef1a0"},
     {file = "cryptography-47.0.0-cp311-abi3-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:b9a8943e359b7615db1a3ba587994618e094ff3d6fa5a390c73d079ce18b3973"},
@@ -359,7 +359,7 @@ version = "0.7.1"
 description = "XML bomb protection for Python stdlib modules"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
-groups = ["main"]
+groups = ["main", "tinywiki"]
 files = [
     {file = "defusedxml-0.7.1-py2.py3-none-any.whl", hash = "sha256:a352e7e428770286cc899e2542b6cdaedb2b4953ff269a210103ec58f6198a61"},
     {file = "defusedxml-0.7.1.tar.gz", hash = "sha256:1bb3032db185915b62d7c6209c5a8792be6a32ab2fedacc84e01b52c51aa3e69"},
@@ -367,24 +367,24 @@ files = [
 
 [[package]]
 name = "django"
-version = "5.2.13"
+version = "6.0.5"
 description = "A high-level Python web framework that encourages rapid development and clean, pragmatic design."
 optional = false
-python-versions = ">=3.10"
-groups = ["main", "dev"]
+python-versions = ">=3.12"
+groups = ["main", "dev", "tinywiki"]
 files = [
-    {file = "django-5.2.13-py3-none-any.whl", hash = "sha256:5788fce61da23788a8ce6f02583765ab060d396720924789f97fa42119d37f7a"},
-    {file = "django-5.2.13.tar.gz", hash = "sha256:a31589db5188d074c63f0945c3888fad104627dfcc236fb2b97f71f89da33bc4"},
+    {file = "django-6.0.5-py3-none-any.whl", hash = "sha256:9d58a7cb49244e74c8e161d5e403a46d6209f1009ba40f5a66d6aa0d0786a8f0"},
+    {file = "django-6.0.5.tar.gz", hash = "sha256:bc6d6872e98a2864c836e42edd644b362db311147dd5aa8d5b82ba7a032f5269"},
 ]
 
 [package.dependencies]
-asgiref = ">=3.8.1"
-sqlparse = ">=0.3.1"
+asgiref = ">=3.9.1"
+sqlparse = ">=0.5.0"
 tzdata = {version = "*", markers = "sys_platform == \"win32\""}
 
 [package.extras]
-argon2 = ["argon2-cffi (>=19.1.0)"]
-bcrypt = ["bcrypt"]
+argon2 = ["argon2-cffi (>=23.1.0)"]
+bcrypt = ["bcrypt (>=4.1.1)"]
 
 [[package]]
 name = "django-allauth"
@@ -392,7 +392,7 @@ version = "65.16.1"
 description = "Integrated set of Django applications addressing authentication, registration, account management as well as 3rd party (social) account authentication."
 optional = false
 python-versions = ">=3.10"
-groups = ["main"]
+groups = ["main", "tinywiki"]
 files = [
     {file = "django_allauth-65.16.1-py3-none-any.whl", hash = "sha256:e49df24056bf37c44e56aaad1e51f78994b7d175bc3476d65e8f8f58390a8ce8"},
     {file = "django_allauth-65.16.1.tar.gz", hash = "sha256:4425ac3088541c4c54983e16e08f6e3eb9f438dc1b1009534fa51c8bb739ed31"},
@@ -422,7 +422,7 @@ version = "1.21.0"
 description = "Automatically refresh your browser on changes to Python code, templates, or static files."
 optional = false
 python-versions = ">=3.9"
-groups = ["main", "dev"]
+groups = ["dev", "tinywiki"]
 files = [
     {file = "django_browser_reload-1.21.0-py3-none-any.whl", hash = "sha256:0b2a86ab460774fa9bb142a121c70e75a72f18109f51a4f6de409cd633d3a70d"},
     {file = "django_browser_reload-1.21.0.tar.gz", hash = "sha256:3335ad3d107eb657f623d1a8e680dfbcab8a83ae1f94df1895e069dddf5604ba"},
@@ -438,7 +438,7 @@ version = "4.0"
 description = "Django Content Security Policy support."
 optional = false
 python-versions = "*"
-groups = ["main"]
+groups = ["tinywiki"]
 files = [
     {file = "django_csp-4.0-py3-none-any.whl", hash = "sha256:d5a0a05463a6b75a4f1fc1828c58c89af8db9364d09fc6e12f122b4d7f3d00dc"},
     {file = "django_csp-4.0.tar.gz", hash = "sha256:b27010bb702eb20a3dad329178df2b61a2b82d338b70fbdc13c3a3bd28712833"},
@@ -460,7 +460,7 @@ version = "0.12.1"
 description = "A package that allows you to utilize 12factor inspired environment variables to configure your Django application."
 optional = false
 python-versions = "<4,>=3.9"
-groups = ["main"]
+groups = ["main", "tinywiki"]
 files = [
     {file = "django_environ-0.12.1-py2.py3-none-any.whl", hash = "sha256:064ba2d5082f833e6d7fe4def4928bde1eedc0248a417575da7db147aeec1c20"},
     {file = "django_environ-0.12.1.tar.gz", hash = "sha256:22859c6e905ab7637fa3348d1787543bb4492f38d761104a3ce0519b7b752845"},
@@ -477,7 +477,7 @@ version = "4.1"
 description = "Extensions for Django"
 optional = false
 python-versions = ">=3.9"
-groups = ["main"]
+groups = ["tinywiki"]
 files = [
     {file = "django_extensions-4.1-py3-none-any.whl", hash = "sha256:0699a7af28f2523bf8db309a80278519362cd4b6e1fd0a8cd4bf063e1e023336"},
     {file = "django_extensions-4.1.tar.gz", hash = "sha256:7b70a4d28e9b840f44694e3f7feb54f55d495f8b3fa6c5c0e5e12bcb2aa3cdeb"},
@@ -519,13 +519,13 @@ version = "1.0.0"
 description = "django-app"
 optional = false
 python-versions = ">=3.11,<3.15"
-groups = ["main"]
+groups = ["tinywiki"]
 files = []
 develop = false
 
 [package.dependencies]
 bbcode = ">=1.1.0,<2.0.0"
-django = ">=5.2.4,<6.0.0"
+django = ">=5.2.4,<7.0.0"
 django-allauth = {version = ">=65.12.0,<66.0.0", extras = ["oauth2", "openid", "saml2", "socialaccount", "steam"]}
 django-browser-reload = ">=1.19.0,<2.0.0"
 django-csp = ">=4.0,<5.0"
@@ -539,7 +539,7 @@ pillow = ">=12.0.0,<13.0.0"
 type = "git"
 url = "https://github.com/c9moser/django-tinywiki.git"
 reference = "HEAD"
-resolved_reference = "ed6269932a4448abb15a1d6e0b8ca57c4d3b656c"
+resolved_reference = "a42f59dc34407f193fe8ce38db3814238100220d"
 
 [[package]]
 name = "django-widget-tweaks"
@@ -547,7 +547,7 @@ version = "1.5.1"
 description = "Tweak the form field rendering in templates, not in python-level form definitions."
 optional = false
 python-versions = ">=3.9"
-groups = ["main"]
+groups = ["main", "tinywiki"]
 files = [
     {file = "django_widget_tweaks-1.5.1-py3-none-any.whl", hash = "sha256:3f5080f8365740fc1c14607498c975cbfed896dd0c40e1b563095716ee31e3b5"},
     {file = "django_widget_tweaks-1.5.1.tar.gz", hash = "sha256:084acc9eeb5a3208f2670522de6284287973e54d54488ce6d402f4b99bc5f452"},
@@ -618,7 +618,7 @@ version = "3.13"
 description = "Internationalized Domain Names in Applications (IDNA)"
 optional = false
 python-versions = ">=3.8"
-groups = ["main"]
+groups = ["main", "tinywiki"]
 files = [
     {file = "idna-3.13-py3-none-any.whl", hash = "sha256:892ea0cde124a99ce773decba204c5552b69c3c67ffd5f232eb7696135bc8bb3"},
     {file = "idna-3.13.tar.gz", hash = "sha256:585ea8fe5d69b9181ec1afba340451fba6ba764af97026f92a91d4eef164a242"},
@@ -682,7 +682,7 @@ version = "3.10.2"
 description = "Python implementation of John Gruber's Markdown."
 optional = false
 python-versions = ">=3.10"
-groups = ["main"]
+groups = ["main", "tinywiki"]
 files = [
     {file = "markdown-3.10.2-py3-none-any.whl", hash = "sha256:e91464b71ae3ee7afd3017d9f358ef0baf158fd9a298db92f1d4761133824c36"},
     {file = "markdown-3.10.2.tar.gz", hash = "sha256:994d51325d25ad8aa7ce4ebaec003febcce822c3f8c911e3b17c52f7f589f950"},
@@ -727,7 +727,7 @@ version = "3.3.1"
 description = "A generic, spec-compliant, thorough implementation of the OAuth request-signing logic"
 optional = false
 python-versions = ">=3.8"
-groups = ["main"]
+groups = ["main", "tinywiki"]
 files = [
     {file = "oauthlib-3.3.1-py3-none-any.whl", hash = "sha256:88119c938d2b8fb88561af5f6ee0eec8cc8d552b7bb1f712743136eb7523b7a1"},
     {file = "oauthlib-3.3.1.tar.gz", hash = "sha256:0f0f8aa759826a193cf66c12ea1af1637f87b9b4622d46e866952bb022e538c9"},
@@ -744,7 +744,7 @@ version = "26.2"
 description = "Core utilities for Python packages"
 optional = false
 python-versions = ">=3.8"
-groups = ["main"]
+groups = ["tinywiki"]
 files = [
     {file = "packaging-26.2-py3-none-any.whl", hash = "sha256:5fc45236b9446107ff2415ce77c807cee2862cb6fac22b8a73826d0693b0980e"},
     {file = "packaging-26.2.tar.gz", hash = "sha256:ff452ff5a3e828ce110190feff1178bb1f2ea2281fa2075aadb987c2fb221661"},
@@ -756,7 +756,7 @@ version = "12.2.0"
 description = "Python Imaging Library (fork)"
 optional = false
 python-versions = ">=3.10"
-groups = ["main"]
+groups = ["main", "tinywiki"]
 files = [
     {file = "pillow-12.2.0-cp310-cp310-macosx_10_10_x86_64.whl", hash = "sha256:a4e8f36e677d3336f35089648c8955c51c6d386a13cf6ee9c189c5f5bd713a9f"},
     {file = "pillow-12.2.0-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:2e589959f10d9824d39b350472b92f0ce3b443c0a3442ebf41c40cb8361c5b97"},
@@ -894,7 +894,7 @@ version = "3.0"
 description = "C parser in Python"
 optional = false
 python-versions = ">=3.10"
-groups = ["main"]
+groups = ["main", "tinywiki"]
 markers = "platform_python_implementation != \"PyPy\" and implementation_name != \"PyPy\""
 files = [
     {file = "pycparser-3.0-py3-none-any.whl", hash = "sha256:b727414169a36b7d524c1c3e31839a521725078d7b2ff038656844266160a992"},
@@ -919,7 +919,7 @@ version = "2.12.1"
 description = "JSON Web Token implementation in Python"
 optional = false
 python-versions = ">=3.9"
-groups = ["main"]
+groups = ["main", "tinywiki"]
 files = [
     {file = "pyjwt-2.12.1-py3-none-any.whl", hash = "sha256:28ca37c070cad8ba8cd9790cd940535d40274d22f80ab87f3ac6a713e6e8454c"},
     {file = "pyjwt-2.12.1.tar.gz", hash = "sha256:c74a7a2adf861c04d002db713dd85f84beb242228e671280bf709d765b03672b"},
@@ -940,7 +940,7 @@ version = "3.2.0"
 description = "OpenID support for modern servers and consumers."
 optional = false
 python-versions = "*"
-groups = ["main"]
+groups = ["main", "tinywiki"]
 files = [
     {file = "python3-openid-3.2.0.tar.gz", hash = "sha256:33fbf6928f401e0b790151ed2b5290b02545e8775f982485205a066f874aaeaf"},
     {file = "python3_openid-3.2.0-py3-none-any.whl", hash = "sha256:6626f771e0417486701e0b4daff762e7212e820ca5b29fcc0d05f6f8736dfa6b"},
@@ -1051,7 +1051,6 @@ files = [
 [package.dependencies]
 attrs = ">=22.2.0"
 rpds-py = ">=0.7.0"
-typing-extensions = {version = ">=4.4.0", markers = "python_version < \"3.13\""}
 
 [[package]]
 name = "requests"
@@ -1059,7 +1058,7 @@ version = "2.33.1"
 description = "Python HTTP for Humans."
 optional = false
 python-versions = ">=3.10"
-groups = ["main"]
+groups = ["main", "tinywiki"]
 files = [
     {file = "requests-2.33.1-py3-none-any.whl", hash = "sha256:4e6d1ef462f3626a1f0a0a9c42dd93c63bad33f9f1c1937509b8c5c8718ab56a"},
     {file = "requests-2.33.1.tar.gz", hash = "sha256:18817f8c57c6263968bc123d237e3b8b08ac046f5456bd1e307ee8f4250d3517"},
@@ -1206,7 +1205,7 @@ version = "0.5.5"
 description = "A non-validating SQL parser."
 optional = false
 python-versions = ">=3.8"
-groups = ["main", "dev"]
+groups = ["main", "dev", "tinywiki"]
 files = [
     {file = "sqlparse-0.5.5-py3-none-any.whl", hash = "sha256:12a08b3bf3eec877c519589833aed092e2444e68240a3577e8e26148acc7b1ba"},
     {file = "sqlparse-0.5.5.tar.gz", hash = "sha256:e20d4a9b0b8585fdf63b10d30066c7c94c5d7a7ec47c889a2d83a3caa93ff28e"},
@@ -1217,25 +1216,12 @@ dev = ["build"]
 doc = ["sphinx"]
 
 [[package]]
-name = "typing-extensions"
-version = "4.15.0"
-description = "Backported and Experimental Type Hints for Python 3.9+"
-optional = false
-python-versions = ">=3.9"
-groups = ["main"]
-markers = "python_version < \"3.13\""
-files = [
-    {file = "typing_extensions-4.15.0-py3-none-any.whl", hash = "sha256:f0fa19c6845758ab08074a0cfa8b7aecb71c999ca73d62883bc25cc018c4e548"},
-    {file = "typing_extensions-4.15.0.tar.gz", hash = "sha256:0cea48d173cc12fa28ecabc3b837ea3cf6f38c6d1136f85cbaaf598984861466"},
-]
-
-[[package]]
 name = "tzdata"
 version = "2026.2"
 description = "Provider of IANA time zone data"
 optional = false
 python-versions = ">=2"
-groups = ["main", "dev"]
+groups = ["main", "dev", "tinywiki"]
 markers = "sys_platform == \"win32\""
 files = [
     {file = "tzdata-2026.2-py2.py3-none-any.whl", hash = "sha256:bbe9af844f658da81a5f95019480da3a89415801f6cc966806612cc7169bffe7"},
@@ -1260,7 +1246,7 @@ version = "2.6.3"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
 optional = false
 python-versions = ">=3.9"
-groups = ["main"]
+groups = ["main", "tinywiki"]
 files = [
     {file = "urllib3-2.6.3-py3-none-any.whl", hash = "sha256:bf272323e553dfb2e87d9bfd225ca7b0f467b919d7bbd355436d3fd37cb0acd4"},
     {file = "urllib3-2.6.3.tar.gz", hash = "sha256:1b62b6884944a57dbe321509ab94fd4d3b307075e0c2eae991ac71ee15ad38ed"},
@@ -1274,5 +1260,5 @@ zstd = ["backports-zstd (>=1.0.0) ; python_version < \"3.14\""]
 
 [metadata]
 lock-version = "2.1"
-python-versions = ">=3.11,<3.15"
-content-hash = "fec5cb9526c6976e94fcebef151d6a139b84f561f43091f710956851b0a4fc33"
+python-versions = ">=3.13,<3.15"
+content-hash = "6e2f16e40eb894199e49f436d466dd2db2442a8cd7dbeb82eb16013807757d3d"
