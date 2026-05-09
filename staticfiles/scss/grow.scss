@@ -93,3 +93,18 @@ th.fit-content * {
     left: 110%;
     margin-top: -1px;
 }
+
+.list-group-item {
+    ul {
+        list-style-type: disc;
+        ul {
+            list-style-type: circle;
+            ul {
+                list-style-type: square;
+                ul {
+                    list-style-type: none;
+                }
+            }
+        }
+    }
+}
