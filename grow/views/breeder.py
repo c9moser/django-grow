@@ -264,11 +264,16 @@ class HxBreederStrainsView(BaseView):
         if self.request.user.is_authenticated:
             if self.request.user.is_staff or self.request.user.is_superuser:
                 allowed_to_add_strains = True
-            elif self.request.user.id == self.breeder.created_by.id:
+            elif self.breeder.created_byself.request.user.id == self.breeder.created_by.id:
                 allowed_to_add_strains = True
             elif self.request.user.groups.filter(name='grow-breeder-editors').exists():
                 allowed_to_add_strains = True
             elif self.request.user.groups.filter(name='grow-strain-creators').exists():
+                allowed_to_add_strains = True
+            elif (
+                not self.breeder.created_by
+                and self.request.user.groups.filter(name='grow-user').exists()
+            ):
                 allowed_to_add_strains = True
 
         context.setdefault('breeder', self.breeder)
