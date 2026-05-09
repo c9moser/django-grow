@@ -62,6 +62,8 @@ RUN poetry config virtualenvs.in-project true \
 	&& (rm /app/django_project/local/settings_dev.py || true) \
 	&& (rm /app/django_project/local/settings_prod.py || true) \
 	&& mv /app/django_project/settings_container_prod.py /app/django_project/local/settings.py \
+	&& mkdir -p /var/log/grow \
+	&& chown www-data:www-data /var/log/grow \
 	&& poetry run python manage.py collectstatic --noinput \
 	&& chown -R www-data:www-data /var/www/grow/static /var/www/grow/media /data
 
