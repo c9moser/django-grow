@@ -27,6 +27,11 @@
 {% blocktranslate %}Grow is a personal growlog and strain database application for cannabis growers. It is open source and free to use. You can use it to keep track of your grows, share them with other growers, and discover new strains.{% endblocktranslate %}
 {% blocktranslate %}If you have an account, you can log in to see your growlogs and the growlogs of other users. If you don't have an account, you can create one for free if the site allows it.{% endblocktranslate %}
 </p>
+<p>
+{% blocktranslate %}Please note that the content on this site is user-generated and may not be accurate, complete, or up-to-date. We do not endorse any illegal activities and we are not responsible for the content of user-generated growlogs and strain entries. Please use this site responsibly and in accordance with the laws of your jurisdiction. If you perform any illegal activities, you do so at your own risk.{% endblocktranslate %}
+</p>
+<p>
+{% blocktranslate %}If you want to host your own instance of Grow, you can find the source code on our <a href="https://codeberg.org/c9moser/django-grow" target="_blank">Codeberg repository</a> or the mirrored <a href="https://github.com/c9moser/django-grow" target="_blank">GitHub repository</a> or you can use the provided Docker image at <a href="https://hub.docker.com/r/c9moser/django-grow" target="_blank">Docker Hub <i>(docker.io/c9moser/django-grow)</i></a> or the image from <a href="https://ghcr.io/c9moser/django-grow" target="_blank">GitHub Container Registry <i>(ghcr.io/c9moser/django-grow)</i></a>.{% endblocktranslate %}
 
 {% if grow_show_legal_disclaimer|default:True %}
 <p>
@@ -41,6 +46,9 @@
 </p>
 <p>
 {% blocktranslate %}We are not providing any medical advice. The information on this site is for educational and entertainment purposes only. Always consult a qualified healthcare professional for medical advice related to cannabis use.{% endblocktranslate %}
+</p>
+<p>
+{% blocktranslate %}We are not responsible for any illegal activities that may occur as a result of using this site. Please use this site responsibly and in accordance with the laws of your jurisdiction. If you perform any illegal activities, you do so at your own risk.{% endblocktranslate %}
 </p>
 
 <div class="alert alert-warning mb-3">
@@ -67,7 +75,8 @@
     {% blocktranslate with developer_email="dev@growbook.eu" %}If you encounter any issues or have suggestions, please contact us at <a href="mailto:{{ developer_email }}">{{ developer_email }}</a>.{% endblocktranslate %}
 </div>
 <p>
-{% blocktranslate with github_url="https://github.com/c9moser/django-grow" codeberg_url="https://codeberg.org/c9moser/django-grow" %}Grow is a community-driven project. If you have any feedback, suggestions, or want to contribute, please visit our <a href="{{ github_url }}" target="_blank">GitHub repository</a> or the mirrored <a href="{{ codeberg_url }}" target="_blank">Codeberg repository</a>.{% endblocktranslate %}
+{% blocktranslate with github_url="https://github.com/c9moser/django-grow" codeberg_url="https://codeberg.org/c9moser/django-grow" %}Grow is a community-driven project. If you have any feedback, suggestions, or want to contribute, please visit our <a href="{{ codeberg_url }}" target="_blank">Codeberg repository</a> or the mirrored <a href="{{ github_url }}" target="_blank">GitHub repository</a>.{% endblocktranslate %}
+{% blocktranslate %}We welcome contributions of all kinds, including bug reports, feature requests, documentation improvements, and code contributions. Please check our contribution guidelines in the repository for more information on how to contribute.{% endblocktranslate %}
 </p>
 
 {% if request.user.is_authenticated %}
